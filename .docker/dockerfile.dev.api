@@ -1,0 +1,13 @@
+FROM golang:1.22.1-alpine
+
+# Set the current working directory inside the container
+WORKDIR /app
+
+# Install hot reload module
+RUN go install github.com/cosmtrek/air@latest
+
+# Expose port 8080 to the outside world
+EXPOSE 8080
+
+# Executable
+ENTRYPOINT ["air"]

@@ -1,0 +1,39 @@
+
+version: "3.8"
+
+services:
+  api-dev:
+    container_name: api-dev
+    build:
+      dockerfile: dockerfile.dev.api
+      context: ./.docker/
+    volumes:
+      - ./api/:/app
+    ports:
+    - 8080:8080
+    networks:
+    - app-net
+    
+  app-dev:
+    container_name: app-dev
+    build:
+      dockerfile: dockerfile.dev.app
+      context: ./.docker/
+    command: 'npm run dev'
+    volumes:
+        - ./app/:/app
+    ports:
+    - 4040:4040
+    networks:
+    - app-net
+    
+
+# to run with logs: docker compose up --no-log-prefix   
+
+# remove logs from other services
+#  logging:
+#     driver: none
+#    attach: false
+
+networks:
+  app-net:
