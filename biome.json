@@ -23,7 +23,6 @@
 		"formatter": {
 			"semicolons": "always",
 			"quoteStyle": "single",
-			"jsxQuoteStyle": "single",
 			"arrowParentheses": "asNeeded"
 		}
 	},
