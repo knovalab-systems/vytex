@@ -1,0 +1,7 @@
+basePath: /v1
+info:
+  contact: {}
+  title: Vytex API
+  version: "0.0"
+paths: {}
+swagger: "2.0"

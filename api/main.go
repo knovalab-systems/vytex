@@ -1,15 +1,24 @@
 package main
 
 import (
-	"net/http"
+	"github.com/knovalab-systems/vytex/pkg/middlewares"
+	"github.com/knovalab-systems/vytex/pkg/routes"
 
 	"github.com/labstack/echo/v4"
 )
 
+// @title Vytex API
+// @version 0.0
+// @BasePath /api/v1
+// @accept json
 func main() {
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+
+	middlewares.EchoMiddleware(e)
+
+	routes.PublicRoutes(e)
+	routes.SwaggerRoute(e)
+	routes.NotFoundRoute(e)
+
 	e.Logger.Fatal(e.Start(":8080"))
 }

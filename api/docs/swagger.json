@@ -1,0 +1,10 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Vytex API",
+        "contact": {},
+        "version": "0.0"
+    },
+    "basePath": "/v1",
+    "paths": {}
+}
