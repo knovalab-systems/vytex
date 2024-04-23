@@ -7,9 +7,9 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func EchoMiddleware(a *echo.Echo) {
+func EchoMiddleware(e *echo.Echo) {
 	// Create route group
-	a.Use(
+	e.Use(
 		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 			LogStatus: true,
 			LogURI:    true,

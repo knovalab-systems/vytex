@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/knovalab-systems/vytex/pkg/configs"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/knovalab-systems/vytex/pkg/routes"
 
@@ -13,9 +14,13 @@ import (
 // @accept json
 func main() {
 	e := echo.New()
+	// configs
+	configs.EchoValidator(e)
 
+	// middlewares
 	middlewares.EchoMiddleware(e)
 
+	// routes
 	routes.PublicRoutes(e)
 	routes.SwaggerRoute(e)
 	routes.NotFoundRoute(e)

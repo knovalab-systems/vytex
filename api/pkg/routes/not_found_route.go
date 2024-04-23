@@ -7,10 +7,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// NotFoundRoute func for describe 404 Error route.
-func NotFoundRoute(a *echo.Echo) {
+// Route for describe 404 Error not found route.
+func NotFoundRoute(e *echo.Echo) {
 	// Create route group
-	route := a.Group("/")
+	route := e.Group("/")
 
 	problemDetails := utils.NewHTTP(http.StatusNotFound)
 
