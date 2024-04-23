@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/knovalab-systems/vytex/app/v1/controllers"
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,5 +15,7 @@ func PublicRoutes(e *echo.Echo) {
 	route.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+
+	route.POST("/login", controllers.Login)
 
 }

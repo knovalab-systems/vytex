@@ -4,7 +4,6 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/configs"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/knovalab-systems/vytex/pkg/routes"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,8 +13,10 @@ import (
 // @accept json
 func main() {
 	e := echo.New()
+
 	// configs
 	configs.EchoValidator(e)
+	configs.LoadEnv()
 
 	// middlewares
 	middlewares.EchoMiddleware(e)
