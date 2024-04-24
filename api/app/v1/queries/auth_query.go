@@ -19,3 +19,9 @@ func RegisterRefresh(userId string, token string, expire time.Time) error {
 	err := table.Create(&session)
 	return err
 }
+
+func ValidRefresh(userId string, token string) (*models.Session, error) {
+	table := gen.Session
+	session, err := table.Where(table.UserID.Eq(userId)).Where(table.RefreshToken.Eq(token)).Where(table.ExpiresAt.Gt(time.Now())).First()
+	return session, err
+}

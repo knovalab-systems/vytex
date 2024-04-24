@@ -29,8 +29,9 @@ func main() {
 	// db.Create(&models.User{UserName: "jose", Password: "12345678"})
 
 	// routes
-	routes.PublicRoutes(e)
 	routes.SwaggerRoute(e)
+	routes.PublicRoutes(e)
+	routes.PrivateRoutes(e)
 	routes.NotFoundRoute(e)
 
 	e.Logger.Fatal(e.Start(":8080"))
