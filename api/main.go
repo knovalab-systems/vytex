@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/knovalab-systems/vytex/pkg/configs"
+	"github.com/knovalab-systems/vytex/pkg/gen"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/knovalab-systems/vytex/pkg/routes"
 	"github.com/knovalab-systems/vytex/platform/database"
@@ -23,7 +24,9 @@ func main() {
 	middlewares.EchoMiddleware(e)
 
 	// database
-	database.Db("")
+	db := database.Db("")
+	gen.SetDefault(db)
+	// db.Create(&models.User{UserName: "jose", Password: "12345678"})
 
 	// routes
 	routes.PublicRoutes(e)

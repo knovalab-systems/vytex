@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/app/v1/queries"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
@@ -36,17 +37,28 @@ func Login(c echo.Context) (err error) {
 		return utils.NewHTTPError(http.StatusBadRequest)
 	}
 
-	// get user, peding
-	user := "jose"
-	pass := "12345678"
-
-	// check user
-	if u.UserName != user || u.Password != pass {
+	// get user
+	user, err := queries.UserByUserName(u.UserName)
+	if err != nil {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
 
-	// generate tokends
-	tokens, err := utils.GenerateTokens(u.UserName)
+	//pending to encrypt pass
+
+	// check user
+	if u.UserName != user.UserName || u.Password != user.Password {
+		return utils.NewHTTPError(http.StatusUnauthorized)
+	}
+
+	// generate tokens
+	expires := time.Now().Add(utils.RefreshExpires)
+	tokens, err := utils.GenerateTokens(user.UserName)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	// save refresh token
+	err = queries.RegisterRefresh(user.ID, tokens.Refresh, expires)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
@@ -55,7 +67,7 @@ func Login(c echo.Context) (err error) {
 	refreshCookie := new(http.Cookie)
 	refreshCookie.Name = utils.RefreshCookieName
 	refreshCookie.Value = tokens.Refresh
-	refreshCookie.Expires = time.Now().Add(utils.RefreshExpires)
+	refreshCookie.Expires = expires
 	refreshCookie.HttpOnly = true
 	c.SetCookie(refreshCookie)
 

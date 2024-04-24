@@ -12,7 +12,7 @@ import (
 // Types for tokens
 type (
 	JWTClaims struct {
-		UserName string `json:"username"`
+		UserId string `json:"userid"`
 		jwt.RegisteredClaims
 	}
 	Tokens struct {
@@ -25,16 +25,16 @@ const AccessExpires time.Duration = time.Minute * 15
 const RefreshExpires time.Duration = time.Hour * 720
 const RefreshCookieName = "vytex_refresh_token"
 
-func GenerateTokens(userName string) (*Tokens, error) {
+func GenerateTokens(userId string) (*Tokens, error) {
 	// Generate JWT Access token.
-	accessToken, err := GenerateAccessToken(userName)
+	accessToken, err := GenerateAccessToken(userId)
 	if err != nil {
 		// Return token generation error.
 		return nil, err
 	}
 
 	// Generate JWT Refresh token.
-	refreshToken, err := GenerateRefreshToken(userName)
+	refreshToken, err := GenerateRefreshToken()
 	if err != nil {
 		// Return token generation error.
 		return nil, err
@@ -46,13 +46,13 @@ func GenerateTokens(userName string) (*Tokens, error) {
 	}, nil
 }
 
-func GenerateAccessToken(username string) (string, error) {
+func GenerateAccessToken(userId string) (string, error) {
 	// env access key
 	secret := os.Getenv("JWT_ACCESS_KEY")
 
 	// create claims
 	claims := &JWTClaims{
-		UserName: username,
+		UserId: userId,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(AccessExpires)),
 		},
@@ -72,7 +72,7 @@ func GenerateAccessToken(username string) (string, error) {
 }
 
 // this should be diff
-func GenerateRefreshToken(username string) (string, error) {
+func GenerateRefreshToken() (string, error) {
 	// Create a new SHA256 hash.
 	hash := sha256.New()
 

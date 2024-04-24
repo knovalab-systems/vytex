@@ -9,11 +9,11 @@ import (
 
 type User struct {
 	ID        string `gorm:"type:uuid;primary_key;"`
-	UserName  string
+	UserName  string `gorm:"unique;"`
 	Name      string
 	Password  string
 	Role      int8
-	Active    bool `gorm:"default:true;"`
+	DeleteAt  gorm.DeletedAt
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
