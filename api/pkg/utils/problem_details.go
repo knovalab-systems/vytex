@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-//RFC 9457
+// RFC 9457
 
 type ProblemDetails struct {
 	// Type is a URI reference [RFC3986] that identifies the

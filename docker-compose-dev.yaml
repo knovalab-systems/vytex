@@ -14,6 +14,7 @@ services:
     - 8080:8080
     networks:
     - app-net
+    - api-net
     
   app-dev:
     container_name: app-dev
@@ -27,8 +28,64 @@ services:
     - 4040:4040
     networks:
     - app-net
+
+  db-dev:
+    image: postgres:16
+    container_name: db-dev
+    environment:
+      - POSTGRES_USER=vytex
+      - POSTGRES_PASSWORD=vytex
+      - POSTGRES_DB=vytex
+    volumes:
+      - db-vytex:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - api-net
+    logging:
+      driver: none
+    attach: false
+
+  db-test:
+    image: postgres:16
+    container_name: db-test
+    environment:
+      - POSTGRES_USER=vytex-test
+      - POSTGRES_PASSWORD=vytex-test
+      - POSTGRES_DB=vytex-test
+    ports:
+      - 6432:5432
+    networks:
+      - api-net
+    logging:
+      driver: none
+    attach: false
+
+  pg-admin:
+    image: dpage/pgadmin4:8.5
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-vytex:/var/lib/pgadmin
+    restart: unless-stopped
+    networks:
+      - api-net
+    logging:
+      driver: none
+    attach: false
+
+
 networks:
-  app-net:    
+  app-net:
+  api-net:
+
+volumes:
+  pgadmin-vytex:
+  db-vytex:
 
 # to run without logs by container: docker compose up --no-log-prefix   
 

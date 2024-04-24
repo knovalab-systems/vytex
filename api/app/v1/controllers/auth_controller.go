@@ -59,7 +59,7 @@ func Login(c echo.Context) (err error) {
 	refreshCookie.HttpOnly = true
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, models.LoginRespose{
+	return c.JSON(http.StatusOK, models.LoginResponse{
 		AccessToken: tokens.Access,
 		Expires:     utils.AccessExpires.Milliseconds(),
 	})

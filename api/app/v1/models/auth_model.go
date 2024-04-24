@@ -6,7 +6,7 @@ type LoginUser struct {
 	Password string `json:"password" validate:"required,lte=120,gte=8"`
 }
 
-type LoginRespose struct {
+type LoginResponse struct {
 	AccessToken string `json:"access_token"`
 	Expires     int64  `json:"expires"`
 }
