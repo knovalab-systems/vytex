@@ -4,6 +4,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/configs"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/knovalab-systems/vytex/pkg/routes"
+	"github.com/knovalab-systems/vytex/platform/database"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,6 +21,9 @@ func main() {
 
 	// middlewares
 	middlewares.EchoMiddleware(e)
+
+	// database
+	database.Db("")
 
 	// routes
 	routes.PublicRoutes(e)

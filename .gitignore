@@ -11,6 +11,7 @@ dist-ssr
 
 # Environment variables
 .env
+*.db
 
 # Logs
 logs

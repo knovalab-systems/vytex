@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -18,20 +19,24 @@ type Config struct {
 	SSLMode  string
 }
 
-func Db() *gorm.DB {
+func Db(host string) *gorm.DB {
 	var dbUrl string
-
+	dbHost := host
 	env := os.Getenv("ENV")
 
 	if env == "test" {
-		dbHost := os.Getenv("TEST_HOST")
+		if host == "" {
+			dbHost = os.Getenv("TEST_HOST")
+		}
 		dbPort := os.Getenv("TEST_PORT")
 		dbUser := os.Getenv("TEST_USER")
 		dbName := os.Getenv("TEST_NAME")
 		dbPassWord := os.Getenv("TEST_PASSWORD")
 		dbUrl = makeUrl(dbHost, dbPort, dbUser, dbName, dbPassWord)
 	} else {
-		dbHost := os.Getenv("DB_HOST")
+		if host == "" {
+			dbHost = os.Getenv("DB_HOST")
+		}
 		dbPort := os.Getenv("DB_PORT")
 		dbUser := os.Getenv("DB_USER")
 		dbName := os.Getenv("DB_NAME")
@@ -44,7 +49,7 @@ func Db() *gorm.DB {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
 
-	db.AutoMigrate()
+	db.AutoMigrate(&models.User{}, &models.Session{})
 
 	return db
 }
