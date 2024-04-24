@@ -9,6 +9,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// Login user
+// @Summary      Login
+// @Description  Given a correct user name and password get access
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Param		 username body string true "User's username"
+// @Param		 password body string true "User's password"
+// @Success      200 {object} models.LoginRespose
+// @Failure      400
+// @Failure      401
+// @Failure      500
+// @Router       /login [post]
 func Login(c echo.Context) (err error) {
 
 	// for keep user
@@ -16,11 +29,11 @@ func Login(c echo.Context) (err error) {
 
 	// body validation
 	if err = c.Bind(u); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Payload")
+		return utils.NewHTTPError(http.StatusBadRequest)
 	}
 
 	if err = c.Validate(u); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid Payload")
+		return utils.NewHTTPError(http.StatusBadRequest)
 	}
 
 	// get user, peding
@@ -29,13 +42,13 @@ func Login(c echo.Context) (err error) {
 
 	// check user
 	if u.UserName != user || u.Password != pass {
-		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid Payload")
+		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
 
 	// generate tokends
 	tokens, err := utils.GenerateTokens(u.UserName)
 	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
 
 	// create n set cookie
@@ -46,8 +59,8 @@ func Login(c echo.Context) (err error) {
 	refreshCookie.HttpOnly = true
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, echo.Map{
-		"access_token": tokens.Access,
-		"expires":      utils.AccessExpires.Milliseconds(),
+	return c.JSON(http.StatusOK, models.LoginRespose{
+		AccessToken: tokens.Access,
+		Expires:     utils.AccessExpires.Milliseconds(),
 	})
 }

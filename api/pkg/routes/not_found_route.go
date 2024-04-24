@@ -12,9 +12,7 @@ func NotFoundRoute(e *echo.Echo) {
 	// Create route group
 	route := e.Group("/")
 
-	problemDetails := utils.NewHTTP(http.StatusNotFound)
-
-	route.GET("*", func(c echo.Context) error {
-		return c.JSON(http.StatusNotFound, problemDetails)
+	route.RouteNotFound("*", func(c echo.Context) error {
+		return utils.NewHTTPError(http.StatusNotFound)
 	})
 }

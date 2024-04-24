@@ -3,19 +3,23 @@ package utils
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"log"
 	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/knovalab-systems/vytex/app/v1/models"
 )
 
-// Tokens struct to describe tokens object.
-type Tokens struct {
-	Access  string
-	Refresh string
-}
+// Types for tokens
+type (
+	JWTClaims struct {
+		UserName string `json:"username"`
+		jwt.RegisteredClaims
+	}
+	Tokens struct {
+		Access  string
+		Refresh string
+	}
+)
 
 const AccessExpires time.Duration = time.Minute * 15
 const RefreshExpires time.Duration = time.Hour * 720
@@ -46,10 +50,8 @@ func GenerateAccessToken(username string) (string, error) {
 	// env access key
 	secret := os.Getenv("JWT_ACCESS_KEY")
 
-	log.Println(secret)
-
 	// create claims
-	claims := &models.JWTClaims{
+	claims := &JWTClaims{
 		UserName: username,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(AccessExpires)),

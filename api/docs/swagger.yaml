@@ -1,7 +1,51 @@
-basePath: /v1
+basePath: /api/v1
+consumes:
+- application/json
+definitions:
+  models.LoginRespose:
+    properties:
+      access_token:
+        type: string
+      expires:
+        type: integer
+    type: object
 info:
   contact: {}
   title: Vytex API
   version: "0.0"
-paths: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Given a correct user name and password get access
+      parameters:
+      - description: User's username
+        in: body
+        name: username
+        required: true
+        schema:
+          type: string
+      - description: User's password
+        in: body
+        name: password
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LoginRespose'
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Login
+      tags:
+      - Auth
 swagger: "2.0"

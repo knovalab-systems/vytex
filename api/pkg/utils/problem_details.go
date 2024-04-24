@@ -1,6 +1,10 @@
 package utils
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/labstack/echo/v4"
+)
 
 //RFC 9457
 
@@ -56,7 +60,18 @@ func New(statusCode int, problemType, title, detail, instance string) *ProblemDe
 	}
 }
 
-// NewHTTP creates a new ProblemDetails error based just the HTTP Status Code
-func NewHTTP(statusCode int) *ProblemDetails {
-	return New(statusCode, "", "", "", "")
+// NewHTTPError creates response with a new ProblemDetails error based just the HTTP Status Code
+func NewHTTPError(statusCode int) *echo.HTTPError {
+	return echo.NewHTTPError(statusCode, New(statusCode, "", "", "", ""))
+}
+
+// NewHTTP creates response with a new ProblemDetail
+func NewHTTPErrorDetail(statusCode int, problemType, title, detail, instance string) *echo.HTTPError {
+	return echo.NewHTTPError(statusCode, &ProblemDetails{
+		Type:     problemType,
+		Title:    title,
+		Status:   statusCode,
+		Detail:   detail,
+		Instance: instance,
+	})
 }

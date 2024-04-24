@@ -13,8 +13,9 @@ func EchoMiddleware(e *echo.Echo) {
 		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 			LogStatus: true,
 			LogURI:    true,
+			LogMethod: true,
 			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-				log.Printf("status: %v, uri: %v \n", v.Status, v.URI)
+				log.Printf("%v %v, uri: %v \n", v.Method, v.Status, v.URI)
 				return nil
 			}}),
 		middleware.Recover(),
