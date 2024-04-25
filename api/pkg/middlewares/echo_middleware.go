@@ -19,6 +19,9 @@ func EchoMiddleware(e *echo.Echo) {
 				return nil
 			}}),
 		middleware.Recover(),
-		middleware.CORS(),
-	)
+		middleware.CORSWithConfig(middleware.CORSConfig{
+			AllowOrigins:     []string{"http://localhost:4040"},
+			AllowCredentials: true,
+			AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderCookie, echo.HeaderAuthorization},
+			AllowMethods:     []string{echo.GET, echo.HEAD, echo.PUT, echo.PATCH, echo.POST, echo.DELETE, echo.OPTIONS}}))
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/gen"
 )
 
-func UserByUserName(userName string) (*models.User, error) {
+func UserForLogin(userName string) (*models.User, error) {
 	table := gen.User
 	user, err := table.Where(table.UserName.Eq(userName)).First()
 	return user, err

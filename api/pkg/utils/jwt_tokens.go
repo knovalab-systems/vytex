@@ -22,7 +22,7 @@ type (
 )
 
 const AccessExpires time.Duration = time.Minute * 15
-const RefreshExpires time.Duration = time.Hour * 720
+const RefreshExpires time.Duration = time.Hour * 168
 const RefreshCookieName = "vytex_refresh_token"
 
 func GenerateTokens(userId string) (*Tokens, error) {

@@ -39,7 +39,7 @@ func Login(c echo.Context) (err error) {
 	}
 
 	// get user
-	user, err := queries.UserByUserName(u.UserName)
+	user, err := queries.UserForLogin(u.UserName)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
@@ -65,17 +65,14 @@ func Login(c echo.Context) (err error) {
 	}
 
 	// create n set cookie
-	refreshCookie := new(http.Cookie)
-	refreshCookie.Name = utils.RefreshCookieName
-	refreshCookie.Value = tokens.Refresh
-	refreshCookie.Expires = expires
-	refreshCookie.HttpOnly = true
+	// create n set cookie
+	refreshCookie := generateRefreshCookie(expires, tokens.Refresh)
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, models.LoginResponse{
+	return c.JSON(http.StatusOK, utils.NewResponseData(models.LoginResponse{
 		AccessToken: tokens.Access,
 		Expires:     utils.AccessExpires.Milliseconds(),
-	})
+	}))
 }
 
 func Refresh(c echo.Context) (err error) {
@@ -96,14 +93,38 @@ func Refresh(c echo.Context) (err error) {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
 
-	// generate new token
-	token, err := utils.GenerateAccessToken(s.UserID)
+	// generate tokens
+	expires := time.Now().Add(utils.RefreshExpires)
+	tokens, err := utils.GenerateTokens(s.UserID)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
 
-	return c.JSON(http.StatusOK, models.LoginResponse{
-		AccessToken: token,
+	// save refresh token
+	err = queries.RegisterRefresh(s.UserID, tokens.Refresh, expires)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	// create n set cookie
+	refreshCookie := generateRefreshCookie(expires, tokens.Refresh)
+	c.SetCookie(refreshCookie)
+
+	return c.JSON(http.StatusOK, utils.NewResponseData(models.LoginResponse{
+		AccessToken: tokens.Access,
 		Expires:     utils.AccessExpires.Milliseconds(),
-	})
+	}))
+}
+
+func generateRefreshCookie(expires time.Time, token string) *http.Cookie {
+	c := new(http.Cookie)
+	c.Name = utils.RefreshCookieName
+	c.Value = token
+	c.Expires = expires
+	c.HttpOnly = true
+	c.SameSite = http.SameSiteLaxMode
+	c.Path = "/"
+	c.MaxAge = int(utils.RefreshExpires.Seconds())
+
+	return c
 }
