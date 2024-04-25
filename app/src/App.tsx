@@ -2,6 +2,7 @@ import { createSignal } from 'solid-js';
 import solidLogo from './assets/solid.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
+import { Button } from './components/ui/button';
 
 function App() {
 	const [count, setCount] = createSignal(0);
@@ -18,9 +19,7 @@ function App() {
 			</div>
 			<h1>Vite + Solid </h1>
 			<div class='card'>
-				<button type='button' onClick={() => setCount(count => count + 1)}>
-					count is {count()}
-				</button>
+				<button type="button" onclick={() => setCount(count => count + 1)}>{count()}</button>
 				<p>
 					Edit <code>src/App.tsx</code> and save to test HMR
 				</p>
