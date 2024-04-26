@@ -1,7 +1,7 @@
 /**@type {import("tailwindcss").Config} */
 module.exports = {
 	darkMode: ['class', '[data-kb-theme="dark"]'],
-	content: ['./src/**/*.{ts,tsx}'],
+	content: ['./index.html', './src/**/*.{ts,tsx}'],
 	theme: {
 		container: {
 			center: true,
@@ -91,6 +91,9 @@ module.exports = {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'content-show': 'content-show 0.2s ease-out',
 				'content-hide': 'content-hide 0.2s ease-out',
+			},
+			backgroundImage: {
+				bg: "url('/vytex.webp')",
 			},
 		},
 	},

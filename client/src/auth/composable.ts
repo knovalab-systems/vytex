@@ -38,8 +38,7 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 			const authData = await storage.get();
 
 			if (refreshPromise || !authData?.expires_at) {
-				await activeRefresh();
-				return;
+				return await activeRefresh();
 			}
 
 			if (authData.expires_at < new Date().getTime() + authConfig.msRefreshBeforeExpires) {
@@ -48,7 +47,7 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 				});
 			}
 
-			await activeRefresh();
+			return activeRefresh();
 		};
 
 		const setCredentials = (data: AuthenticationData) => {
@@ -149,7 +148,9 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 				resetStorage();
 			},
 			async getToken() {
-				await refreshIfExpired();
+				await refreshIfExpired().catch(() => {
+					/* fail gracefully */
+				});
 
 				const data = await storage.get();
 				return data?.access_token ?? null;
