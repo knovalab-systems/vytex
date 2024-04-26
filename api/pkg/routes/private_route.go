@@ -1,7 +1,6 @@
 package routes
 
 import (
-	"github.com/knovalab-systems/vytex/app/v1/controllers"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/labstack/echo/v4"
 )
@@ -13,7 +12,5 @@ func PrivateRoutes(e *echo.Echo) {
 
 	// Config middleware with the custom claims type
 	middlewares.JwtMiddleware(route)
-
-	route.POST("/refresh", controllers.Refresh)
 
 }

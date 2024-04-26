@@ -16,6 +16,8 @@ func PublicRoutes(e *echo.Echo) {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
+	// auth routes
 	route.POST("/login", controllers.Login)
+	route.POST("/refresh", controllers.Refresh)
 
 }

@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/app/v1/queries"
 	"github.com/knovalab-systems/vytex/pkg/utils"
@@ -82,13 +81,8 @@ func Refresh(c echo.Context) (err error) {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
 
-	// get the user from jwt
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.JWTClaims)
-	userId := claims.UserId
-
 	// check refresh in db
-	s, err := queries.ValidRefresh(userId, cookie.Value)
+	s, err := queries.ValidRefresh(cookie.Value)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
@@ -102,6 +96,12 @@ func Refresh(c echo.Context) (err error) {
 
 	// save refresh token
 	err = queries.RegisterRefresh(s.UserID, tokens.Refresh, expires)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	// delete old refresh
+	err = queries.DeleteRefresh(s.ID)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
