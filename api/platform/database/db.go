@@ -21,28 +21,13 @@ type Config struct {
 
 func Db(host string) *gorm.DB {
 	var dbUrl string
-	dbHost := host
-	env := os.Getenv("ENV")
 
-	if env == "test" {
-		if host == "" {
-			dbHost = os.Getenv("TEST_HOST")
-		}
-		dbPort := os.Getenv("TEST_PORT")
-		dbUser := os.Getenv("TEST_USER")
-		dbName := os.Getenv("TEST_NAME")
-		dbPassWord := os.Getenv("TEST_PASSWORD")
-		dbUrl = makeUrl(dbHost, dbPort, dbUser, dbName, dbPassWord)
-	} else {
-		if host == "" {
-			dbHost = os.Getenv("DB_HOST")
-		}
-		dbPort := os.Getenv("DB_PORT")
-		dbUser := os.Getenv("DB_USER")
-		dbName := os.Getenv("DB_NAME")
-		dbPassWord := os.Getenv("DB_PASSWORD")
-		dbUrl = makeUrl(dbHost, dbPort, dbUser, dbName, dbPassWord)
-	}
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbName := os.Getenv("DB_NAME")
+	dbPassWord := os.Getenv("DB_PASSWORD")
+	dbUrl = makeUrl(dbHost, dbPort, dbUser, dbName, dbPassWord)
 
 	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 	if err != nil {

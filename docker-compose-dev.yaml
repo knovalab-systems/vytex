@@ -46,21 +46,6 @@ services:
       driver: none
     attach: false
 
-  db-test:
-    image: postgres:16
-    container_name: db-test
-    environment:
-      - POSTGRES_USER=vytex-test
-      - POSTGRES_PASSWORD=vytex-test
-      - POSTGRES_DB=vytex-test
-    ports:
-      - 6432:5432
-    networks:
-      - api-net
-    logging:
-      driver: none
-    attach: false
-
   pg-admin:
     image: dpage/pgadmin4:8.5
     container_name: pgadmin
