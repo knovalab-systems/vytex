@@ -17,7 +17,7 @@ func PublicRoutes(e *echo.Echo) {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
 
-	authController := controllers.Controller{AuthRepository: &queries.AuthQuery{}}
+	authController := controllers.AuthController{AuthRepository: &queries.AuthQuery{}}
 
 	// auth routes
 	route.POST("/login", authController.Login)

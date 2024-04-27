@@ -7,26 +7,29 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/gen"
 )
 
-func UserForLogin(userName string) (*models.User, error) {
+type AuthQuery struct {
+}
+
+func (m *AuthQuery) UserForLogin(userName string) (*models.User, error) {
 	table := gen.User
 	user, err := table.Where(table.UserName.Eq(userName)).First()
 	return user, err
 }
 
-func RegisterRefresh(userId string, token string, expire time.Time) error {
+func (m *AuthQuery) RegisterRefresh(userId string, token string, expire time.Time) error {
 	table := gen.Session
 	session := models.Session{UserID: userId, RefreshToken: token, ExpiresAt: expire}
 	err := table.Create(&session)
 	return err
 }
 
-func ValidRefresh(token string) (*models.Session, error) {
+func (m *AuthQuery) ValidRefresh(token string) (*models.Session, error) {
 	table := gen.Session
 	session, err := table.Where(table.RefreshToken.Eq(token)).Where(table.ExpiresAt.Gt(time.Now())).First()
 	return session, err
 }
 
-func DeleteRefresh(id int) error {
+func (m *AuthQuery) DeleteRefresh(id int) error {
 	table := gen.Session
 	_, err := table.Where(table.ID.Eq(id)).Delete()
 	return err

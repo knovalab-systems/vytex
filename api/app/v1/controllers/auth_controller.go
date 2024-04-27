@@ -5,10 +5,14 @@ import (
 	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/app/v1/queries"
+	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
+
+type AuthController struct {
+	repository.AuthRepository
+}
 
 // Login user
 // @Summary      Login
@@ -23,7 +27,7 @@ import (
 // @Failure      401
 // @Failure      500
 // @Router       /login [post]
-func Login(c echo.Context) (err error) {
+func (m *AuthController) Login(c echo.Context) (err error) {
 
 	// for keep user
 	u := new(models.LoginUser)
@@ -38,7 +42,7 @@ func Login(c echo.Context) (err error) {
 	}
 
 	// get user
-	user, err := queries.UserForLogin(u.UserName)
+	user, err := m.AuthRepository.UserForLogin(u.UserName)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
@@ -58,7 +62,7 @@ func Login(c echo.Context) (err error) {
 	}
 
 	// save refresh token
-	err = queries.RegisterRefresh(user.ID, tokens.Refresh, expires)
+	err = m.AuthRepository.RegisterRefresh(user.ID, tokens.Refresh, expires)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
@@ -83,7 +87,7 @@ func Login(c echo.Context) (err error) {
 // @Failure      401
 // @Failure      500
 // @Router       /refresh [post]
-func Refresh(c echo.Context) (err error) {
+func (m *AuthController) Refresh(c echo.Context) (err error) {
 	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
 	if err != nil {
@@ -91,7 +95,7 @@ func Refresh(c echo.Context) (err error) {
 	}
 
 	// check refresh in db
-	s, err := queries.ValidRefresh(cookie.Value)
+	s, err := m.ValidRefresh(cookie.Value)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusUnauthorized)
 	}
@@ -104,13 +108,13 @@ func Refresh(c echo.Context) (err error) {
 	}
 
 	// save refresh token
-	err = queries.RegisterRefresh(s.UserID, tokens.Refresh, expires)
+	err = m.AuthRepository.RegisterRefresh(s.UserID, tokens.Refresh, expires)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
 
 	// delete old refresh
-	err = queries.DeleteRefresh(s.ID)
+	err = m.AuthRepository.DeleteRefresh(s.ID)
 	if err != nil {
 		return utils.NewHTTPError(http.StatusInternalServerError)
 	}
