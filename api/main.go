@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/knovalab-systems/vytex/pkg/configs"
+	"github.com/knovalab-systems/vytex/pkg/config"
 	"github.com/knovalab-systems/vytex/pkg/gen"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/knovalab-systems/vytex/pkg/routes"
@@ -17,8 +17,8 @@ func main() {
 	e := echo.New()
 
 	// configs
-	configs.EchoValidator(e)
-	configs.LoadEnv()
+	config.EchoValidator(e)
+	config.LoadEnv()
 
 	// middlewares
 	middlewares.EchoMiddleware(e)
