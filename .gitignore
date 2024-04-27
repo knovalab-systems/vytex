@@ -3,7 +3,6 @@
 build/
 tmp/
 node_modules
-request
 dist
 dist-ssr
 

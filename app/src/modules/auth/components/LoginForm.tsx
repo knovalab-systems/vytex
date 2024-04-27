@@ -28,21 +28,21 @@ function LoginForm() {
 	};
 
 	return (
-		<div class='grid md:grid-cols-3 w-full h-full '>
-			<div class='hidden md:block col-span-2 bg-bg' />
-			<Form class='my-auto md:m-auto md:w-3/5 xl:w-5/6' onSubmit={handleSubmit}>
-				<div class='flex flex-col justify-center gap-6 p-8 m-4 bg-white rounded-md border border-gray-100 shadow-md'>
-					<h1 class='text-left text-2xl font-bold'>
+		<div class="grid md:grid-cols-3 w-full h-full ">
+			<div class="hidden md:block col-span-2 bg-bg" />
+			<Form class="my-auto md:m-auto md:w-3/5 xl:w-5/6" onSubmit={handleSubmit}>
+				<div class="flex flex-col justify-center gap-6 p-8 m-4 bg-white rounded-md border border-gray-100 shadow-md">
+					<h1 class="text-left text-2xl font-bold">
 						Bienvenido a Vytex <br />
 						Inicia sesión para continuar
 					</h1>
-					<Field name='email'>
+					<Field name="email">
 						{(field, props) => (
 							<div>
-								<Label for='username-field'>Nombre de usuario</Label>
+								<Label for="username-field">Nombre de usuario</Label>
 								<Input
-									placeholder='jose23'
-									id='username-field'
+									placeholder="jose23"
+									id="username-field"
 									aria-errormessage={field.error}
 									required
 									value={field.value}
@@ -51,15 +51,15 @@ function LoginForm() {
 							</div>
 						)}
 					</Field>
-					<Field name='password'>
+					<Field name="password">
 						{(field, props) => (
 							<div>
-								<Label for='pass-field'>Contraseña</Label>
+								<Label for="pass-field">Contraseña</Label>
 								<Input
 									value={field.value}
-									placeholder='*********'
-									type='password'
-									id='pass-field'
+									placeholder="*********"
+									type="password"
+									id="pass-field"
 									aria-errormessage={field.error}
 									required
 									{...props}
@@ -67,7 +67,7 @@ function LoginForm() {
 							</div>
 						)}
 					</Field>
-					<Button disabled={disabled()} type='submit'>
+					<Button disabled={disabled()} type="submit">
 						Iniciar sesión
 					</Button>
 				</div>

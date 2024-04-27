@@ -18,7 +18,6 @@ func PublicRoutes(e *echo.Echo) {
 
 	// auth routes
 	route.POST("/login", controllers.Login)
-	route.POST("/logout", controllers.Logout)
 	route.POST("/refresh", controllers.Refresh)
 
 }

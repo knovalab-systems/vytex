@@ -1,7 +1,6 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
 import ProtectedWrapper from '~/components/ProtectedWrapper';
-import Home from '~/pages/HomePage';
 import { LOGIN_PATH } from '~/utils/paths';
 
 const LoginPage = lazy(() => import('~/modules/auth/pages/LoginPage'));
@@ -11,10 +10,10 @@ function Routes() {
 	return (
 		<>
 			<Route path={'/'} component={ProtectedWrapper}>
-				<Route path={'/'} component={Home} />
+				<Route path={'/'} component={() => <div>home</div>} />
 			</Route>
 			<Route path={LOGIN_PATH} component={LoginPage} />
-			<Route path='*404' component={NotFoundPage} />
+			<Route path="*404" component={NotFoundPage} />
 		</>
 	);
 }
