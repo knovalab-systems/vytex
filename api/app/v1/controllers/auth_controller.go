@@ -18,7 +18,7 @@ import (
 // @Produce      json
 // @Param		 username body string true "User's username"
 // @Param		 password body string true "User's password"
-// @Success      200 {object} models.LoginRespose
+// @Success      200 {object} models.LoginResponse
 // @Failure      400
 // @Failure      401
 // @Failure      500
@@ -74,6 +74,15 @@ func Login(c echo.Context) (err error) {
 	}))
 }
 
+// Refresh user credentials
+// @Summary      Refresh
+// @Description  Given a correct refresh cookie get access
+// @Tags         Auth
+// @Produce      json
+// @Success      200 {object} models.LoginResponse
+// @Failure      401
+// @Failure      500
+// @Router       /refresh [post]
 func Refresh(c echo.Context) (err error) {
 	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
