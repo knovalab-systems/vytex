@@ -18,7 +18,7 @@ import (
 // @Produce      json
 // @Param		 username body string true "User's username"
 // @Param		 password body string true "User's password"
-// @Success      200 {object} models.LoginRespose
+// @Success      200 {object} models.LoginResponse
 // @Failure      400
 // @Failure      401
 // @Failure      500
@@ -127,4 +127,51 @@ func generateRefreshCookie(expires time.Time, token string) *http.Cookie {
 	c.MaxAge = int(utils.RefreshExpires.Seconds())
 
 	return c
+}
+
+// Logout user
+// @Summary      Logout
+// @Description  Remove the refresh token from the database and delete the cookie
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Success      200
+// @Failure      401
+// @Failure      500
+// @Router       /logout [post]
+func Logout(c echo.Context) (err error) {
+	// get the cookie using the name
+	cookie, err := c.Cookie(utils.RefreshCookieName)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusUnauthorized)
+	}
+
+	// check refresh in db
+	s, err := queries.ValidRefresh(cookie.Value)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusUnauthorized)
+	}
+
+	// delete old refresh
+	err = queries.DeleteRefresh(s.ID)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	// delete cookie
+	clearRefreshCookie(c)
+
+	return c.JSON(http.StatusOK, utils.NewResponseData(nil))
+}
+
+func clearRefreshCookie(c echo.Context) {
+	c.SetCookie(&http.Cookie{
+		Name:     utils.RefreshCookieName,
+		Value:    "",
+		Expires:  time.Now(),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Path:     "/",
+		MaxAge:   -1,
+	})
 }
