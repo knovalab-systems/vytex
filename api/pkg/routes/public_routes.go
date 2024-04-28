@@ -22,5 +22,6 @@ func PublicRoutes(e *echo.Echo) {
 	// auth routes
 	route.POST("/login", authController.Login)
 	route.POST("/refresh", authController.Refresh)
+	route.POST("/logout", authController.Logout)
 
 }

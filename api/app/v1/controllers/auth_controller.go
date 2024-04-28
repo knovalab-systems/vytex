@@ -141,3 +141,50 @@ func generateRefreshCookie(expires time.Time, token string) *http.Cookie {
 
 	return c
 }
+
+// Logout user
+// @Summary      Logout
+// @Description  Remove the refresh token from the database and delete the cookie
+// @Tags         Auth
+// @Accept       json
+// @Produce      json
+// @Success      200
+// @Failure      401
+// @Failure      500
+// @Router       /logout [post]
+func (m *AuthController) Logout(c echo.Context) (err error) {
+	// get the cookie using the name
+	cookie, err := c.Cookie(utils.RefreshCookieName)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusUnauthorized)
+	}
+
+	// check refresh in db
+	s, err := m.AuthRepository.ValidRefresh(cookie.Value)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusUnauthorized)
+	}
+
+	// delete old refresh
+	err = m.AuthRepository.DeleteRefresh(s.ID)
+	if err != nil {
+		return utils.NewHTTPError(http.StatusInternalServerError)
+	}
+
+	// delete cookie
+	clearRefreshCookie(c)
+
+	return c.JSON(http.StatusOK, utils.NewResponseData(nil))
+}
+
+func clearRefreshCookie(c echo.Context) {
+	c.SetCookie(&http.Cookie{
+		Name:     utils.RefreshCookieName,
+		Value:    "",
+		Expires:  time.Now(),
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Path:     "/",
+		MaxAge:   -1,
+	})
+}
