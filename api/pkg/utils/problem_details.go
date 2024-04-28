@@ -2,8 +2,6 @@ package utils
 
 import (
 	"net/http"
-
-	"github.com/labstack/echo/v4"
 )
 
 // RFC 9457
@@ -61,17 +59,14 @@ func New(statusCode int, problemType, title, detail, instance string) *ProblemDe
 }
 
 // NewHTTPError creates response with a new ProblemDetails error based just the HTTP Status Code
-func NewHTTPError(statusCode int) *echo.HTTPError {
-	return echo.NewHTTPError(statusCode, New(statusCode, "", "", "", ""))
+func ProblemDetailsCode(statusCode int) *ProblemDetails {
+	return New(statusCode, "", "", "", "")
 }
 
-// NewHTTP creates response with a new ProblemDetail
-func NewHTTPErrorDetail(statusCode int, problemType, title, detail, instance string) *echo.HTTPError {
-	return echo.NewHTTPError(statusCode, &ProblemDetails{
-		Type:     problemType,
-		Title:    title,
-		Status:   statusCode,
-		Detail:   detail,
-		Instance: instance,
-	})
+func AuthProblemDetails() *ProblemDetails {
+	return New(http.StatusUnauthorized, "", "INVALID_CREDENTIAL", "Invalid user credentials", "")
+}
+
+func ServerErrorProblemDetails() *ProblemDetails {
+	return New(http.StatusInternalServerError, "", "SERVER ERROR", "", "")
 }
