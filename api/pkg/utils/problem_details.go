@@ -64,9 +64,9 @@ func ProblemDetailsCode(statusCode int) *ProblemDetails {
 }
 
 func AuthProblemDetails() *ProblemDetails {
-	return New(http.StatusUnauthorized, "", "INVALID_CREDENTIAL", "Invalid user credentials", "")
+	return New(http.StatusUnauthorized, "", "", "Invalid user credentials", "")
 }
 
 func ServerErrorProblemDetails() *ProblemDetails {
-	return New(http.StatusInternalServerError, "", "SERVER ERROR", "", "")
+	return New(http.StatusInternalServerError, "", "", "", "")
 }
