@@ -2,7 +2,6 @@ package mocks
 
 import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -27,18 +26,5 @@ func (m *AuthMock) RegisterRefresh(id string, token string) error {
 
 func (m *AuthMock) ValidRefresh(token string) (*models.Session, error) {
 	args := m.Called(token)
-	return args.Get(0).(*models.Session), args.Error(0)
-
-}
-
-type TokenMock struct {
-	mock.Mock
-}
-
-func (m *TokenMock) GenerateTokens(id string) (*utils.Tokens, error) {
-	args := m.Called(id)
-	return &utils.Tokens{
-		Access:  args.String(0),
-		Refresh: args.String(0),
-	}, nil
+	return args.Get(0).(*models.Session), args.Error(1)
 }

@@ -104,7 +104,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	// generate tokens
 	tokens, err := m.GenerateTokens(s.UserID)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
 	// save refresh token
