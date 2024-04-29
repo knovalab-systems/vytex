@@ -15,6 +15,9 @@ services:
     networks:
     - app-net
     - api-net
+    depends_on:
+      db-dev:
+        condition: service_healthy
     
   app-dev:
     container_name: app-dev
@@ -28,6 +31,9 @@ services:
     - 4040:4040
     networks:
     - app-net
+    depends_on:
+      api-dev:
+        condition: service_started
 
   db-dev:
     image: postgres:16
@@ -42,9 +48,12 @@ services:
       - 5432:5432
     networks:
       - api-net
-    logging:
-      driver: none
     attach: false
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
 
   pg-admin:
     image: dpage/pgadmin4:8.5
@@ -59,10 +68,10 @@ services:
     restart: unless-stopped
     networks:
       - api-net
-    logging:
-      driver: none
     attach: false
-
+    depends_on:
+      db-dev:
+        condition: service_healthy
 
 networks:
   app-net:
@@ -72,8 +81,7 @@ volumes:
   pgadmin-vytex:
   db-vytex:
 
-# to run without logs by container: docker compose up --no-log-prefix   
-
+# to run: docker compose -f docker-compose-dev.yaml up
 # remove logs from other services
 #  logging:
 #     driver: none
