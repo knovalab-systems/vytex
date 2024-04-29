@@ -12,6 +12,7 @@ import (
 
 type AuthController struct {
 	repository.AuthRepository
+	repository.TokensRepository
 }
 
 // Login user
@@ -27,55 +28,55 @@ type AuthController struct {
 // @Failure      401
 // @Failure      500
 // @Router       /login [post]
-func (m *AuthController) Login(c echo.Context) (err error) {
-
+func (m *AuthController) Login(c echo.Context) error {
 	// for keep user
 	u := new(models.LoginUser)
 
-	// body validation
-	if err = c.Bind(u); err != nil {
-		return utils.NewHTTPError(http.StatusBadRequest)
+	// body bind
+	if err := c.Bind(u); err != nil {
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
-	if err = c.Validate(u); err != nil {
-		return utils.NewHTTPError(http.StatusBadRequest)
+	// body validation
+	if err := c.Validate(u); err != nil {
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	// get user
 	user, err := m.AuthRepository.UserForLogin(u.UserName)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusUnauthorized)
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	//pending to encrypt pass
 
 	// check user
-	if u.UserName != user.UserName || u.Password != user.Password {
-		return utils.NewHTTPError(http.StatusUnauthorized)
+	if u.Password != user.Password {
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	// generate tokens
-	expires := time.Now().Add(utils.RefreshExpires)
-	tokens, err := utils.GenerateTokens(user.ID)
+	tokens, err := m.GenerateTokens(user.ID)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusInternalServerError)
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
 	// save refresh token
-	err = m.AuthRepository.RegisterRefresh(user.ID, tokens.Refresh, expires)
+	err = m.AuthRepository.RegisterRefresh(user.ID, tokens.Refresh)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusInternalServerError)
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
 	// create n set cookie
-	// create n set cookie
-	refreshCookie := generateRefreshCookie(expires, tokens.Refresh)
+	refreshCookie := generateRefreshCookie(tokens.Refresh)
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, utils.NewResponseData(models.LoginResponse{
-		AccessToken: tokens.Access,
-		Expires:     utils.AccessExpires.Milliseconds(),
-	}))
+	return c.JSON(http.StatusOK, models.AuthResponse{
+		Data: models.DataAuthResponse{
+			AccessToken: tokens.Access,
+			Expires:     utils.AccessExpires.Milliseconds(),
+		},
+	})
 }
 
 // Refresh user credentials
@@ -87,49 +88,51 @@ func (m *AuthController) Login(c echo.Context) (err error) {
 // @Failure      401
 // @Failure      500
 // @Router       /refresh [post]
-func (m *AuthController) Refresh(c echo.Context) (err error) {
+func (m *AuthController) Refresh(c echo.Context) error {
 	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusUnauthorized)
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	// check refresh in db
 	s, err := m.ValidRefresh(cookie.Value)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusUnauthorized)
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	// generate tokens
-	expires := time.Now().Add(utils.RefreshExpires)
-	tokens, err := utils.GenerateTokens(s.UserID)
+	tokens, err := m.GenerateTokens(s.UserID)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusInternalServerError)
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
 	// save refresh token
-	err = m.AuthRepository.RegisterRefresh(s.UserID, tokens.Refresh, expires)
+	err = m.AuthRepository.RegisterRefresh(s.UserID, tokens.Refresh)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusInternalServerError)
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
 	// delete old refresh
 	err = m.AuthRepository.DeleteRefresh(s.ID)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusInternalServerError)
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
 	// create n set cookie
-	refreshCookie := generateRefreshCookie(expires, tokens.Refresh)
+	refreshCookie := generateRefreshCookie(tokens.Refresh)
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, utils.NewResponseData(models.LoginResponse{
-		AccessToken: tokens.Access,
-		Expires:     utils.AccessExpires.Milliseconds(),
-	}))
+	return c.JSON(http.StatusOK, models.AuthResponse{
+		Data: models.DataAuthResponse{
+			AccessToken: tokens.Access,
+			Expires:     utils.AccessExpires.Milliseconds(),
+		},
+	})
 }
 
-func generateRefreshCookie(expires time.Time, token string) *http.Cookie {
+func generateRefreshCookie(token string) *http.Cookie {
+	expires := time.Now().Add(utils.RefreshExpires)
 	c := new(http.Cookie)
 	c.Name = utils.RefreshCookieName
 	c.Value = token

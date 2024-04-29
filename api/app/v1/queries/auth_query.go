@@ -5,6 +5,7 @@ import (
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/gen"
+	"github.com/knovalab-systems/vytex/pkg/utils"
 )
 
 type AuthQuery struct {
@@ -16,7 +17,8 @@ func (m *AuthQuery) UserForLogin(userName string) (*models.User, error) {
 	return user, err
 }
 
-func (m *AuthQuery) RegisterRefresh(userId string, token string, expire time.Time) error {
+func (m *AuthQuery) RegisterRefresh(userId string, token string) error {
+	expire := time.Now().Add(utils.RefreshExpires)
 	table := gen.Session
 	session := models.Session{UserID: userId, RefreshToken: token, ExpiresAt: expire}
 	err := table.Create(&session)

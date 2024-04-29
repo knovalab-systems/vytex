@@ -13,6 +13,6 @@ func NotFoundRoute(e *echo.Echo) {
 	route := e.Group("/")
 
 	route.RouteNotFound("*", func(c echo.Context) error {
-		return utils.NewHTTPError(http.StatusNotFound)
+		return c.JSON(http.StatusNotFound, utils.ProblemDetailsCode(http.StatusNotFound))
 	})
 }

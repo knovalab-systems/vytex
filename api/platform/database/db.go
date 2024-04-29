@@ -20,14 +20,17 @@ type Config struct {
 }
 
 func Db(host string) *gorm.DB {
-	var dbUrl string
+	dbHost := host
 
-	dbHost := os.Getenv("DB_HOST")
+	if host == "" {
+		dbHost = os.Getenv("DB_HOST")
+	}
+
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbName := os.Getenv("DB_NAME")
 	dbPassWord := os.Getenv("DB_PASSWORD")
-	dbUrl = makeUrl(dbHost, dbPort, dbUser, dbName, dbPassWord)
+	dbUrl := makeUrl(dbHost, dbPort, dbUser, dbName, dbPassWord)
 
 	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
 	if err != nil {
