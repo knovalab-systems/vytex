@@ -155,29 +155,29 @@ func generateRefreshCookie(token string) *http.Cookie {
 // @Failure      401
 // @Failure      500
 // @Router       /logout [post]
-func (m *AuthController) Logout(c echo.Context) (err error) {
-	// get the cookie using the name
+func (m *AuthController) Logout(c echo.Context) error {
+
+	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusUnauthorized)
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	// check refresh in db
 	s, err := m.AuthRepository.ValidRefresh(cookie.Value)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusUnauthorized)
+		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
 	}
 
 	// delete old refresh
 	err = m.AuthRepository.DeleteRefresh(s.ID)
 	if err != nil {
-		return utils.NewHTTPError(http.StatusInternalServerError)
+		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
 	}
 
-	// delete cookie
 	clearRefreshCookie(c)
+	return c.NoContent(http.StatusOK)
 
-	return c.JSON(http.StatusOK, utils.NewResponseData(nil))
 }
 
 func clearRefreshCookie(c echo.Context) {
