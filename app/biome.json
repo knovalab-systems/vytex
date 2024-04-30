@@ -1,7 +1,5 @@
 {
-	"extends": [
-		"../biome.json"
-	],
+	"extends": ["../biome.json"],
 	"javascript": {
 		"formatter": {
 			"jsxQuoteStyle": "single"

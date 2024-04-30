@@ -1,4 +1,5 @@
 /// <reference types="vitest" />
+import path from 'node:path';
 import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
 
@@ -6,9 +7,6 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'jsdom',
-		// if you have few tests, try commenting one
-		// or both out to improve performance:
-		// threads: false,
 		// isolate: false,
 	},
 	plugins: [solid()],
@@ -21,5 +19,8 @@ export default defineConfig({
 	},
 	resolve: {
 		conditions: ['development', 'browser'],
+		alias: {
+			'~': path.resolve(__dirname, './src'),
+		},
 	},
 });

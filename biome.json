@@ -12,18 +12,14 @@
 	"formatter": {
 		"enabled": true,
 		"lineWidth": 120,
-		"ignore": [
-			"dist",
-			"node_modules",
-			"data",
-			"uploads"
-		]
+		"ignore": ["dist", "node_modules", "data", "uploads"]
 	},
 	"javascript": {
 		"formatter": {
 			"semicolons": "always",
 			"quoteStyle": "single",
-			"arrowParentheses": "asNeeded"
+			"arrowParentheses": "asNeeded",
+			"jsxQuoteStyle": "single"
 		}
 	},
 	"files": {

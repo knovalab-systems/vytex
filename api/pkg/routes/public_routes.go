@@ -3,6 +3,9 @@ package routes
 import (
 	"net/http"
 
+	"github.com/knovalab-systems/vytex/app/v1/controllers"
+	"github.com/knovalab-systems/vytex/app/v1/queries"
+	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -14,5 +17,11 @@ func PublicRoutes(e *echo.Echo) {
 	route.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, World!")
 	})
+
+	authController := controllers.AuthController{AuthRepository: &queries.AuthQuery{}, TokensRepository: &utils.JwtTokends{}}
+
+	// auth routes
+	route.POST("/login", authController.Login)
+	route.POST("/refresh", authController.Refresh)
 
 }

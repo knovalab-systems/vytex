@@ -1,8 +1,10 @@
 package utils
 
-import "net/http"
+import (
+	"net/http"
+)
 
-//RFC 9457
+// RFC 9457
 
 type ProblemDetails struct {
 	// Type is a URI reference [RFC3986] that identifies the
@@ -56,7 +58,15 @@ func New(statusCode int, problemType, title, detail, instance string) *ProblemDe
 	}
 }
 
-// NewHTTP creates a new ProblemDetails error based just the HTTP Status Code
-func NewHTTP(statusCode int) *ProblemDetails {
+// NewHTTPError creates response with a new ProblemDetails error based just the HTTP Status Code
+func ProblemDetailsCode(statusCode int) *ProblemDetails {
 	return New(statusCode, "", "", "", "")
+}
+
+func AuthProblemDetails() *ProblemDetails {
+	return New(http.StatusUnauthorized, "", "", "Invalid user credentials", "")
+}
+
+func ServerErrorProblemDetails() *ProblemDetails {
+	return New(http.StatusInternalServerError, "", "", "", "")
 }

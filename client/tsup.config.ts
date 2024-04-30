@@ -10,8 +10,9 @@ export default defineConfig({
 	dts: true, // generate dts file for main module
 	minify: env === 'production',
 	bundle: env === 'production',
+	sourcemap: env === 'production',
 	watch: env === 'development',
 	format: ['esm'], // generate esm files
 	outDir: 'dist', // Output directory
-	entry: ['src/index.ts'],
+	entry: ['src/index.ts', 'src/auth/index.ts', 'src/rest/index.ts'],
 });
