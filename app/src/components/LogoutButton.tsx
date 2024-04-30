@@ -1,20 +1,19 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal } from 'solid-js';
 import { Button } from '~/components/ui/button';
-import { signOut } from '~/modules/auth/requests/logoutRequests';
+import { logoutRequest } from '~/modules/auth/requests/logoutRequests';
 
 const LogoutButton = (props: { navigateTo: string }) => {
 	const navigate = useNavigate();
 	const [navigateTo] = createSignal(props.navigateTo);
 
-	const logout = () => {
-		signOut()
-			.then(() => {
-				navigate(navigateTo(), { replace: true });
-			})
-			.catch(error => {
-				console.error(error);
-			});
+	const logout = async () => {
+		try {
+			await logoutRequest();
+			navigate(navigateTo(), { replace: true });
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	return (
