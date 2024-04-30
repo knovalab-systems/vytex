@@ -1,10 +1,11 @@
-import { Navigate } from '@solidjs/router';
+import { Navigate, useSearchParams } from '@solidjs/router';
 import { createResource, Switch, Match } from 'solid-js';
-import { client } from '~/utils/client';
 import LoginForm from '../components/LoginForm';
+import { refreshRequest } from '../requests/authRequests';
 
 function LoginPage() {
-	const [token] = createResource(client.refresh);
+	const [searchParams, _] = useSearchParams();
+	const [token] = createResource(searchParams.reason ? 0 : 1, refreshRequest);
 
 	return (
 		<Switch>
