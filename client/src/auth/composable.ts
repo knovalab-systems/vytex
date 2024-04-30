@@ -38,7 +38,7 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 			const authData = await storage.get();
 
 			if (refreshPromise || !authData?.expires_at) {
-				return await activeRefresh();
+				return activeRefresh();
 			}
 
 			if (authData.expires_at < new Date().getTime() + authConfig.msRefreshBeforeExpires) {

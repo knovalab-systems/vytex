@@ -42,6 +42,7 @@ function LoginForm() {
 								<Label for='username-field'>Nombre de usuario</Label>
 								<Input
 									placeholder='jose23'
+									autocomplete='on'
 									id='username-field'
 									aria-errormessage={field.error}
 									required

@@ -9,7 +9,7 @@ function ProtectedWrapper(props: { children?: JSXElement }) {
 	return (
 		<Switch>
 			<Match when={token.state === 'ready'}>{c()}</Match>
-			<Match when={token.state === 'errored'}>{<Navigate href={'/login'} />}</Match>
+			<Match when={token.state === 'errored'}>{<Navigate href={'/login?reason=TOKEN_EXPIRED'} />}</Match>
 		</Switch>
 	);
 }
