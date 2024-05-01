@@ -7,6 +7,15 @@ export default defineConfig({
 	test: {
 		globals: true,
 		environment: 'jsdom',
+		// mockReset: true,
+		server: {
+			deps: {
+				inline: true,
+			},
+		},
+		// if you have few tests, try commenting one
+		// or both out to improve performance:
+		// threads: false,
 		// isolate: false,
 	},
 	plugins: [solid()],

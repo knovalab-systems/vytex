@@ -121,3 +121,58 @@ func TestRefresh(t *testing.T) {
 	}
 
 }
+
+func TestLogout(t *testing.T) {
+	testCase := []struct {
+		Name   string
+		Cookie string
+		Code   int
+		Delete bool
+	}{
+		{Name: "Without Cookie", Code: http.StatusUnauthorized},
+		{Name: "Invalid cookie", Cookie: "2", Code: http.StatusUnauthorized},
+		{Name: "Successful logout", Cookie: "1", Code: http.StatusOK},
+		{Name: "Error deleting refresh", Cookie: "1", Code: http.StatusInternalServerError, Delete: true},
+	}
+
+	// Define a valid session
+	validCookie := "1"
+	invalidCookie := "2"
+	session := &models.Session{UserID: "1", ID: 1}
+
+	for i := range testCase {
+		testCase := testCase[i]
+
+		t.Run(testCase.Name, func(t *testing.T) {
+			// Create a new HTTP request
+			req := httptest.NewRequest(http.MethodPost, "/", nil)
+			if len(testCase.Cookie) > 0 {
+				req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, testCase.Cookie))
+			}
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			c := e.NewContext(req, rec)
+
+			// Define the mock behavior
+			mockAuth := mocks.AuthMock{}
+			mockAuth.On("ValidRefresh", validCookie).Return(session, nil)
+			mockAuth.On("ValidRefresh", invalidCookie).Return(session, errors.New("error"))
+			//mockAuth.On("DeleteRefresh", session.ID).Return(nil)
+			//mockAuth.On("DeleteRefresh", session.ID).Return(errors.New("error"))
+
+			if testCase.Delete {
+				mockAuth.On("DeleteRefresh", session.ID).Return(errors.New("error"))
+			} else {
+				mockAuth.On("DeleteRefresh", session.ID).Return(nil)
+			}
+
+			// Create the controller with the mock
+			controller := AuthController{AuthRepository: &mockAuth}
+
+			// Run the test
+			if assert.NoError(t, controller.Logout(c)) {
+				assert.Equal(t, testCase.Code, rec.Code)
+			}
+		})
+	}
+}

@@ -4,6 +4,7 @@ build/
 tmp/
 node_modules
 dist
+http_requests
 dist-ssr
 
 # Test
