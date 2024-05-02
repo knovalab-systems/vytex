@@ -21,15 +21,14 @@ func main() {
 	config.LoadEnv()
 
 	// middlewares
-	middlewares.EchoMiddleware(e)
+	middlewares.EchoMiddlewares(e)
 
 	// database
 	db := database.Db("")
 	gen.SetDefault(db)
-	// db.Create(&models.User{UserName: "jose", Password: "12345678"})
 
 	// routes
-	routes.SwaggerRoute(e)
+	routes.SwaggerRoutes(e)
 	routes.PublicRoutes(e)
 	routes.PrivateRoutes(e)
 	routes.NotFoundRoute(e)

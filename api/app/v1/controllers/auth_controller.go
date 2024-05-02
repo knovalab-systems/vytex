@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
@@ -34,37 +35,37 @@ func (m *AuthController) Login(c echo.Context) error {
 
 	// body bind
 	if err := c.Bind(u); err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.AuthBadRequest()
 	}
 
 	// body validation
 	if err := c.Validate(u); err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.AuthBadRequest()
 	}
 
 	// get user
 	user, err := m.AuthRepository.UserForLogin(u.UserName)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.AuthUnauthorized()
 	}
 
 	//pending to encrypt pass
 
 	// check user
 	if u.Password != user.Password {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.AuthUnauthorized()
 	}
 
 	// generate tokens
 	tokens, err := m.GenerateTokens(user.ID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
+		return problems.ServerError()
 	}
 
 	// save refresh token
 	err = m.AuthRepository.RegisterRefresh(user.ID, tokens.Refresh)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
+		return problems.ServerError()
 	}
 
 	// create n set cookie
@@ -92,31 +93,31 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.RefreshUnauthorized()
 	}
 
 	// check refresh in db
 	s, err := m.ValidRefresh(cookie.Value)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.RefreshUnauthorized()
 	}
 
 	// generate tokens
 	tokens, err := m.GenerateTokens(s.UserID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
+		return problems.ServerError()
 	}
 
 	// save refresh token
 	err = m.AuthRepository.RegisterRefresh(s.UserID, tokens.Refresh)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
+		return problems.ServerError()
 	}
 
 	// delete old refresh
 	err = m.AuthRepository.DeleteRefresh(s.ID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
+		return problems.ServerError()
 	}
 
 	// create n set cookie
@@ -160,19 +161,19 @@ func (m *AuthController) Logout(c echo.Context) error {
 	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.RefreshUnauthorized()
 	}
 
 	// check refresh in db
 	s, err := m.AuthRepository.ValidRefresh(cookie.Value)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, utils.AuthProblemDetails())
+		return problems.RefreshUnauthorized()
 	}
 
 	// delete old refresh
 	err = m.AuthRepository.DeleteRefresh(s.ID)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, utils.ServerErrorProblemDetails())
+		return problems.ServerError()
 	}
 
 	clearRefreshCookie(c)

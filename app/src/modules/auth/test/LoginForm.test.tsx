@@ -106,12 +106,10 @@ describe('LoginForm', () => {
 		fireEvent.input(passwordField, { target: { value: '' } });
 		fireEvent.click(submitButton);
 
-		await waitFor(() => {
-			const errorusernameField = screen.getByText('Por favor ingresa el usuario.');
-			const errorPasswordField = screen.getByText('Por favor ingresa la contraseña.');
-			expect(errorusernameField).toBeInTheDocument();
-			expect(errorPasswordField).toBeInTheDocument();
-		});
+		const errorusernameField = await screen.findByText('Por favor ingresa el usuario.');
+		const errorPasswordField = await screen.findByText('Por favor ingresa la contraseña.');
+		expect(errorusernameField).toBeInTheDocument();
+		expect(errorPasswordField).toBeInTheDocument();
 	});
 
 	it('shows bad length password error', async () => {
@@ -123,9 +121,7 @@ describe('LoginForm', () => {
 		fireEvent.input(passwordField, { target: { value: '1' } });
 		fireEvent.click(submitButton);
 
-		await waitFor(() => {
-			const errorPasswordField = screen.getByText('La contraseña debe ser de mínimo 8 caracteres.');
-			expect(errorPasswordField).toBeInTheDocument();
-		});
+		const errorPasswordField = await screen.findByText('La contraseña debe ser de mínimo 8 caracteres.');
+		expect(errorPasswordField).toBeInTheDocument();
 	});
 });

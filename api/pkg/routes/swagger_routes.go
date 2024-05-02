@@ -7,7 +7,7 @@ import (
 )
 
 // Routes for swagger routes
-func SwaggerRoute(e *echo.Echo) {
+func SwaggerRoutes(e *echo.Echo) {
 	// Create route group
 	route := e.Group("/swagger")
 
