@@ -49,7 +49,7 @@ func (m *AuthController) Login(c echo.Context) error {
 		return problems.AuthUnauthorized()
 	}
 
-	//pending to encrypt pass
+	// pending to encrypt pass
 
 	// check user
 	if u.Password != user.Password {
