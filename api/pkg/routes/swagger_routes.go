@@ -6,9 +6,8 @@ import (
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
-// Routes for swagger routes
+// Routes for swagger
 func SwaggerRoutes(e *echo.Echo) {
-	// Create route group
 	route := e.Group("/swagger")
 
 	route.GET("*", echoSwagger.WrapHandler)

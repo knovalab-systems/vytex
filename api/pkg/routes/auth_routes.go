@@ -7,12 +7,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func publicAuthRoutes(r *echo.Group) {
+func publicAuthRoutes(g *echo.Group) {
+	route := g.Group("/auth")
 
 	authController := controllers.AuthController{AuthRepository: &queries.AuthQuery{}, TokensRepository: &utils.JwtTokends{}}
 
-	r.POST("/login", authController.Login)
-	r.POST("/refresh", authController.Refresh)
-	r.POST("/logout", authController.Logout)
+	route.POST("/login", authController.Login)
+	route.POST("/refresh", authController.Refresh)
+	route.POST("/logout", authController.Logout)
 
 }
