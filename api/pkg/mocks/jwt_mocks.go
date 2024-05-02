@@ -12,7 +12,7 @@ type TokenMock struct {
 func (m *TokenMock) GenerateTokens(id string) (*utils.Tokens, error) {
 	args := m.Called(id)
 	return &utils.Tokens{
-		Access:  args.String(0),
-		Refresh: args.String(0),
-	}, nil
+		Access:  "",
+		Refresh: "",
+	}, args.Error(0)
 }

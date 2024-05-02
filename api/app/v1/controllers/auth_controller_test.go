@@ -20,14 +20,16 @@ import (
 func TestLogin(t *testing.T) {
 	testCases := []struct {
 		Name   string
-		Params map[string]string
+		Params map[string]any
 		Code   int
 	}{
-		{Name: "Without params", Params: map[string]string{"user": "pass"}, Code: http.StatusUnauthorized},
-		{Name: "Fail validation", Params: map[string]string{"username": "jose", "password": "1234567"}, Code: http.StatusUnauthorized},
-		{Name: "Not found user", Params: map[string]string{"username": "antonio", "password": "antonio1"}, Code: http.StatusUnauthorized},
-		{Name: "Invalid password", Params: map[string]string{"username": "jose", "password": "antonio1"}, Code: http.StatusUnauthorized},
-		{Name: "Successful login", Params: map[string]string{"username": "jose", "password": "12345678"}, Code: http.StatusOK},
+		{Name: "Fail binding", Params: map[string]any{"username": 23232}, Code: http.StatusBadRequest},
+		{Name: "Fail validation, missing parameters ", Params: map[string]any{}, Code: http.StatusBadRequest},
+		{Name: "Fail validation, password length", Params: map[string]any{"username": "jose", "password": "1234567"}, Code: http.StatusBadRequest},
+		{Name: "Not found user", Params: map[string]any{"username": "antonio", "password": "antonio1"}, Code: http.StatusUnauthorized},
+		{Name: "Find invalid password", Params: map[string]any{"username": "jose", "password": "antonio1"}, Code: http.StatusUnauthorized},
+		{Name: "Not generate tokens", Params: map[string]any{"username": "jose", "password": "12345678"}, Code: http.StatusInternalServerError},
+		{Name: "Not save refresh token", Params: map[string]any{"username": "jose", "password": "12345678"}, Code: http.StatusInternalServerError},
 	}
 
 	authorizedUser := &models.User{ID: "1", UserName: "jose", Password: "12345678"}
@@ -53,20 +55,51 @@ func TestLogin(t *testing.T) {
 			mockAuth := mocks.AuthMock{}
 			mockAuth.On("UserForLogin", authorizedUser.UserName).Return(authorizedUser, nil)
 			mockAuth.On("UserForLogin", unauthorizedUser.UserName).Return(unauthorizedUser, errors.New("error"))
-			mockAuth.On("RegisterRefresh", authorizedUser.ID, authorizedUser.ID).Return(nil)
+			mockAuth.On("RegisterRefresh", authorizedUser.ID, authorizedUser.ID).Return(errors.New("error"))
 			tokenMock := mocks.TokenMock{}
-			tokenMock.On("GenerateTokens", authorizedUser.ID).Return(authorizedUser.ID)
+			tokenMock.On("GenerateTokens", authorizedUser.ID).Return(errors.New("error"))
 
 			// controller
 			controller := AuthController{AuthRepository: &mockAuth, TokensRepository: &tokenMock}
 
 			// test
-			if assert.NoError(t, controller.Login(c)) {
-				assert.Equal(t, testCase.Code, rec.Code)
+			err := controller.Login(c)
+			if assert.Error(t, err) {
+				assert.Equal(t, testCase.Code, err.(*echo.HTTPError).Code)
 			}
 
 		})
 	}
+
+	t.Run("Login successfully", func(t *testing.T) {
+
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "12345678"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		mockAuth := mocks.AuthMock{}
+		mockAuth.On("UserForLogin", authorizedUser.UserName).Return(authorizedUser, nil)
+		mockAuth.On("RegisterRefresh", authorizedUser.ID, "").Return(nil)
+
+		tokenMock := mocks.TokenMock{}
+		tokenMock.On("GenerateTokens", authorizedUser.ID).Return(nil)
+
+		// controller
+		controller := AuthController{AuthRepository: &mockAuth, TokensRepository: &tokenMock}
+
+		// test
+		if assert.NoError(t, controller.Login(c)) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+
+	})
 
 }
 
