@@ -10,7 +10,7 @@ import (
 func publicAuthRoutes(g *echo.Group) {
 	route := g.Group("/auth")
 
-	authController := controllers.AuthController{AuthRepository: &queries.AuthQuery{}, TokensRepository: &utils.JwtTokends{}}
+	authController := controllers.AuthController{AuthRepository: &queries.AuthQuery{}, TokensRepository: &utils.JwtTokens{}}
 
 	route.POST("/login", authController.Login)
 	route.POST("/refresh", authController.Refresh)
