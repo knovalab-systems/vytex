@@ -1,7 +1,6 @@
-import type { Component } from 'solid-js';
+import type { Component, JSX } from 'solid-js';
 import { splitProps } from 'solid-js';
 
-import { Button as ButtonPrimitive } from '@kobalte/core';
 import type { VariantProps } from 'class-variance-authority';
 import { cva } from 'class-variance-authority';
 
@@ -33,16 +32,11 @@ const buttonVariants = cva(
 	},
 );
 
-export interface ButtonProps extends ButtonPrimitive.ButtonRootProps, VariantProps<typeof buttonVariants> {}
+export interface ButtonProps extends JSX.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {}
 
 const Button: Component<ButtonProps> = props => {
 	const [, rest] = splitProps(props, ['variant', 'size', 'class']);
-	return (
-		<ButtonPrimitive.Root
-			class={cn(buttonVariants({ variant: props.variant, size: props.size }), props.class)}
-			{...rest}
-		/>
-	);
+	return <button class={cn(buttonVariants({ variant: props.variant, size: props.size }), props.class)} {...rest} />;
 };
 
 export { Button, buttonVariants };

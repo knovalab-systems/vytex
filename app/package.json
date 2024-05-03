@@ -15,7 +15,6 @@
 		"test": "vitest"
 	},
 	"dependencies": {
-		"@kobalte/core": "^0.12.6",
 		"@modular-forms/solid": "^0.20.0",
 		"@solidjs/router": "^0.13.3",
 		"@vytex/client": "0.0.0",
