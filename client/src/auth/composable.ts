@@ -85,7 +85,7 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 					fetchOptions.credentials = authConfig.credentials;
 				}
 
-				const requestUrl = getRequestUrl(client.url, '/refresh');
+				const requestUrl = getRequestUrl(client.url, '/auth/refresh');
 
 				const data = await request<AuthenticationData>(requestUrl.toString(), fetchOptions, client.globals.fetch);
 
@@ -105,7 +105,7 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 			async login(username: string, password: string) {
 				resetStorage();
 
-				const requestUrl = getRequestUrl(client.url, '/login');
+				const requestUrl = getRequestUrl(client.url, '/auth/login');
 
 				const authData: Record<string, string> = { username, password };
 
@@ -141,7 +141,7 @@ export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
 					fetchOptions.credentials = authConfig.credentials;
 				}
 
-				const requestUrl = getRequestUrl(client.url, '/logout');
+				const requestUrl = getRequestUrl(client.url, '/auth/logout');
 				await request(requestUrl.toString(), fetchOptions, client.globals.fetch);
 
 				if (refreshTimeout) clearTimeout(refreshTimeout);
