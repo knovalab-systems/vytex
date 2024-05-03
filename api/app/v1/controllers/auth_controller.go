@@ -72,12 +72,14 @@ func (m *AuthController) Login(c echo.Context) error {
 	refreshCookie := generateRefreshCookie(tokens.Refresh)
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, models.AuthResponse{
+	res := models.Response{
 		Data: models.DataAuthResponse{
 			AccessToken: tokens.Access,
 			Expires:     utils.AccessExpires.Milliseconds(),
 		},
-	})
+	}
+
+	return c.JSON(http.StatusOK, res)
 }
 
 // Refresh user credentials
@@ -124,26 +126,14 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	refreshCookie := generateRefreshCookie(tokens.Refresh)
 	c.SetCookie(refreshCookie)
 
-	return c.JSON(http.StatusOK, models.AuthResponse{
+	res := models.Response{
 		Data: models.DataAuthResponse{
 			AccessToken: tokens.Access,
 			Expires:     utils.AccessExpires.Milliseconds(),
 		},
-	})
-}
+	}
 
-func generateRefreshCookie(token string) *http.Cookie {
-	expires := time.Now().Add(utils.RefreshExpires)
-	c := new(http.Cookie)
-	c.Name = utils.RefreshCookieName
-	c.Value = token
-	c.Expires = expires
-	c.HttpOnly = true
-	c.SameSite = http.SameSiteLaxMode
-	c.Path = "/"
-	c.MaxAge = int(utils.RefreshExpires.Seconds())
-
-	return c
+	return c.JSON(http.StatusOK, res)
 }
 
 // Logout user
@@ -176,12 +166,6 @@ func (m *AuthController) Logout(c echo.Context) error {
 		return problems.ServerError()
 	}
 
-	clearRefreshCookie(c)
-	return c.NoContent(http.StatusOK)
-
-}
-
-func clearRefreshCookie(c echo.Context) {
 	c.SetCookie(&http.Cookie{
 		Name:     utils.RefreshCookieName,
 		Value:    "",
@@ -191,4 +175,21 @@ func clearRefreshCookie(c echo.Context) {
 		Path:     "/",
 		MaxAge:   -1,
 	})
+
+	return c.NoContent(http.StatusOK)
+
+}
+
+func generateRefreshCookie(token string) *http.Cookie {
+	expires := time.Now().Add(utils.RefreshExpires)
+	c := new(http.Cookie)
+	c.Name = utils.RefreshCookieName
+	c.Value = token
+	c.Expires = expires
+	c.HttpOnly = true
+	c.SameSite = http.SameSiteLaxMode
+	c.Path = "/"
+	c.MaxAge = int(utils.RefreshExpires.Seconds())
+
+	return c
 }

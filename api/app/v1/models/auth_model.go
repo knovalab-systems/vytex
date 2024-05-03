@@ -15,10 +15,6 @@ type DataAuthResponse struct {
 	Expires     int64  `json:"expires"`
 }
 
-type AuthResponse struct {
-	Data DataAuthResponse `json:"data"`
-}
-
 type Session struct {
 	ID           int `gorm:"primaryKey"`
 	ExpiresAt    time.Time
