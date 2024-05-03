@@ -8,8 +8,9 @@ import (
 type UserQuery struct {
 }
 
-func (m *UserQuery) SelectUsers() ([]*models.User, error) {
+func (m *UserQuery) SelectUsers(req *models.Request) ([]*models.User, error) {
 	table := gen.User
-	users, err := table.Find()
+	users, err := table.Unscoped().Limit(req.Limit).Offset(req.Offset).Find()
+
 	return users, err
 }

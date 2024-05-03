@@ -6,13 +6,17 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
+	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReadUser(t *testing.T) {
+
+	queryLimit := utils.QueryLimit()
 
 	t.Run("Error on get user from db", func(t *testing.T) {
 		// context
@@ -24,7 +28,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers").Return(errors.New("error"))
+		userMock.On("SelectUsers", &models.Request{Limit: queryLimit}).Return(errors.New("error"))
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -45,7 +49,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers").Return(nil)
+		userMock.On("SelectUsers", &models.Request{Limit: queryLimit}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
