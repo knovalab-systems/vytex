@@ -1,6 +1,6 @@
 import type { MergeCoreCollection } from '../index.js';
 import type { DirectusRole } from './role.js';
-import type { DirectusUser } from './user.js';
+import type { VytexUser } from './user.js';
 
 export type DirectusPreset<Schema extends object> = MergeCoreCollection<
 	Schema,
@@ -8,7 +8,7 @@ export type DirectusPreset<Schema extends object> = MergeCoreCollection<
 	{
 		id: number;
 		bookmark: string | null;
-		user: DirectusUser<Schema> | string | null;
+		user: VytexUser<Schema> | string | null;
 		role: DirectusRole<Schema> | string | null;
 		collection: string | null; // TODO keyof complete schema
 		search: string | null;

@@ -1,5 +1,5 @@
 import type { MergeCoreCollection } from '../index.js';
-import type { DirectusUser } from './user.js';
+import type { VytexUser } from './user.js';
 import type { DirectusFolder } from './folder.js';
 
 // Base type for directus_files
@@ -14,9 +14,9 @@ export type DirectusFile<Schema extends object> = MergeCoreCollection<
 		title: string | null;
 		type: string | null;
 		folder: DirectusFolder<Schema> | string | null;
-		uploaded_by: DirectusUser<Schema> | string | null;
+		uploaded_by: VytexUser<Schema> | string | null;
 		uploaded_on: 'datetime';
-		modified_by: DirectusUser<Schema> | string | null;
+		modified_by: VytexUser<Schema> | string | null;
 		modified_on: 'datetime';
 		charset: string | null;
 		filesize: string | null;

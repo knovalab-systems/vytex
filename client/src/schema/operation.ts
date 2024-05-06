@@ -1,6 +1,6 @@
 import type { MergeCoreCollection } from '../index.js';
 import type { DirectusFlow } from './flow.js';
-import type { DirectusUser } from './user.js';
+import type { VytexUser } from './user.js';
 
 export type DirectusOperation<Schema extends object> = MergeCoreCollection<
 	Schema,
@@ -18,6 +18,6 @@ export type DirectusOperation<Schema extends object> = MergeCoreCollection<
 		reject: DirectusOperation<Schema> | string | null;
 		flow: DirectusFlow<Schema> | string;
 		date_created: 'datetime' | null;
-		user_created: DirectusUser<Schema> | string | null;
+		user_created: VytexUser<Schema> | string | null;
 	}
 >;

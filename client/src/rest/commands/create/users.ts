@@ -1,11 +1,11 @@
-import type { DirectusUser } from '../../../schema/user.js';
+import type { VytexUser } from '../../../schema/user.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 
 export type CreateUserOutput<
 	Schema extends object,
 	TQuery extends Query<Schema, Item>,
-	Item extends object = DirectusUser<Schema>,
+	Item extends object = VytexUser<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
 
 /**
@@ -17,12 +17,12 @@ export type CreateUserOutput<
  * @returns Returns the user objects for the created users.
  */
 export const createUsers =
-	<Schema extends object, const TQuery extends Query<Schema, DirectusUser<Schema>>>(
-		items: Partial<DirectusUser<Schema>>[],
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		items: Partial<VytexUser<Schema>>[],
 		query?: TQuery,
 	): RestCommand<CreateUserOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/users`,
+		path: '/users',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -37,12 +37,12 @@ export const createUsers =
  * @returns Returns the user object for the created user.
  */
 export const createUser =
-	<Schema extends object, const TQuery extends Query<Schema, DirectusUser<Schema>>>(
-		item: Partial<DirectusUser<Schema>>,
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		item: Partial<VytexUser<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateUserOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/users`,
+		path: '/users',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

@@ -1,6 +1,6 @@
 import type { MergeCoreCollection } from '../index.js';
 import type { DirectusRevision } from './revision.js';
-import type { DirectusUser } from './user.js';
+import type { VytexUser } from './user.js';
 
 export type DirectusActivity<Schema extends object> = MergeCoreCollection<
 	Schema,
@@ -8,7 +8,7 @@ export type DirectusActivity<Schema extends object> = MergeCoreCollection<
 	{
 		id: number;
 		action: string;
-		user: DirectusUser<Schema> | string | null;
+		user: VytexUser<Schema> | string | null;
 		timestamp: 'datetime';
 		ip: string | null;
 		user_agent: string | null;

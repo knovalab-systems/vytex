@@ -11,9 +11,9 @@ import (
 type AuthQuery struct {
 }
 
-func (m *AuthQuery) UserForLogin(userName string) (*models.User, error) {
+func (m *AuthQuery) UserForLogin(username string) (*models.User, error) {
 	table := genquery.User
-	user, err := table.Where(table.UserName.Eq(userName)).First()
+	user, err := table.Where(table.Username.Eq(username)).First()
 	return user, err
 }
 

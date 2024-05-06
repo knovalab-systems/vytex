@@ -6,7 +6,7 @@ import (
 
 // Struct to describe login user
 type LoginUser struct {
-	UserName string `json:"username" validate:"required,lte=30"`
+	Username string `json:"username" validate:"required,lte=30"`
 	Password string `json:"password" validate:"required,lte=20,gte=8"`
 }
 

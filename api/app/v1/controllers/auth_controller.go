@@ -44,7 +44,7 @@ func (m *AuthController) Login(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.AuthRepository.UserForLogin(u.UserName)
+	user, err := m.AuthRepository.UserForLogin(u.Username)
 	if err != nil {
 		return problems.AuthUnauthorized()
 	}

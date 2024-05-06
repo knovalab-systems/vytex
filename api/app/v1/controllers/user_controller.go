@@ -36,7 +36,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 
 	// do pagination
 	if u.Page > 0 {
-		u.Offset = u.Limit*u.Page - 1
+		u.Offset = u.Limit * (u.Page - 1)
 	}
 
 	// do query
