@@ -1,10 +1,19 @@
 import UserTable from '../components/UserTable';
+import { Match, Switch, createResource, createSignal } from 'solid-js';
+import { getUsers } from '../requests/userRequests';
 
 function Users() {
+	const [page, setPage] = createSignal(1);
+	const [users] = createResource(page(), getUsers);
+
 	return (
-		<div class='h-full'>
-			<UserTable />
-		</div>
+		<Switch>
+			<Match when={users.state === 'ready'}>
+				<div class='h-full'>
+					<UserTable users={users()} />
+				</div>
+			</Match>
+		</Switch>
 	);
 }
 

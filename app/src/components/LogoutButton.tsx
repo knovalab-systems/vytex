@@ -1,7 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { createSignal } from 'solid-js';
 import { Button } from '~/components/ui/Button';
-import { logoutRequest } from '~/modules/auth/requests/logoutRequests';
+import { logoutRequest } from '~/modules/auth/requests/authRequests';
 
 const LogoutButton = (props: { navigateTo: string }) => {
 	const navigate = useNavigate();
