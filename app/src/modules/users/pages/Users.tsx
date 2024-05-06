@@ -6,6 +6,8 @@ function Users() {
 	const [page, setPage] = createSignal(1);
 	const [users] = createResource(page(), getUsers);
 
+	setPage(1);
+
 	return (
 		<Switch>
 			<Match when={users.state === 'ready'}>
