@@ -4,6 +4,8 @@
 
 @layer base {
   :root {
+    --practice_date: #3C4FED;
+    --trailway: #744AC7;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
 
@@ -99,6 +101,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings:
