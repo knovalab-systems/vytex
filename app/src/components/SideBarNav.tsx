@@ -1,8 +1,9 @@
 import { For, children, type JSXElement } from 'solid-js';
 import { A } from '@solidjs/router';
-import { RiUserFacesUserFill, RiSystemLogoutBoxLine } from 'solid-icons/ri';
+import { RiUserFacesUserFill } from 'solid-icons/ri';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { IoLogoIonitron } from 'solid-icons/io';
+import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
 
 function SideBarNav(props: { children?: JSXElement }) {
 	const c = children(() => props.children);
@@ -27,7 +28,7 @@ function SideBarNav(props: { children?: JSXElement }) {
 									activeClass='bg-practice_date'
 									href={page.path}
 									end={page.end}
-									class='w-full flex items-center group  p-2 font-semibold text-sm rounded-lg text-white hover:bg-practice_date dark:hover:bg-gray-700 gap-1 p transition-colors duration-200'
+									class='w-full flex items-center group p-2 font-semibold text-sm rounded-lg text-white hover:bg-practice_date  gap-1 p transition-colors duration-200'
 								>
 									{page.icon}
 									<span class='ml-3'>{page.name}</span>
@@ -40,18 +41,7 @@ function SideBarNav(props: { children?: JSXElement }) {
 					</For>
 					<div class='my-2 bg-gray-600 h-[1px]' />
 					<li>
-						<A
-							activeClass='bg-practice_date'
-							href={'/logout'}
-							class='w-full flex items-center group  p-2 font-semibold text-sm rounded-lg text-white hover:bg-practice_date dark:hover:bg-gray-700 gap-1 p transition-colors duration-200'
-							inactiveClass='text-gray-400'
-						>
-							<RiSystemLogoutBoxLine size={24} />
-							<span class='ml-3'>Cerrar sesión</span>
-							<div class='ml-auto w-1 rounded-xl h-8 bg-transparent transition-colors duration-200 relative overflow-hidden'>
-								<span class='absolute top-0 left-0 w-full h-[102%] translate-y-full group-hover:translate-y-0 bg-white transition-all duration-300' />
-							</div>
-						</A>
+						<LogoutNavButton />
 					</li>
 				</ul>
 			</nav>
