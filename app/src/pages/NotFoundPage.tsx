@@ -2,18 +2,18 @@ import { A } from '@solidjs/router';
 
 function NotFoundPage() {
 	return (
-		<div class='h-full flex-1 px-8 flex'>
+		<main class='h-full flex-1 px-8 flex'>
 			<div class='flex m-auto flex-col items-center justify-center gap-6 p-8 bg-white rounded-md border border-gray-100 shadow-xl'>
 				<p class='text-6xl md:text-7xl lg:text-9xl font-bold tracking-wider text-gray-300'>404</p>
 				<p class='text-2xl md:text-3xl lg:text-5xl font-bold tracking-wider text-gray-500  text-center'>
 					La página no existe
 				</p>
-				<p class='text-gray-500 pb-4 border-b-2 text-center'>
+				<p class='text-gray-500 pb-3 border-b-2 text-center'>
 					Disculpa, no se ha podido encontrar la página solicitada.
 				</p>
 				<A
 					href={'/'}
-					class='flex items-center text-white space-x-2 px-4 py-2 mt-6 rounded transition duration-150 bg-blue-500 shadow-blue-500/20 hover:bg-blue-700 hover:shadow-blue-700/40 ripple-bg-blue-200'
+					class='flex items-center text-white space-x-2 px-4 py-2 rounded transition duration-150 bg-blue-500 shadow-blue-500/20 hover:bg-blue-700 hover:shadow-blue-700/40 ripple-bg-blue-200'
 					title='Página Principal'
 				>
 					<svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'>
@@ -27,7 +27,7 @@ function NotFoundPage() {
 					<span>Ir a la página Principal</span>
 				</A>
 			</div>
-		</div>
+		</main>
 	);
 }
 

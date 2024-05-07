@@ -3,7 +3,7 @@ import { IoLogoIonitron } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
 import { For, type JSXElement, children } from 'solid-js';
-import LogoutButton from './LogoutButton';
+import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
 
 function SideBarNav(props: { children?: JSXElement }) {
 	const c = children(() => props.children);
@@ -28,7 +28,7 @@ function SideBarNav(props: { children?: JSXElement }) {
 									activeClass='bg-practice_date'
 									href={page.path}
 									end={page.end}
-									class='w-full flex items-center group  p-2 font-semibold text-sm rounded-lg text-white hover:bg-practice_date dark:hover:bg-gray-700 gap-1 p transition-colors duration-200'
+									class='w-full flex items-center group p-2 font-semibold text-sm rounded-lg text-white hover:bg-practice_date  gap-1 p transition-colors duration-200'
 								>
 									{page.icon}
 									<span class='ml-3'>{page.name}</span>
@@ -41,7 +41,7 @@ function SideBarNav(props: { children?: JSXElement }) {
 					</For>
 					<div class='my-2 bg-gray-600 h-[1px]' />
 					<li>
-						<LogoutButton navigateTo={'/login'} />
+						<LogoutNavButton />
 					</li>
 				</ul>
 			</nav>
