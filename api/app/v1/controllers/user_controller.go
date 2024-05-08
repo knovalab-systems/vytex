@@ -51,3 +51,33 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 
 	return c.JSON(200, res)
 }
+
+func (m *UserController) ReadUsersByName(c echo.Context) error {
+	name := c.QueryParam("name")
+
+	users, err := m.SelectUserByName(name)
+
+	if err != nil {
+		return echo.NewHTTPError(404, err.Error())
+	}
+	if len(users) == 0 {
+		return echo.NewHTTPError(404, "User not found")
+	}
+
+	return c.JSON(200, users)
+}
+
+func (m *UserController) ReadUsersByUsername(c echo.Context) error {
+	username := c.QueryParam("username")
+
+	user, err := m.SelectUserByUsername(username)
+
+	if err != nil {
+		return echo.NewHTTPError(404, err.Error())
+	}
+	if user == nil {
+		return echo.NewHTTPError(404, "User not found")
+	}
+
+	return c.JSON(200, user)
+}
