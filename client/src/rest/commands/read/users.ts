@@ -1,7 +1,7 @@
 import type { VytexUser } from '../../../schema/user.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadUserOutput<
 	Schema extends object,
@@ -25,6 +25,56 @@ export const readUsers =
 		params: query ?? {},
 		method: 'GET',
 	});
+
+/**
+ * List an existing user by name.
+ *
+ * @param name The name of the user
+ * @param query The query parameters
+ *
+ * @returns Returns the requested user object.
+ * @throws Will throw if name is empty
+ */
+export const readUserByName =
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		name: VytexUser<Schema>['name'],
+		query?: TQuery,
+	): RestCommand<ReadUserOutput<Schema, TQuery>[], Schema> =>
+	() => {
+		if (!name) {
+			throw new Error('Name cannot be empty');
+		}
+		return {
+			path: `/users/?name=${encodeURIComponent(name)}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};
+
+/**
+ * List an existing user by username.
+ *
+ * @param username The name of the user
+ * @param query The query parameters
+ *
+ * @returns Returns the requested user object.
+ * @throws Will throw if name is empty
+ */
+export const readUserByUsername =
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		name: VytexUser<Schema>['username'],
+		query?: TQuery,
+	): RestCommand<ReadUserOutput<Schema, TQuery>[], Schema> =>
+	() => {
+		if (!name) {
+			throw new Error('username cannot be empty');
+		}
+		return {
+			path: `/users/?username=${encodeURIComponent(name)}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};
 
 /**
  * List an existing user by primary key.
