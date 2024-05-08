@@ -4,24 +4,23 @@ import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { logoutRequest } from '~/modules/auth/requests/authRequests';
 import { MESSAGES } from '~/utils/constans';
+import { LOGIN_PATH } from '~/utils/paths';
 import ConfirmationModal from './ConfirmationModal';
 
-const LogoutButton = (props: { navigateTo: string }) => {
+const LogoutButton = () => {
 	const navigate = useNavigate();
-	const [navigateTo] = createSignal(props.navigateTo);
 	const [showModal, setShowModal] = createSignal(false);
 
-	const logout = async () => {
-		try {
-			await logoutRequest();
-			navigate(`${navigateTo()}`, { replace: true });
-			toast.success(MESSAGES.logout.confirm);
-		} catch (error) {
-			toast.error(MESSAGES.logout.error)
-		}
+	const handleLogOut = () => {
+		logoutRequest()
+			.then(() => {
+				navigate(LOGIN_PATH);
+				toast.success(MESSAGES.logout.confirm);
+			})
+			.catch(() => toast.error('Error al cerrar sesión'));
 	};
 
-	const handleLogout = () => {
+	const handleModal = () => {
 		setShowModal(true);
 	};
 
@@ -29,7 +28,7 @@ const LogoutButton = (props: { navigateTo: string }) => {
 		<>
 			<button
 				type='button'
-				onclick={handleLogout}
+				onclick={handleModal}
 				class='w-full flex items-center group  p-2 font-semibold text-sm rounded-lg text-white hover:bg-practice_date dark:hover:bg-gray-700 gap-1 p transition-colors duration-200'
 			>
 				<RiSystemLogoutBoxLine size={24} />
@@ -42,7 +41,7 @@ const LogoutButton = (props: { navigateTo: string }) => {
 				<ConfirmationModal
 					title={MESSAGES.logout.title}
 					message={MESSAGES.logout.description}
-					onConfirm={logout}
+					onConfirm={handleLogOut}
 					onCancel={() => setShowModal(false)}
 				/>
 			)}
