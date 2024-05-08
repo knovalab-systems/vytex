@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/knovalab-systems/vytex/config"
-	"github.com/knovalab-systems/vytex/pkg/genquery"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
+	"github.com/knovalab-systems/vytex/pkg/query"
 	"github.com/knovalab-systems/vytex/pkg/routes"
 	"github.com/knovalab-systems/vytex/platform/database"
 	"github.com/labstack/echo/v4"
@@ -25,7 +25,7 @@ func main() {
 
 	// database
 	db := database.Db("")
-	genquery.SetDefault(db)
+	query.SetDefault(db)
 
 	// routes
 	routes.SwaggerRoutes(e)

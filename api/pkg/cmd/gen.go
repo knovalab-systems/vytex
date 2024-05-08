@@ -11,8 +11,8 @@ import (
 
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath:      "../genquery/",
-		OutFile:      "genquery.go",
+		OutPath:      "../query/",
+		OutFile:      "query.go",
 		WithUnitTest: true,
 		Mode:         gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
 	})
