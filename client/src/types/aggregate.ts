@@ -9,7 +9,7 @@ export type GroupingFunctions = {
 // strings are used to ensure precision and prevent overflows
 export type AggregationTypes = {
 	count: {
-		output: string | null;
+		output: number | null;
 		wildcard: true;
 	};
 	countDistinct: {
