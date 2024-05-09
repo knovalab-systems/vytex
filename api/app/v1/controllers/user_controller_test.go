@@ -180,6 +180,8 @@ func TestReadUser(t *testing.T) {
 
 func TestAggregateUser(t *testing.T) {
 
+	// dont fail binding on any case
+
 	t.Run("Fail validation empty fields", func(t *testing.T) {
 		// context
 		q := make(url.Values)

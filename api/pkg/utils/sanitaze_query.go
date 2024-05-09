@@ -33,7 +33,7 @@ func LimitQuery() int {
 }
 
 func sanitizedLimit(limit int) int {
-	if limit == -1 {
+	if limit == -1 { // here could be a max limit query
 		return LimitQuery()
 	}
 	return limit
