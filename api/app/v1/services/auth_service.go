@@ -1,4 +1,4 @@
-package queries
+package services
 
 import (
 	"time"
@@ -8,16 +8,16 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/utils"
 )
 
-type AuthQuery struct {
+type AuthService struct {
 }
 
-func (m *AuthQuery) UserForLogin(username string) (*models.User, error) {
+func (m *AuthService) UserForLogin(username string) (*models.User, error) {
 	table := query.User
 	user, err := table.Where(table.Username.Eq(username)).First()
 	return user, err
 }
 
-func (m *AuthQuery) RegisterRefresh(userId string, token string) error {
+func (m *AuthService) RegisterRefresh(userId string, token string) error {
 	expire := time.Now().Add(utils.RefreshExpires)
 	table := query.Session
 	session := models.Session{UserID: userId, RefreshToken: token, ExpiresAt: expire}
@@ -25,13 +25,13 @@ func (m *AuthQuery) RegisterRefresh(userId string, token string) error {
 	return err
 }
 
-func (m *AuthQuery) ValidRefresh(token string) (*models.Session, error) {
+func (m *AuthService) ValidRefresh(token string) (*models.Session, error) {
 	table := query.Session
 	session, err := table.Where(table.RefreshToken.Eq(token)).Where(table.ExpiresAt.Gt(time.Now())).First()
 	return session, err
 }
 
-func (m *AuthQuery) DeleteRefresh(id int) error {
+func (m *AuthService) DeleteRefresh(id int) error {
 	table := query.Session
 	_, err := table.Where(table.ID.Eq(id)).Delete()
 	return err
