@@ -13,11 +13,38 @@ type UserController struct {
 }
 
 func (m *UserController) ReadUsers(c echo.Context) error {
-
 	// for query params
-	u := new(models.Request)
-	queryLimit := utils.QueryLimit()
-	u.Limit = queryLimit
+	u := &models.Request{Limit: -1}
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.AuthBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.AuthBadRequest()
+	}
+
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.AuthBadRequest()
+	}
+
+	// do query
+	users, err := m.SelectUsers(u)
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: users}
+	return c.JSON(200, res)
+}
+
+func (m *UserController) AggregateUsers(c echo.Context) error {
+	// for query params
+	u := new(models.AggregateRequest)
 
 	// bind
 	if err := c.Bind(u); err != nil {
@@ -29,25 +56,13 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 		return echo.NewHTTPError(400)
 	}
 
-	// set max value limite - PROPOSITION
-	if u.Limit == -1 {
-		u.Limit = queryLimit
-	}
-
-	// do pagination
-	if u.Page > 0 {
-		u.Offset = u.Limit * (u.Page - 1)
-	}
-
 	// do query
-	users, err := m.SelectUsers(u)
+	aggregate, err := m.UserRepository.AggregationUsers(u)
 	if err != nil {
 		return problems.ServerError()
 	}
 
 	// return data
-
-	res := models.Response{Data: users}
-
+	res := models.Response{Data: aggregate}
 	return c.JSON(200, res)
 }

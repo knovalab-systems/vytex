@@ -16,7 +16,7 @@ import (
 
 func TestReadUser(t *testing.T) {
 
-	queryLimit := utils.QueryLimit()
+	queryLimit := utils.LimitQuery()
 
 	t.Run("Error on get user from db", func(t *testing.T) {
 		// context
