@@ -16,5 +16,5 @@ func (m *UserMock) SelectUsers(req *models.Request) ([]*models.User, error) {
 
 func (m *UserMock) AggregationUsers(req *models.AggregateRequest) ([]*models.AggregateData, error) {
 	args := m.Called(req)
-	return []*models.AggregateData{}, args.Error(0)
+	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
 }

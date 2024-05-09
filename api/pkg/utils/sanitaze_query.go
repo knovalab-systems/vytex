@@ -8,6 +8,15 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 )
 
+func SanitizedQuery(req *models.Request) error {
+
+	req.Limit = sanitizedLimit(req.Limit)
+
+	req.Offset = sanitizeOffset(req.Offset, req.Page, req.Limit)
+
+	return nil
+}
+
 func LimitQuery() int {
 	limit := 50
 	env, exists := os.LookupEnv("QUERY_LIMIT_DEFAULT")
@@ -21,16 +30,6 @@ func LimitQuery() int {
 		}
 	}
 	return limit
-}
-
-func SanitizedQuery(req *models.Request) error {
-
-	// set max value limite - PROPOSITION
-	req.Limit = sanitizedLimit(req.Limit)
-
-	req.Offset = sanitizeOffset(req.Offset, req.Offset, req.Limit)
-
-	return nil
 }
 
 func sanitizedLimit(limit int) int {

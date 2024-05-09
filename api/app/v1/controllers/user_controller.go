@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"reflect"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
@@ -48,6 +50,11 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// validate
+	if reflect.ValueOf(u).Elem().IsZero() {
 		return problems.AggregateUsersBadRequest()
 	}
 
