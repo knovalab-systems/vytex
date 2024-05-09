@@ -9,6 +9,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+
 function Users() {
 	const [page, setPage] = createSignal(1);
 	const [users] = createResource(page, getUsers);

@@ -7,10 +7,11 @@ import { useNavigate } from '@solidjs/router';
 
 function LogoutNavButton() {
 	const navigate = useNavigate();
+
 	const handleLogOut = () => {
 		logoutRequest()
 			.then(() => {
-				navigate(LOGIN_PATH);
+				navigate(`${LOGIN_PATH}?reason=LOG_OUT`);
 			})
 			.catch(() => toast.error('Error al cerrar sesión'));
 	};
