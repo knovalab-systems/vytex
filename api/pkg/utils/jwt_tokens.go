@@ -11,8 +11,9 @@ import (
 
 // Types for tokens
 type Tokens struct {
-	Access  string
-	Refresh string
+	Access           string
+	Refresh          string
+	RefreshExpiresAt time.Time
 }
 
 type JWTClaims struct {
@@ -27,7 +28,7 @@ const AccessExpires time.Duration = time.Minute * 15
 const RefreshExpires time.Duration = time.Hour * 168
 const RefreshCookieName = "vytex_refresh_token"
 
-func (m *JwtTokens) GenerateTokens(userId string) (*Tokens, error) {
+func GenerateTokens(userId string) (*Tokens, error) {
 	// Generate JWT Access token.
 	accessToken, err := GenerateAccessToken(userId)
 	if err != nil {

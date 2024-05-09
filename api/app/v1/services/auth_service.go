@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -11,18 +12,34 @@ import (
 type AuthService struct {
 }
 
-func (m *AuthService) UserForLogin(username string) (*models.User, error) {
+func (m *AuthService) ValidUser(username string, password string) (*models.User, error) {
+
 	table := query.User
 	user, err := table.Where(table.Username.Eq(username)).First()
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Password != password { // pending to encrypt pass
+		return nil, errors.New("INVALID CREDENTIALS")
+	}
 	return user, err
 }
 
-func (m *AuthService) RegisterRefresh(userId string, token string) error {
-	expire := time.Now().Add(utils.RefreshExpires)
+func (m *AuthService) Credentials(user string) (*utils.Tokens, error) {
+	// get tokens
+	tokens, err := utils.GenerateTokens(user)
+	if err != nil {
+		return nil, err
+	}
+	tokens.RefreshExpiresAt = time.Now().Add(utils.RefreshExpires)
+
+	// create session
 	table := query.Session
-	session := models.Session{UserID: userId, RefreshToken: token, ExpiresAt: expire}
-	err := table.Create(&session)
-	return err
+	session := models.Session{UserID: user, RefreshToken: tokens.Refresh, ExpiresAt: tokens.RefreshExpiresAt}
+	err = table.Create(&session)
+
+	return tokens, err
 }
 
 func (m *AuthService) ValidRefresh(token string) (*models.Session, error) {
