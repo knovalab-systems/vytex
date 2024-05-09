@@ -18,17 +18,17 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.AuthBadRequest()
+		return problems.UsersBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.AuthBadRequest()
+		return problems.UsersBadRequest()
 	}
 
 	// sanitize
 	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.AuthBadRequest()
+		return problems.UsersBadRequest()
 	}
 
 	// do query
@@ -48,12 +48,7 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return echo.NewHTTPError(400)
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return echo.NewHTTPError(400)
+		return problems.AggregateUsersBadRequest()
 	}
 
 	// do query
