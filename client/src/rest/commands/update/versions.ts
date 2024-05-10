@@ -27,7 +27,7 @@ export const updateContentVersions =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/versions`,
+			path: '/versions',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

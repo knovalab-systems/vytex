@@ -27,7 +27,7 @@ export const rest = (config: Partial<RestConfig> = {}) => {
 					options.headers['Content-Type'] = 'application/json';
 				} else if (options.headers['Content-Type'] === 'multipart/form-data') {
 					// let the fetch function deal with multipart boundaries
-					delete options.headers['Content-Type'];
+					options.headers['Content-Type'] = '';
 				}
 
 				// we need to use THIS here instead of client to access overridden functions
@@ -36,7 +36,7 @@ export const rest = (config: Partial<RestConfig> = {}) => {
 
 					if (token) {
 						if (!options.headers) options.headers = {};
-						options.headers['Authorization'] = `Bearer ${token}`;
+						options.headers.Authorization = `Bearer ${token}`;
 					}
 				}
 
@@ -52,7 +52,7 @@ export const rest = (config: Partial<RestConfig> = {}) => {
 				}
 
 				if (options.body) {
-					fetchOptions['body'] = options.body;
+					fetchOptions.body = options.body;
 				}
 
 				// apply onRequest hook from command

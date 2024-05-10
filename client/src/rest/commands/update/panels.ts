@@ -1,7 +1,7 @@
 import type { DirectusPanel } from '../../../schema/panel.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdatePanelOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updatePanels =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/panels`,
+			path: '/panels',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

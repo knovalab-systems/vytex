@@ -50,49 +50,49 @@ export const queryToParams = <Schema extends object, Item>(
 			return [...chain, String(value)].join('.');
 		};
 
-		params['fields'] = query.fields.flatMap(value => walkFields(value)).join(',');
+		params.fields = query.fields.flatMap(value => walkFields(value)).join(',');
 	}
 
 	if (query.filter && Object.keys(query.filter).length > 0) {
-		params['filter'] = JSON.stringify(query.filter);
+		params.filter = JSON.stringify(query.filter);
 	}
 
 	if (query.search) {
 		// covers both empty string and undefined
-		params['search'] = query.search;
+		params.search = query.search;
 	}
 
 	if ('sort' in query && query.sort) {
 		// covers empty array and undefined
-		params['sort'] = typeof query.sort === 'string' ? query.sort : query.sort.join(',');
+		params.sort = typeof query.sort === 'string' ? query.sort : query.sort.join(',');
 	}
 
 	if (typeof query.limit === 'number' && query.limit >= -1) {
-		params['limit'] = String(query.limit);
+		params.limit = String(query.limit);
 	}
 
 	if (typeof query.offset === 'number' && query.offset >= 0) {
-		params['offset'] = String(query.offset);
+		params.offset = String(query.offset);
 	}
 
 	if (typeof query.page === 'number' && query.page >= 1) {
-		params['page'] = String(query.page);
+		params.page = String(query.page);
 	}
 
 	if (query.deep && Object.keys(query.deep).length > 0) {
-		params['deep'] = JSON.stringify(query.deep);
+		params.deep = JSON.stringify(query.deep);
 	}
 
 	if (query.alias && Object.keys(query.alias).length > 0) {
-		params['alias'] = JSON.stringify(query.alias);
+		params.alias = JSON.stringify(query.alias);
 	}
 
 	if (query.aggregate && Object.keys(query.aggregate).length > 0) {
-		params['aggregate'] = JSON.stringify(query.aggregate);
+		params.aggregate = JSON.stringify(query.aggregate);
 	}
 
 	if (query.groupBy && query.groupBy.length > 0) {
-		params['groupBy'] = query.groupBy.join(',');
+		params.groupBy = query.groupBy.join(',');
 	}
 
 	for (const [key, value] of Object.entries(query)) {

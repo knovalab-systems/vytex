@@ -1,6 +1,6 @@
 import type { DirectusDashboard } from '../../../schema/dashboard.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing dashboards.
@@ -14,7 +14,7 @@ export const deleteDashboards =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/dashboards`,
+			path: '/dashboards',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

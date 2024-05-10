@@ -1,7 +1,7 @@
 import type { DirectusPanel } from '../../../schema/panel.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadPanelOutput<
 	Schema extends object,
@@ -19,7 +19,7 @@ export const readPanels =
 		query?: TQuery,
 	): RestCommand<ReadPanelOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/panels`,
+		path: '/panels',
 		params: query ?? {},
 		method: 'GET',
 	});

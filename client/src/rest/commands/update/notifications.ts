@@ -1,7 +1,7 @@
 import type { DirectusNotification } from '../../../schema/notification.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateNotificationOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateNotifications =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/notifications`,
+			path: '/notifications',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

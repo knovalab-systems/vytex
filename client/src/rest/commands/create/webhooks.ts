@@ -22,7 +22,7 @@ export const createWebhooks =
 		query?: TQuery,
 	): RestCommand<CreateWebhookOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/webhooks`,
+		path: '/webhooks',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createWebhook =
 		query?: TQuery,
 	): RestCommand<CreateWebhookOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/webhooks`,
+		path: '/webhooks',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

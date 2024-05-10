@@ -22,7 +22,7 @@ export const createRoles =
 		query?: TQuery,
 	): RestCommand<CreateRoleOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/roles`,
+		path: '/roles',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createRole =
 		query?: TQuery,
 	): RestCommand<CreateRoleOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/roles`,
+		path: '/roles',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

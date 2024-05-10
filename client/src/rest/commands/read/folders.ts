@@ -1,7 +1,7 @@
 import type { DirectusFolder } from '../../../schema/folder.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadFolderOutput<
 	Schema extends object,
@@ -19,7 +19,7 @@ export const readFolders =
 		query?: TQuery,
 	): RestCommand<ReadFolderOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/folders`,
+		path: '/folders',
 		params: query ?? {},
 		method: 'GET',
 	});

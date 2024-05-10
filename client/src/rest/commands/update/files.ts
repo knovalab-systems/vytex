@@ -1,7 +1,7 @@
 import type { DirectusFile } from '../../../schema/file.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateFileOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateFiles =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/files`,
+			path: '/files',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',
