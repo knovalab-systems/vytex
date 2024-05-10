@@ -18,6 +18,7 @@
 		"@kobalte/core": "^0.13.1",
 		"@modular-forms/solid": "^0.20.0",
 		"@solidjs/router": "^0.13.3",
+		"@tanstack/solid-query": "^5.35.5",
 		"@vytex/client": "0.0.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
