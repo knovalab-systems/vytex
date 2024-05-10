@@ -1,9 +1,9 @@
-import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
-import { Button } from '~/components/ui/Button';
-import { logoutRequest } from '../requests/authRequests';
-import toast from 'solid-toast';
-import { LOGIN_PATH } from '~/utils/paths';
 import { useNavigate } from '@solidjs/router';
+import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
+import toast from 'solid-toast';
+import { Button } from '~/components/ui/Button';
+import { LOGIN_PATH } from '~/utils/paths';
+import { logoutRequest } from '../requests/authRequests';
 
 function LogoutNavButton() {
 	const navigate = useNavigate();

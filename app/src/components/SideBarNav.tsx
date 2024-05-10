@@ -1,8 +1,8 @@
-import { For, children, type JSXElement } from 'solid-js';
 import { A } from '@solidjs/router';
-import { RiUserFacesUserFill } from 'solid-icons/ri';
-import { OcHomefill3 } from 'solid-icons/oc';
 import { IoLogoIonitron } from 'solid-icons/io';
+import { OcHomefill3 } from 'solid-icons/oc';
+import { RiUserFacesUserFill } from 'solid-icons/ri';
+import { For, type JSXElement, children } from 'solid-js';
 import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
 
 function SideBarNav(props: { children?: JSXElement }) {

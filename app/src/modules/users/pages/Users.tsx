@@ -1,6 +1,4 @@
-import UserTable from '../components/UserTable';
 import { Match, Switch, createResource, createSignal } from 'solid-js';
-import { countUsers, getUsers } from '../requests/userRequests';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -9,6 +7,8 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+import UserTable from '../components/UserTable';
+import { countUsers, getUsers } from '../requests/userRequests';
 
 function Users() {
 	const [page, setPage] = createSignal(1);
