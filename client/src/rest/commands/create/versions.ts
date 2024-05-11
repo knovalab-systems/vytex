@@ -22,7 +22,7 @@ export const createContentVersions =
 		query?: TQuery,
 	): RestCommand<CreateContentVersionOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/versions`,
+		path: '/versions',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createContentVersion =
 		query?: TQuery,
 	): RestCommand<CreateContentVersionOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/versions`,
+		path: '/versions',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

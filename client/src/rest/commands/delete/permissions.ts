@@ -1,6 +1,6 @@
 import type { DirectusPermission } from '../../../schema/permission.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing permissions rules
@@ -14,7 +14,7 @@ export const deletePermissions =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/permissions`,
+			path: '/permissions',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

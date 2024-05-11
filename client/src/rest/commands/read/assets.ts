@@ -1,7 +1,7 @@
 import type { DirectusFile } from '../../../schema/file.js';
 import type { AssetsQuery } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Read the contents of a file as a ReadableStream<Uint8Array>

@@ -22,7 +22,7 @@ export const createComment =
 		query?: TQuery,
 	): RestCommand<CreateActivityOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/activity/comment`,
+		path: '/activity/comment',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

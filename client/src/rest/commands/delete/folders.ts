@@ -1,6 +1,6 @@
 import type { DirectusFolder } from '../../../schema/folder.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing folders.
@@ -14,7 +14,7 @@ export const deleteFolders =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/folders`,
+			path: '/folders',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

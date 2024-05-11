@@ -12,7 +12,7 @@ import type { RestCommand } from '../../types.js';
 export const inviteUser =
 	<Schema extends object>(email: string, role: string, invite_url?: string): RestCommand<void, Schema> =>
 	() => ({
-		path: `/users/invite`,
+		path: '/users/invite',
 		method: 'POST',
 		body: JSON.stringify({
 			email,
@@ -32,7 +32,7 @@ export const inviteUser =
 export const acceptUserInvite =
 	<Schema extends object>(token: string, password: string): RestCommand<void, Schema> =>
 	() => ({
-		path: `/users/invite/accept`,
+		path: '/users/invite/accept',
 		method: 'POST',
 		body: JSON.stringify({
 			token,
@@ -50,7 +50,7 @@ export const acceptUserInvite =
 export const generateTwoFactorSecret =
 	<Schema extends object>(password: string): RestCommand<{ secret: string; otpauth_url: string }, Schema> =>
 	() => ({
-		path: `/users/me/tfa/generate`,
+		path: '/users/me/tfa/generate',
 		method: 'POST',
 		body: JSON.stringify({
 			password,
@@ -68,7 +68,7 @@ export const generateTwoFactorSecret =
 export const enableTwoFactor =
 	<Schema extends object>(secret: string, otp: string): RestCommand<void, Schema> =>
 	() => ({
-		path: `/users/me/tfa/enable`,
+		path: '/users/me/tfa/enable',
 		method: 'POST',
 		body: JSON.stringify({
 			secret,
@@ -86,7 +86,7 @@ export const enableTwoFactor =
 export const disableTwoFactor =
 	<Schema extends object>(otp: string): RestCommand<void, Schema> =>
 	() => ({
-		path: `/users/me/tfa/disable`,
+		path: '/users/me/tfa/disable',
 		method: 'POST',
 		body: JSON.stringify({ otp }),
 	});

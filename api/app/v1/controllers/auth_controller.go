@@ -13,7 +13,6 @@ import (
 
 type AuthController struct {
 	repository.AuthRepository
-	repository.TokensRepository
 }
 
 // Login user
@@ -24,7 +23,7 @@ type AuthController struct {
 // @Produce      json
 // @Param		 username body string true "User's username"
 // @Param		 password body string true "User's password"
-// @Success      200 {object} models.LoginResponse
+// @Success      200 {object} models.Response
 // @Failure      400
 // @Failure      401
 // @Failure      500
@@ -44,32 +43,19 @@ func (m *AuthController) Login(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.AuthRepository.UserForLogin(u.Username)
+	user, err := m.AuthRepository.ValidUser(u.Username, u.Password)
 	if err != nil {
-		return problems.AuthUnauthorized()
-	}
-
-	// pending to encrypt pass
-
-	// check user
-	if u.Password != user.Password {
 		return problems.AuthUnauthorized()
 	}
 
 	// generate tokens
-	tokens, err := m.GenerateTokens(user.ID)
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// save refresh token
-	err = m.AuthRepository.RegisterRefresh(user.ID, tokens.Refresh)
+	tokens, err := m.Credentials(user.ID)
 	if err != nil {
 		return problems.ServerError()
 	}
 
 	// create n set cookie
-	refreshCookie := generateRefreshCookie(tokens.Refresh)
+	refreshCookie := generateRefreshCookie(tokens.Refresh, tokens.RefreshExpiresAt)
 	c.SetCookie(refreshCookie)
 
 	res := models.Response{
@@ -87,7 +73,7 @@ func (m *AuthController) Login(c echo.Context) error {
 // @Description  Given a correct refresh cookie get access
 // @Tags         Auth
 // @Produce      json
-// @Success      200 {object} models.LoginResponse
+// @Success      200 {object} models.Response
 // @Failure      401
 // @Failure      500
 // @Router       /refresh [post]
@@ -105,13 +91,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	}
 
 	// generate tokens
-	tokens, err := m.GenerateTokens(s.UserID)
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// save refresh token
-	err = m.AuthRepository.RegisterRefresh(s.UserID, tokens.Refresh)
+	tokens, err := m.Credentials(s.UserID)
 	if err != nil {
 		return problems.ServerError()
 	}
@@ -123,7 +103,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	}
 
 	// create n set cookie
-	refreshCookie := generateRefreshCookie(tokens.Refresh)
+	refreshCookie := generateRefreshCookie(tokens.Refresh, tokens.RefreshExpiresAt)
 	c.SetCookie(refreshCookie)
 
 	res := models.Response{
@@ -180,12 +160,11 @@ func (m *AuthController) Logout(c echo.Context) error {
 
 }
 
-func generateRefreshCookie(token string) *http.Cookie {
-	expires := time.Now().Add(utils.RefreshExpires)
+func generateRefreshCookie(token string, expiresAt time.Time) *http.Cookie {
 	c := new(http.Cookie)
 	c.Name = utils.RefreshCookieName
 	c.Value = token
-	c.Expires = expires
+	c.Expires = expiresAt
 	c.HttpOnly = true
 	c.SameSite = http.SameSiteLaxMode
 	c.Path = "/"

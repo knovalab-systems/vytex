@@ -1,6 +1,6 @@
 import type { DirectusOperation } from '../../../schema/operation.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing operations.
@@ -14,7 +14,7 @@ export const deleteOperations =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/operations`,
+			path: '/operations',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

@@ -1,7 +1,7 @@
 import type { DirectusPreset } from '../../../schema/preset.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdatePresetOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updatePresets =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/presets`,
+			path: '/presets',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

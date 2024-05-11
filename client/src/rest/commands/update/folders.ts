@@ -1,7 +1,7 @@
 import type { DirectusFolder } from '../../../schema/folder.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateFolderOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateFolders =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/folders`,
+			path: '/folders',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

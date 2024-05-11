@@ -21,7 +21,7 @@ export const authenticateShare =
 		Schema
 	> =>
 	() => ({
-		path: `/shares/auth`,
+		path: '/shares/auth',
 		method: 'POST',
 		body: JSON.stringify({ share, password }),
 	});
@@ -37,7 +37,7 @@ export const authenticateShare =
 export const inviteShare =
 	<Schema extends object>(share: string, emails: string[]): RestCommand<void, Schema> =>
 	() => ({
-		path: `/shares/invite`,
+		path: '/shares/invite',
 		method: 'POST',
 		body: JSON.stringify({ share, emails }),
 	});

@@ -1,6 +1,6 @@
 import type { MergeCoreCollection } from '../index.js';
-import type { VytexUser } from './user.js';
 import type { DirectusDashboard } from './dashboard.js';
+import type { VytexUser } from './user.js';
 
 export type DirectusPanel<Schema extends object> = MergeCoreCollection<
 	Schema,

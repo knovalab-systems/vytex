@@ -1,7 +1,7 @@
 import type { DirectusActivity } from '../../../schema/activity.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadActivityOutput<
 	Schema extends object,
@@ -19,7 +19,7 @@ export const readActivities =
 		query?: TQuery,
 	): RestCommand<ReadActivityOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/activity`,
+		path: '/activity',
 		params: query ?? {},
 		method: 'GET',
 	});

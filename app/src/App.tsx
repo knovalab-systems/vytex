@@ -1,17 +1,22 @@
-import { Suspense } from 'solid-js';
-import './App.css';
-import { Router } from '@solidjs/router';
+import { type RouteSectionProps, Router } from '@solidjs/router';
+import { QueryClientProvider } from '@tanstack/solid-query';
 import { Toaster } from 'solid-toast';
+import './App.css';
 import Routes from './routes/Routes';
+import { queryClient } from './utils/queryClient';
 
 function App() {
 	return (
-		<Suspense>
-			<Router>
-				<Routes />
-			</Router>
-			<Toaster />
-		</Suspense>
+		<Router
+			root={(props: RouteSectionProps) => (
+				<QueryClientProvider client={queryClient}>
+					{props.children}
+					<Toaster />
+				</QueryClientProvider>
+			)}
+		>
+			<Routes />
+		</Router>
 	);
 }
 

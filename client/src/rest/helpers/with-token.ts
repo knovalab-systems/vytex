@@ -9,7 +9,7 @@ export function withToken<Schema extends object, Output>(
 
 		if (token) {
 			if (!options.headers) options.headers = {};
-			options.headers['Authorization'] = `Bearer ${token}`;
+			options.headers.Authorization = `Bearer ${token}`;
 		}
 
 		return options;

@@ -22,7 +22,7 @@ export const createNotifications =
 		query?: TQuery,
 	): RestCommand<CreateNotificationOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/notifications`,
+		path: '/notifications',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createNotification =
 		query?: TQuery,
 	): RestCommand<CreateNotificationOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/notifications`,
+		path: '/notifications',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

@@ -2,11 +2,11 @@ import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
-import { LoginSchema, type LoginType } from '../schema/authSchemas';
-import { loginRequest } from '../requests/authRequests';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
+import { loginRequest } from '../requests/authRequests';
+import { LoginSchema, type LoginType } from '../schema/authSchemas';
 
 function LoginForm() {
 	const navigate = useNavigate();

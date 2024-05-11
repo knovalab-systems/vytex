@@ -1,7 +1,7 @@
 import type { DirectusPermission } from '../../../schema/permission.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadPermissionOutput<
 	Schema extends object,
@@ -19,7 +19,7 @@ export const readPermissions =
 		query?: TQuery,
 	): RestCommand<ReadPermissionOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/permissions`,
+		path: '/permissions',
 		params: query ?? {},
 		method: 'GET',
 	});

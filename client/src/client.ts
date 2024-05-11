@@ -18,7 +18,6 @@ const defaultGlobals: ClientGlobals = {
  * @returns A Vytex client.
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const createVytexClient = <Schema = any>(url: string, options: ClientOptions = {}): VytexClient<Schema> => {
 	const globals = options.globals ? { ...defaultGlobals, ...options.globals } : defaultGlobals;
 	return {

@@ -22,7 +22,7 @@ export const createOperations =
 		query?: TQuery,
 	): RestCommand<CreateOperationOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/operations`,
+		path: '/operations',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createOperation =
 		query?: TQuery,
 	): RestCommand<CreateOperationOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/operations`,
+		path: '/operations',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

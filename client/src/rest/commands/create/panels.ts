@@ -22,7 +22,7 @@ export const createPanels =
 		query?: TQuery,
 	): RestCommand<CreatePanelOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/panels`,
+		path: '/panels',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createPanel =
 		query?: TQuery,
 	): RestCommand<CreatePanelOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/panels`,
+		path: '/panels',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',
