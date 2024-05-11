@@ -1,20 +1,21 @@
-import { Navigate } from '@solidjs/router';
+import { Navigate, type RouteSectionProps } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { type JSXElement, Match, Switch, createResource } from 'solid-js';
+import { Match, Switch, createResource } from 'solid-js';
 import { refreshRequest } from '~/modules/auth/requests/authRequests';
 import { client } from '~/utils/client';
 import { LOGIN_PATH } from '~/utils/paths';
-import SideBarNav from './SideBarNav';
+import Loading from './Loading';
 
-function ProtectedWrapper(props: { children?: JSXElement }) {
+function ProtectedWrapper(props: RouteSectionProps) {
 	const [token] = createResource(client.getToken);
 	const refresh = createQuery(() => refreshRequest(token.state === 'ready' && !token()));
 
 	return (
 		<Switch>
-			<Match when={(token.state === 'ready' && !!token()) || refresh.isSuccess}>
-				<SideBarNav>{props.children /**temporal use of nav */}</SideBarNav>
+			<Match when={token.loading || refresh.isFetching}>
+				<Loading label='Comprobando credenciales' />
 			</Match>
+			<Match when={(token.state === 'ready' && !!token()) || refresh.isSuccess}>{props.children}</Match>
 			<Match when={token.state === 'errored' || refresh.isError}>
 				{<Navigate href={`${LOGIN_PATH}?reason=TOKEN_EXPIRED`} />}
 			</Match>

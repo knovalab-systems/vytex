@@ -1,4 +1,5 @@
 import { Match, Switch, createResource, createSignal } from 'solid-js';
+import Loading from '~/components/Loading';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -17,12 +18,15 @@ function Users() {
 
 	return (
 		<Switch>
+			<Match when={users.loading || usersCount.loading}>
+				<Loading />
+			</Match>
 			<Match when={users.state === 'ready' && usersCount.state === 'ready'}>
 				<div class='h-full'>
 					<UserTable users={users()} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
-						count={Number(usersCount()?.at(0)?.count) || 1 /** pending for count fetch */}
+						count={Number(usersCount()?.at(0)?.count) || 1}
 						page={page()}
 						onPageChange={setPage}
 						itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}
