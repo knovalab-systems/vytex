@@ -1,5 +1,5 @@
 /**@type {import("tailwindcss").Config} */
-module.exports = {
+export default {
 	darkMode: ['class', '[data-kb-theme="dark"]'],
 	content: ['./index.html', './src/**/*.{ts,tsx}'],
 	theme: {
@@ -11,7 +11,12 @@ module.exports = {
 			},
 		},
 		extend: {
+			width: {
+				'1/8': '12.5%',
+			},
 			colors: {
+				practice_date: '#3C4FED',
+				trailway: '#744AC7',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',

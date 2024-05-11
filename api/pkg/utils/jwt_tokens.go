@@ -16,18 +16,18 @@ type Tokens struct {
 }
 
 type JWTClaims struct {
-	UserId string `json:"userid"`
+	UserId string `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
-type JwtTokends struct {
+type JwtTokens struct {
 }
 
 const AccessExpires time.Duration = time.Minute * 15
 const RefreshExpires time.Duration = time.Hour * 168
 const RefreshCookieName = "vytex_refresh_token"
 
-func (m *JwtTokends) GenerateTokens(userId string) (*Tokens, error) {
+func (m *JwtTokens) GenerateTokens(userId string) (*Tokens, error) {
 	// Generate JWT Access token.
 	accessToken, err := GenerateAccessToken(userId)
 	if err != nil {

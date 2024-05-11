@@ -124,7 +124,7 @@ func TestLogin(t *testing.T) {
 
 	t.Run("Find invalid password", func(t *testing.T) {
 		// context
-		user := &models.User{ID: "1", UserName: "jose", Password: "12345678"}
+		user := &models.User{ID: "1", Username: "jose", Password: "12345678"}
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "antonio1"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -136,7 +136,7 @@ func TestLogin(t *testing.T) {
 
 		// mocks
 		mockAuth := mocks.AuthMock{}
-		mockAuth.On("UserForLogin", user.UserName).Return(user, nil)
+		mockAuth.On("UserForLogin", user.Username).Return(user, nil)
 		tokenMock := mocks.TokenMock{}
 
 		// controller
@@ -152,7 +152,7 @@ func TestLogin(t *testing.T) {
 
 	t.Run("Not generate tokens", func(t *testing.T) {
 		// context
-		user := &models.User{ID: "1", UserName: "jose", Password: "12345678"}
+		user := &models.User{ID: "1", Username: "jose", Password: "12345678"}
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "12345678"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -164,7 +164,7 @@ func TestLogin(t *testing.T) {
 
 		// mocks
 		mockAuth := mocks.AuthMock{}
-		mockAuth.On("UserForLogin", user.UserName).Return(user, nil)
+		mockAuth.On("UserForLogin", user.Username).Return(user, nil)
 		tokenMock := mocks.TokenMock{}
 		tokenMock.On("GenerateTokens", user.ID).Return(errors.New("error"))
 
@@ -181,7 +181,7 @@ func TestLogin(t *testing.T) {
 
 	t.Run("Not save refresh token", func(t *testing.T) {
 		// context
-		user := &models.User{ID: "1", UserName: "jose", Password: "12345678"}
+		user := &models.User{ID: "1", Username: "jose", Password: "12345678"}
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "12345678"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -193,7 +193,7 @@ func TestLogin(t *testing.T) {
 
 		// mocks
 		mockAuth := mocks.AuthMock{}
-		mockAuth.On("UserForLogin", user.UserName).Return(user, nil)
+		mockAuth.On("UserForLogin", user.Username).Return(user, nil)
 		mockAuth.On("RegisterRefresh", user.ID, "").Return(errors.New("error"))
 		tokenMock := mocks.TokenMock{}
 		tokenMock.On("GenerateTokens", user.ID).Return(nil)
@@ -211,7 +211,7 @@ func TestLogin(t *testing.T) {
 
 	t.Run("Login successfully", func(t *testing.T) {
 		// context
-		user := &models.User{ID: "1", UserName: "jose", Password: "12345678"}
+		user := &models.User{ID: "1", Username: "jose", Password: "12345678"}
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "12345678"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -223,7 +223,7 @@ func TestLogin(t *testing.T) {
 
 		// mocks
 		mockAuth := mocks.AuthMock{}
-		mockAuth.On("UserForLogin", user.UserName).Return(user, nil)
+		mockAuth.On("UserForLogin", user.Username).Return(user, nil)
 		mockAuth.On("RegisterRefresh", user.ID, "").Return(nil)
 		tokenMock := mocks.TokenMock{}
 		tokenMock.On("GenerateTokens", user.ID).Return(nil)

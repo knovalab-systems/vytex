@@ -23,9 +23,7 @@ export const aggregate =
 		const collectionName = String(collection);
 		throwIfEmpty(collectionName, 'Collection cannot be empty');
 
-		const path = collectionName.startsWith('directus_')
-			? `/${collectionName.substring(9)}`
-			: `/items/${collectionName}`;
+		const path = `/${collectionName.substring(6)}/aggregate`;
 
 		return {
 			path,
@@ -33,7 +31,7 @@ export const aggregate =
 			params: {
 				...(options.query ?? {}),
 				...(options.groupBy ? { groupBy: options.groupBy } : {}),
-				aggregate: options.aggregate,
+				...options.aggregate,
 			},
 		};
 	};

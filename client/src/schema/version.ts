@@ -1,6 +1,6 @@
 import type { MergeCoreCollection } from '../index.js';
 import type { DirectusCollection } from './collection.js';
-import type { DirectusUser } from './user.js';
+import type { VytexUser } from './user.js';
 
 export type DirectusVersion<Schema extends object> = MergeCoreCollection<
 	Schema,
@@ -14,7 +14,7 @@ export type DirectusVersion<Schema extends object> = MergeCoreCollection<
 		hash: string;
 		date_created: 'datetime' | null;
 		date_updated: 'datetime' | null;
-		user_created: DirectusUser<Schema> | string | null;
-		user_updated: DirectusUser<Schema> | string | null;
+		user_created: VytexUser<Schema> | string | null;
+		user_updated: VytexUser<Schema> | string | null;
 	}
 >;

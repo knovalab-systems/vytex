@@ -6,17 +6,13 @@ import (
 
 // Struct to describe login user
 type LoginUser struct {
-	UserName string `json:"username" validate:"required,lte=30"`
+	Username string `json:"username" validate:"required,lte=30"`
 	Password string `json:"password" validate:"required,lte=20,gte=8"`
 }
 
 type DataAuthResponse struct {
 	AccessToken string `json:"access_token"`
 	Expires     int64  `json:"expires"`
-}
-
-type AuthResponse struct {
-	Data DataAuthResponse `json:"data"`
 }
 
 type Session struct {

@@ -8,14 +8,14 @@ import (
 )
 
 type User struct {
-	ID        string `gorm:"type:uuid;primary_key;"`
-	UserName  string
-	Name      string
-	Password  string
-	Role      int8
-	DeleteAt  gorm.DeletedAt
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        string         `json:"id" gorm:"type:uuid;primary_key;"`
+	Username  string         `json:"username"`
+	Name      string         `json:"name"`
+	Password  string         `json:"password"`
+	Role      int8           `json:"role"`
+	DeleteAt  gorm.DeletedAt `json:"delete_at"`
+	CreatedAt time.Time      `json:"create_at"`
+	UpdatedAt time.Time      `json:"update_at"`
 }
 
 // BeforeCreate will set a UUID rather than numeric ID.

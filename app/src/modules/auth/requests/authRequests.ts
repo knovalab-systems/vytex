@@ -10,3 +10,7 @@ export async function refreshRequest(enabled: number) {
 	}
 	return Promise.reject('Ignore refresh');
 }
+
+export async function logoutRequest() {
+	return await client.logout();
+}

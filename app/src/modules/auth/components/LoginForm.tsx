@@ -4,7 +4,7 @@ import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { LoginSchema, type LoginType } from '../schema/authSchemas';
 import { loginRequest } from '../requests/authRequests';
-import { Button } from '~/components/ui/button';
+import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 
