@@ -20,6 +20,8 @@ import type { DirectusVersion } from './version.js';
 import type { DirectusWebhook } from './webhook.js';
 
 export interface CoreSchema<Schema extends object = object> {
+	vytex_users: VytexUser<Schema>[];
+	/** 
 	directus_activity: DirectusActivity<Schema>[];
 	directus_collections: DirectusCollection<Schema>[];
 	directus_dashboards: DirectusDashboard<Schema>[];
@@ -37,7 +39,6 @@ export interface CoreSchema<Schema extends object = object> {
 	directus_roles: DirectusRole<Schema>[];
 	directus_settings: DirectusSettings<Schema>;
 	directus_shares: DirectusShare<Schema>[];
-	directus_users: VytexUser<Schema>[];
 	directus_versions: DirectusVersion<Schema>[];
-	directus_webhooks: DirectusWebhook<Schema>[];
+	directus_webhooks: DirectusWebhook<Schema>[];*/
 }

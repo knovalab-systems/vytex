@@ -12,10 +12,11 @@ function LogoutNavButton() {
 	const [showModal, setShowModal] = createSignal(false);
 
 	const navigate = useNavigate();
+
 	const handleLogOut = () => {
 		logoutRequest()
 			.then(() => {
-				navigate(LOGIN_PATH);
+				navigate(`${LOGIN_PATH}?reason=LOG_OUT`);
 				toast.success(MESSAGES.logout.confirm);
 			})
 			.catch(() => toast.error('Error al cerrar sesión'));

@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"reflect"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
@@ -13,30 +15,22 @@ type UserController struct {
 }
 
 func (m *UserController) ReadUsers(c echo.Context) error {
-
 	// for query params
-	u := new(models.Request)
-	queryLimit := utils.QueryLimit()
-	u.Limit = queryLimit
+	u := &models.Request{Limit: -1}
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return echo.NewHTTPError(400)
+		return problems.UsersBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return echo.NewHTTPError(400)
+		return problems.UsersBadRequest()
 	}
 
-	// set max value limite - PROPOSITION
-	if u.Limit == -1 {
-		u.Limit = queryLimit
-	}
-
-	// do pagination
-	if u.Page > 0 {
-		u.Offset = u.Limit * (u.Page - 1)
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.UsersBadRequest()
 	}
 
 	// do query
@@ -46,9 +40,32 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// return data
-
 	res := models.Response{Data: users}
+	return c.JSON(200, res)
+}
 
+func (m *UserController) AggregateUsers(c echo.Context) error {
+	// for query params
+	u := new(models.AggregateRequest)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// validate
+	if reflect.ValueOf(u).Elem().IsZero() {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// do query
+	aggregate, err := m.UserRepository.AggregationUsers(u)
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: aggregate}
 	return c.JSON(200, res)
 }
 

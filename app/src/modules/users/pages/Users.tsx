@@ -1,4 +1,4 @@
-import { Match, Switch, createEffect, createSignal } from 'solid-js';
+import { Match, Switch, createEffect, createResource, createSignal } from 'solid-js';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -9,7 +9,7 @@ import {
 } from '~/components/ui/Pagination';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
-import { getUsers, getUsersbyName, getUsersbyUsername } from '../requests/userRequests';
+import { countUsers, getUsers, getUsersbyName, getUsersbyUsername } from '../requests/userRequests';
 import type { GetUsersType } from '../requests/userRequests';
 
 function Users() {
@@ -18,13 +18,14 @@ function Users() {
 	const [usernameFilter, setUsernameFilter] = createSignal('');
 	const [users, setUsers] = createSignal<GetUsersType>([]);
 	const [isFiltering, setIsFiltering] = createSignal(false);
+	// const [users] = createResource(page, getUsers);
+	const [usersCount] = createResource(countUsers);
 
 	createEffect(async () => {
 		const name = nameFilter();
 		const username = usernameFilter();
 		const currentPage = page();
 		let fetchedUsers: GetUsersType;
-
 
 		if (name) {
 			fetchedUsers = await getUsersbyName(name, currentPage);
@@ -49,28 +50,24 @@ function Users() {
 		) || [];
 	};
 
-
-
 	return (
 		<Switch>
-			<Match when={(users()?.length ?? 0) > 0}>
+			<Match when={(users()?.length ?? 0) > 0 && usersCount.state === 'ready'}>
 				<div class='h-full'>
 					<UserControls setNameFilter={setNameFilter} setUsernameFilter={setUsernameFilter} />
 					<UserTable users={filteredUsers()} />
-					{!isFiltering() && (
-						<Pagination
-							class='pt-2 [&>*]:justify-center'
-							count={3 /** pending for count fetch */}
-							page={page()}
-							onPageChange={setPage}
-							itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}
-							ellipsisComponent={() => <PaginationEllipsis />}
-						>
-							<PaginationPrevious />
-							<PaginationItems />
-							<PaginationNext />
-						</Pagination>
-					)}
+					<Pagination
+						class='pt-2 [&>*]:justify-center'
+						count={Number(usersCount()?.at(0)?.count) || 1 /** pending for count fetch */}
+						page={page()}
+						onPageChange={setPage}
+						itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}
+						ellipsisComponent={() => <PaginationEllipsis />}
+					>
+						<PaginationPrevious />
+						<PaginationItems />
+						<PaginationNext />
+					</Pagination>
 				</div>
 			</Match>
 		</Switch>
