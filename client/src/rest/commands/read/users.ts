@@ -27,6 +27,40 @@ export const readUsers =
 	});
 
 /**
+ * List all disabled users that exist in Vytex.
+ *
+ * @param query The query parameters
+ *
+ * @returns An array of up to limit user objects. If no items are available, data will be an empty array.
+ *
+ */
+
+export const readDisabledUsers =
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		query?: TQuery,
+	): RestCommand<ReadUserOutput<Schema, TQuery>[], Schema> =>
+	() => ({
+		path: '/users/disabled',
+		params: query ?? {},
+		method: 'GET',
+	});
+
+/**
+ * List all enabled users that exist in Vytex.
+ * @param quey The query parameters
+ * @returns An array of up to limit user objects. If no items are available, data will be an empty array.
+ */
+export const readEnabledUsers =
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		query?: TQuery,
+	): RestCommand<ReadUserOutput<Schema, TQuery>[], Schema> =>
+	() => ({
+		path: '/users/enabled',
+		params: query ?? {},
+		method: 'GET',
+	});
+
+/**
  * List an existing user by name.
  *
  * @param name The name of the user
