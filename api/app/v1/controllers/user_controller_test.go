@@ -95,29 +95,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("GetUserFilter", &models.Request{Limit: queryLimit}).Return(models.UserFilter{}, errors.New("error"))
-
-		userController := UserController{UserRepository: &userMock}
-
-		// test
-		err := userController.ReadUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Error on select users by filter from db", func(t *testing.T) {
-		// context
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		userMock := mocks.UserMock{}
-		userMock.On("GetUserFilter", &models.Request{Limit: queryLimit}).Return(models.UserFilter{Username: "test"}, nil)
-		userMock.On("SelectUsersByFilter", &models.UserFilter{Username: "test"}, &models.Request{Limit: queryLimit}).Return(nil, errors.New("error"))
+		userMock.On("SelectUsers", &models.Request{Limit: &queryLimit}).Return(errors.New("error"))
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -141,7 +119,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: queryLimit, Offset: 1}).Return(nil)
+		userMock.On("SelectUsers", &models.Request{Limit: &queryLimit, Offset: 1}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -165,7 +143,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: queryLimit, Page: 2, Offset: queryLimit}).Return(nil)
+		userMock.On("SelectUsers", &models.Request{Limit: &queryLimit, Page: 2, Offset: queryLimit}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
