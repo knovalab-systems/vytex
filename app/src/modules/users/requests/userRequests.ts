@@ -1,4 +1,11 @@
-import { aggregate, readUserByName, readUserByUsername, readUsers } from '@vytex/client';
+import {
+	aggregate,
+	readDisabledUsers,
+	readEnabledUsers,
+	readUserByName,
+	readUserByUsername,
+	readUsers,
+} from '@vytex/client';
 import { client } from '~/utils/client';
 import { QUERY_LIMIT } from '~/utils/constans';
 
@@ -29,7 +36,23 @@ export async function getUsersbyUsername(username: string, page: number) {
 	);
 }
 
-export type GetUsersType = Awaited<ReturnType<typeof getUsers>> | undefined;
+export async function getDisabledUsers(page: number) {
+	return await client.request(
+		readDisabledUsers({
+			page: page | 0,
+			limit: QUERY_LIMIT,
+		}),
+	);
+}
+
+export async function getEnabledUsers(page: number) {
+	return await client.request(
+		readEnabledUsers({
+			page: page | 0,
+			limit: QUERY_LIMIT,
+		}),
+	);
+}
 
 export async function countUsers() {
 	return await client.request(
@@ -38,3 +61,5 @@ export async function countUsers() {
 		}),
 	);
 }
+
+export type GetUsersType = Awaited<ReturnType<typeof getUsers>> | undefined;
