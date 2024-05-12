@@ -12,7 +12,7 @@ type User struct {
 	Username  string         `json:"username"`
 	Name      string         `json:"name"`
 	Password  string         `json:"password"`
-	Role      int8           `json:"role"`
+	Role      string         `json:"role" gorm:"type:uuid"`
 	DeleteAt  gorm.DeletedAt `json:"delete_at"`
 	CreatedAt time.Time      `json:"create_at"`
 	UpdatedAt time.Time      `json:"update_at"`
