@@ -1,6 +1,6 @@
+import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { GetUsersType } from '../requests/userRequests';
-import { For } from 'solid-js';
 
 function UserTable(props: { users: GetUsersType }) {
 	return (
@@ -17,6 +17,11 @@ function UserTable(props: { users: GetUsersType }) {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
+					<Show when={(props.users?.length ?? 0) === 0}>
+						<TableRow class='bg-white'>
+							<TableCell colspan={6}>Datos no encontrados, por favor verifique la busqueda!</TableCell>
+						</TableRow>
+					</Show>
 					<For each={props.users}>
 						{user => (
 							<TableRow class='bg-white'>

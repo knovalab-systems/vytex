@@ -15,7 +15,6 @@ type UserControlsProps = {
 	statusFilterValue: string;
 };
 
-
 const UserControls = (props: UserControlsProps) => {
 	let timeoutId: NodeJS.Timeout;
 
@@ -41,8 +40,16 @@ const UserControls = (props: UserControlsProps) => {
 				Nuevo usuario
 				<FaSolidPlus class='ml-2' size={20} />
 			</Button>
-			<FilterInput filterValue={props.usernameFilterValue} setFilter={debounce(props.setUsernameFilter, 400)} placeholder='Usuario' />
-			<FilterInput filterValue={props.nameFilterValue} setFilter={debounce(props.setNameFilter, 400)} placeholder='Nombre' />
+			<FilterInput
+				filterValue={props.usernameFilterValue}
+				setFilter={debounce(props.setUsernameFilter, 400)}
+				placeholder='Usuario'
+			/>
+			<FilterInput
+				filterValue={props.nameFilterValue}
+				setFilter={debounce(props.setNameFilter, 400)}
+				placeholder='Nombre'
+			/>
 			<SelectOptions placeholder='Estado de usuario' options={USER_STATUS_OPTIONS} setSelect={props.setStatusFilter} />
 		</div>
 	);

@@ -79,7 +79,7 @@ export const readUserByName =
 			throw new Error('Name cannot be empty');
 		}
 		return {
-			path: `/users/?name=${encodeURIComponent(name)}`,
+			path: `/users/name/?name=${encodeURIComponent(name)}`,
 			params: query ?? {},
 			method: 'GET',
 		};
@@ -88,23 +88,23 @@ export const readUserByName =
 /**
  * List an existing user by username.
  *
- * @param username The name of the user
+ * @param username The username of the user
  * @param query The query parameters
  *
  * @returns Returns the requested user object.
- * @throws Will throw if name is empty
+ * @throws Will throw if username is empty
  */
 export const readUserByUsername =
 	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
-		name: VytexUser<Schema>['username'],
+		username: VytexUser<Schema>['username'],
 		query?: TQuery,
 	): RestCommand<ReadUserOutput<Schema, TQuery>[], Schema> =>
 	() => {
-		if (!name) {
+		if (!username) {
 			throw new Error('username cannot be empty');
 		}
 		return {
-			path: `/users/?username=${encodeURIComponent(name)}`,
+			path: `/users/username/?username=${encodeURIComponent(username)}`,
 			params: query ?? {},
 			method: 'GET',
 		};

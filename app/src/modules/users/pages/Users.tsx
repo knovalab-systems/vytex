@@ -1,4 +1,4 @@
-import { Match, Switch, createEffect, createResource, createSignal, equalFn } from 'solid-js';
+import { Match, Switch, createEffect, createResource, createSignal } from 'solid-js';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -10,7 +10,14 @@ import {
 import { USER_STATUS } from '~/utils/constans';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
-import { countUsers, getDisabledUsers, getEnabledUsers, getUsers, getUsersbyName, getUsersbyUsername } from '../requests/userRequests';
+import {
+	countUsers,
+	getDisabledUsers,
+	getEnabledUsers,
+	getUsers,
+	getUsersbyName,
+	getUsersbyUsername,
+} from '../requests/userRequests';
 import type { GetUsersType } from '../requests/userRequests';
 
 function Users() {
@@ -24,27 +31,33 @@ function Users() {
 
 	const fetchUsers = async (name: string, username: string, status: string, currentPage: number) => {
 		const fetchFunctions = {
-			[name]: () => getUsersbyName(name, currentPage),
-			[username]: () => getUsersbyUsername(username, currentPage),
-			[USER_STATUS.inactive]: () => getDisabledUsers(currentPage),
-			[USER_STATUS.active]: () => getEnabledUsers(currentPage),
-			default: () => getUsers(currentPage)
+			name: name ? () => getUsersbyName(name, currentPage) : null,
+			username: username ? () => getUsersbyUsername(username, currentPage) : null,
+			status: status
+				? status === USER_STATUS.inactive
+					? () => getDisabledUsers(currentPage)
+					: () => getEnabledUsers(currentPage)
+				: null,
+			default: () => getUsers(currentPage),
 		};
 
-		const key = [status, name, username].find(key => key in fetchFunctions) || 'default';
-		return await fetchFunctions[key]();
+		const key =
+			Object.keys(fetchFunctions).find(
+				key => fetchFunctions[key as 'name' | 'username' | 'status' | 'default'] !== null,
+			) || 'default';
+		const fetchFunction = fetchFunctions[key as 'name' | 'username' | 'status' | 'default'];
+		return fetchFunction ? (await fetchFunction()) ?? [] : [];
 	};
 
-
 	createEffect(async () => {
-		const name = nameFilter();
-		const username = usernameFilter();
+		const name = nameFilter().toLowerCase();
+		const username = usernameFilter().toLowerCase();
 		const status = statusFilter();
 		const currentPage = page();
 
 		const fetchedUsers = await fetchUsers(name, username, status, currentPage);
 
-		console.log("fetchedUsers:", fetchedUsers);
+		console.log('fetchedUsers:', fetchedUsers);
 
 		setUsers(fetchedUsers);
 	});
@@ -57,18 +70,17 @@ function Users() {
 		setIsFiltering(!!(nameFilterValue || usernameFilterValue || statusFilterValue));
 
 		return users()?.filter(
-			user => (!statusFilterValue ||
-				(statusFilterValue === USER_STATUS.inactive ? user.deleteAt !== null :
-					(statusFilterValue === USER_STATUS.active ? !user.deleteAt : true)))
-		)?.filter(
 			user => (!nameFilterValue || (user.name || '').toLowerCase().includes(nameFilterValue)) &&
-				(!usernameFilterValue || (user.username || '').toLowerCase().includes(usernameFilterValue))
+				(!usernameFilterValue || (user.username || '').toLowerCase().includes(usernameFilterValue)) &&
+				(!statusFilterValue ||
+					(statusFilterValue === USER_STATUS.inactive ? user.deleteAt !== null :
+						(statusFilterValue === USER_STATUS.active ? !user.deleteAt : true)))
 		) || [];
 	};
 
 	return (
 		<Switch>
-			<Match when={(users()?.length ?? 0) > 0 && usersCount.state === 'ready'}>
+			<Match when={usersCount.state === 'ready'}>
 				<div class='h-full'>
 					<UserControls
 						setNameFilter={setNameFilter}

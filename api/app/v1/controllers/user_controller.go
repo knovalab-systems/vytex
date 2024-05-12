@@ -77,9 +77,6 @@ func (m *UserController) ReadUsersByName(c echo.Context) error {
 	if err != nil {
 		return echo.NewHTTPError(404, err.Error())
 	}
-	if len(users) == 0 {
-		return echo.NewHTTPError(404, "User not found")
-	}
 
 	return c.JSON(200, users)
 }
@@ -91,9 +88,6 @@ func (m *UserController) ReadUsersByUsername(c echo.Context) error {
 
 	if err != nil {
 		return echo.NewHTTPError(404, err.Error())
-	}
-	if len(users) == 0 {
-		return echo.NewHTTPError(404, "User not found")
 	}
 
 	return c.JSON(200, users)

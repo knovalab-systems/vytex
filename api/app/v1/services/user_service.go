@@ -32,14 +32,14 @@ func (m *UserService) AggregationUsers(req *models.AggregateRequest) ([]*models.
 
 func (m *UserService) SelectUserByName(name string) ([]*models.User, error) {
 	table := query.User
-	condition := query.User.Name.Lower().Like("%" + name + "%")
+	condition := table.Name.Lower().Like("%" + name + "%")
 	users, err := table.Unscoped().Where(condition).Find()
 	return users, err
 }
 
 func (m *UserService) SelectUserByUsername(username string) ([]*models.User, error) {
 	table := query.User
-	condition := query.User.Username.Lower().Like("%" + username + "%")
+	condition := table.Username.Lower().Like("%" + username + "%")
 	users, err := table.Unscoped().Where(condition).Find()
 	return users, err
 }
