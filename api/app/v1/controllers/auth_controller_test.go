@@ -412,7 +412,7 @@ func TestLogout(t *testing.T) {
 
 		// Run the test
 		if assert.NoError(t, controller.Logout(c)) {
-			assert.Equal(t, http.StatusOK, rec.Code)
+			assert.Equal(t, http.StatusNoContent, rec.Code)
 		}
 	})
 }
