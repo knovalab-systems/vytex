@@ -12,7 +12,8 @@ func SanitizedQuery(req *models.Request) error {
 
 	req.Limit = sanitizedLimit(req.Limit)
 
-	req.Offset = sanitizeOffset(req.Offset, req.Page, req.Limit)
+	// need to be late than sanitizedLimit
+	req.Offset = sanitizeOffset(req.Offset, req.Page, *req.Limit)
 
 	return nil
 }
@@ -26,15 +27,19 @@ func LimitQuery() int {
 			log.Println("Invalid type in enviroment variable, QUERY_LIMIT_DEFAULT", err)
 		} else {
 			return limit
-
 		}
 	}
 	return limit
 }
 
-func sanitizedLimit(limit int) int {
-	if limit == -1 { // here could be a max limit query
-		return LimitQuery()
+func sanitizedLimit(limit *int) *int {
+	if limit == nil {
+		l := LimitQuery()
+		return &l
+	}
+	if *limit == -1 { // here could be a max limit query
+		l := LimitQuery()
+		return &l
 	}
 	return limit
 }

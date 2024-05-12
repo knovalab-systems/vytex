@@ -16,7 +16,7 @@ type UserController struct {
 
 func (m *UserController) ReadUsers(c echo.Context) error {
 	// for query params
-	u := &models.Request{Limit: -1}
+	u := new(models.Request)
 
 	// bind
 	if err := c.Bind(u); err != nil {

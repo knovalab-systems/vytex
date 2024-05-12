@@ -10,7 +10,7 @@ type UserService struct {
 
 func (m *UserService) SelectUsers(req *models.Request) ([]*models.User, error) {
 	table := query.User
-	users, err := table.Unscoped().Limit(req.Limit).Offset(req.Offset).Find()
+	users, err := table.Unscoped().Limit(*req.Limit).Offset(req.Offset).Find()
 	return users, err
 }
 
