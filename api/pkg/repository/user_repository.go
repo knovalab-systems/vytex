@@ -7,4 +7,5 @@ type UserRepository interface {
 	GetUserFilter(u *models.Query) (models.UserFilter, error)
 	SelectUsersByFilter(filter *models.UserFilter, req *models.Query) ([]*models.User, error)
 	AggregationUsers(*models.AggregateQuery) ([]*models.AggregateData, error)
+	UpdateUser(*models.UpdateUserBody) (*models.User, error)
 }

@@ -83,3 +83,27 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 	res := models.Response{Data: aggregate}
 	return c.JSON(200, res)
 }
+
+func (m *UserController) UpdateUser(c echo.Context) error {
+
+	u := new(models.UpdateUserBody)
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// update
+	user, err := m.UserRepository.UpdateUser(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(200, models.Response{
+		Data: user,
+	})
+}

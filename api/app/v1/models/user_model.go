@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 
 	"github.com/google/uuid"
@@ -25,4 +26,25 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 	}
 	return
+}
+
+type UpdateUserBody struct {
+	ID   string  `param:"userId" validate:"required,uuid"`
+	Role *string `json:"role"`
+}
+
+func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
+	updateMap := map[string]interface{}{}
+
+	if m.Role != nil {
+		if *m.Role == "" {
+			updateMap["role"] = nil
+		} else if IsRole(*m.Role) {
+			updateMap["role"] = *m.Role
+		} else {
+			return nil, errors.New("INVALID ROLE")
+		}
+	}
+
+	return updateMap, nil
 }
