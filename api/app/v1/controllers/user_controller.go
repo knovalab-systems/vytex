@@ -6,7 +6,6 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -28,15 +27,10 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// do query
+	// get users
 	users, err := m.SelectUsers(u)
 	if err != nil {
-		return problems.ServerError()
+		return err
 	}
 
 	// return data
@@ -58,10 +52,10 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 		return problems.AggregateUsersBadRequest()
 	}
 
-	// do query
+	// aggegation
 	aggregate, err := m.UserRepository.AggregationUsers(u)
 	if err != nil {
-		return problems.ServerError()
+		return err
 	}
 
 	// return data
@@ -70,16 +64,16 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 }
 
 func (m *UserController) UpdateUser(c echo.Context) error {
-
 	u := new(models.UpdateUserBody)
+
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
+		return problems.UpdateUsersBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
+		return problems.UpdateUsersBadRequest()
 	}
 
 	// update
