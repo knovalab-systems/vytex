@@ -11,13 +11,13 @@ import (
 type UserService struct {
 }
 
-func (m *UserService) SelectUsers(req *models.Request) ([]*models.User, error) {
+func (m *UserService) SelectUsers(req *models.Query) ([]*models.User, error) {
 	table := query.User
 	users, err := table.Unscoped().Limit(*req.Limit).Offset(req.Offset).Find()
 	return users, err
 }
 
-func (m *UserService) AggregationUsers(req *models.AggregateRequest) ([]*models.AggregateData, error) {
+func (m *UserService) AggregationUsers(req *models.AggregateQuery) ([]*models.AggregateData, error) {
 
 	table := query.User
 	aggregate := &models.AggregateData{}

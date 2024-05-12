@@ -8,7 +8,7 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 )
 
-func SanitizedQuery(req *models.Request) error {
+func SanitizedQuery(req *models.Query) error {
 
 	req.Limit = sanitizedLimit(req.Limit)
 
