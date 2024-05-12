@@ -117,7 +117,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: &queryLimit}).Return(errors.New("error"))
+		userMock.On("SelectUsers", &models.Query{Limit: &queryLimit}).Return(errors.New("error"))
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -141,7 +141,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: &queryLimit, Offset: 1}).Return(nil)
+		userMock.On("SelectUsers", &models.Query{Limit: &queryLimit, Offset: 1}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -165,7 +165,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: &queryLimit, Page: 2, Offset: queryLimit}).Return(nil)
+		userMock.On("SelectUsers", &models.Query{Limit: &queryLimit, Page: 2, Offset: queryLimit}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -194,7 +194,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateRequest{Count: ""}).Return(&models.AggregateData{}, nil)
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: ""}).Return(&models.AggregateData{}, nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -217,7 +217,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateRequest{Count: "*"}).Return(&models.AggregateData{}, errors.New("error"))
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("error"))
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -239,7 +239,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateRequest{Count: "*"}).Return(&models.AggregateData{}, nil)
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
 
 		userController := UserController{UserRepository: &userMock}
 

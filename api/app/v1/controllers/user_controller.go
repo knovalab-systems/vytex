@@ -16,7 +16,7 @@ type UserController struct {
 
 func (m *UserController) ReadUsers(c echo.Context) error {
 	// for query params
-	u := new(models.Request)
+	u := new(models.Query)
 
 	// bind
 	if err := c.Bind(u); err != nil {
@@ -46,7 +46,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 
 func (m *UserController) AggregateUsers(c echo.Context) error {
 	// for query params
-	u := new(models.AggregateRequest)
+	u := new(models.AggregateQuery)
 
 	// bind
 	if err := c.Bind(u); err != nil {
