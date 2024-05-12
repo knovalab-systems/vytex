@@ -17,7 +17,8 @@ type Tokens struct {
 }
 
 type JWTClaims struct {
-	UserId string `json:"user_id"`
+	User string `json:"user"`
+	Role string `json:"role"`
 	jwt.RegisteredClaims
 }
 
@@ -28,9 +29,9 @@ const AccessExpires time.Duration = time.Minute * 15
 const RefreshExpires time.Duration = time.Hour * 168
 const RefreshCookieName = "vytex_refresh_token"
 
-func GenerateTokens(userId string) (*Tokens, error) {
+func GenerateTokens(user string, role string) (*Tokens, error) {
 	// Generate JWT Access token.
-	accessToken, err := GenerateAccessToken(userId)
+	accessToken, err := GenerateAccessToken(user, role)
 	if err != nil {
 		// Return token generation error.
 		return nil, err
@@ -49,13 +50,14 @@ func GenerateTokens(userId string) (*Tokens, error) {
 	}, nil
 }
 
-func GenerateAccessToken(userId string) (string, error) {
+func GenerateAccessToken(user string, role string) (string, error) {
 	// env access key
 	secret := os.Getenv("JWT_ACCESS_KEY")
 
 	// create claims
 	claims := &JWTClaims{
-		UserId: userId,
+		User: user,
+		Role: role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(AccessExpires)),
 		},

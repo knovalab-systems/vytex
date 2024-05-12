@@ -48,7 +48,7 @@ func (m *AuthService) ValidRefresh(token string) (*models.SessionWithRole, error
 	u := query.User
 
 	session := &models.SessionWithRole{}
-	err := s.Select(s.ALL, u.Role).Where(s.RefreshToken.Eq(token)).Where(s.ExpiresAt.Gt(time.Now())).Join(u, u.ID.EqCol(s.UserID)).Scan(session)
+	err := s.Select(s.ID, s.UserID, u.Role).Where(s.RefreshToken.Eq(token)).Where(s.ExpiresAt.Gt(time.Now())).Join(u, u.ID.EqCol(s.UserID)).Scan(session)
 	if err != nil {
 		return nil, err
 	}

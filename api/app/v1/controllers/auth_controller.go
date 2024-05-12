@@ -156,7 +156,7 @@ func (m *AuthController) Logout(c echo.Context) error {
 		MaxAge:   -1,
 	})
 
-	return c.NoContent(http.StatusOK)
+	return c.NoContent(http.StatusNoContent)
 
 }
 
