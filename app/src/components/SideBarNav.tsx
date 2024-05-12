@@ -11,7 +11,6 @@ function SideBarNav(props: RouteSectionProps) {
 	const pages = [
 		{ name: 'Home', icon: <OcHomefill3 size={24} />, path: '/', end: true },
 		{ name: 'Usuarios', icon: <RiUserFacesUserFill size={24} />, path: '/users' },
-		{ name: 'Usuarios', icon: <RiUserFacesUserFill size={24} />, path: '/load' },
 	];
 
 	return (
