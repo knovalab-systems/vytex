@@ -42,11 +42,10 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 	updateMap := map[string]interface{}{}
 
 	if m.Role != nil {
-		if IsRole(*m.Role) {
-			updateMap["role"] = *m.Role
-		} else {
+		if !IsRole(*m.Role) {
 			return nil, errors.New("INVALID ROLE")
 		}
+		updateMap["role"] = *m.Role
 	}
 
 	return updateMap, nil

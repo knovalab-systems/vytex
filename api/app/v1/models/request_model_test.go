@@ -1,14 +1,15 @@
-package utils
+package models
 
 import (
 	"testing"
 
+	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSanitizedLimit(t *testing.T) {
 
-	limitQuery := LimitQuery()
+	limitQuery := utils.LimitQuery()
 
 	t.Run("set limit query, on -1", func(t *testing.T) {
 		// context

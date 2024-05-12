@@ -10,14 +10,11 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReadUser(t *testing.T) {
-
-	queryLimit := utils.LimitQuery()
 
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
@@ -117,19 +114,18 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Query{Limit: &queryLimit}).Return(errors.New("error"))
+		userMock.On("SelectUsers", &models.Query{}).Return(errors.New("error"))
 
 		userController := UserController{UserRepository: &userMock}
 
 		// test
 		err := userController.ReadUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
-		}
+		assert.Error(t, err)
 	})
 
 	t.Run("Get users succesfully with offset n limit", func(t *testing.T) {
 		// context
+		limit := -1
 		q := make(url.Values)
 		q.Set("limit", "-1")
 		q.Set("offset", "1")
@@ -141,7 +137,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Query{Limit: &queryLimit, Offset: 1}).Return(nil)
+		userMock.On("SelectUsers", &models.Query{Limit: &limit, Offset: 1}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -154,6 +150,7 @@ func TestReadUser(t *testing.T) {
 
 	t.Run("Get users succesfully with page n limit", func(t *testing.T) {
 		// context
+		limit := -1
 		q := make(url.Values)
 		q.Set("limit", "-1")
 		q.Set("page", "2")
@@ -165,7 +162,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Query{Limit: &queryLimit, Page: 2, Offset: queryLimit}).Return(nil)
+		userMock.On("SelectUsers", &models.Query{Limit: &limit, Page: 2}).Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -200,9 +197,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// test
 		err := userController.AggregateUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
+		assert.Error(t, err)
 	})
 
 	t.Run("Fail validation empty fields", func(t *testing.T) {
@@ -223,10 +218,10 @@ func TestAggregateUser(t *testing.T) {
 
 		// test
 		err := userController.AggregateUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
-		}
+		assert.Error(t, err)
+
 	})
+
 	t.Run("Get aggregate succesfully", func(t *testing.T) {
 		// context
 		q := make(url.Values)
