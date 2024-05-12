@@ -11,6 +11,11 @@ func AuthBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values for user credentials", ""))
 }
 
+func JwtBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, New(code, "", "", "Missing access token", ""))
+}
+
 func UsersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users resources", ""))

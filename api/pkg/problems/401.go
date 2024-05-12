@@ -8,7 +8,7 @@ import (
 
 func JWTUnauthorized() *echo.HTTPError {
 	code := http.StatusUnauthorized
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid or missing access token", ""))
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid access token", ""))
 }
 
 func AuthUnauthorized() *echo.HTTPError {
