@@ -87,14 +87,73 @@ func (m *UserController) ReadUsersByName(c echo.Context) error {
 func (m *UserController) ReadUsersByUsername(c echo.Context) error {
 	username := c.QueryParam("username")
 
-	user, err := m.SelectUserByUsername(username)
+	users, err := m.SelectUserByUsername(username)
 
 	if err != nil {
 		return echo.NewHTTPError(404, err.Error())
 	}
-	if user == nil {
+	if len(users) == 0 {
 		return echo.NewHTTPError(404, "User not found")
 	}
 
-	return c.JSON(200, user)
+	return c.JSON(200, users)
+}
+
+func (m *UserController) ReadDisableUsers(c echo.Context) error {
+	u := &models.Request{Limit: -1}
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// do query
+	users, err := m.SelectDisableUsers(u)
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: users}
+	return c.JSON(200, res)
+
+}
+
+func (m *UserController) ReadEnableUsers(c echo.Context) error {
+	u := &models.Request{Limit: -1}
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// do query
+	users, err := m.SelectEnableUsers(u)
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: users}
+	return c.JSON(200, res)
 }

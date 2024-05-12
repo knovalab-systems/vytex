@@ -15,6 +15,9 @@ func privateUsersRoutes(g *echo.Group) {
 	route.GET("/", userController.ReadUsers)
 	route.GET("/", userController.ReadUsersByName)
 	route.GET("/", userController.ReadUsersByUsername)
+	route.GET("/disabled", userController.ReadDisableUsers)
+	route.GET("/enabled", userController.ReadEnableUsers)
+	route.GET("/enabled/", userController.ReadEnableUsers)
 	route.GET("/aggregate", userController.AggregateUsers)
 	route.GET("/aggregate/", userController.AggregateUsers)
 
