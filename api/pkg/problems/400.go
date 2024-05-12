@@ -25,3 +25,8 @@ func AggregateUsersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users aggregation resources", ""))
 }
+
+func UpdateUsersBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to update user", ""))
+}

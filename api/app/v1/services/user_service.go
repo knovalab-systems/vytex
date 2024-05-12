@@ -13,21 +13,30 @@ import (
 type UserService struct {
 }
 
-func (m *UserService) SelectUsers(req *models.Query) ([]*models.User, error) {
+func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
+
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
 	table := query.User
-	users, err := table.Unscoped().Limit(*req.Limit).Offset(req.Offset).Find()
-	return users, err
+	users, err := table.Unscoped().Limit(*q.Limit).Offset(q.Offset).Find()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	return users, nil
 }
 
-func (m *UserService) AggregationUsers(req *models.AggregateQuery) ([]*models.AggregateData, error) {
+func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 
 	table := query.User
 	aggregate := &models.AggregateData{}
 
-	if req.Count != "" {
+	if q.Count != "" {
 		count, err := table.Count()
 		if err != nil {
-			return nil, err
+			return nil, problems.ServerError()
 		}
 		aggregate.Count = count
 	}
@@ -104,15 +113,16 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 
 	updateMap, err := update.ToUpdate()
 	if err != nil {
-		return nil, problems.UsersBadRequest()
+		return nil, problems.UpdateUsersBadRequest()
 	}
 
 	rows, err := table.Where(table.ID.Eq(update.ID)).Updates(updateMap)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
 	if rows.RowsAffected == 0 {
-		return nil, problems.UsersBadRequest()
+		return nil, problems.UpdateUsersBadRequest()
 	}
 
 	user, err := table.Where(table.ID.Eq(update.ID)).First()
