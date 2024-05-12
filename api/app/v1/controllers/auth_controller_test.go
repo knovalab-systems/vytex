@@ -164,7 +164,7 @@ func TestLogin(t *testing.T) {
 		// mocks
 		mockAuth := mocks.AuthMock{}
 		mockAuth.On("ValidUser", user.Username, user.Password).Return(user, nil)
-		mockAuth.On("Credentials", user.ID).Return(tokens, errors.New("error"))
+		mockAuth.On("Credentials", user.ID, "").Return(tokens, errors.New("error"))
 
 		// controller
 		controller := AuthController{AuthRepository: &mockAuth}
@@ -193,7 +193,7 @@ func TestLogin(t *testing.T) {
 		// mocks
 		mockAuth := mocks.AuthMock{}
 		mockAuth.On("ValidUser", user.Username, user.Password).Return(user, nil)
-		mockAuth.On("Credentials", user.ID).Return(tokens, nil)
+		mockAuth.On("Credentials", user.ID, "").Return(tokens, nil)
 
 		// controller
 		controller := AuthController{AuthRepository: &mockAuth}
@@ -243,7 +243,7 @@ func TestRefresh(t *testing.T) {
 
 		// mocks
 		mockAuth := mocks.AuthMock{}
-		mockAuth.On("ValidRefresh", cookie).Return(&models.Session{}, defaultError)
+		mockAuth.On("ValidRefresh", cookie).Return(&models.SessionWithRole{}, defaultError)
 
 		// controller
 		controller := AuthController{AuthRepository: &mockAuth}
@@ -259,7 +259,7 @@ func TestRefresh(t *testing.T) {
 	t.Run("Not save refresh token", func(t *testing.T) {
 		// context
 		cookie := "1"
-		session := &models.Session{UserID: "1", ID: 1}
+		session := &models.SessionWithRole{UserID: "1", ID: 1}
 		tokens := &utils.Tokens{}
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, cookie))
@@ -270,7 +270,7 @@ func TestRefresh(t *testing.T) {
 		// mocks
 		mockAuth := mocks.AuthMock{}
 		mockAuth.On("ValidRefresh", cookie).Return(session, nil)
-		mockAuth.On("Credentials", session.UserID).Return(tokens, defaultError)
+		mockAuth.On("Credentials", session.UserID, "").Return(tokens, defaultError)
 
 		// controller
 		controller := AuthController{AuthRepository: &mockAuth}
@@ -287,7 +287,7 @@ func TestRefresh(t *testing.T) {
 		t.Parallel()
 
 		cookie := "1"
-		session := &models.Session{UserID: "1", ID: 1}
+		session := &models.SessionWithRole{UserID: "1", ID: 1}
 		tokens := &utils.Tokens{}
 
 		// context
@@ -301,7 +301,7 @@ func TestRefresh(t *testing.T) {
 		mockAuth := mocks.AuthMock{}
 		mockAuth.On("ValidRefresh", cookie).Return(session, nil)
 		mockAuth.On("DeleteRefresh", session.ID).Return(defaultError)
-		mockAuth.On("Credentials", session.UserID).Return(tokens, nil)
+		mockAuth.On("Credentials", session.UserID, "").Return(tokens, nil)
 
 		// controller
 		controller := AuthController{AuthRepository: &mockAuth}
@@ -317,7 +317,7 @@ func TestRefresh(t *testing.T) {
 	t.Run("Successfully refresh", func(t *testing.T) {
 		// context
 		cookie := "1"
-		session := &models.Session{UserID: "1", ID: 1}
+		session := &models.SessionWithRole{UserID: "1", ID: 1}
 		tokens := &utils.Tokens{}
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, "1"))
@@ -328,7 +328,7 @@ func TestRefresh(t *testing.T) {
 		// mocks
 		mockAuth := mocks.AuthMock{}
 		mockAuth.On("ValidRefresh", cookie).Return(session, nil)
-		mockAuth.On("Credentials", session.UserID).Return(tokens, nil)
+		mockAuth.On("Credentials", session.UserID, "").Return(tokens, nil)
 		mockAuth.On("DeleteRefresh", session.ID).Return(nil)
 
 		// controller
@@ -358,7 +358,7 @@ func TestLogout(t *testing.T) {
 	// Define a valid session
 	validCookie := "1"
 	invalidCookie := "2"
-	session := &models.Session{UserID: "1", ID: 1}
+	session := &models.SessionWithRole{UserID: "1", ID: 1}
 
 	for i := range testCase {
 		testCase := testCase[i]
@@ -395,7 +395,7 @@ func TestLogout(t *testing.T) {
 	t.Run("Logout Successfully ", func(t *testing.T) {
 		// Create a new HTTP request
 		cookie := "1"
-		session := &models.Session{UserID: "1", ID: 1}
+		session := &models.SessionWithRole{UserID: "1", ID: 1}
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
 		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, cookie))
 		rec := httptest.NewRecorder()
