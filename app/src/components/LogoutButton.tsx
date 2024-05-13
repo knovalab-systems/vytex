@@ -3,7 +3,7 @@ import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
 import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { logoutRequest } from '~/modules/auth/requests/authRequests';
-import { MESSAGES } from '~/utils/constans';
+import { MESSAGES } from '~/utils/constants';
 import { LOGIN_PATH } from '~/utils/paths';
 import ConfirmationModal from './ConfirmationModal';
 

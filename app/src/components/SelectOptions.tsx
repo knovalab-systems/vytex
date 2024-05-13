@@ -11,7 +11,8 @@ interface SelectOptionsProps {
 	options: { label: string; value: string }[];
 	placeholder: string;
 	setSelect: (value: string) => void;
-	selectValue: string;
+	setClearOption: (value: boolean) => void;
+	clearOptios: boolean;
 }
 
 function SelectOptions(props: SelectOptionsProps) {
@@ -20,7 +21,10 @@ function SelectOptions(props: SelectOptionsProps) {
 			options={props.options}
 			optionValue={option => option.value}
 			optionTextValue={option => option.label}
-			onChange={option => props.setSelect(option ? option.value : '')}
+			onChange={option => {
+				const value = option ? option.value : '';
+				props.setSelect(value);
+			}}
 			placeholder={props.placeholder}
 			itemComponent={props => (
 				<Select.Item item={props.item} class='flex justify-between items-center h-8 px-2'>
@@ -36,7 +40,14 @@ function SelectOptions(props: SelectOptionsProps) {
 				aria-label='User Status'
 			>
 				<Select.Value<options> class='overflow-hidden overflow-ellipsis whitespace-nowrap'>
-					{state => <span>{state.selectedOption().label}</span>}
+					{state => {
+						if (props.clearOptios) {
+							state.clear();
+							props.setClearOption(false);
+						} else {
+							return <span>{state.selectedOption().label}</span>
+						}
+					}}
 				</Select.Value>
 				<Select.Icon class='h-5 w-5 flex-none'>
 					<TiArrowUnsorted />

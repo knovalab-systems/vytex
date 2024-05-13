@@ -1,5 +1,6 @@
 import { FaSolidPlus } from 'solid-icons/fa';
-import { onCleanup } from 'solid-js';
+import { TbFilterX } from 'solid-icons/tb';
+import { createSignal, onCleanup } from 'solid-js';
 import toast from 'solid-toast';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
@@ -16,6 +17,8 @@ type UserControlsProps = {
 };
 
 const UserControls = (props: UserControlsProps) => {
+	const [clearOption, setClearOption] = createSignal(false);
+
 	let timeoutId: NodeJS.Timeout;
 
 	const debounce = (func: (value: string) => void, delay: number) => {
@@ -32,12 +35,14 @@ const UserControls = (props: UserControlsProps) => {
 	const clearFilter = () => {
 		props.setNameFilter('');
 		props.setUsernameFilter('');
+		props.setStatusFilter('');
+		setClearOption(true);
 	};
 
 
 	const areFiltersApplied = () => {
-		return props.nameFilterValue !== '' || props.usernameFilterValue !== '' || props.statusFilterValue !== '';
-	};
+		return [props.nameFilterValue, props.usernameFilterValue, props.statusFilterValue].some(value => value !== '');
+	}
 
 	return (
 		<div class='flex flex-wrap justify-between'>
@@ -63,12 +68,14 @@ const UserControls = (props: UserControlsProps) => {
 				/>
 				<SelectOptions
 					placeholder='Estado de usuario'
-					selectValue={props.statusFilterValue}
 					options={USER_STATUS_OPTIONS}
+					clearOptios={clearOption()}
+					setClearOption={setClearOption}
 					setSelect={props.setStatusFilter} />
 			</div>
 			<div>
-				<Button class='w-auto font-bold bg-gray-600 h-12 hover:bg-gray-800' onclick={clearFilter} disabled={!areFiltersApplied()}>
+				<Button class='w-auto font-bold bg-red-500 h-12 hover:bg-red-600' onclick={clearFilter} disabled={!areFiltersApplied()}>
+					<TbFilterX class='mr-2' size={20} />
 					Limpiar filtros
 				</Button>
 			</div>
