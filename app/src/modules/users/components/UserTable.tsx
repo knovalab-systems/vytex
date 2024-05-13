@@ -1,6 +1,7 @@
 import { For } from 'solid-js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { GetUsersType } from '../requests/userRequests';
+import { roles } from '~/utils/roles';
 
 function UserTable(props: { users: GetUsersType }) {
 	return (
@@ -22,7 +23,7 @@ function UserTable(props: { users: GetUsersType }) {
 							<TableCell>{user.id}</TableCell>
 							<TableCell>{user.username}</TableCell>
 							<TableCell>{user.name}</TableCell>
-							<TableCell>{user.rol}</TableCell>
+							<TableCell>{roles[user.role].name}</TableCell>
 							<TableCell>
 								{user.delete_at ? (
 									<div class='inline-flex items-center px-3 py-1 text-red-500 rounded-full gap-x-2 bg-red-100/60 '>
