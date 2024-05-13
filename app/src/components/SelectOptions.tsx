@@ -11,16 +11,17 @@ interface SelectOptionsProps {
 	options: { label: string; value: string }[];
 	placeholder: string;
 	setSelect: (value: string) => void;
+	selectValue: string;
 }
 
-function SelectOptions({ options, placeholder, setSelect }: SelectOptionsProps) {
+function SelectOptions(props: SelectOptionsProps) {
 	return (
 		<Select
-			options={options}
+			options={props.options}
 			optionValue={option => option.value}
 			optionTextValue={option => option.label}
-			onChange={option => setSelect(option.value)}
-			placeholder={placeholder}
+			onChange={option => props.setSelect(option ? option.value : '')}
+			placeholder={props.placeholder}
 			itemComponent={props => (
 				<Select.Item item={props.item} class='flex justify-between items-center h-8 px-2'>
 					<Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>

@@ -29,29 +29,51 @@ const UserControls = (props: UserControlsProps) => {
 		clearTimeout(timeoutId);
 	});
 
+	const clearFilter = () => {
+		props.setNameFilter('');
+		props.setUsernameFilter('');
+	};
+
+
+	const areFiltersApplied = () => {
+		return props.nameFilterValue !== '' || props.usernameFilterValue !== '' || props.statusFilterValue !== '';
+	};
+
 	return (
-		<div class='flex flex-wrap gap-4'>
-			<Button
-				class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
-				onclick={() => {
-					toast.success('Nuevo usuario');
-				}}
-			>
-				Nuevo usuario
-				<FaSolidPlus class='ml-2' size={20} />
-			</Button>
-			<FilterInput
-				filterValue={props.usernameFilterValue}
-				setFilter={debounce(props.setUsernameFilter, 400)}
-				placeholder='Usuario'
-			/>
-			<FilterInput
-				filterValue={props.nameFilterValue}
-				setFilter={debounce(props.setNameFilter, 400)}
-				placeholder='Nombre'
-			/>
-			<SelectOptions placeholder='Estado de usuario' options={USER_STATUS_OPTIONS} setSelect={props.setStatusFilter} />
+		<div class='flex flex-wrap justify-between'>
+			<div class='flex flex-wrap gap-4'>
+				<Button
+					class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
+					onclick={() => {
+						toast.success('Nuevo usuario');
+					}}
+				>
+					Nuevo usuario
+					<FaSolidPlus class='ml-2' size={20} />
+				</Button>
+				<FilterInput
+					filterValue={props.usernameFilterValue}
+					setFilter={debounce(props.setUsernameFilter, 300)}
+					placeholder='Usuario'
+				/>
+				<FilterInput
+					filterValue={props.nameFilterValue}
+					setFilter={debounce(props.setNameFilter, 300)}
+					placeholder='Nombre'
+				/>
+				<SelectOptions
+					placeholder='Estado de usuario'
+					selectValue={props.statusFilterValue}
+					options={USER_STATUS_OPTIONS}
+					setSelect={props.setStatusFilter} />
+			</div>
+			<div>
+				<Button class='w-auto font-bold bg-gray-600 h-12 hover:bg-gray-800' onclick={clearFilter} disabled={!areFiltersApplied()}>
+					Limpiar filtros
+				</Button>
+			</div>
 		</div>
+
 	);
 };
 

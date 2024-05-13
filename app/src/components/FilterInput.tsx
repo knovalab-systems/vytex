@@ -6,23 +6,24 @@ type FilterProps = {
 	placeholder: string;
 };
 
-function FilterInput({ setFilter, placeholder, filterValue }: FilterProps) {
+function FilterInput(props: FilterProps) {
 	const handleInput = (e: Event) => {
 		e.preventDefault();
 		const target = e.target as HTMLInputElement;
-		setFilter(target.value);
+		props.setFilter(target.value);
+		console.log(props.filterValue);
 	};
 
 	return (
 		<Input
 			class='w-80 h-12 mb-2 text-xl focus:ring-gray-500'
 			type='text'
-			value={filterValue}
+			value={props.filterValue}
 			onInput={handleInput}
 			onPaste={(e: ClipboardEvent) => {
-				setFilter(e.clipboardData?.getData('text/plain') ?? '');
+				props.setFilter(e.clipboardData?.getData('text/plain') ?? '');
 			}}
-			placeholder={placeholder}
+			placeholder={props.placeholder}
 		/>
 	);
 }
