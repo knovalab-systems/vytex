@@ -19,11 +19,9 @@ function FilterInput({ setFilter, placeholder, filterValue }: FilterProps) {
 			type='text'
 			value={filterValue}
 			onInput={handleInput}
-			onPaste={
-				(e: ClipboardEvent) => {
-					setFilter(e.clipboardData?.getData('text/plain') ?? '');
-				}
-			}
+			onPaste={(e: ClipboardEvent) => {
+				setFilter(e.clipboardData?.getData('text/plain') ?? '');
+			}}
 			placeholder={placeholder}
 		/>
 	);

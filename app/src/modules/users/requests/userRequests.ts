@@ -7,7 +7,7 @@ import {
 	readUsers,
 } from '@vytex/client';
 import { client } from '~/utils/client';
-import { QUERY_LIMIT } from '~/utils/constans';
+import { QUERY_LIMIT, USER_STATUS } from '~/utils/constants';
 
 export async function getUsers(page: number) {
 	return await client.request(
@@ -61,5 +61,24 @@ export async function countUsers() {
 		}),
 	);
 }
+
+export const getFetchFunction = (name: string, username: string, status: string, currentPage: number) => {
+	const fetchFunctions = {
+		name: name ? () => getUsersbyName(name, currentPage) : null,
+		username: username ? () => getUsersbyUsername(username, currentPage) : null,
+		status: status
+			? status === USER_STATUS.inactive
+				? () => getDisabledUsers(currentPage)
+				: () => getEnabledUsers(currentPage)
+			: null,
+		default: () => getUsers(currentPage),
+	};
+
+	const key =
+		Object.keys(fetchFunctions).find(
+			key => fetchFunctions[key as 'name' | 'username' | 'status' | 'default'] !== null,
+		) || 'default';
+	return { fetchFunction: fetchFunctions[key as 'name' | 'username' | 'status' | 'default'], key };
+};
 
 export type GetUsersType = Awaited<ReturnType<typeof getUsers>> | undefined;

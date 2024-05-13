@@ -4,7 +4,7 @@ import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import ConfirmationModal from '~/components/ConfirmationModal';
 import { Button } from '~/components/ui/Button';
-import { MESSAGES } from '~/utils/constans';
+import { MESSAGES } from '~/utils/constants';
 import { LOGIN_PATH } from '~/utils/paths';
 import { logoutRequest } from '../requests/authRequests';
 

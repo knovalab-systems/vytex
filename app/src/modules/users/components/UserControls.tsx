@@ -4,7 +4,7 @@ import toast from 'solid-toast';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
-import { USER_ROLES_OPTIONS, USER_STATUS_OPTIONS } from '~/utils/constans';
+import { USER_STATUS_OPTIONS } from '~/utils/constants';
 
 type UserControlsProps = {
 	setNameFilter: (value: string) => void;
