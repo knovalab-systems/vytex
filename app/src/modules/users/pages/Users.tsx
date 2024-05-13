@@ -1,4 +1,4 @@
-import { Match, Switch, createResource, createSignal } from 'solid-js';
+import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -9,24 +9,31 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import UserTable from '../components/UserTable';
-import { countUsers, getUsers } from '../requests/userRequests';
+import { countUsersQuery, getUsersQuery } from '../requests/userRequests';
+import { createQuery } from '@tanstack/solid-query';
+import { QUERY_LIMIT } from '~/utils/constans';
 
 function Users() {
 	const [page, setPage] = createSignal(1);
-	const [users] = createResource(page, getUsers);
-	const [usersCount] = createResource(countUsers);
+	const users = createQuery(() => getUsersQuery(page()));
+	const usersCount = createQuery(countUsersQuery);
+	const pages = createMemo<number>(() => {
+		const count = usersCount.data?.at(0)?.count || 1;
+		const safe = count === 0 ? 1 : count;
+		return Math.ceil(safe / QUERY_LIMIT);
+	});
 
 	return (
 		<Switch>
-			<Match when={users.loading || usersCount.loading}>
+			<Match when={users.isPending || usersCount.isPending}>
 				<Loading />
 			</Match>
-			<Match when={users.state === 'ready' && usersCount.state === 'ready'}>
-				<div class='h-full'>
-					<UserTable users={users()} />
+			<Match when={users.isSuccess && users.isSuccess}>
+				<div class='h-full flex flex-col'>
+					<UserTable users={users.data} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
-						count={Number(usersCount()?.at(0)?.count) || 1}
+						count={pages()}
 						page={page()}
 						onPageChange={setPage}
 						itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}
