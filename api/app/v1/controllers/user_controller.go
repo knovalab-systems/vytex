@@ -13,6 +13,15 @@ type UserController struct {
 	repository.UserRepository
 }
 
+// Get the users
+// @Summary      Get users from db
+// @Description  Get all the user, limit for query o default limit
+// @Tags         Users
+// @Produce      json
+// @Success      200 {object} models.User
+// @Failure      400
+// @Failure      500
+// @Router       /users [get]
 func (m *UserController) ReadUsers(c echo.Context) error {
 	// for query params
 	u := new(models.Query)
@@ -55,10 +64,18 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// return data
-	res := models.Response{Data: users}
-	return c.JSON(200, res)
+	return c.JSON(200, users)
 }
 
+// Get aggregate from users
+// @Summary      Get aggregate from users
+// @Description  Get an aggregate function from users resource
+// @Tags         Users
+// @Produce      json
+// @Success      200 {object} models.AggregateData
+// @Failure      400
+// @Failure      500
+// @Router       /users/aggregate [get]
 func (m *UserController) AggregateUsers(c echo.Context) error {
 	// for query params
 	u := new(models.AggregateQuery)
@@ -80,10 +97,19 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 	}
 
 	// return data
-	res := models.Response{Data: aggregate}
-	return c.JSON(200, res)
+	return c.JSON(200, aggregate)
 }
 
+// Update role
+// @Summary      Update role
+// @Description  Updates the role of a user
+// @Tags         Users
+// @param		 userId path string true "User ID"
+// @Produce      json
+// @Success      200 {object} models.User
+// @Failure      400
+// @Failure      500
+// @Router       /users/{userId} [post]
 func (m *UserController) UpdateUser(c echo.Context) error {
 	u := new(models.UpdateUserBody)
 
@@ -103,7 +129,5 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(200, models.Response{
-		Data: user,
-	})
+	return c.JSON(200, user)
 }
