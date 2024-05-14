@@ -9,7 +9,7 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import UserTable from '../components/UserTable';
-import { countUsersQuery, getUsersQuery } from '../requests/userRequests';
+import { countUsersQuery, getUsersQuery } from '../requests/getUserRequests';
 import { createQuery } from '@tanstack/solid-query';
 import { QUERY_LIMIT } from '~/utils/constans';
 
