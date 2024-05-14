@@ -11,13 +11,24 @@ import {
 } from '@kobalte/core/dialog';
 import type { PolymorphicProps } from '@kobalte/core/polymorphic';
 import { cn } from '~/lib/utils';
+import type { VariantProps } from 'class-variance-authority';
+import { buttonVariants } from './Button';
 
 const Dialog = DialogPrimitive;
 
-type TriggerProps<T extends ValidComponent = 'button'> = PolymorphicProps<T, DialogTriggerProps>;
+type TriggerProps<T extends ValidComponent = 'button'> = PolymorphicProps<T, DialogTriggerProps> &
+	VariantProps<typeof buttonVariants>;
+
 const DialogTrigger: Component<TriggerProps> = props => {
-	const [, rest] = splitProps(props, ['children']);
-	return <DialogPrimitive.Trigger {...rest}>{props.children}</DialogPrimitive.Trigger>;
+	const [, rest] = splitProps(props, ['variant', 'size', 'class']);
+	return (
+		<DialogPrimitive.Trigger
+			class={cn(buttonVariants({ variant: props.variant, size: props.size }), props.class)}
+			{...rest}
+		>
+			{props.children}
+		</DialogPrimitive.Trigger>
+	);
 };
 
 const DialogPortal: Component<DialogPortalProps> = props => {

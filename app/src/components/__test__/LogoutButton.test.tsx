@@ -1,10 +1,10 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as logoutRequests from '~/modules/auth/requests/authRequests';
+import * as logoutRequest from '~/modules/auth/requests/authRequests';
 import LogoutButton from '../LogoutButton';
 
-vi.mock('~/modules/auth/requests/logoutRequests', () => ({
+vi.mock('~/modules/auth/requests/authRequests', () => ({
 	logoutRequest: vi.fn(),
 }));
 
@@ -27,7 +27,7 @@ describe('LogoutButton', () => {
 	});
 
 	it('calls logout request on button click', async () => {
-		const logoutSpy = vi.spyOn(logoutRequests, 'logoutRequest');
+		const logoutSpy = vi.spyOn(logoutRequest, 'logoutRequest');
 
 		render(() => <LogoutButton navigateTo='/' />);
 
@@ -39,7 +39,7 @@ describe('LogoutButton', () => {
 	});
 
 	it('redirects to provided path on successful logout', async () => {
-		vi.spyOn(logoutRequests, 'logoutRequest').mockResolvedValueOnce();
+		vi.spyOn(logoutRequest, 'logoutRequest').mockResolvedValueOnce();
 
 		render(() => <LogoutButton navigateTo='/login' />);
 

@@ -16,11 +16,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { updateRole } from '../requests/updateUserRequests';
 
 function RoleCell(props: {
-	role: string;
+	roleValue: string;
 	id: string;
 }) {
-	const [role, setRole] = createSignal(roles[props.role]);
-	const [value, setValue] = createSignal(roles[props.role]);
+	const [role, setRole] = createSignal(roles[props.roleValue]);
+	const [value, setValue] = createSignal(roles[props.roleValue]);
 	const [edit, setEdit] = createSignal(false);
 
 	createEffect(() => {
@@ -30,15 +30,19 @@ function RoleCell(props: {
 	});
 
 	const handleSubmit = () => {
-		updateRole(props.id, value().role)
-			.then(() => {
-				console.log('update');
-				setRole(value());
-				setEdit(false);
-			})
-			.catch(err => {
-				console.log(err);
-			});
+		if (value().role !== role().role) {
+			updateRole(props.id, value().role)
+				.then(() => {
+					console.log('update');
+					setRole(value());
+					setEdit(false);
+				})
+				.catch(err => {
+					console.log(err);
+				});
+		} else {
+			setEdit(false);
+		}
 	};
 
 	return (
@@ -47,10 +51,8 @@ function RoleCell(props: {
 				<span class='my-auto'>{role().name}</span>
 
 				<Dialog open={edit()} onOpenChange={setEdit}>
-					<DialogTrigger class='invisible'>
-						<Button variant='ghost' class=' hover:bg-slate-200'>
-							<AiFillEdit size={18} class='' />
-						</Button>
+					<DialogTrigger variant='ghost' class='invisible hover:bg-slate-200'>
+						<AiFillEdit size={18} />
 					</DialogTrigger>
 					<DialogContent class='w-[90%] sm:max-w-[425px]'>
 						<DialogHeader>
@@ -68,7 +70,7 @@ function RoleCell(props: {
 							placeholder='Selecciona un rol'
 							itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.name}</SelectItem>}
 						>
-							<SelectTrigger aria-label='Roles'>
+							<SelectTrigger aria-label='Roles' role='listbox'>
 								<SelectValue<RoleItems>>{state => state.selectedOption().name}</SelectValue>
 							</SelectTrigger>
 							<SelectContent />
