@@ -1,7 +1,7 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
+import NavWrapper from '~/components/NavWrapper';
 import ProtectedWrapper from '~/components/ProtectedWrapper';
-import SideBarNav from '~/components/SideBarNav';
 import { LOGIN_PATH } from '~/utils/paths';
 
 const LoginPage = lazy(() => import('~/modules/auth/pages/LoginPage'));
@@ -13,7 +13,7 @@ function Routes() {
 	return (
 		<>
 			<Route path={'/'} component={ProtectedWrapper}>
-				<Route path={'/'} component={SideBarNav}>
+				<Route path={'/'} component={NavWrapper}>
 					<Route path={'/'} component={Home} />
 					<Route path={'/users'} component={Users} />
 				</Route>

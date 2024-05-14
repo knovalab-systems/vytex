@@ -2,10 +2,15 @@ html,
 body,
 #root {
   height: 100%;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
   scroll-behavior: smooth;
+}
+
+#root {
+  display: flex;
 }
 
 ::-webkit-scrollbar {
