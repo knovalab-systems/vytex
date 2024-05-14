@@ -44,8 +44,6 @@ function Users() {
 
 		const fetchedUsers = await fetchUsers(name, username, status, currentPage);
 
-		console.log('fetchedUsers:', fetchedUsers);
-
 		setUsers(fetchedUsers);
 	});
 

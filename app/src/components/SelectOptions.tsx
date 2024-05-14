@@ -1,64 +1,38 @@
-import { Select } from '@kobalte/core/select';
-import { AiOutlineCheck } from 'solid-icons/ai';
-import { TiArrowUnsorted } from 'solid-icons/ti';
-
-interface options {
-	label: string;
-	value: string;
-}
+import { splitProps } from "solid-js";
+import { cn } from "~/lib/utils";
 
 interface SelectOptionsProps {
 	options: { label: string; value: string }[];
 	placeholder: string;
 	setSelect: (value: string) => void;
-	setClearOption: (value: boolean) => void;
-	clearOptios: boolean;
+	statusValue: string;
+	class?: string;
 }
 
 function SelectOptions(props: SelectOptionsProps) {
+	const [, rest] = splitProps(props, ['options', 'placeholder', 'setSelect', 'statusValue', 'class']);
+
+	const handleChange = (event: Event) => {
+		const target = event.target as HTMLSelectElement;
+		props.setSelect(target.value);
+	};
+
 	return (
-		<Select
-			options={props.options}
-			optionValue={option => option.value}
-			optionTextValue={option => option.label}
-			onChange={option => {
-				const value = option ? option.value : '';
-				props.setSelect(value);
-			}}
-			placeholder={props.placeholder}
-			itemComponent={props => (
-				<Select.Item item={props.item} class='flex justify-between items-center h-8 px-2'>
-					<Select.ItemLabel>{props.item.rawValue.label}</Select.ItemLabel>
-					<Select.ItemIndicator class='h-5 w-5 flex items-center justify-center'>
-						<AiOutlineCheck />
-					</Select.ItemIndicator>
-				</Select.Item>
+		<select
+			value={props.statusValue}
+			onchange={handleChange}
+			class={cn(
+				'inline-flex items-center justify-between w-80 rounded-md px-4 h-12 bg-white border border-gray-300 text-gray-700 transition-colors hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500',
+				props.class,
 			)}
+			aria-label='User Status'
+			{...rest}
 		>
-			<Select.Trigger
-				class='inline-flex items-center justify-between w-80 rounded-md px-4 h-12 bg-white border border-gray-300 text-gray-700 transition-colors hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500'
-				aria-label='User Status'
-			>
-				<Select.Value<options> class='overflow-hidden overflow-ellipsis whitespace-nowrap'>
-					{state => {
-						if (props.clearOptios) {
-							state.clear();
-							props.setClearOption(false);
-						} else {
-							return <span>{state.selectedOption().label}</span>;
-						}
-					}}
-				</Select.Value>
-				<Select.Icon class='h-5 w-5 flex-none'>
-					<TiArrowUnsorted />
-				</Select.Icon>
-			</Select.Trigger>
-			<Select.Portal>
-				<Select.Content class='bg-white rounded-md border border-gray-300 shadow-md transform transition-transform origin-top animate-slide-up'>
-					<Select.Listbox class='overflow-y-auto max-h-90 p-2' />
-				</Select.Content>
-			</Select.Portal>
-		</Select>
+			<option value=''>{props.placeholder}</option>
+			{props.options.map(option => (
+				<option value={option.value}>{option.label}</option>
+			))}
+		</select>
 	);
 }
 

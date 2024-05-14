@@ -56,7 +56,7 @@ const UserControls = (props: UserControlsProps) => {
 					<FaSolidPlus class='ml-2' size={20} />
 				</Button>
 				<FilterInput
-					class='w-32'
+					class='w-52'
 					filterValue={props.usernameFilterValue}
 					setFilter={debounce(props.setUsernameFilter, 300)}
 					placeholder='Usuario'
@@ -67,11 +67,10 @@ const UserControls = (props: UserControlsProps) => {
 					placeholder='Nombre'
 				/>
 				<SelectOptions
-					placeholder='Estado de usuario'
 					options={USER_STATUS_OPTIONS}
-					clearOptios={clearOption()}
-					setClearOption={setClearOption}
+					placeholder='Estado de usuario'
 					setSelect={props.setStatusFilter}
+					statusValue={props.statusFilterValue}
 				/>
 			</div>
 			<div>
