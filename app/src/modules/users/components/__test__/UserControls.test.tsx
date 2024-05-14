@@ -69,29 +69,22 @@ describe('UserControls', () => {
         expect(setUsernameFilter).toHaveBeenCalledWith('john123');
     });
 
-    // it('should call setStatusFilter when status filter changes', async () => {
-    //     render(() => (
-    //         <UserControls
-    //             setNameFilter={setNameFilter}
-    //             nameFilterValue=""
-    //             setUsernameFilter={setUsernameFilter}
-    //             usernameFilterValue=""
-    //             setStatusFilter={setStatusFilter}
-    //             statusFilterValue=""
-    //         />
-    //     ));
+    it('should call setStatusFilter when status filter changes', async () => {
+        render(() => (
+            <UserControls
+                setNameFilter={setNameFilter}
+                nameFilterValue=""
+                setUsernameFilter={setUsernameFilter}
+                usernameFilterValue=""
+                setStatusFilter={setStatusFilter}
+                statusFilterValue=""
+            />
+        ));
 
-    //     const statusFilterSelect = screen.getByText(/Estado de usuario/i);
-    //     fireEvent.click(statusFilterSelect);
-
-    //     const option = await screen.findByText(/Activo/i);
-    //     fireEvent.click(option);
-
-
-    //     await new Promise(resolve => setTimeout(resolve, 300));
-    //     expect(setStatusFilter).toHaveBeenCalledWith('activo');
-
-    // });
+        const select = screen.getByText('Estado de usuario');
+        fireEvent.change(select, { target: { value: 'Activo' } });
+        expect(setStatusFilter).toHaveBeenCalledWith('Activo');
+    });
 
     it('should clear all filters when clear filters button is clicked', async () => {
         // render with initial filters
