@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"log"
 	"reflect"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -17,6 +18,8 @@ type UserController struct {
 func (m *UserController) ReadUsers(c echo.Context) error {
 	// for query params
 	u := &models.Request{Limit: -1}
+
+	log.Print("model", u)
 
 	// bind
 	if err := c.Bind(u); err != nil {
@@ -70,30 +73,72 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 }
 
 func (m *UserController) ReadUsersByName(c echo.Context) error {
-	name := c.QueryParam("name")
+	u := &models.Request{Limit: -1}
 
-	users, err := m.SelectUserByName(name)
-
-	if err != nil {
-		return echo.NewHTTPError(404, err.Error())
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
 	}
 
-	return c.JSON(200, users)
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// get name
+	s := c.QueryParam("name")
+
+	// do query
+	users, err := m.SelectUserByName(u, s)
+
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: users}
+
+	return c.JSON(200, res)
 }
 
 func (m *UserController) ReadUsersByUsername(c echo.Context) error {
-	username := c.QueryParam("username")
+	u := &models.Request{Limit: -1}
 
-	users, err := m.SelectUserByUsername(username)
-
-	if err != nil {
-		return echo.NewHTTPError(404, err.Error())
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
 	}
 
-	return c.JSON(200, users)
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// get username
+	s := c.QueryParam("username")
+
+	// do query
+	users, err := m.SelectUserByUsername(u, s)
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: users}
+	return c.JSON(200, res)
 }
 
-func (m *UserController) ReadDisableUsers(c echo.Context) error {
+func (m *UserController) ReadDisabledUsers(c echo.Context) error {
 	u := &models.Request{Limit: -1}
 
 	// bind
@@ -112,7 +157,7 @@ func (m *UserController) ReadDisableUsers(c echo.Context) error {
 	}
 
 	// do query
-	users, err := m.SelectDisableUsers(u)
+	users, err := m.SelectDisabledUsers(u)
 	if err != nil {
 		return problems.ServerError()
 	}
@@ -123,7 +168,7 @@ func (m *UserController) ReadDisableUsers(c echo.Context) error {
 
 }
 
-func (m *UserController) ReadEnableUsers(c echo.Context) error {
+func (m *UserController) ReadEnabledUsers(c echo.Context) error {
 	u := &models.Request{Limit: -1}
 
 	// bind
@@ -142,7 +187,7 @@ func (m *UserController) ReadEnableUsers(c echo.Context) error {
 	}
 
 	// do query
-	users, err := m.SelectEnableUsers(u)
+	users, err := m.SelectEnabledUsers(u)
 	if err != nil {
 		return problems.ServerError()
 	}
