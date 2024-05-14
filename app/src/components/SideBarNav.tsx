@@ -1,16 +1,17 @@
 import { A } from '@solidjs/router';
 import { IoLogoIonitron } from 'solid-icons/io';
-import { OcHomefill3 } from 'solid-icons/oc';
-import { RiUserFacesUserFill } from 'solid-icons/ri';
-import { For } from 'solid-js';
+
+import { For, type JSXElement } from 'solid-js';
 import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
 
-function SideBarNav() {
-	const pages = [
-		{ name: 'Home', icon: <OcHomefill3 size={24} />, path: '/', end: true },
-		{ name: 'Usuarios', icon: <RiUserFacesUserFill size={24} />, path: '/users' },
-	];
+interface Props {
+	name: string;
+	path: string;
+	end?: boolean;
+	icon: JSXElement;
+}
 
+function SideBarNav(props: { pages: Props[] }) {
 	return (
 		<nav class=' w-1/8 p-2 bg-gray-900/95 h-full shadow-md shadow-gray-900 hidden lg:block'>
 			<div class='flex font-sans lg:text-xs 2xl:text-xl items-center text-center py-2 text-white uppercase'>
@@ -19,7 +20,7 @@ function SideBarNav() {
 			</div>
 			<div class='my-2 bg-gray-600 h-[1px]' />
 			<ul class='space-y-2'>
-				<For each={pages}>
+				<For each={props.pages}>
 					{page => (
 						<li>
 							<A
