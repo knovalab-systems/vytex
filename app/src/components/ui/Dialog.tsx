@@ -77,14 +77,17 @@ const DialogContent: Component<ContentProps> = props => {
 		</DialogPortal>
 	);
 };
+
 const DialogHeader: Component<ComponentProps<'div'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
 	return <div class={cn('flex flex-col space-y-1.5 text-center sm:text-left', props.class)} {...rest} />;
 };
+
 const DialogFooter: Component<ComponentProps<'div'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
-	return <div class={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', props.class)} {...rest} />;
+	return <div class={cn('flex flex-col-reverse sm:flex-row sm:justify-end gap-2', props.class)} {...rest} />;
 };
+
 type TitleProps<T extends ValidComponent = 'h2'> = PolymorphicProps<T, DialogTitleProps>;
 const DialogTitle: Component<TitleProps> = props => {
 	const [, rest] = splitProps(props, ['class']);
@@ -92,9 +95,11 @@ const DialogTitle: Component<TitleProps> = props => {
 		<DialogPrimitive.Title class={cn('text-lg font-semibold leading-none tracking-tight', props.class)} {...rest} />
 	);
 };
+
 type DescriptionProps<T extends ValidComponent = 'p'> = PolymorphicProps<T, DialogDescriptionProps>;
 const DialogDescription: Component<DescriptionProps> = props => {
 	const [, rest] = splitProps(props, ['class']);
 	return <DialogPrimitive.Description class={cn('text-sm text-muted-foreground', props.class)} {...rest} />;
 };
+
 export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogFooter, DialogTitle, DialogDescription };

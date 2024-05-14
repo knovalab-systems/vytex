@@ -1,6 +1,6 @@
 import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetUsersType } from '../requests/userRequests';
+import type { GetUsersType } from '../requests/getUserRequests';
 import RoleCell from './RoleCell';
 
 function UserTable(props: { users: GetUsersType }) {
