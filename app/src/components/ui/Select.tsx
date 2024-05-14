@@ -39,7 +39,7 @@ const SelectTrigger: Component<TriggerProps> = props => {
 					stroke-linejoin='round'
 					class='size-4 opacity-50'
 				>
-					<title>1</title>
+					<title>Down arrow</title>
 					<path d='M6 9l6 6l6 -6' />
 				</svg>
 			</SelectPrimitive.Icon>

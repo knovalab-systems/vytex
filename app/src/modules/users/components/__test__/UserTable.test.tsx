@@ -1,6 +1,6 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { GetUsersType } from '../../requests/getUserRequests';
 import UserTable from '../UserTable';
 import * as RoleCell from '../RoleCell';
@@ -14,6 +14,10 @@ vi.mock('../RoleCell', () => ({
 }));
 
 describe('User Table', () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
 	it('renders correctly on empty users', () => {
 		render(() => <UserTable users={undefined} />);
 		const tableHeader = screen.getByText('ID');

@@ -31,7 +31,7 @@ function UserTable(props: { users: GetUsersType }) {
 								<TableCell>{user.id}</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>{user.name}</TableCell>
-								<RoleCell id={user.id} role={user.role} />
+								<RoleCell id={user.id} roleValue={user.role} />
 								<TableCell>
 									{user.delete_at ? (
 										<div class='inline-flex items-center px-3 py-1 text-red-500 rounded-full gap-x-2 bg-red-100/60 '>
