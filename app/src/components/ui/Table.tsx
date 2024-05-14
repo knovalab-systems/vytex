@@ -3,13 +3,14 @@ import { splitProps } from 'solid-js';
 
 import { cn } from '~/lib/utils';
 
+const TableContainer: Component<ComponentProps<'div'>> = props => {
+	const [, rest] = splitProps(props, ['class']);
+	return <div class={cn('rounded-lg shadow-md overflow-auto')} {...rest} />;
+};
+
 const Table: Component<ComponentProps<'table'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
-	return (
-		<div class='relative w-full overflow-auto'>
-			<table class={cn('w-full caption-bottom text-sm', props.class)} {...rest} />
-		</div>
-	);
+	return <table class={cn('w-full text-sm', props.class)} {...rest} />;
 };
 
 const TableHeader: Component<ComponentProps<'thead'>> = props => {
@@ -59,4 +60,4 @@ const TableCaption: Component<ComponentProps<'caption'>> = props => {
 	return <caption class={cn('mt-4 text-sm text-muted-foreground', props.class)} {...rest} />;
 };
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+export { Table, TableContainer, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
