@@ -45,7 +45,7 @@ function SelectOptions(props: SelectOptionsProps) {
 							state.clear();
 							props.setClearOption(false);
 						} else {
-							return <span>{state.selectedOption().label}</span>
+							return <span>{state.selectedOption().label}</span>;
 						}
 					}}
 				</Select.Value>

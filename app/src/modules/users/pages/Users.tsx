@@ -20,12 +20,9 @@ function Users() {
 	const [usernameFilter, setUsernameFilter] = createSignal('');
 	const [statusFilter, setStatusFilter] = createSignal('');
 	const [users, setUsers] = createSignal<GetUsersType>([]);
-	const [isLoading, setIsLoading] = createSignal(false);
 	const [usersCount] = createResource(countUsers);
 
 	const fetchUsers = async (name: string, username: string, status: string, currentPage: number) => {
-		setIsLoading(true);
-
 		const { fetchFunction } = getFetchFunction(name, username, status, currentPage);
 
 		const usersToFilter: GetUsersType = fetchFunction ? (await fetchFunction()) ?? [] : [];
@@ -50,7 +47,6 @@ function Users() {
 		console.log('fetchedUsers:', fetchedUsers);
 
 		setUsers(fetchedUsers);
-		setIsLoading(false);
 	});
 
 	return (
@@ -65,7 +61,7 @@ function Users() {
 						setStatusFilter={setStatusFilter}
 						statusFilterValue={statusFilter()}
 					/>
-					<UserTable users={users()} isLoading={isLoading()} />
+					<UserTable users={users()} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
 						count={Number(usersCount()?.at(0)?.count) || 1 /** pending for count fetch */}

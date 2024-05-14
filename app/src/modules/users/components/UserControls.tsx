@@ -39,10 +39,9 @@ const UserControls = (props: UserControlsProps) => {
 		setClearOption(true);
 	};
 
-
 	const areFiltersApplied = () => {
 		return [props.nameFilterValue, props.usernameFilterValue, props.statusFilterValue].some(value => value !== '');
-	}
+	};
 
 	return (
 		<div class='flex flex-wrap justify-between'>
@@ -53,10 +52,11 @@ const UserControls = (props: UserControlsProps) => {
 						toast.success('Nuevo usuario');
 					}}
 				>
-					Nuevo usuario
+					Nuevo
 					<FaSolidPlus class='ml-2' size={20} />
 				</Button>
 				<FilterInput
+					class='w-32'
 					filterValue={props.usernameFilterValue}
 					setFilter={debounce(props.setUsernameFilter, 300)}
 					placeholder='Usuario'
@@ -71,16 +71,20 @@ const UserControls = (props: UserControlsProps) => {
 					options={USER_STATUS_OPTIONS}
 					clearOptios={clearOption()}
 					setClearOption={setClearOption}
-					setSelect={props.setStatusFilter} />
+					setSelect={props.setStatusFilter}
+				/>
 			</div>
 			<div>
-				<Button class='w-auto font-bold bg-red-500 h-12 hover:bg-red-600' onclick={clearFilter} disabled={!areFiltersApplied()}>
+				<Button
+					class='w-auto font-bold bg-red-500 h-12 hover:bg-red-600'
+					onclick={clearFilter}
+					disabled={!areFiltersApplied()}
+				>
 					<TbFilterX class='mr-2' size={20} />
 					Limpiar filtros
 				</Button>
 			</div>
 		</div>
-
 	);
 };
 
