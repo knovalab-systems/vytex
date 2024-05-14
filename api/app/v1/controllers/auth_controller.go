@@ -21,13 +21,12 @@ type AuthController struct {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Param		 username body string true "User's username"
-// @Param		 password body string true "User's password"
+// @Param		 request body models.LoginUser true "User's credentials"
 // @Success      200 {object} models.Response
 // @Failure      400
 // @Failure      401
 // @Failure      500
-// @Router       /login [post]
+// @Router       /auth/login [post]
 func (m *AuthController) Login(c echo.Context) error {
 	// for keep user
 	u := new(models.LoginUser)
@@ -58,11 +57,9 @@ func (m *AuthController) Login(c echo.Context) error {
 	refreshCookie := generateRefreshCookie(tokens.Refresh, tokens.RefreshExpiresAt)
 	c.SetCookie(refreshCookie)
 
-	res := models.Response{
-		Data: models.DataAuthResponse{
-			AccessToken: tokens.Access,
-			Expires:     utils.AccessExpires.Milliseconds(),
-		},
+	res := models.DataAuthResponse{
+		AccessToken: tokens.Access,
+		Expires:     utils.AccessExpires.Milliseconds(),
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -76,7 +73,7 @@ func (m *AuthController) Login(c echo.Context) error {
 // @Success      200 {object} models.Response
 // @Failure      401
 // @Failure      500
-// @Router       /refresh [post]
+// @Router       /auth/refresh [post]
 func (m *AuthController) Refresh(c echo.Context) error {
 	// get the cookie with refresh token
 	cookie, err := c.Cookie(utils.RefreshCookieName)
@@ -106,11 +103,9 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	refreshCookie := generateRefreshCookie(tokens.Refresh, tokens.RefreshExpiresAt)
 	c.SetCookie(refreshCookie)
 
-	res := models.Response{
-		Data: models.DataAuthResponse{
-			AccessToken: tokens.Access,
-			Expires:     utils.AccessExpires.Milliseconds(),
-		},
+	res := models.DataAuthResponse{
+		AccessToken: tokens.Access,
+		Expires:     utils.AccessExpires.Milliseconds(),
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -125,7 +120,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 // @Success      200
 // @Failure      401
 // @Failure      500
-// @Router       /logout [post]
+// @Router       /auth/logout [post]
 func (m *AuthController) Logout(c echo.Context) error {
 
 	// get the cookie with refresh token
