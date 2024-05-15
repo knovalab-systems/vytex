@@ -20,7 +20,7 @@ export const createRelation =
 		item: NestedPartial<DirectusRelation<Schema>>,
 	): RestCommand<CreateRelationOutput<Schema>, Schema> =>
 	() => ({
-		path: `/relations`,
+		path: '/relations',
 		body: JSON.stringify(item),
 		method: 'POST',
 	});

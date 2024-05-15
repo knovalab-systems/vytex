@@ -22,7 +22,7 @@ export const createTranslations =
 		query?: TQuery,
 	): RestCommand<CreateTranslationOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/translations`,
+		path: '/translations',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createTranslation =
 		query?: TQuery,
 	): RestCommand<CreateTranslationOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/translations`,
+		path: '/translations',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

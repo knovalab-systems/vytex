@@ -1,19 +1,24 @@
-import { Navigate } from '@solidjs/router';
-import { type JSXElement, children, createResource, Switch, Match } from 'solid-js';
+import { Navigate, type RouteSectionProps } from '@solidjs/router';
+import { createQuery } from '@tanstack/solid-query';
+import { Match, Switch, createResource } from 'solid-js';
+import { refreshRequest } from '~/modules/auth/requests/authRequests';
 import { client } from '~/utils/client';
 import { LOGIN_PATH } from '~/utils/paths';
-import SideBarNav from './SideBarNav';
+import Loading from './Loading';
 
-function ProtectedWrapper(props: { children?: JSXElement }) {
-	const c = children(() => props.children);
-	const [token] = createResource(() => client.refresh());
+function ProtectedWrapper(props: RouteSectionProps) {
+	const [token] = createResource(client.getToken);
+	const refresh = createQuery(() => refreshRequest(token.state === 'ready' && !token()));
 
 	return (
 		<Switch>
-			<Match when={token.state === 'ready'}>
-				<SideBarNav>{c() /**temporal use of nav */}</SideBarNav>
+			<Match when={token.loading || refresh.isFetching}>
+				<Loading label='Comprobando credenciales' />
 			</Match>
-			<Match when={token.state === 'errored'}>{<Navigate href={`${LOGIN_PATH}?reason=TOKEN_EXPIRED`} />}</Match>
+			<Match when={(token.state === 'ready' && !!token()) || refresh.isSuccess}>{props.children}</Match>
+			<Match when={token.state === 'errored' || refresh.isError}>
+				{<Navigate href={`${LOGIN_PATH}?reason=TOKEN_EXPIRED`} />}
+			</Match>
 		</Switch>
 	);
 }

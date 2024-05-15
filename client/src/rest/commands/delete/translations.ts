@@ -1,6 +1,6 @@
 import type { DirectusTranslation } from '../../../schema/translation.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing translations.
@@ -14,7 +14,7 @@ export const deleteTranslations =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/translations`,
+			path: '/translations',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

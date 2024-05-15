@@ -1,7 +1,7 @@
 import type { AllCollections } from '../../../index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { AggregationOptions, AggregationOutput } from '../../../types/aggregate.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Aggregate allow you to perform calculations on a set of values, returning a single result.

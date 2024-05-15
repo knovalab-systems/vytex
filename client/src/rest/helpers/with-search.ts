@@ -9,7 +9,7 @@ export function withSearch<Schema extends object, Output>(
 		if (options.method === 'GET') {
 			options.method = 'SEARCH';
 			options.body = JSON.stringify({ query: options.params });
-			delete options.params;
+			options.params = undefined;
 		}
 
 		return options;

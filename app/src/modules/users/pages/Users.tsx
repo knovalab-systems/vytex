@@ -1,4 +1,5 @@
 import { Match, Switch, createEffect, createResource, createSignal } from 'solid-js';
+import Loading from '~/components/Loading';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -13,6 +14,7 @@ import { getFilters } from '../filters/filters';
 import { countUsers, getFetchFunction } from '../requests/userRequests';
 import type { GetUsersType } from '../requests/userRequests';
 import type { userType } from '../schema/schema';
+
 
 function Users() {
 	const [page, setPage] = createSignal(1);
@@ -54,6 +56,9 @@ function Users() {
 
 	return (
 		<Switch>
+			<Match when={usersCount.loading}>
+				<Loading />
+			</Match>
 			<Match when={usersCount.state === 'ready'}>
 				<div class='h-full'>
 					<UserControls
@@ -69,7 +74,7 @@ function Users() {
 					<UserTable users={users()} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
-						count={Number(usersCount()?.at(0)?.count) || 1 /** pending for count fetch */}
+						count={Number(usersCount()?.at(0)?.count) || 1}
 						page={page()}
 						onPageChange={setPage}
 						itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}

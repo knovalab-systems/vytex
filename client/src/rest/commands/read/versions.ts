@@ -19,7 +19,7 @@ export const readContentVersions =
 		query?: TQuery,
 	): RestCommand<ReadContentVersionOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/versions`,
+		path: '/versions',
 		params: query ?? {},
 		method: 'GET',
 	});

@@ -1,6 +1,6 @@
 import type { DirectusShare } from '../../../schema/share.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing shares.
@@ -14,7 +14,7 @@ export const deleteShares =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/shares`,
+			path: '/shares',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

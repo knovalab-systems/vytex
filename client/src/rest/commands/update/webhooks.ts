@@ -1,7 +1,7 @@
 import type { DirectusWebhook } from '../../../schema/webhook.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateWebhookOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateWebhooks =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/webhooks`,
+			path: '/webhooks',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

@@ -1,8 +1,8 @@
+import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
-import UserTable from '../UserTable';
 import type { GetUsersType } from '../../requests/userRequests';
+import UserTable from '../UserTable';
 
 describe('User Table', () => {
 	it('renders correctly on empty users', () => {

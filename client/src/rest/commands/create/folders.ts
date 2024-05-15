@@ -22,7 +22,7 @@ export const createFolders =
 		query?: TQuery,
 	): RestCommand<CreateFolderOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/folders`,
+		path: '/folders',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createFolder =
 		query?: TQuery,
 	): RestCommand<CreateFolderOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/folders`,
+		path: '/folders',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

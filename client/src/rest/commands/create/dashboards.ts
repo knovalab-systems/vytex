@@ -22,7 +22,7 @@ export const createDashboards =
 		query?: TQuery,
 	): RestCommand<CreateDashboardOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/dashboards`,
+		path: '/dashboards',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createDashboard =
 		query?: TQuery,
 	): RestCommand<CreateDashboardOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/dashboards`,
+		path: '/dashboards',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

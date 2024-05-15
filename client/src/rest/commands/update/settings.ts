@@ -20,7 +20,7 @@ export const updateSettings =
 		query?: TQuery,
 	): RestCommand<UpdateSettingOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/settings`,
+		path: '/settings',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'PATCH',

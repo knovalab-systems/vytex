@@ -22,7 +22,7 @@ export const createCollection =
 		query?: TQuery,
 	): RestCommand<CreateCollectionOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/collections`,
+		path: '/collections',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

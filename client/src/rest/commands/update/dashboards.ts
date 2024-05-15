@@ -1,7 +1,7 @@
 import type { DirectusDashboard } from '../../../schema/dashboard.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateDashboardOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateDashboards =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/dashboards`,
+			path: '/dashboards',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

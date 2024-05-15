@@ -14,7 +14,7 @@ export const deleteContentVersions =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/versions`,
+			path: '/versions',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

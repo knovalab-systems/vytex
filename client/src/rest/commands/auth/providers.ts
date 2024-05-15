@@ -14,6 +14,6 @@ export interface ReadProviderOutput {
 export const readProviders =
 	<Schema extends object>(): RestCommand<ReadProviderOutput[], Schema> =>
 	() => ({
-		path: `/auth`,
+		path: '/auth',
 		method: 'GET',
 	});

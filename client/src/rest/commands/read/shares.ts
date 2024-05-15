@@ -1,7 +1,7 @@
 import type { DirectusShare } from '../../../schema/share.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadShareOutput<
 	Schema extends object,
@@ -19,7 +19,7 @@ export const readShares =
 		query?: TQuery,
 	): RestCommand<ReadShareOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/shares`,
+		path: '/shares',
 		params: query ?? {},
 		method: 'GET',
 	});

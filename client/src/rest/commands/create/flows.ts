@@ -22,7 +22,7 @@ export const createFlows =
 		query?: TQuery,
 	): RestCommand<CreateFlowOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/flows`,
+		path: '/flows',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createFlow =
 		query?: TQuery,
 	): RestCommand<CreateFlowOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/flows`,
+		path: '/flows',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',
