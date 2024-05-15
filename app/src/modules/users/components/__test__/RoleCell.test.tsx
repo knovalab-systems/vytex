@@ -57,27 +57,38 @@ describe('RoleCell', () => {
 	it('renders correctly after close dialog', () => {
 		render(() => <RoleCell roleValue='admin' id='1' />);
 
+		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
+		expect(roleNameBefore).toBeInTheDocument();
+
 		const triggerButton = screen.getByRole('button');
 		fireEvent.click(triggerButton);
+
+		const roleNameInDialog = screen.getAllByText('Administrador'); // getByText error, there is more than one by select
+		expect(roleNameInDialog).not.toBeNull();
 
 		const closeButton = screen.getByText('Cancelar');
 		fireEvent.click(closeButton);
 
-		const roleName = screen.getByText('Administrador');
-
-		expect(roleName).toBeInTheDocument();
+		const roleNameAfter = screen.getByText('Administrador');
+		expect(roleNameAfter).toBeInTheDocument(); // there is only one again
 	});
 
-	it('renders correctly after save with same role', () => {
+	it('renders correctly after save', () => {
 		render(() => <RoleCell roleValue='admin' id='1' />);
+
+		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
+		expect(roleNameBefore).toBeInTheDocument();
 
 		const triggerButton = screen.getByRole('button');
 		fireEvent.click(triggerButton);
 
+		const roleNameInDialog = screen.getAllByText('Administrador'); // getByText error there is more than one by select
+		expect(roleNameInDialog).not.toBeNull();
+
 		const saveButton = screen.getByText('Guardar');
 		fireEvent.click(saveButton);
 
-		const roleName = screen.getByText('Administrador');
-		expect(roleName).toBeInTheDocument();
+		const roleNameAfter = screen.getByText('Administrador');
+		expect(roleNameAfter).toBeInTheDocument(); // there is only one again
 	});
 });
