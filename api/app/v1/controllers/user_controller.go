@@ -3,6 +3,7 @@ package controllers
 import (
 	"log"
 	"reflect"
+	"strconv"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -188,6 +189,46 @@ func (m *UserController) ReadEnabledUsers(c echo.Context) error {
 
 	// do query
 	users, err := m.SelectEnabledUsers(u)
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	// return data
+	res := models.Response{Data: users}
+	return c.JSON(200, res)
+}
+
+func (m *UserController) ReadUsersBuRole(c echo.Context) error {
+	u := &models.Request{Limit: -1}
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// sanitize
+	if err := utils.SanitizedQuery(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// get role
+	s := c.QueryParam("role")
+
+	// convert role to int8
+	r, err := strconv.ParseInt(s, 10, 8)
+
+	//ParseInt(s string, base int, bitSize int)
+	if err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// do query
+	users, err := m.SelectUsersByRole(u, int8(r))
 	if err != nil {
 		return problems.ServerError()
 	}

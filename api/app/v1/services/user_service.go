@@ -55,3 +55,9 @@ func (m *UserService) SelectEnabledUsers(req *models.Request) ([]*models.User, e
 	users, err := table.Unscoped().Limit(req.Limit).Offset(req.Offset).Where(query.User.DeleteAt.IsNull()).Find()
 	return users, err
 }
+
+func (m *UserService) SelectUsersByRole(req *models.Request, role int8) ([]*models.User, error) {
+	table := query.User
+	users, err := table.Unscoped().Limit(req.Limit).Offset(req.Offset).Where(query.User.Role.Eq(role)).Find()
+	return users, err
+}
