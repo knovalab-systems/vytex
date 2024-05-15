@@ -111,6 +111,31 @@ export const readUserByUsername =
 	};
 
 /**
+ * List all users that exist in Vytex by role.
+ *
+ * @param role The role id of the user
+ * @param query The query parameters
+ *
+ * @returns Returns the requested user object.
+ * @throws Will throw if role is empty
+ */
+export const readUserByRole =
+	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+		role: VytexUser<Schema>['role'],
+		query?: TQuery,
+	): RestCommand<ReadUserOutput<Schema, TQuery>[], Schema> =>
+	() => {
+		if (!role) {
+			throw new Error('role cannot be empty');
+		}
+		return {
+			path: `/users/role/?role=${encodeURIComponent(role)}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};
+
+/**
  * List an existing user by primary key.
  *
  * @param key The primary key of the user
