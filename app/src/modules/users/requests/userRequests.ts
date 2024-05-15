@@ -3,6 +3,7 @@ import {
 	readDisabledUsers,
 	readEnabledUsers,
 	readUserByName,
+	readUserByRole,
 	readUserByUsername,
 	readUsers,
 } from '@vytex/client';
@@ -54,6 +55,15 @@ export async function getEnabledUsers(page: number) {
 	);
 }
 
+export async function getUsersByRole(roleId: number, page: number) {
+	return await client.request(
+		readUserByRole(roleId, {
+			page: page | 0,
+			limit: QUERY_LIMIT,
+		}),
+	);
+}
+
 export async function countUsers() {
 	return await client.request(
 		aggregate('vytex_users', {
@@ -62,7 +72,13 @@ export async function countUsers() {
 	);
 }
 
-export const getFetchFunction = (name: string, username: string, status: string, currentPage: number) => {
+export const getFetchFunction = (
+	name: string,
+	username: string,
+	status: string,
+	currentPage: number,
+	roleId: number,
+) => {
 	const fetchFunctions = {
 		name: name ? () => getUsersbyName(name, currentPage) : null,
 		username: username ? () => getUsersbyUsername(username, currentPage) : null,
@@ -71,6 +87,7 @@ export const getFetchFunction = (name: string, username: string, status: string,
 				? () => getDisabledUsers(currentPage)
 				: () => getEnabledUsers(currentPage)
 			: null,
+		roleId: roleId ? () => getUsersByRole(roleId, currentPage) : null,
 		default: () => getUsers(currentPage),
 	};
 

@@ -1,7 +1,7 @@
 import { USER_STATUS } from '~/utils/constants';
 import type { userType } from '../schema/schema';
 
-export const getFilters = (name: string, username: string, status: string) => [
+export const getFilters = (name: string, username: string, status: string, roleId: number) => [
 	{
 		key: 'name',
 		value: name.toLowerCase(),
@@ -22,5 +22,10 @@ export const getFilters = (name: string, username: string, status: string) => [
 				: value === USER_STATUS.active
 					? !user.delete_at
 					: true),
+	},
+	{
+		key: 'role',
+		value: roleId,
+		filterFunction: (user: userType, value: number) => !value || user.role === value,
 	},
 ];

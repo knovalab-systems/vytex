@@ -19,18 +19,22 @@ function Users() {
 	const [nameFilter, setNameFilter] = createSignal('');
 	const [usernameFilter, setUsernameFilter] = createSignal('');
 	const [statusFilter, setStatusFilter] = createSignal('');
+	const [roleIdFilter, setRoleIdFilter] = createSignal('');
 	const [users, setUsers] = createSignal<GetUsersType>([]);
 	const [usersCount] = createResource(countUsers);
 
-	const fetchUsers = async (name: string, username: string, status: string, currentPage: number) => {
-		const { fetchFunction } = getFetchFunction(name, username, status, currentPage);
+	const fetchUsers = async (name: string, username: string, status: string, currentPage: number, roleId: string) => {
+		// role id to number
+		const role = Number.parseInt(roleId);
+
+		const { fetchFunction } = getFetchFunction(name, username, status, currentPage, role);
 
 		const usersToFilter: GetUsersType = fetchFunction ? (await fetchFunction()) ?? [] : [];
 
-		const filters = getFilters(name, username, status);
+		const filters = getFilters(name, username, status, role);
 
 		const filteredUsers = filters.reduce((users: GetUsersType, filter) => {
-			return (users as Array<userType>).filter(user => filter.filterFunction(user, filter.value));
+			return (users as Array<userType>).filter(user => filter.filterFunction(user, filter.value as never));
 		}, usersToFilter);
 
 		return filteredUsers;
@@ -40,9 +44,10 @@ function Users() {
 		const name = nameFilter().toLowerCase();
 		const username = usernameFilter().toLowerCase();
 		const status = statusFilter();
+		const roleId = roleIdFilter();
 		const currentPage = page();
 
-		const fetchedUsers = await fetchUsers(name, username, status, currentPage);
+		const fetchedUsers = await fetchUsers(name, username, status, currentPage, roleId);
 
 		setUsers(fetchedUsers);
 	});
@@ -58,6 +63,8 @@ function Users() {
 						usernameFilterValue={usernameFilter()}
 						setStatusFilter={setStatusFilter}
 						statusFilterValue={statusFilter()}
+						setRoleIdFilter={setRoleIdFilter}
+						roleIdFilterValue={roleIdFilter()}
 					/>
 					<UserTable users={users()} />
 					<Pagination
