@@ -299,6 +299,29 @@ func TestReadUsersByName(t *testing.T) {
 		}
 	})
 
+	t.Run("Fail validation, bad value for page", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("page", "-1")
+		q.Set("name", "test")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByName(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
 	t.Run("Error on get users from db", func(t *testing.T) {
 		// context
 		q := make(url.Values)
@@ -322,7 +345,7 @@ func TestReadUsersByName(t *testing.T) {
 		}
 	})
 
-	t.Run("Get users succesfully with offset n limit", func(t *testing.T) {
+	t.Run("Get users successfully with offset n limit", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("name", "test")
@@ -347,7 +370,7 @@ func TestReadUsersByName(t *testing.T) {
 		}
 	})
 
-	t.Run("Get users succesfully with page n limit", func(t *testing.T) {
+	t.Run("Get users successfully with page n limit", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("name", "test")
@@ -402,6 +425,29 @@ func TestReadUsersByUsername(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("limit", "-2")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByUsername(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail validation, bad value for page", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("page", "-1")
+		q.Set("username", "test")
 		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
@@ -778,4 +824,151 @@ func TestReadDisableUsers(t *testing.T) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
+}
+
+func TestReadUsersByRole(t *testing.T) {
+	queryLimit := utils.LimitQuery()
+
+	t.Run("Fail binding", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("limit", "uno")
+		q.Set("role", "admin")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByRole(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail validation, bad value for limit", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("limit", "-2")
+		q.Set("role", "admin")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByRole(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail validation, bad value for page", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("page", "-1")
+		q.Set("role", "admin")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByRole(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Error on get users from db", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("role", "1")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUsersByRole", &models.Request{Limit: queryLimit}, int8(1)).Return(errors.New("error"))
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByRole(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Get users successfully with offset n limit", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("role", "1")
+		q.Set("limit", "-1")
+		q.Set("offset", "1")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUsersByRole", &models.Request{Limit: queryLimit, Offset: 1}, int8(1)).Return(nil)
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByRole(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Get users successfully with page n limit", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("role", "1")
+		q.Set("limit", "-1")
+		q.Set("page", "2")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUsersByRole", &models.Request{Limit: queryLimit, Page: 2, Offset: queryLimit}, int8(1)).Return(nil)
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsersByRole(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
 }

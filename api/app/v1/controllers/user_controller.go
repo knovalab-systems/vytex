@@ -1,15 +1,14 @@
 package controllers
 
 import (
-	"log"
-	"reflect"
-	"strconv"
-
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
+	"log"
+	"reflect"
+	"strconv"
 )
 
 type UserController struct {
@@ -198,7 +197,7 @@ func (m *UserController) ReadEnabledUsers(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
-func (m *UserController) ReadUsersBuRole(c echo.Context) error {
+func (m *UserController) ReadUsersByRole(c echo.Context) error {
 	u := &models.Request{Limit: -1}
 
 	// bind
@@ -218,11 +217,8 @@ func (m *UserController) ReadUsersBuRole(c echo.Context) error {
 
 	// get role
 	s := c.QueryParam("role")
-
-	// convert role to int8
 	r, err := strconv.ParseInt(s, 10, 8)
 
-	//ParseInt(s string, base int, bitSize int)
 	if err != nil {
 		return problems.UsersBadRequest()
 	}

@@ -9,6 +9,11 @@ type UserMock struct {
 	mock.Mock
 }
 
+func (m *UserMock) SelectUsersByRole(request *models.Request, i int8) ([]*models.User, error) {
+	args := m.Called(request, i)
+	return []*models.User{}, args.Error(0)
+}
+
 func (m *UserMock) SelectUserByName(request *models.Request, s string) ([]*models.User, error) {
 	args := m.Called(request, s)
 	return []*models.User{}, args.Error(0)
