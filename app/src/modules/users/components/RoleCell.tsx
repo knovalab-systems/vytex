@@ -14,6 +14,7 @@ import {
 import { createEffect, createSignal } from 'solid-js';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { updateRole } from '../requests/updateUserRequests';
+import toast from 'solid-toast';
 
 function RoleCell(props: {
 	roleValue: string;
@@ -33,12 +34,12 @@ function RoleCell(props: {
 		if (value().role !== role().role) {
 			updateRole(props.id, value().role)
 				.then(() => {
-					console.log('update');
 					setRole(value());
 					setEdit(false);
+					toast.success('El rol ha sido actualizado');
 				})
-				.catch(err => {
-					console.log(err);
+				.catch(() => {
+					toast.error('Error al actualizar rol');
 				});
 		} else {
 			setEdit(false);
@@ -51,7 +52,7 @@ function RoleCell(props: {
 				<span class='my-auto'>{role().name}</span>
 
 				<Dialog open={edit()} onOpenChange={setEdit}>
-					<DialogTrigger variant='ghost' class='invisible hover:bg-slate-200'>
+					<DialogTrigger variant='ghost' class='invisible hover:bg-baby_blue'>
 						<AiFillEdit size={18} />
 					</DialogTrigger>
 					<DialogContent class='w-[90%] sm:max-w-[425px]'>
