@@ -22,7 +22,7 @@ type AuthController struct {
 // @Accept       json
 // @Produce      json
 // @Param		 request body models.LoginUser true "User's credentials"
-// @Success      200 {object} models.Response
+// @Success      200 {object} models.DataAuthResponse
 // @Failure      400
 // @Failure      401
 // @Failure      500
@@ -70,7 +70,7 @@ func (m *AuthController) Login(c echo.Context) error {
 // @Description  Given a correct refresh cookie get access
 // @Tags         Auth
 // @Produce      json
-// @Success      200 {object} models.Response
+// @Success      200 {object} models.DataAuthResponse
 // @Failure      401
 // @Failure      500
 // @Router       /auth/refresh [post]
@@ -117,7 +117,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 // @Tags         Auth
 // @Accept       json
 // @Produce      json
-// @Success      200
+// @Success      204
 // @Failure      401
 // @Failure      500
 // @Router       /auth/logout [post]

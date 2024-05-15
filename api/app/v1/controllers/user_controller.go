@@ -84,6 +84,7 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 // @Description  Updates the role of a user
 // @Tags         Users
 // @param		 userId path string true "User ID"
+// @param		 models.UpdateUserBody body string true "User update values"
 // @Produce      json
 // @Success      200 {object} models.User
 // @Failure      400

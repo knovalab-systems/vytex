@@ -44,7 +44,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 	table := query.User
 
 	updateMap, err := update.ToUpdate()
-	if err != nil {
+	if err != nil || len(updateMap) == 0 {
 		return nil, problems.UpdateUsersBadRequest()
 	}
 
