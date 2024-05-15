@@ -17,6 +17,7 @@ export default {
 			colors: {
 				practice_date: '#3C4FED',
 				trailway: '#744AC7',
+				baby_blue: '#BADEF4',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
