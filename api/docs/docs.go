@@ -46,7 +46,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Response"
+                            "$ref": "#/definitions/models.DataAuthResponse"
                         }
                     },
                     "400": {
@@ -75,8 +75,8 @@ const docTemplate = `{
                 ],
                 "summary": "Logout",
                 "responses": {
-                    "200": {
-                        "description": "OK"
+                    "204": {
+                        "description": "No Content"
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -101,7 +101,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.Response"
+                            "$ref": "#/definitions/models.DataAuthResponse"
                         }
                     },
                     "401": {
@@ -182,6 +182,15 @@ const docTemplate = `{
                         "name": "userId",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "User update values",
+                        "name": "models.UpdateUserBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -220,6 +229,17 @@ const docTemplate = `{
                 "count": {}
             }
         },
+        "models.DataAuthResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                },
+                "expires": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.LoginUser": {
             "type": "object",
             "required": [
@@ -236,12 +256,6 @@ const docTemplate = `{
                     "type": "string",
                     "maxLength": 30
                 }
-            }
-        },
-        "models.Response": {
-            "type": "object",
-            "properties": {
-                "data": {}
             }
         },
         "models.User": {

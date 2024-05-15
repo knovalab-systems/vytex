@@ -30,6 +30,6 @@ func (m *UserMock) AggregationUsers(req *models.AggregateQuery) ([]*models.Aggre
 }
 
 func (m *UserMock) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
-	args := m.Called(update)
+	args := m.Called()
 	return args.Get(0).(*models.User), args.Error(1)
 }
