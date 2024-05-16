@@ -1,5 +1,6 @@
-import { For } from 'solid-js';
+import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { USER_ROLE } from '~/utils/constants';
 import type { GetUsersType } from '../requests/userRequests';
 
 function UserTable(props: { users: GetUsersType }) {
@@ -17,13 +18,20 @@ function UserTable(props: { users: GetUsersType }) {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
+					<Show when={(props.users?.length ?? 0) === 0}>
+						<TableRow class='bg-white'>
+							<TableCell colspan={6}>
+								No se encontraron resultados. Por favor, ajuste los filtros de búsqueda.
+							</TableCell>
+						</TableRow>
+					</Show>
 					<For each={props.users}>
 						{user => (
 							<TableRow class='bg-white'>
 								<TableCell>{user.id}</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>{user.name}</TableCell>
-								<TableCell>{user.rol}</TableCell>
+								<TableCell>{USER_ROLE[user.role as keyof typeof USER_ROLE]}</TableCell>
 								<TableCell>
 									{user.delete_at ? (
 										<div class='inline-flex items-center px-3 py-1 text-red-500 rounded-full gap-x-2 bg-red-100/60 '>

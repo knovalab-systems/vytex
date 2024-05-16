@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"reflect"
-
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
+	"reflect"
 )
 
 type UserController struct {
@@ -33,8 +32,24 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
+	// get filter structure
+	filters, e := m.UserRepository.GetUserFilter(u)
+
+	if e != nil {
+		return problems.ServerError()
+	}
+
 	// do query
-	users, err := m.SelectUsers(u)
+	var users []*models.User
+	var err error
+
+	// Check if UserFilter fields are not empty and add queries accordingly
+	if filters.Username != "" || filters.Name != "" || filters.Role != "" || filters.DeleteAt != "" {
+		users, err = m.UserRepository.SelectUsersByFilter(&filters, u)
+	} else {
+		users, err = m.SelectUsers(u)
+	}
+
 	if err != nil {
 		return problems.ServerError()
 	}
