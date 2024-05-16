@@ -6,9 +6,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
-	"log"
 	"reflect"
-	"strconv"
 )
 
 type UserController struct {
@@ -18,8 +16,6 @@ type UserController struct {
 func (m *UserController) ReadUsers(c echo.Context) error {
 	// for query params
 	u := &models.Request{Limit: -1}
-
-	log.Print("model", u)
 
 	// bind
 	if err := c.Bind(u); err != nil {
@@ -36,8 +32,24 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
+	// get filter structure
+	filters, e := m.UserRepository.GetUserFilter(u)
+
+	if e != nil {
+		return problems.ServerError()
+	}
+
 	// do query
-	users, err := m.SelectUsers(u)
+	var users []*models.User
+	var err error
+
+	// Check if UserFilter fields are not empty and add queries accordingly
+	if filters.Username != "" || filters.Name != "" || filters.Role != "" || filters.DeleteAt != "" {
+		users, err = m.UserRepository.SelectUsersByFilter(&filters, u)
+	} else {
+		users, err = m.SelectUsers(u)
+	}
+
 	if err != nil {
 		return problems.ServerError()
 	}
@@ -69,167 +81,5 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 
 	// return data
 	res := models.Response{Data: aggregate}
-	return c.JSON(200, res)
-}
-
-func (m *UserController) ReadUsersByName(c echo.Context) error {
-	u := &models.Request{Limit: -1}
-
-	// bind
-	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// get name
-	s := c.QueryParam("name")
-
-	// do query
-	users, err := m.SelectUserByName(u, s)
-
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// return data
-	res := models.Response{Data: users}
-
-	return c.JSON(200, res)
-}
-
-func (m *UserController) ReadUsersByUsername(c echo.Context) error {
-	u := &models.Request{Limit: -1}
-
-	// bind
-	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// get username
-	s := c.QueryParam("username")
-
-	// do query
-	users, err := m.SelectUserByUsername(u, s)
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// return data
-	res := models.Response{Data: users}
-	return c.JSON(200, res)
-}
-
-func (m *UserController) ReadDisabledUsers(c echo.Context) error {
-	u := &models.Request{Limit: -1}
-
-	// bind
-	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// do query
-	users, err := m.SelectDisabledUsers(u)
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// return data
-	res := models.Response{Data: users}
-	return c.JSON(200, res)
-
-}
-
-func (m *UserController) ReadEnabledUsers(c echo.Context) error {
-	u := &models.Request{Limit: -1}
-
-	// bind
-	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// do query
-	users, err := m.SelectEnabledUsers(u)
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// return data
-	res := models.Response{Data: users}
-	return c.JSON(200, res)
-}
-
-func (m *UserController) ReadUsersByRole(c echo.Context) error {
-	u := &models.Request{Limit: -1}
-
-	// bind
-	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// get role
-	s := c.QueryParam("role")
-	r, err := strconv.ParseInt(s, 10, 8)
-
-	if err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// do query
-	users, err := m.SelectUsersByRole(u, int8(r))
-	if err != nil {
-		return problems.ServerError()
-	}
-
-	// return data
-	res := models.Response{Data: users}
 	return c.JSON(200, res)
 }
