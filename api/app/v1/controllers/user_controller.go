@@ -36,7 +36,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	// do query
+	// get users
 	users, err := m.SelectUsers(u)
 	if err != nil {
 		return err
