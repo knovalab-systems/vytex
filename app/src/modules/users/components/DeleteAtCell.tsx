@@ -14,11 +14,11 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 		const user = { delete_at: newStatus ? null : '' };
 		updateUserRequest(props.userId, user)
 			.then(() => {
-				toast.success('El rol ha sido actualizado');
+				toast.success('El estado ha sido actualizado');
 			})
 			.catch(() => {
 				setStatus(!newStatus);
-				toast.error('Error al actualizar rol');
+				toast.error('Error al actualizar estad');
 			})
 			.finally(() => {
 				setLoading(false);
