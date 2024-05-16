@@ -11,8 +11,8 @@ import {
 } from '@kobalte/core/pagination';
 import type { PolymorphicProps } from '@kobalte/core/polymorphic';
 
-import { cn } from '~/lib/utils';
 import { buttonVariants } from '~/components/ui/Button';
+import { cn } from '~/lib/utils';
 
 type RootProps<T extends ValidComponent = 'nav'> = PolymorphicProps<T, PaginationRootProps>;
 

@@ -1,7 +1,7 @@
 import type { DirectusRole } from '../../../schema/role.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateRoleOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateRoles =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/roles`,
+			path: '/roles',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

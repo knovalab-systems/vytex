@@ -41,7 +41,7 @@ export const updateItems =
 			payload = { query: keysOrQuery };
 		}
 
-		payload['data'] = item;
+		payload.data = item;
 
 		return {
 			path: `/items/${collection as string}`,

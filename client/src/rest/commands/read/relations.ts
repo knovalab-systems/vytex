@@ -1,7 +1,7 @@
 import type { DirectusRelation } from '../../../schema/relation.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadRelationOutput<
 	Schema extends object,
@@ -16,7 +16,7 @@ export type ReadRelationOutput<
 export const readRelations =
 	<Schema extends object>(): RestCommand<ReadRelationOutput<Schema>[], Schema> =>
 	() => ({
-		path: `/relations`,
+		path: '/relations',
 		method: 'GET',
 	});
 

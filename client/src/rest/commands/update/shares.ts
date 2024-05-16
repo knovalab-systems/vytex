@@ -1,7 +1,7 @@
 import type { DirectusShare } from '../../../schema/share.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateShareOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateShares =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/shares`,
+			path: '/shares',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

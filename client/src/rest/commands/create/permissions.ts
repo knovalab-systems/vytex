@@ -22,7 +22,7 @@ export const createPermissions =
 		query?: TQuery,
 	): RestCommand<CreatePermissionOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/permissions`,
+		path: '/permissions',
 		params: query ?? {},
 		body: JSON.stringify(items),
 		method: 'POST',
@@ -42,7 +42,7 @@ export const createPermission =
 		query?: TQuery,
 	): RestCommand<CreatePermissionOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/permissions`,
+		path: '/permissions',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'POST',

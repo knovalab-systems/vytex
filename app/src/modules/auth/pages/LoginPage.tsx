@@ -1,16 +1,28 @@
 import { Navigate, useSearchParams } from '@solidjs/router';
-import { createResource, Switch, Match } from 'solid-js';
-import LoginForm from '../components/LoginForm';
+import { createQuery } from '@tanstack/solid-query';
+import { Match, Suspense, Switch, lazy } from 'solid-js';
+import Loading from '~/components/Loading';
 import { refreshRequest } from '../requests/authRequests';
+
+const LoginForm = lazy(() => import('../components/LoginForm'));
 
 function LoginPage() {
 	const [searchParams, _] = useSearchParams();
-	const [token] = createResource(searchParams.reason ? 0 : 1, refreshRequest);
+	const refresh = createQuery(() => refreshRequest(!searchParams.reason));
 
 	return (
 		<Switch>
-			<Match when={token.state === 'ready'}>{<Navigate href={'/'} />}</Match>
-			<Match when={token.state === 'errored'}>{<LoginForm />}</Match>
+			<Match when={refresh.isFetching}>
+				<Loading label='Comprobando credenciales' />
+			</Match>
+			<Match when={refresh.isSuccess}>{<Navigate href={'/'} />}</Match>
+			<Match when={refresh.isError || !!searchParams}>
+				{
+					<Suspense fallback={<Loading label='Cargando inicio de sesión' />}>
+						<LoginForm />
+					</Suspense>
+				}
+			</Match>
 		</Switch>
 	);
 }

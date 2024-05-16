@@ -1,7 +1,7 @@
 import type { DirectusPermission } from '../../../schema/permission.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdatePermissionOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updatePermissions =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/permissions`,
+			path: '/permissions',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

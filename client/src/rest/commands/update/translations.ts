@@ -1,7 +1,7 @@
 import type { DirectusTranslation } from '../../../schema/translation.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateTranslationOutput<
 	Schema extends object,
@@ -27,7 +27,7 @@ export const updateTranslations =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/translations`,
+			path: '/translations',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',

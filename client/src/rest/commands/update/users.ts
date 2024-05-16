@@ -1,7 +1,7 @@
+import type { VytexUser } from '../../../schema/user.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
-import type { VytexUser } from '../../../schema/user.js';
 
 export type UpdateUserOutput<
 	Schema extends object,
@@ -29,7 +29,7 @@ export const updateUsers =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/users`,
+			path: '/users',
 			params: query ?? {},
 			body: JSON.stringify({ keys, data: item }),
 			method: 'PATCH',
@@ -77,7 +77,7 @@ export const updateMe =
 		query?: TQuery,
 	): RestCommand<UpdateUserOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/users/me`,
+		path: '/users/me',
 		params: query ?? {},
 		body: JSON.stringify(item),
 		method: 'PATCH',

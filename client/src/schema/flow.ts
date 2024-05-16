@@ -1,6 +1,6 @@
 import type { MergeCoreCollection } from '../index.js';
-import type { VytexUser } from './user.js';
 import type { DirectusOperation } from './operation.js';
+import type { VytexUser } from './user.js';
 
 export type DirectusFlow<Schema extends object> = MergeCoreCollection<
 	Schema,

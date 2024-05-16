@@ -1,7 +1,7 @@
 import type { DirectusTranslation } from '../../../schema/translation.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadTranslationOutput<
 	Schema extends object,
@@ -19,7 +19,7 @@ export const readTranslations =
 		query?: TQuery,
 	): RestCommand<ReadTranslationOutput<Schema, TQuery>[], Schema> =>
 	() => ({
-		path: `/translations`,
+		path: '/translations',
 		params: query ?? {},
 		method: 'GET',
 	});

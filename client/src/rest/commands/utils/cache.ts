@@ -8,5 +8,5 @@ export const clearCache =
 	<Schema extends object>(): RestCommand<void, Schema> =>
 	() => ({
 		method: 'POST',
-		path: `/utils/cache/clear`,
+		path: '/utils/cache/clear',
 	});

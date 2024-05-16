@@ -1,6 +1,6 @@
 import type { DirectusWebhook } from '../../../schema/webhook.js';
-import { throwIfEmpty } from '../../utils/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 /**
  * Delete multiple existing webhooks.
@@ -14,7 +14,7 @@ export const deleteWebhooks =
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
 		return {
-			path: `/webhooks`,
+			path: '/webhooks',
 			body: JSON.stringify(keys),
 			method: 'DELETE',
 		};

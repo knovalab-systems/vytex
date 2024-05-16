@@ -20,7 +20,7 @@ export const readSettings =
 		query?: TQuery,
 	): RestCommand<ReadSettingOutput<Schema, TQuery>, Schema> =>
 	() => ({
-		path: `/settings`,
+		path: '/settings',
 		params: query ?? {},
 		method: 'GET',
 	});
