@@ -1,7 +1,7 @@
-import { Button } from '~/components/ui/Button';
-import { TableCell } from '~/components/ui/Table';
 import { AiFillEdit } from 'solid-icons/ai';
-import { type RoleItems, listRole, roles } from '~/utils/roles';
+import { createEffect, createSignal } from 'solid-js';
+import toast from 'solid-toast';
+import { Button } from '~/components/ui/Button';
 import {
 	Dialog,
 	DialogContent,
@@ -11,10 +11,10 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '~/components/ui/Dialog';
-import { createEffect, createSignal } from 'solid-js';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
+import { TableCell } from '~/components/ui/Table';
+import { type RoleItems, listRole, roles } from '~/utils/roles';
 import { updateRole } from '../requests/updateUserRequests';
-import toast from 'solid-toast';
 
 function RoleCell(props: {
 	roleValue: string;

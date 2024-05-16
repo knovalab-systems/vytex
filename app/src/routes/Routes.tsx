@@ -1,6 +1,5 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
-import NavWrapper from '~/components/NavWrapper';
 import ProtectedWrapper from '~/components/ProtectedWrapper';
 import { LOGIN_PATH } from '~/utils/paths';
 
@@ -8,6 +7,7 @@ const LoginPage = lazy(() => import('~/modules/auth/pages/LoginPage'));
 const NotFoundPage = lazy(() => import('~/pages/NotFoundPage'));
 const Home = lazy(() => import('~/pages/Home'));
 const Users = lazy(() => import('~/modules/users/pages/Users'));
+const NavWrapper = lazy(() => import('~/components/NavWrapper'));
 
 function Routes() {
 	return (

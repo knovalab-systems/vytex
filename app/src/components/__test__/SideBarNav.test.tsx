@@ -1,8 +1,8 @@
-import '@testing-library/jest-dom';
 import { render, screen } from '@solidjs/testing-library';
+import '@testing-library/jest-dom';
+import type { JSXElement } from 'solid-js';
 import { describe, expect, it, vi } from 'vitest';
 import SideBarNav from '../SideBarNav';
-import type { JSXElement } from 'solid-js';
 
 interface Props {
 	name: string;
