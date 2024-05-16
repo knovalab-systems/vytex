@@ -9,29 +9,14 @@ type UserMock struct {
 	mock.Mock
 }
 
-func (m *UserMock) SelectUsersByRole(request *models.Request, i int8) ([]*models.User, error) {
-	args := m.Called(request, i)
-	return []*models.User{}, args.Error(0)
+func (m *UserMock) GetUserFilter(u *models.Request) (models.UserFilter, error) {
+	args := m.Called(u)
+	return args.Get(0).(models.UserFilter), args.Error(1)
 }
 
-func (m *UserMock) SelectUserByName(request *models.Request, s string) ([]*models.User, error) {
-	args := m.Called(request, s)
-	return []*models.User{}, args.Error(0)
-}
-
-func (m *UserMock) SelectUserByUsername(request *models.Request, s string) ([]*models.User, error) {
-	args := m.Called(request, s)
-	return []*models.User{}, args.Error(0)
-}
-
-func (m *UserMock) SelectDisabledUsers(request *models.Request) ([]*models.User, error) {
-	args := m.Called(request)
-	return []*models.User{}, args.Error(0)
-}
-
-func (m *UserMock) SelectEnabledUsers(request *models.Request) ([]*models.User, error) {
-	args := m.Called(request)
-	return []*models.User{}, args.Error(0)
+func (m *UserMock) SelectUsersByFilter(filter *models.UserFilter, req *models.Request) ([]*models.User, error) {
+	args := m.Called(filter, req)
+	return []*models.User{}, args.Error(1)
 }
 
 func (m *UserMock) SelectUsers(req *models.Request) ([]*models.User, error) {
