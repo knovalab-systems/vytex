@@ -12,8 +12,7 @@ func privateUsersRoutes(g *echo.Group) {
 	userController := controllers.UserController{UserRepository: &services.UserService{}}
 
 	route.GET("", userController.ReadUsers)
-	route.GET("/", userController.ReadUsers)
 	route.GET("/aggregate", userController.AggregateUsers)
-	route.GET("/aggregate/", userController.AggregateUsers)
+	route.PATCH("/:userId", userController.UpdateUser)
 
 }

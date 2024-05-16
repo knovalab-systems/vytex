@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
@@ -10,14 +12,11 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestReadUser(t *testing.T) {
-
-	queryLimit := utils.LimitQuery()
 
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
@@ -66,7 +65,7 @@ func TestReadUser(t *testing.T) {
 	t.Run("Fail validation, bad value for page", func(t *testing.T) {
 		// context
 		q := make(url.Values)
-		q.Set("offset", "-1")
+		q.Set("page", "-1")
 		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
@@ -85,50 +84,7 @@ func TestReadUser(t *testing.T) {
 		}
 	})
 
-	t.Run("Error on get user from db", func(t *testing.T) {
-		// context
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		userMock := mocks.UserMock{}
-		userMock.On("GetUserFilter", &models.Request{Limit: queryLimit}).Return(models.UserFilter{}, errors.New("error"))
-
-		userController := UserController{UserRepository: &userMock}
-
-		// test
-		err := userController.ReadUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Error on select users by filter from db", func(t *testing.T) {
-		// context
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		userMock := mocks.UserMock{}
-		userMock.On("GetUserFilter", &models.Request{Limit: queryLimit}).Return(models.UserFilter{Username: "test"}, nil)
-		userMock.On("SelectUsersByFilter", &models.UserFilter{Username: "test"}, &models.Request{Limit: queryLimit}).Return(nil, errors.New("error"))
-
-		userController := UserController{UserRepository: &userMock}
-
-		// test
-		err := userController.ReadUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Get users successfully with offset n limit", func(t *testing.T) {
+	t.Run("Get users succesfully with offset n limit", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("limit", "-1")
@@ -141,7 +97,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: queryLimit, Offset: 1}).Return(nil)
+		userMock.On("SelectUsers").Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -152,7 +108,7 @@ func TestReadUser(t *testing.T) {
 		}
 	})
 
-	t.Run("Get users successfully with page n limit", func(t *testing.T) {
+	t.Run("Get users succesfully with page n limit", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("limit", "-1")
@@ -165,7 +121,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers", &models.Request{Limit: queryLimit, Page: 2, Offset: queryLimit}).Return(nil)
+		userMock.On("SelectUsers").Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -194,8 +150,6 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateRequest{Count: ""}).Return(&models.AggregateData{}, nil)
-
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -205,7 +159,7 @@ func TestAggregateUser(t *testing.T) {
 		}
 	})
 
-	t.Run("Fail validation empty fields", func(t *testing.T) {
+	t.Run("Get aggregate succesfully", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("count", "*")
@@ -217,31 +171,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateRequest{Count: "*"}).Return(&models.AggregateData{}, errors.New("error"))
-
-		userController := UserController{UserRepository: &userMock}
-
-		// test
-		err := userController.AggregateUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Get aggregate successfully", func(t *testing.T) {
-		// context
-		q := make(url.Values)
-		q.Set("count", "*")
-		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateRequest{Count: "*"}).Return(&models.AggregateData{}, nil)
-
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -250,4 +180,142 @@ func TestAggregateUser(t *testing.T) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
+}
+
+func TestUpdateUser(t *testing.T) {
+
+	t.Run("Fail binding, role is a integer", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]int{"role": 32321})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+
+	})
+
+	t.Run("Fail validate, role is a not a uuid", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"role": "12321321"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("31b63ffb-15f5-48d7-9a24-587f437f07ec")
+
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+
+	})
+
+	t.Run("Fail validate, userId is a not a uuid", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"role": "31b63ffb-15f5-48d7-9a24-587f437f07ec"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("2312312")
+
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+
+	})
+
+	t.Run("Updates user successfully", func(t *testing.T) {
+		// context
+		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"role": role})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, errors.New("Error")) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		assert.Error(t, err)
+
+	})
+
+	t.Run("Updates user successfully", func(t *testing.T) {
+		// context
+		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"role": role})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, nil) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+
+	})
+
 }

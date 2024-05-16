@@ -1,4 +1,4 @@
-import { Match, Switch, createEffect, createResource, createSignal } from 'solid-js';
+import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -10,9 +10,9 @@ import {
 } from '~/components/ui/Pagination';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
-import { countUsers, getFiltertUsers } from '../requests/userRequests';
-import type { GetUsersType } from '../requests/userRequests';
-
+import { countUsersQuery, getUsersQuery } from '../requests/getUserRequests';
+import { createQuery } from '@tanstack/solid-query';
+import { QUERY_LIMIT } from '~/utils/constants';
 
 function Users() {
 	const [page, setPage] = createSignal(1);
@@ -20,36 +20,23 @@ function Users() {
 	const [usernameFilter, setUsernameFilter] = createSignal('');
 	const [statusFilter, setStatusFilter] = createSignal('');
 	const [roleIdFilter, setRoleIdFilter] = createSignal('');
-	const [users, setUsers] = createSignal<GetUsersType>([]);
-	const [usersCount] = createResource(countUsers);
-
-	const fetchUsers = async (name: string, username: string, status: string, currentPage: number, roleId: string) => {
-		console.log(status);
-
-		const usersToFilter = await getFiltertUsers(name, username, roleId, status, currentPage);
-
-		return usersToFilter;
-	};
-
-	createEffect(async () => {
-		const name = nameFilter().toLowerCase();
-		const username = usernameFilter().toLowerCase();
-		const status = statusFilter();
-		const roleId = roleIdFilter();
-		const currentPage = page();
-
-		const fetchedUsers = await fetchUsers(name, username, status, currentPage, roleId);
-
-		setUsers(fetchedUsers);
+	const users = createQuery(() =>
+		getUsersQuery(nameFilter(), usernameFilter(), roleIdFilter(), statusFilter(), page()),
+	);
+	const usersCount = createQuery(countUsersQuery);
+	const pages = createMemo<number>(() => {
+		const count = usersCount.data?.at(0)?.count || 1;
+		const safe = count === 0 ? 1 : count;
+		return Math.ceil(safe / QUERY_LIMIT);
 	});
 
 	return (
 		<Switch>
-			<Match when={usersCount.loading}>
+			<Match when={users.isPending || usersCount.isPending}>
 				<Loading />
 			</Match>
-			<Match when={usersCount.state === 'ready'}>
-				<div class='h-full'>
+			<Match when={users.isSuccess && usersCount.isSuccess}>
+				<div class='h-full flex flex-col'>
 					<UserControls
 						setNameFilter={setNameFilter}
 						nameFilterValue={nameFilter()}
@@ -60,10 +47,10 @@ function Users() {
 						setRoleIdFilter={setRoleIdFilter}
 						roleIdFilterValue={roleIdFilter()}
 					/>
-					<UserTable users={users()} />
+					<UserTable users={users.data} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
-						count={Number(usersCount()?.at(0)?.count) || 1}
+						count={pages()}
 						page={page()}
 						onPageChange={setPage}
 						itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}

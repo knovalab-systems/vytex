@@ -6,8 +6,8 @@ import (
 )
 
 type AuthRepository interface {
-	Credentials(string) (*utils.Tokens, error)
+	Credentials(string, string) (*utils.Tokens, error)
 	DeleteRefresh(int) error
-	ValidRefresh(string) (*models.Session, error)
+	ValidRefresh(string) (*models.SessionWithRole, error)
 	ValidUser(string, string) (*models.User, error)
 }

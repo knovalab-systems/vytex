@@ -26,9 +26,9 @@ func (m *AuthService) ValidUser(username string, password string) (*models.User,
 	return user, err
 }
 
-func (m *AuthService) Credentials(user string) (*utils.Tokens, error) {
+func (m *AuthService) Credentials(user string, role string) (*utils.Tokens, error) {
 	// get tokens
-	tokens, err := utils.GenerateTokens(user)
+	tokens, err := utils.GenerateTokens(user, role)
 	if err != nil {
 		return nil, err
 	}
@@ -42,10 +42,17 @@ func (m *AuthService) Credentials(user string) (*utils.Tokens, error) {
 	return tokens, err
 }
 
-func (m *AuthService) ValidRefresh(token string) (*models.Session, error) {
-	table := query.Session
-	session, err := table.Where(table.RefreshToken.Eq(token)).Where(table.ExpiresAt.Gt(time.Now())).First()
-	return session, err
+func (m *AuthService) ValidRefresh(token string) (*models.SessionWithRole, error) {
+
+	s := query.Session
+	u := query.User
+
+	session := &models.SessionWithRole{}
+	err := s.Select(s.ID, s.UserID, u.Role).Where(s.RefreshToken.Eq(token)).Where(s.ExpiresAt.Gt(time.Now())).Join(u, u.ID.EqCol(s.UserID)).Scan(session)
+	if err != nil {
+		return nil, err
+	}
+	return session, nil
 }
 
 func (m *AuthService) DeleteRefresh(id int) error {

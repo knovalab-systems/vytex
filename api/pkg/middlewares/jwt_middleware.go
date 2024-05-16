@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"errors"
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -18,10 +19,12 @@ func JwtMiddleware(r *echo.Group) {
 		},
 		SigningKey: []byte(secret),
 		ErrorHandler: func(c echo.Context, err error) error {
-			if err != nil {
-				return problems.JWTUnauthorized()
+			var extratorErr *echojwt.TokenExtractionError
+			if errors.As(err, &extratorErr) {
+				return problems.JwtBadRequest()
 			}
-			return nil
+			return problems.JWTUnauthorized()
+
 		},
 	}
 

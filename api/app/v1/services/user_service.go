@@ -3,29 +3,75 @@ package services
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/pkg/query"
 	"strconv"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/pkg/problems"
+	"github.com/knovalab-systems/vytex/pkg/query"
 )
 
 type UserService struct {
 }
 
-func (m *UserService) SelectUsers(req *models.Request) ([]*models.User, error) {
+func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
+
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
 	table := query.User
-	users, err := table.Unscoped().Limit(req.Limit).Offset(req.Offset).Find()
-	return users, err
+	query := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+	filter, err := userFilters(q)
+	if err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
+	if filter.Name != "" {
+		condition := table.Name.Lower().Like("%" + filter.Name + "%")
+		query = query.Where(condition)
+	}
+
+	if filter.Username != "" {
+		condition := table.Username.Lower().Like("%" + filter.Username + "%")
+		query = query.Where(condition)
+	}
+
+	if filter.Role != "" {
+		condition := table.Role.Eq(filter.Role)
+		query = query.Where(condition)
+	}
+
+	if filter.DeleteAt != "" {
+		value, err := strconv.ParseBool(filter.DeleteAt)
+		if err != nil {
+			return nil, err
+		}
+		if value {
+			condition := table.DeleteAt.IsNull()
+			query = query.Where(condition)
+		} else {
+			condition := table.DeleteAt.IsNotNull()
+			query = query.Where(condition)
+		}
+	}
+
+	users, err := query.Find()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	return users, nil
 }
 
-func (m *UserService) AggregationUsers(req *models.AggregateRequest) ([]*models.AggregateData, error) {
+func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 
 	table := query.User
 	aggregate := &models.AggregateData{}
 
-	if req.Count != "" {
+	if q.Count != "" {
 		count, err := table.Count()
 		if err != nil {
-			return nil, err
+			return nil, problems.ServerError()
 		}
 		aggregate.Count = count
 	}
@@ -33,7 +79,7 @@ func (m *UserService) AggregationUsers(req *models.AggregateRequest) ([]*models.
 	return []*models.AggregateData{aggregate}, nil
 }
 
-func (m *UserService) GetUserFilter(u *models.Request) (models.UserFilter, error) {
+func userFilters(u *models.Query) (models.UserFilter, error) {
 	var result map[string]map[string]interface{}
 	err := json.Unmarshal([]byte(u.Filter), &result)
 	if err != nil {
@@ -57,9 +103,9 @@ func (m *UserService) GetUserFilter(u *models.Request) (models.UserFilter, error
 	return userFilter, nil
 }
 
-func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models.Request) ([]*models.User, error) {
+func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models.Query) ([]*models.User, error) {
 	table := query.User
-	queries := table.Unscoped().Limit(req.Limit).Offset(req.Offset)
+	queries := table.Unscoped().Limit(*req.Limit).Offset(req.Offset)
 
 	if filter.Name != "" {
 		condition := table.Name.Lower().Like("%" + filter.Name + "%")
@@ -72,11 +118,7 @@ func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models
 	}
 
 	if filter.Role != "" {
-		role, err := strconv.ParseInt(filter.Role, 10, 8)
-		if err != nil {
-			return nil, err
-		}
-		condition := table.Role.Eq(int8(role))
+		condition := table.Role.Eq(filter.Role)
 		queries = queries.Where(condition)
 	}
 
@@ -95,4 +137,29 @@ func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models
 	}
 
 	return queries.Find()
+}
+
+func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
+	table := query.User
+
+	updateMap, err := update.ToUpdate()
+	if err != nil || len(updateMap) == 0 {
+		return nil, problems.UpdateUsersBadRequest()
+	}
+
+	rows, err := table.Where(table.ID.Eq(update.ID)).Updates(updateMap)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, problems.UpdateUsersBadRequest()
+	}
+
+	user, err := table.Where(table.ID.Eq(update.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return user, nil
 }
