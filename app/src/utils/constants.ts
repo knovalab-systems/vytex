@@ -1,9 +1,14 @@
 export const QUERY_LIMIT = 20;
 
 export const USER_STATUS = {
-	active: 'activo',
-	inactive: 'inactivo',
+	active: 'true',
+	inactive: 'false',
 };
+
+export const USER_STATUS_OPTIONS = [
+	{ label: 'Activo', value: USER_STATUS.active },
+	{ label: 'Inactivo', value: USER_STATUS.inactive },
+];
 
 export const USER_ROLE = {
 	1: 'Admin',
@@ -11,11 +16,6 @@ export const USER_ROLE = {
 	3: 'Invitado',
 	4: 'Desarrollador',
 };
-
-export const USER_STATUS_OPTIONS = [
-	{ label: 'Activo', value: USER_STATUS.active },
-	{ label: 'Inactivo', value: USER_STATUS.inactive },
-];
 
 export const USER_ROLES_OPTIONS = [
 	{ label: 'Administrador', value: 1 },

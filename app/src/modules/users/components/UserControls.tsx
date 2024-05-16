@@ -1,6 +1,6 @@
 import { FaSolidPlus } from 'solid-icons/fa';
 import { TbFilterX } from 'solid-icons/tb';
-import { onCleanup } from 'solid-js';
+import { Show, onCleanup } from 'solid-js';
 import toast from 'solid-toast';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
@@ -19,7 +19,6 @@ type UserControlsProps = {
 };
 
 const UserControls = (props: UserControlsProps) => {
-
 	let timeoutId: NodeJS.Timeout;
 
 	const debounce = (func: (value: string) => void, delay: number) => {
@@ -41,7 +40,9 @@ const UserControls = (props: UserControlsProps) => {
 	};
 
 	const areFiltersApplied = () => {
-		return [props.nameFilterValue, props.usernameFilterValue, props.statusFilterValue, props.roleIdFilterValue].some(value => value !== '');
+		return [props.nameFilterValue, props.usernameFilterValue, props.statusFilterValue, props.roleIdFilterValue].some(
+			value => value !== '',
+		);
 	};
 
 	return (
@@ -81,14 +82,16 @@ const UserControls = (props: UserControlsProps) => {
 				/>
 			</div>
 			<div>
-				<Button
-					class='w-auto font-bold bg-red-500 h-12 hover:bg-red-600'
-					onclick={clearFilter}
-					disabled={!areFiltersApplied()}
-				>
-					<TbFilterX class='mr-2' size={20} />
-					Limpiar filtros
-				</Button>
+				<Show when={areFiltersApplied()}>
+					<Button
+						class='w-auto font-bold bg-red-500 h-12 hover:bg-red-600'
+						onclick={clearFilter}
+						disabled={!areFiltersApplied()}
+					>
+						<TbFilterX class='mr-2' size={20} />
+						Limpiar filtros
+					</Button>
+				</Show>
 			</div>
 		</div>
 	);

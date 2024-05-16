@@ -1,16 +1,12 @@
 import { useNavigate } from '@solidjs/router';
 import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
-import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
-import ConfirmationModal from '~/components/ConfirmationModal';
 import { Button } from '~/components/ui/Button';
 import { MESSAGES } from '~/utils/constants';
 import { LOGIN_PATH } from '~/utils/paths';
 import { logoutRequest } from '../requests/authRequests';
 
 function LogoutNavButton() {
-	const [showModal, setShowModal] = createSignal(false);
-
 	const navigate = useNavigate();
 
 	const handleLogOut = () => {
@@ -22,14 +18,10 @@ function LogoutNavButton() {
 			.catch(() => toast.error('Error al cerrar sesión'));
 	};
 
-	const handleModal = () => {
-		setShowModal(true);
-	};
-
 	return (
 		<>
 			<Button
-				onclick={handleModal}
+				onclick={handleLogOut}
 				class='w-full h-auto flex items-center group bg-transparent p-2 font-semibold text-sm rounded-lg text-white hover:bg-red-500  gap-1 p transition-colors duration-200'
 			>
 				<RiSystemLogoutBoxLine size={24} />
@@ -38,14 +30,6 @@ function LogoutNavButton() {
 					<span class='absolute top-0 left-0 w-full h-[102%] translate-y-full group-hover:translate-y-0 bg-white transition-all duration-300' />
 				</div>
 			</Button>
-			{showModal() && (
-				<ConfirmationModal
-					title='Cerrar sesión'
-					message='¿Estás seguro que deseas cerrar sesión?'
-					onConfirm={handleLogOut}
-					onCancel={() => setShowModal(false)}
-				/>
-			)}
 		</>
 	);
 }

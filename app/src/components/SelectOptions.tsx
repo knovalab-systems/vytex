@@ -1,5 +1,5 @@
-import { splitProps } from "solid-js";
-import { cn } from "~/lib/utils";
+import { splitProps } from 'solid-js';
+import { cn } from '~/lib/utils';
 
 interface SelectOptionsProps {
 	options: { label: string; value: string | number }[];

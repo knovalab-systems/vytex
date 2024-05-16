@@ -9,10 +9,8 @@ import {
 } from '~/components/ui/Pagination';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
-import { getFilters } from '../filters/filters';
-import { countUsers, getFetchFunction } from '../requests/userRequests';
+import { countUsers, getFiltertUsers } from '../requests/userRequests';
 import type { GetUsersType } from '../requests/userRequests';
-import type { userType } from '../schema/schema';
 
 function Users() {
 	const [page, setPage] = createSignal(1);
@@ -24,20 +22,11 @@ function Users() {
 	const [usersCount] = createResource(countUsers);
 
 	const fetchUsers = async (name: string, username: string, status: string, currentPage: number, roleId: string) => {
-		// role id to number
-		const role = Number.parseInt(roleId);
+		console.log(status);
 
-		const { fetchFunction } = getFetchFunction(name, username, status, currentPage, role);
+		const usersToFilter = await getFiltertUsers(name, username, roleId, status, currentPage);
 
-		const usersToFilter: GetUsersType = fetchFunction ? (await fetchFunction()) ?? [] : [];
-
-		const filters = getFilters(name, username, status, role);
-
-		const filteredUsers = filters.reduce((users: GetUsersType, filter) => {
-			return (users as Array<userType>).filter(user => filter.filterFunction(user, filter.value as never));
-		}, usersToFilter);
-
-		return filteredUsers;
+		return usersToFilter;
 	};
 
 	createEffect(async () => {
