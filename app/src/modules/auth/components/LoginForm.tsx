@@ -6,7 +6,7 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { loginRequest } from '../requests/authRequests';
-import { LoginSchema, type LoginType } from '../schemas/authSchemas';
+import { LoginSchema, type LoginType } from '../schemas/loginSchema';
 
 function LoginForm() {
 	const navigate = useNavigate();
