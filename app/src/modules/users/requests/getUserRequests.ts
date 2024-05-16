@@ -3,33 +3,24 @@ import { aggregate, readUsers } from '@vytex/client';
 import { client } from '~/utils/client';
 import { QUERY_LIMIT } from '~/utils/constants';
 
-export function getUsersQuery(page: number) {
+export function getUsersQuery(name: string, username: string, roleId: string, status: string, page: number) {
 	return queryOptions({
-		queryFn: () => getUsers(page),
-		queryKey: ['getusers', page],
+		queryFn: () => getUsers(name, username, roleId, status, page),
+		queryKey: ['getusers', name, username, roleId, status, page],
 	});
 }
 
-async function getUsers(page: number) {
-	return await client.request(
-		readUsers({
-			page: page | 0,
-			limit: QUERY_LIMIT,
-		}),
-	);
-}
-
-export async function getFiltertUsers(name: string, username: string, roleId: string, status: string, page: number) {
+async function getUsers(name: string, username: string, roleId: string, status: string, page: number) {
 	return await client.request(
 		readUsers({
 			page: page | 0,
 			limit: QUERY_LIMIT,
 			filter: {
 				name: {
-					_eq: name,
+					_eq: name.toLowerCase(),
 				},
 				username: {
-					_eq: username,
+					_eq: username.toLowerCase(),
 				},
 				role: {
 					_eq: roleId,

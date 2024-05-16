@@ -20,9 +20,7 @@ function UserTable(props: { users: GetUsersType }) {
 				<TableBody>
 					<Show when={(props.users?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>
-								No se encontraron resultados. Por favor, ajuste los filtros de búsqueda.
-							</TableCell>
+							<TableCell colspan={6}>No se han encontraron resultados.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.users}>

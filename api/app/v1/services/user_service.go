@@ -21,7 +21,42 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	}
 
 	table := query.User
-	users, err := table.Unscoped().Limit(*q.Limit).Offset(q.Offset).Find()
+	query := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+	filter, err := userFilters(q)
+	if err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
+	if filter.Name != "" {
+		condition := table.Name.Lower().Like("%" + filter.Name + "%")
+		query = query.Where(condition)
+	}
+
+	if filter.Username != "" {
+		condition := table.Username.Lower().Like("%" + filter.Username + "%")
+		query = query.Where(condition)
+	}
+
+	if filter.Role != "" {
+		condition := table.Role.Eq(filter.Role)
+		query = query.Where(condition)
+	}
+
+	if filter.DeleteAt != "" {
+		value, err := strconv.ParseBool(filter.DeleteAt)
+		if err != nil {
+			return nil, err
+		}
+		if value {
+			condition := table.DeleteAt.IsNull()
+			query = query.Where(condition)
+		} else {
+			condition := table.DeleteAt.IsNotNull()
+			query = query.Where(condition)
+		}
+	}
+
+	users, err := query.Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -44,7 +79,7 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	return []*models.AggregateData{aggregate}, nil
 }
 
-func (m *UserService) GetUserFilter(u *models.Request) (models.UserFilter, error) {
+func userFilters(u *models.Query) (models.UserFilter, error) {
 	var result map[string]map[string]interface{}
 	err := json.Unmarshal([]byte(u.Filter), &result)
 	if err != nil {
@@ -68,9 +103,9 @@ func (m *UserService) GetUserFilter(u *models.Request) (models.UserFilter, error
 	return userFilter, nil
 }
 
-func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models.Request) ([]*models.User, error) {
+func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models.Query) ([]*models.User, error) {
 	table := query.User
-	queries := table.Unscoped().Limit(req.Limit).Offset(req.Offset)
+	queries := table.Unscoped().Limit(*req.Limit).Offset(req.Offset)
 
 	if filter.Name != "" {
 		condition := table.Name.Lower().Like("%" + filter.Name + "%")
@@ -83,11 +118,7 @@ func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models
 	}
 
 	if filter.Role != "" {
-		role, err := strconv.ParseInt(filter.Role, 10, 8)
-		if err != nil {
-			return nil, err
-		}
-		condition := table.Role.Eq(int8(role))
+		condition := table.Role.Eq(filter.Role)
 		queries = queries.Where(condition)
 	}
 

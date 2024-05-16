@@ -36,29 +36,8 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	// sanitize
-	if err := utils.SanitizedQuery(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// get filter structure
-	filters, e := m.UserRepository.GetUserFilter(u)
-
-	if e != nil {
-		return problems.ServerError()
-	}
-
 	// do query
-	var users []*models.User
-	var err error
-
-	// Check if UserFilter fields are not empty and add queries accordingly
-	if filters.Username != "" || filters.Name != "" || filters.Role != "" || filters.DeleteAt != "" {
-		users, err = m.UserRepository.SelectUsersByFilter(&filters, u)
-	} else {
-		users, err = m.SelectUsers(u)
-	}
-
+	users, err := m.SelectUsers(u)
 	if err != nil {
 		return err
 	}
