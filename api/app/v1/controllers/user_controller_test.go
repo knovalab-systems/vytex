@@ -262,7 +262,7 @@ func TestUpdateUser(t *testing.T) {
 
 	})
 
-	t.Run("Updates user successfully", func(t *testing.T) {
+	t.Run("Updates user successfully with role", func(t *testing.T) {
 		// context
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
@@ -289,12 +289,12 @@ func TestUpdateUser(t *testing.T) {
 
 	})
 
-	t.Run("Updates user successfully", func(t *testing.T) {
+	t.Run("Updates user successfully with delete_at", func(t *testing.T) {
 		// context
-		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		delete_at := "2020-12-09T16:09:53+00:00"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": role})
+		json.NewEncoder(body).Encode(map[string]string{"delete_at": delete_at})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -315,7 +315,35 @@ func TestUpdateUser(t *testing.T) {
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
+	})
 
+	t.Run("Updates user successfully all values", func(t *testing.T) {
+		// context
+		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		delete_at := "2020-12-09T16:09:53+00:00"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"role": role, "delete_at": delete_at})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, nil) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
 	})
 
 }
