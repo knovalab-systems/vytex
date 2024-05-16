@@ -18,7 +18,7 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 			})
 			.catch(() => {
 				setStatus(!newStatus);
-				toast.error('Error al actualizar estad');
+				toast.error('Error al actualizar el estado');
 			})
 			.finally(() => {
 				setLoading(false);
