@@ -34,7 +34,7 @@ describe('RoleCell', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <RoleCell roleValue='admin' id='1' />);
+		render(() => <RoleCell roleValue='admin' userId='1' />);
 
 		const roleName = screen.getByText('Administrador');
 		const triggerButton = screen.getByRole('button');
@@ -44,7 +44,7 @@ describe('RoleCell', () => {
 	});
 
 	it('renders correctly dialog', () => {
-		render(() => <RoleCell roleValue='admin' id='1' />);
+		render(() => <RoleCell roleValue='admin' userId='1' />);
 
 		const triggerButton = screen.getByRole('button');
 		fireEvent.click(triggerButton);
@@ -55,7 +55,7 @@ describe('RoleCell', () => {
 	});
 
 	it('renders correctly after close dialog', () => {
-		render(() => <RoleCell roleValue='admin' id='1' />);
+		render(() => <RoleCell roleValue='admin' userId='1' />);
 
 		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
 		expect(roleNameBefore).toBeInTheDocument();
@@ -74,7 +74,7 @@ describe('RoleCell', () => {
 	});
 
 	it('renders correctly after save', () => {
-		render(() => <RoleCell roleValue='admin' id='1' />);
+		render(() => <RoleCell roleValue='admin' userId='1' />);
 
 		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
 		expect(roleNameBefore).toBeInTheDocument();
