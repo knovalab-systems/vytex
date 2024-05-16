@@ -26,19 +26,8 @@ describe('LogoutButton', () => {
 		expect(logoutButton).toBeInTheDocument();
 	});
 
-
-	it('opens modal on button click', () => {
-		render(() => <LogoutButton />);
-
-		const logoutButton = screen.getByText('Cerrar sesión');
-
-		fireEvent.click(logoutButton);
-
-		expect(screen.getByText('Confirmar')).toBeInTheDocument();
-	});
-
-	it('calls logout request on modal confirmation', async () => {
-		const logoutSpy = vi.spyOn(logoutRequest, 'logoutRequest');
+	it('logs out on button click', async () => {
+		vi.spyOn(logoutRequest, 'logoutRequest').mockResolvedValueOnce();
 
 		render(() => <LogoutButton />);
 
@@ -48,7 +37,7 @@ describe('LogoutButton', () => {
 		const confirmButton = screen.getByText('Confirmar');
 		fireEvent.click(confirmButton);
 
-		await waitFor(() => expect(logoutSpy).toHaveBeenCalled());
+		await waitFor(() => expect(logoutRequest.logoutRequest).toHaveBeenCalled());
 	});
 
 
