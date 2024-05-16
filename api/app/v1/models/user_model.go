@@ -34,8 +34,9 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type UpdateUserBody struct {
-	ID   string  `param:"userId" validate:"required,uuid"`
-	Role *string `json:"role" validate:"omitnil,uuid"`
+	ID       string              `param:"userId" validate:"required,uuid"`
+	Role     *string             `json:"role" validate:"omitnil,uuid"`
+	DeleteAt Optional[time.Time] `json:"delete_at"`
 }
 
 func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
@@ -46,6 +47,15 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 			return nil, errors.New("INVALID ROLE")
 		}
 		updateMap["role"] = *m.Role
+	}
+
+	if !m.DeleteAt.IsNil() {
+		if m.DeleteAt.IsNullDefined() {
+			updateMap["delete_at"] = nil
+		} else {
+			updateMap["delete_at"] = m.DeleteAt.Value
+		}
+
 	}
 
 	return updateMap, nil

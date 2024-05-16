@@ -147,7 +147,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 		return nil, problems.UpdateUsersBadRequest()
 	}
 
-	rows, err := table.Where(table.ID.Eq(update.ID)).Updates(updateMap)
+	rows, err := table.Unscoped().Where(table.ID.Eq(update.ID)).Updates(updateMap)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -156,7 +156,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 		return nil, problems.UpdateUsersBadRequest()
 	}
 
-	user, err := table.Where(table.ID.Eq(update.ID)).First()
+	user, err := table.Unscoped().Where(table.ID.Eq(update.ID)).First()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
