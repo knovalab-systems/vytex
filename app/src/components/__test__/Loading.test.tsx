@@ -1,5 +1,5 @@
-import '@testing-library/jest-dom';
 import { render, screen } from '@solidjs/testing-library';
+import '@testing-library/jest-dom';
 import { describe, expect, it } from 'vitest';
 import Loading from '../Loading';
 

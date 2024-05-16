@@ -1,3 +1,4 @@
+import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
 import {
@@ -8,10 +9,9 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+import { QUERY_LIMIT } from '~/utils/constans';
 import UserTable from '../components/UserTable';
 import { countUsersQuery, getUsersQuery } from '../requests/getUserRequests';
-import { createQuery } from '@tanstack/solid-query';
-import { QUERY_LIMIT } from '~/utils/constans';
 
 function Users() {
 	const [page, setPage] = createSignal(1);

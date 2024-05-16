@@ -1,9 +1,11 @@
 import { type RouteSectionProps, Router } from '@solidjs/router';
 import { QueryClientProvider } from '@tanstack/solid-query';
+import { lazy } from 'solid-js';
 import { Toaster } from 'solid-toast';
 import './App.css';
-import Routes from './routes/Routes';
 import { queryClient } from './utils/queryClient';
+
+const Routes = lazy(() => import('~/routes/Routes'));
 
 function App() {
 	return (

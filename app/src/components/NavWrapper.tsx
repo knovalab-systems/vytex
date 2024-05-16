@@ -1,9 +1,9 @@
-import { Suspense, Show } from 'solid-js';
-import Loading from './Loading';
 import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
-import SideBarNav from './SideBarNav';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
+import { Show, Suspense } from 'solid-js';
+import Loading from './Loading';
+import SideBarNav from './SideBarNav';
 
 function NavWrapper(props: RouteSectionProps) {
 	const isRouting = useIsRouting();

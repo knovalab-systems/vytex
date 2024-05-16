@@ -1,5 +1,3 @@
-import type { Component, ComponentProps, ValidComponent } from 'solid-js';
-import { splitProps } from 'solid-js';
 import {
 	type DialogContentProps,
 	type DialogDescriptionProps,
@@ -10,8 +8,10 @@ import {
 	type DialogTriggerProps,
 } from '@kobalte/core/dialog';
 import type { PolymorphicProps } from '@kobalte/core/polymorphic';
-import { cn } from '~/lib/utils';
 import type { VariantProps } from 'class-variance-authority';
+import type { Component, ComponentProps, ValidComponent } from 'solid-js';
+import { splitProps } from 'solid-js';
+import { cn } from '~/lib/utils';
 import { buttonVariants } from './Button';
 
 const Dialog = DialogPrimitive;
