@@ -6,6 +6,7 @@ import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
 import { USER_ROLES_OPTIONS, USER_STATUS_OPTIONS } from '~/utils/constants';
+import { cleanupDebounce, debounce } from '~/utils/debounce';
 
 type UserControlsProps = {
 	setNameFilter: (value: string) => void;
@@ -19,17 +20,8 @@ type UserControlsProps = {
 };
 
 const UserControls = (props: UserControlsProps) => {
-	let timeoutId: NodeJS.Timeout;
-
-	const debounce = (func: (value: string) => void, delay: number) => {
-		return (value: string) => {
-			clearTimeout(timeoutId);
-			timeoutId = setTimeout(() => func(value), delay);
-		};
-	};
-
 	onCleanup(() => {
-		clearTimeout(timeoutId);
+		cleanupDebounce();
 	});
 
 	const clearFilter = () => {
@@ -46,7 +38,7 @@ const UserControls = (props: UserControlsProps) => {
 	};
 
 	return (
-		<div class='flex flex-wrap justify-between'>
+		<div class='flex flex-wrap justify-between pt-1'>
 			<div class='flex flex-wrap gap-4'>
 				<Button
 					class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
