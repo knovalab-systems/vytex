@@ -3,6 +3,8 @@ import toast from 'solid-toast';
 import { Switch } from '~/components/ui/Switch';
 import { TableCell } from '~/components/ui/Table';
 import { updateUserRequest } from '../requests/updateUserRequests';
+import { getLocalTimeZone, now } from '@internationalized/date';
+import type { User } from '../schemas/userSchema';
 
 function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 	const [status, setStatus] = createSignal(!props.delete_at);
@@ -11,7 +13,11 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 	const handleSubmit = (newStatus: boolean) => {
 		setStatus(newStatus);
 		setLoading(true);
-		const user = { delete_at: newStatus ? null : '' };
+		const user: User = { delete_at: null };
+		if (!newStatus) {
+			const date = now(getLocalTimeZone()).toAbsoluteString();
+			user.delete_at = date;
+		}
 		updateUserRequest(props.userId, user)
 			.then(() => {
 				toast.success('El estado ha sido actualizado');

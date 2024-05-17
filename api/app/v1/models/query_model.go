@@ -46,5 +46,6 @@ func sanitizeOffset(offset int, page int, limit int) int {
 }
 
 type AggregateQuery struct {
-	Count string `query:"count"`
+	Count  string `query:"count"`
+	Filter string `query:"filter"`
 }

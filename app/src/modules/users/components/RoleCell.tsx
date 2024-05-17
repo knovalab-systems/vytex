@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { TableCell } from '~/components/ui/Table';
 import { type RoleItems, listRole, roles } from '~/utils/roles';
 import { updateUserRequest } from '../requests/updateUserRequests';
+import type { User } from '../schemas/userSchema';
 
 function RoleCell(props: {
 	roleValue: string;
@@ -32,7 +33,7 @@ function RoleCell(props: {
 
 	const handleSubmit = () => {
 		if (value().role !== role().role) {
-			const user = { role: value().role };
+			const user: User = { role: value().role };
 			updateUserRequest(props.userId, user)
 				.then(() => {
 					setRole(value());

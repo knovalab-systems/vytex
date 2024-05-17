@@ -22,41 +22,12 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 
 	table := query.User
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
-	filter, err := userFilters(q)
+	filter, err := userFilters(q.Filter, s)
 	if err != nil {
 		return nil, problems.UsersBadRequest()
 	}
 
-	if filter.Name != "" {
-		condition := table.Name.Lower().Like("%" + filter.Name + "%")
-		s = s.Where(condition)
-	}
-
-	if filter.Username != "" {
-		condition := table.Username.Lower().Like("%" + filter.Username + "%")
-		s = s.Where(condition)
-	}
-
-	if filter.Role != "" {
-		condition := table.Role.Eq(filter.Role)
-		s = s.Where(condition)
-	}
-
-	if filter.DeleteAt != "" {
-		value, err := strconv.ParseBool(filter.DeleteAt)
-		if err != nil {
-			return nil, err
-		}
-		if value {
-			condition := table.DeleteAt.IsNull()
-			s = s.Where(condition)
-		} else {
-			condition := table.DeleteAt.IsNotNull()
-			s = s.Where(condition)
-		}
-	}
-
-	users, err := s.Find()
+	users, err := filter.Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -69,7 +40,12 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	aggregate := &models.AggregateData{}
 
 	if q.Count != "" {
-		count, err := table.Count()
+		s := table.Unscoped()
+		filter, err := userFilters(q.Filter, s)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		count, err := filter.Count()
 		if err != nil {
 			return nil, problems.ServerError()
 		}
@@ -79,11 +55,17 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	return []*models.AggregateData{aggregate}, nil
 }
 
-func userFilters(u *models.Query) (models.UserFilter, error) {
+func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
+
+	if u == "" {
+		return s, nil
+	}
+
+	table := query.User
 	var result map[string]map[string]interface{}
-	err := json.Unmarshal([]byte(u.Filter), &result)
+	err := json.Unmarshal([]byte(u), &result)
 	if err != nil {
-		return models.UserFilter{}, err
+		return nil, err
 	}
 
 	var userFilter models.UserFilter
@@ -100,43 +82,36 @@ func userFilters(u *models.Query) (models.UserFilter, error) {
 		}
 	}
 
-	return userFilter, nil
-}
-
-func (m *UserService) SelectUsersByFilter(filter *models.UserFilter, req *models.Query) ([]*models.User, error) {
-	table := query.User
-	queries := table.Unscoped().Limit(*req.Limit).Offset(req.Offset)
-
-	if filter.Name != "" {
-		condition := table.Name.Lower().Like("%" + filter.Name + "%")
-		queries = queries.Where(condition)
+	if userFilter.Name != "" {
+		condition := table.Name.Lower().Like("%" + userFilter.Name + "%")
+		s = s.Where(condition)
 	}
 
-	if filter.Username != "" {
-		condition := table.Username.Lower().Like("%" + filter.Username + "%")
-		queries = queries.Where(condition)
+	if userFilter.Username != "" {
+		condition := table.Username.Lower().Like("%" + userFilter.Username + "%")
+		s = s.Where(condition)
 	}
 
-	if filter.Role != "" {
-		condition := table.Role.Eq(filter.Role)
-		queries = queries.Where(condition)
+	if userFilter.Role != "" {
+		condition := table.Role.Eq(userFilter.Role)
+		s = s.Where(condition)
 	}
 
-	if filter.DeleteAt != "" {
-		value, err := strconv.ParseBool(filter.DeleteAt)
+	if userFilter.DeleteAt != "" {
+		value, err := strconv.ParseBool(userFilter.DeleteAt)
 		if err != nil {
 			return nil, err
 		}
 		if value {
 			condition := table.DeleteAt.IsNull()
-			queries = queries.Where(condition)
+			s = s.Where(condition)
 		} else {
 			condition := table.DeleteAt.IsNotNull()
-			queries = queries.Where(condition)
+			s = s.Where(condition)
 		}
 	}
 
-	return queries.Find()
+	return s, nil
 }
 
 func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
