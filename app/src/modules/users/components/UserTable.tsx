@@ -1,13 +1,14 @@
 import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { GetUsersType } from '../requests/getUserRequests';
+import DeleteAtCell from './DeleteAtCell';
 import RoleCell from './RoleCell';
 
 function UserTable(props: { users: GetUsersType }) {
 	return (
 		<TableContainer>
-			<Table class='border border-white-200'>
-				<TableHeader class='sticky top-0'>
+			<Table class='table-auto border border-white-200'>
+				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
 						<TableHead>ID</TableHead>
 						<TableHead>Usuario</TableHead>
@@ -29,18 +30,8 @@ function UserTable(props: { users: GetUsersType }) {
 								<TableCell>{user.id}</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>{user.name}</TableCell>
-								<RoleCell id={user.id} roleValue={user.role} />
-								<TableCell>
-									{user.delete_at ? (
-										<div class='inline-flex items-center px-3 py-1 text-red-500 rounded-full gap-x-2 bg-red-100/60 '>
-											Inactivo
-										</div>
-									) : (
-										<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 bg-emerald-100/60 '>
-											Activo
-										</div>
-									)}
-								</TableCell>
+								<RoleCell userId={user.id} roleValue={user.role} />
+								<DeleteAtCell delete_at={user.delete_at} userId={user.id} />
 								<TableCell>Acciones</TableCell>
 							</TableRow>
 						)}

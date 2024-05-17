@@ -21,7 +21,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	}
 
 	table := query.User
-	query := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 	filter, err := userFilters(q)
 	if err != nil {
 		return nil, problems.UsersBadRequest()
@@ -29,17 +29,17 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 
 	if filter.Name != "" {
 		condition := table.Name.Lower().Like("%" + filter.Name + "%")
-		query = query.Where(condition)
+		s = s.Where(condition)
 	}
 
 	if filter.Username != "" {
 		condition := table.Username.Lower().Like("%" + filter.Username + "%")
-		query = query.Where(condition)
+		s = s.Where(condition)
 	}
 
 	if filter.Role != "" {
 		condition := table.Role.Eq(filter.Role)
-		query = query.Where(condition)
+		s = s.Where(condition)
 	}
 
 	if filter.DeleteAt != "" {
@@ -49,14 +49,14 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 		}
 		if value {
 			condition := table.DeleteAt.IsNull()
-			query = query.Where(condition)
+			s = s.Where(condition)
 		} else {
 			condition := table.DeleteAt.IsNotNull()
-			query = query.Where(condition)
+			s = s.Where(condition)
 		}
 	}
 
-	users, err := query.Find()
+	users, err := s.Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -147,7 +147,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 		return nil, problems.UpdateUsersBadRequest()
 	}
 
-	rows, err := table.Where(table.ID.Eq(update.ID)).Updates(updateMap)
+	rows, err := table.Unscoped().Where(table.ID.Eq(update.ID)).Updates(updateMap)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -156,7 +156,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 		return nil, problems.UpdateUsersBadRequest()
 	}
 
-	user, err := table.Where(table.ID.Eq(update.ID)).First()
+	user, err := table.Unscoped().Where(table.ID.Eq(update.ID)).First()
 	if err != nil {
 		return nil, problems.ServerError()
 	}

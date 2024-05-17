@@ -1,7 +1,7 @@
-import { Button } from '~/components/ui/Button';
-import { TableCell } from '~/components/ui/Table';
 import { AiFillEdit } from 'solid-icons/ai';
-import { type RoleItems, listRole, roles } from '~/utils/roles';
+import { createEffect, createSignal } from 'solid-js';
+import toast from 'solid-toast';
+import { Button } from '~/components/ui/Button';
 import {
 	Dialog,
 	DialogContent,
@@ -11,14 +11,14 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from '~/components/ui/Dialog';
-import { createEffect, createSignal } from 'solid-js';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
-import { updateRole } from '../requests/updateUserRequests';
-import toast from 'solid-toast';
+import { TableCell } from '~/components/ui/Table';
+import { type RoleItems, listRole, roles } from '~/utils/roles';
+import { updateUserRequest } from '../requests/updateUserRequests';
 
 function RoleCell(props: {
 	roleValue: string;
-	id: string;
+	userId: string;
 }) {
 	const [role, setRole] = createSignal(roles[props.roleValue]);
 	const [value, setValue] = createSignal(roles[props.roleValue]);
@@ -32,7 +32,8 @@ function RoleCell(props: {
 
 	const handleSubmit = () => {
 		if (value().role !== role().role) {
-			updateRole(props.id, value().role)
+			const user = { role: value().role };
+			updateUserRequest(props.userId, user)
 				.then(() => {
 					setRole(value());
 					setEdit(false);
@@ -48,7 +49,7 @@ function RoleCell(props: {
 
 	return (
 		<TableCell>
-			<div class='flex w-full justify-between group-hover:*:visible '>
+			<div class='flex w-full justify-between group-hover:*:visible'>
 				<span class='my-auto'>{role().name}</span>
 
 				<Dialog open={edit()} onOpenChange={setEdit}>
