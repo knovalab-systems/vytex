@@ -28,7 +28,7 @@ const FilterInput: FilterProps = props => {
 			}}
 			placeholder={props.placeholder}
 			class={cn(
-				'w-80 h-12 p-2 mb-2 text-xl borderborder-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300',
+				'w-80 h-12 p-2 mb-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300',
 				props.class,
 			)}
 			{...rest}

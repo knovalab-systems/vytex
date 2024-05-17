@@ -1,3 +1,4 @@
+import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
 import {
@@ -8,11 +9,10 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+import { QUERY_LIMIT } from '~/utils/constants';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
 import { countUsersQuery, getUsersQuery } from '../requests/getUserRequests';
-import { createQuery } from '@tanstack/solid-query';
-import { QUERY_LIMIT } from '~/utils/constants';
 
 function Users() {
 	const [page, setPage] = createSignal(1);
@@ -31,22 +31,23 @@ function Users() {
 	});
 
 	return (
-		<Switch>
-			<Match when={users.isPending || usersCount.isPending}>
-				<Loading />
-			</Match>
-			<Match when={users.isSuccess && usersCount.isSuccess}>
-				<div class='h-full flex flex-col'>
-					<UserControls
-						setNameFilter={setNameFilter}
-						nameFilterValue={nameFilter()}
-						setUsernameFilter={setUsernameFilter}
-						usernameFilterValue={usernameFilter()}
-						setStatusFilter={setStatusFilter}
-						statusFilterValue={statusFilter()}
-						setRoleIdFilter={setRoleIdFilter}
-						roleIdFilterValue={roleIdFilter()}
-					/>
+		<div class='h-full flex flex-col'>
+			<UserControls
+				setNameFilter={setNameFilter}
+				nameFilterValue={nameFilter()}
+				setUsernameFilter={setUsernameFilter}
+				usernameFilterValue={usernameFilter()}
+				setStatusFilter={setStatusFilter}
+				statusFilterValue={statusFilter()}
+				setRoleIdFilter={setRoleIdFilter}
+				roleIdFilterValue={roleIdFilter()}
+			/>
+
+			<Switch>
+				<Match when={users.isLoading && usersCount.isLoading}>
+					<Loading />
+				</Match>
+				<Match when={users.isSuccess && usersCount.isSuccess}>
 					<UserTable users={users.data} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
@@ -60,9 +61,9 @@ function Users() {
 						<PaginationItems />
 						<PaginationNext />
 					</Pagination>
-				</div>
-			</Match>
-		</Switch>
+				</Match>
+			</Switch>
+		</div>
 	);
 }
 

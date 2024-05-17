@@ -1,3 +1,5 @@
+import { ADMIN_ROLE, NO_ROLE } from './env';
+
 export const QUERY_LIMIT = 20;
 
 export const USER_STATUS = {
@@ -10,18 +12,9 @@ export const USER_STATUS_OPTIONS = [
 	{ label: 'Inactivo', value: USER_STATUS.inactive },
 ];
 
-export const USER_ROLE = {
-	1: 'Admin',
-	2: 'Operario',
-	3: 'Invitado',
-	4: 'Desarrollador',
-};
-
 export const USER_ROLES_OPTIONS = [
-	{ label: 'Administrador', value: 1 },
-	{ label: 'Operario', value: 2 },
-	{ label: 'Invitado', value: 3 },
-	{ label: 'Desarrollador', value: 4 },
+	{ label: 'Administrador', value: ADMIN_ROLE },
+	{ label: 'Sin rol', value: NO_ROLE },
 ];
 
 export const MESSAGES = {
