@@ -23,7 +23,7 @@ function Users() {
 	const users = createQuery(() =>
 		getUsersQuery(nameFilter(), usernameFilter(), roleIdFilter(), statusFilter(), page()),
 	);
-	const usersCount = createQuery(countUsersQuery);
+	const usersCount = createQuery(() => countUsersQuery(nameFilter(), usernameFilter(), roleIdFilter(), statusFilter()));
 	const pages = createMemo<number>(() => {
 		const count = usersCount.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;

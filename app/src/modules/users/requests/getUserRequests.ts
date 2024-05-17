@@ -33,17 +33,33 @@ async function getUsers(name: string, username: string, roleId: string, status: 
 	);
 }
 
-export function countUsersQuery() {
+export function countUsersQuery(name: string, username: string, roleId: string, status: string) {
 	return queryOptions({
-		queryFn: countUsers,
-		queryKey: ['countUsers'],
+		queryFn: () => countUsers(name, username, roleId, status),
+		queryKey: ['countUsers', name, username, roleId, status],
 	});
 }
 
-async function countUsers() {
+async function countUsers(name: string, username: string, roleId: string, status: string) {
 	return await client.request(
 		aggregate('vytex_users', {
 			aggregate: { count: '*' },
+			query: {
+				filter: {
+					name: {
+						_eq: name.toLowerCase(),
+					},
+					username: {
+						_eq: username.toLowerCase(),
+					},
+					role: {
+						_eq: roleId,
+					},
+					delete_at: {
+						_eq: status,
+					},
+				},
+			},
 		}),
 	);
 }
