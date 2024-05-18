@@ -7,7 +7,7 @@ import RoleCell from './RoleCell';
 function UserTable(props: { users: GetUsersType }) {
 	return (
 		<TableContainer>
-			<Table class='table-auto border border-white-200'>
+			<Table class='table-auto'>
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
 						<TableHead>ID</TableHead>

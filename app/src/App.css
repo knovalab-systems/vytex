@@ -9,10 +9,6 @@ body,
   scroll-behavior: smooth;
 }
 
-#root {
-  display: flex;
-}
-
 ::-webkit-scrollbar {
   width: 16px;
 }
