@@ -6,4 +6,5 @@ type UserRepository interface {
 	SelectUsers(*models.Query) ([]*models.User, error)
 	AggregationUsers(*models.AggregateQuery) ([]*models.AggregateData, error)
 	UpdateUser(*models.UpdateUserBody) (*models.User, error)
+	CreateUser(body *models.CreateUserBody) (*models.User, error)
 }

@@ -111,3 +111,35 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 
 	return c.JSON(200, user)
 }
+
+// CreateUser Create user
+// @Summary      Create user
+// @Description  Create a new user
+// @Tags         Users
+// @Produce      json
+// @param		 models.CreateUserBody body string true "User create values"
+// @Success      200 {object} models.User
+// @Failure      400
+// @Failure      500
+// @Router       /users [post]
+func (m *UserController) CreateUser(c echo.Context) error {
+	u := new(models.CreateUserBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.CreateUsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CreateUsersBadRequest()
+	}
+
+	// create
+	user, err := m.UserRepository.CreateUser(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(200, user)
+}

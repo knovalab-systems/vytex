@@ -138,3 +138,21 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 
 	return user, nil
 }
+
+func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
+	table := query.User
+
+	user := &models.User{
+		Username: u.Username,
+		Name:     u.Name,
+		Password: u.Password,
+		Role:     u.Role,
+	}
+
+	err := table.Create(user)
+	if err != nil {
+		return nil, problems.CreateUsersBadRequest()
+	}
+
+	return user, nil
+}
