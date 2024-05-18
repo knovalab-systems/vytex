@@ -1,15 +1,8 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import type { JSXElement } from 'solid-js';
 import { describe, expect, it, vi } from 'vitest';
+import type { PropsPages } from '../NavWrapper';
 import SideBarNav from '../SideBarNav';
-
-interface Props {
-	name: string;
-	path: string;
-	end?: boolean;
-	icon: JSXElement;
-}
 
 const MockA = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -37,7 +30,7 @@ describe('SideBarNav', () => {
 	});
 
 	it('renders correctly with pages', () => {
-		const pages: Props[] = [{ name: 'Usuario', path: '/', icon: <div /> }];
+		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
 		render(() => <SideBarNav pages={pages} />);
 
 		const testPageText = screen.getByText('/');

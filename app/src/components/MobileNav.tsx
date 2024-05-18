@@ -1,11 +1,11 @@
-import { createSignal, createEffect, Show } from 'solid-js';
-import type { PropsPages } from './NavWrapper';
-import { FiMenu } from 'solid-icons/fi';
-import { Portal } from 'solid-js/web';
 import { A } from '@solidjs/router';
-import { Button } from './ui/Button';
-import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
 import { AiOutlineClose } from 'solid-icons/ai';
+import { FiMenu } from 'solid-icons/fi';
+import { createEffect, createSignal } from 'solid-js';
+import { Portal } from 'solid-js/web';
+import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
+import type { PropsPages } from './NavWrapper';
+import { Button } from './ui/Button';
 
 function MobileNav(props: { pages: PropsPages[] }) {
 	const [open, setOpen] = createSignal(false);

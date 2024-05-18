@@ -1,9 +1,9 @@
+import { getLocalTimeZone, now } from '@internationalized/date';
 import { Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { Switch } from '~/components/ui/Switch';
 import { TableCell } from '~/components/ui/Table';
 import { updateUserRequest } from '../requests/updateUserRequests';
-import { getLocalTimeZone, now } from '@internationalized/date';
 import type { User } from '../schemas/userSchema';
 
 function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
@@ -46,7 +46,7 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 						Activo
 					</div>
 				</Show>
-				<div class='my-auto relative hidden'>
+				<div class='my-auto relative lg:hidden'>
 					<Switch checked={status()} onChange={handleSubmit} disabled={loading()} />
 				</div>
 			</div>
