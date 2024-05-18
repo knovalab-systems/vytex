@@ -23,3 +23,8 @@ func (m *UserMock) UpdateUser(update *models.UpdateUserBody) (*models.User, erro
 	args := m.Called()
 	return args.Get(0).(*models.User), args.Error(1)
 }
+
+func (m *UserMock) CreateUser(body *models.CreateUserBody) (*models.User, error) {
+	args := m.Called()
+	return args.Get(0).(*models.User), args.Error(1)
+}

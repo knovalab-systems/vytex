@@ -141,5 +141,5 @@ func (m *UserController) CreateUser(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(200, user)
+	return c.JSON(201, user)
 }
