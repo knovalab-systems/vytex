@@ -2,6 +2,18 @@ import { ADMIN_ROLE, NO_ROLE } from './env';
 
 export const QUERY_LIMIT = 20;
 
+export const STATUS_CODE = {
+	ok: 200,
+	created: 201,
+	noContent: 204,
+	badRequest: 400,
+	unauthorized: 401,
+	forbidden: 403,
+	notFound: 404,
+	conflict: 409,
+	internalServerError: 500,
+};
+
 export const USER_STATUS = {
 	active: 'true',
 	inactive: 'false',
@@ -32,5 +44,12 @@ export const MESSAGES = {
 	auth: {
 		error: 'Revisa tu usuario y contraseña',
 		password: 'La contraseña debe tener al menos 8 caracteres',
+	},
+	user: {
+		created: 'Usuario creado correctamente',
+		updated: 'Usuario actualizado correctamente',
+		deleted: 'Usuario eliminado correctamente',
+		exists: 'El usuario ya existe',
+		error: 'Error al crear usuario',
 	},
 };

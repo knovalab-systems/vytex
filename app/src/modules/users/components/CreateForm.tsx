@@ -5,14 +5,16 @@ import toast from "solid-toast";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
 import { Label } from "~/components/ui/Label";
+import { MESSAGES, STATUS_CODE } from "~/utils/constants";
 import { listRole } from "~/utils/roles";
-import { createUserRequest } from "../requests/createUserRequest";
+import { createUserRequest } from "../requests/createUserRequests";
 import { CreateSchema, type CreateType } from "../schemas/createSchema";
 
 
 function CreateForm() {
     const navigate = useNavigate();
     const [disabled, setDisable] = createSignal(false);
+
     const [_, { Form, Field }] = createForm<CreateType>({
         validate: valiForm(CreateSchema),
         initialValues: { name: '', username: '', password: '', confirmpassword: '', role: '' },
@@ -23,12 +25,15 @@ function CreateForm() {
         setDisable(true);
         createUserRequest(data.name, data.username, data.password, data.role)
             .then(() => {
-                toast.success('Usuario creado correctamente');
+                toast.success(MESSAGES.user.created);
                 navigate('/users');
             })
             .catch((error) => {
-                toast.error(error.message);
-                toast.error('Error al crear el usuario');
+                if (error.response.status === STATUS_CODE.conflict) {
+                    toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
+                } else {
+                    toast.error(MESSAGES.user.error);
+                }
                 setDisable(false);
             })
     };
@@ -83,7 +88,7 @@ function CreateForm() {
                                 <Input
                                     value={field.value}
                                     type='password'
-                                    placeholder="*********"
+                                    placeholder="********"
                                     id='pass-field'
                                     aria-errormessage={field.error}
                                     required
@@ -133,7 +138,7 @@ function CreateForm() {
                             Cancelar
                         </Button>
                         <Button type='submit' disabled={disabled()} class="bg-green-600 ">
-                            Crear usuario
+                            Guardar
                         </Button>
                     </div>
                 </div>
