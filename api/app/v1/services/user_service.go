@@ -142,17 +142,34 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
 	table := query.User
 
-	user := &models.User{
-		Username: u.Username,
-		Name:     u.Name,
-		Password: u.Password,
-		Role:     u.Role,
-	}
+	_, err := u.Validate()
 
-	err := table.Create(user)
 	if err != nil {
 		return nil, problems.CreateUsersBadRequest()
 	}
 
+	user := &models.User{
+		Username: u.Username,
+		Name:     u.Name,
+		Password: u.Password,
+		Role:     *u.Role,
+	}
+
+	err = table.Create(user)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
 	return user, nil
+}
+
+func (m *UserService) CheckUserExistence(username string) (bool, error) {
+	table := query.User
+
+	count, err := table.Where(table.Username.Eq(username)).Count()
+	if err != nil {
+		return false, problems.ServerError()
+	}
+
+	return count > 0, nil
 }

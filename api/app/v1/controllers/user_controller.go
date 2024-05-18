@@ -135,11 +135,22 @@ func (m *UserController) CreateUser(c echo.Context) error {
 		return problems.CreateUsersBadRequest()
 	}
 
-	// create
-	user, err := m.UserRepository.CreateUser(u)
+	// check if user exists using username
+	exist, err := m.UserRepository.CheckUserExistence(u.Username)
+
 	if err != nil {
 		return err
 	}
 
+	if exist {
+		return problems.UserExists()
+	}
+
+	// create
+	user, err := m.UserRepository.CreateUser(u)
+
+	if err != nil {
+		return err
+	}
 	return c.JSON(201, user)
 }
