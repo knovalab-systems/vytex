@@ -1,12 +1,13 @@
+import { useNavigate } from '@solidjs/router';
 import { FaSolidPlus } from 'solid-icons/fa';
 import { TbFilterX } from 'solid-icons/tb';
 import { Show, onCleanup } from 'solid-js';
-import toast from 'solid-toast';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
-import { USER_ROLES_OPTIONS, USER_STATUS_OPTIONS } from '~/utils/constants';
+import { USER_STATUS_OPTIONS } from '~/utils/constants';
 import { cleanupDebounce, debounce } from '~/utils/debounce';
+import { listRole } from '~/utils/roles';
 
 type UserControlsProps = {
 	setNameFilter: (value: string) => void;
@@ -20,6 +21,8 @@ type UserControlsProps = {
 };
 
 const UserControls = (props: UserControlsProps) => {
+	const navigate = useNavigate();
+
 	onCleanup(() => {
 		cleanupDebounce();
 	});
@@ -37,14 +40,16 @@ const UserControls = (props: UserControlsProps) => {
 		);
 	};
 
+	const goToUserCreationPage = () => {
+		navigate('/users/create');
+	}
+
 	return (
 		<div class='flex flex-wrap justify-between pt-1'>
 			<div class='flex flex-wrap gap-4'>
 				<Button
 					class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
-					onclick={() => {
-						toast.success('Nuevo usuario');
-					}}
+					onclick={goToUserCreationPage}
 				>
 					Nuevo
 					<FaSolidPlus class='ml-2' size={20} />
@@ -67,7 +72,7 @@ const UserControls = (props: UserControlsProps) => {
 					value={props.statusFilterValue}
 				/>
 				<SelectOptions
-					options={USER_ROLES_OPTIONS}
+					options={listRole.map(role => ({ label: role.name, value: role.role }))}
 					placeholder='Rol de usuario'
 					setSelect={props.setRoleIdFilter}
 					value={props.roleIdFilterValue}
