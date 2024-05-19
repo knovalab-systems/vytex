@@ -2,7 +2,7 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PropsPages } from '../NavWrapper';
-import SideBarNav from '../SideBarNav';
+import MobileNav from '../MobileNav';
 
 const MockA = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -20,31 +20,31 @@ vi.mock('~/modules/auth/components/LogoutNavButton', () => ({
 	},
 }));
 
-describe('SideBarNav', () => {
+describe('MobileNav', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly on zero pages', () => {
-		render(() => <SideBarNav pages={[]} />);
+		render(() => <MobileNav pages={[]} />);
 
-		const testText = screen.getByText('Vytex');
+		const testText = screen.getByText('Cerrar');
 
 		expect(testText).toBeInTheDocument();
 	});
 
 	it('renders correctly with pages', () => {
 		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
-		render(() => <SideBarNav pages={pages} />);
+		render(() => <MobileNav pages={pages} />);
 
 		const testPageText = screen.getByText('/');
 
 		expect(testPageText).toBeInTheDocument();
 	});
 
-	it('calls A correctly', () => {
+	it('call A correctly', () => {
 		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
-		render(() => <SideBarNav pages={pages} />);
+		render(() => <MobileNav pages={pages} />);
 
 		const A = screen.getByText('/');
 		fireEvent.click(A);
@@ -54,7 +54,7 @@ describe('SideBarNav', () => {
 
 	it('calls LogOut correctly', () => {
 		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
-		render(() => <SideBarNav pages={pages} />);
+		render(() => <MobileNav pages={pages} />);
 
 		const logOut = screen.getByText('LogOut');
 		fireEvent.click(logOut);
