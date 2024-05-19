@@ -33,6 +33,11 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 
+type ReadUser struct {
+	ID string `param:"userId" validate:"required,uuid"`
+	Query
+}
+
 type UpdateUserBody struct {
 	ID       string              `param:"userId" validate:"required,uuid"`
 	Role     *string             `json:"role" validate:"omitnil,uuid"`
