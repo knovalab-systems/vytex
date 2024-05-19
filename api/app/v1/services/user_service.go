@@ -35,6 +35,26 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	return users, nil
 }
 
+func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
+	table := query.User
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+	filter, err := userFilters(q.Filter, s)
+	if err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
+	user, err := filter.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	return user, nil
+}
+
 func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 
 	table := query.User
