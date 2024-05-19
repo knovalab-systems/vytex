@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"reflect"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -71,18 +70,14 @@ func (m *UserController) ReadMe(c echo.Context) error {
 	claims := user.Claims.(*utils.JWTClaims)
 	u.ID = claims.User
 
-	log.Println(u.ID)
-
 	// validate
 	if err := c.Validate(u); err != nil {
-		log.Println("here")
 		return problems.UsersBadRequest()
 	}
 
 	// get users
 	users, err := m.SelectUser(u)
 	if err != nil {
-		log.Println("here")
 		return err
 	}
 
