@@ -121,6 +121,7 @@ function CreateForm() {
                                     class="w-full h-10 px-3 py-2 text-base bg-white border rounded-lg focus:shadow-outline"
                                     id='role-field'
                                     aria-errormessage={field.error}
+                                    value={field.value}
                                     required
                                     {...props}
                                 >
