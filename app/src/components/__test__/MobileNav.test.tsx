@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PropsPages } from '../NavWrapper';
+import type { NavPages } from '../NavWrapper';
 import MobileNav from '../MobileNav';
 
 const MockA = vi.fn();
@@ -34,7 +34,7 @@ describe('MobileNav', () => {
 	});
 
 	it('renders correctly with pages', () => {
-		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
+		const pages: NavPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
 		render(() => <MobileNav pages={pages} />);
 
 		const testPageText = screen.getByText('/');
@@ -43,7 +43,7 @@ describe('MobileNav', () => {
 	});
 
 	it('call A correctly', () => {
-		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
+		const pages: NavPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
 		render(() => <MobileNav pages={pages} />);
 
 		const A = screen.getByText('/');
@@ -53,7 +53,7 @@ describe('MobileNav', () => {
 	});
 
 	it('calls LogOut correctly', () => {
-		const pages: PropsPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
+		const pages: NavPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
 		render(() => <MobileNav pages={pages} />);
 
 		const logOut = screen.getByText('LogOut');

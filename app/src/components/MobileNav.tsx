@@ -4,10 +4,10 @@ import { FiMenu } from 'solid-icons/fi';
 import { createEffect, createSignal } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
-import type { PropsPages } from './NavWrapper';
+import type { NavPages } from './NavWrapper';
 import { Button } from './ui/Button';
 
-function MobileNav(props: { pages: PropsPages[] }) {
+function MobileNav(props: { pages: NavPages[] }) {
 	const [open, setOpen] = createSignal(false);
 
 	const handleClose = () => {
