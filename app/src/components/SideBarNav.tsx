@@ -2,9 +2,9 @@ import { A } from '@solidjs/router';
 import { IoLogoIonitron } from 'solid-icons/io';
 import { For } from 'solid-js';
 import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
-import type { PropsPages } from './NavWrapper';
+import type { NavPages } from './NavWrapper';
 
-function SideBarNav(props: { pages: PropsPages[] }) {
+function SideBarNav(props: { pages: NavPages[] }) {
 	return (
 		<nav class='w-1/8 p-2 bg-gray-900/95 h-full shadow-md shadow-gray-900 hidden lg:block'>
 			<div class='flex font-sans items-center text-center py-2 text-white uppercase lg:text-xs 2xl:text-xl'>
