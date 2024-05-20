@@ -9,6 +9,11 @@ type UserMock struct {
 	mock.Mock
 }
 
+func (m *UserMock) CheckUserExistence(username string) (bool, error) {
+	args := m.Called()
+	return args.Bool(0), args.Error(1)
+}
+
 func (m *UserMock) SelectUsers(req *models.Query) ([]*models.User, error) {
 	args := m.Called()
 	return []*models.User{}, args.Error(0)

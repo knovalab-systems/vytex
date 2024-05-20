@@ -427,6 +427,38 @@ func TestCreateUser(t *testing.T) {
 		assert.Error(t, err)
 	})
 
+	t.Run("Fail to create, user exist", func(t *testing.T) {
+		// context
+		name := "test"
+		username := "test"
+		password := "test"
+		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		mockUser.On("CreateUser").Return(&models.User{}, nil)
+		mockUser.On("CheckUserExistence").Return(true, nil)
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.CreateUser(c)
+
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusConflict, err.(*echo.HTTPError).Code)
+		}
+	})
+
 	t.Run("Create user successfully", func(t *testing.T) {
 		// context
 		name := "test"
