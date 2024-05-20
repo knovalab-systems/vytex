@@ -3,9 +3,9 @@ import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { cn } from '~/lib/utils';
-import { MESSAGES } from '~/utils/constants';
 import { LOGIN_PATH } from '~/utils/paths';
 import { logoutRequest } from '../requests/authRequests';
+import RoleRoot from './RoleRoot';
 
 /**
  *
@@ -14,10 +14,12 @@ import { logoutRequest } from '../requests/authRequests';
  */
 function LogoutNavButton(props: { class?: string }) {
 	const navigate = useNavigate();
+	const { setRole } = RoleRoot;
 
 	const handleLogOut = () => {
 		logoutRequest()
 			.then(() => {
+				setRole(null);
 				navigate(`${LOGIN_PATH}?reason=LOG_OUT`);
 				toast.success('Sessión cerrada correctamente');
 			})

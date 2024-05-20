@@ -1,20 +1,22 @@
 import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
+import { createQuery } from '@tanstack/solid-query';
+import { readMe } from '@vytex/client';
 import { BsPersonWorkspace } from 'solid-icons/bs';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
-import { type JSXElement, Show, Suspense, lazy, Switch, Match } from 'solid-js';
-import Loading from './Loading';
-import { createQuery } from '@tanstack/solid-query';
+import { type JSXElement, Match, Show, Suspense, Switch, createEffect, lazy } from 'solid-js';
+import Loading from '~/components/Loading';
+import MobileNav from '~/components/MobileNav';
 import { client } from '~/utils/client';
-import { readMe } from '@vytex/client';
 import { ADMIN_ROLE } from '~/utils/env';
-import MobileNav from './MobileNav';
+import RoleRoot from './RoleRoot';
 
-const SideBarNav = lazy(() => import('./SideBarNav'));
+const SideBarNav = lazy(() => import('~/components/SideBarNav'));
 
 function NavWrapper(props: RouteSectionProps) {
+	const { setRole } = RoleRoot;
 	const isRouting = useIsRouting();
-	const role = createQuery(() => ({
+	const user = createQuery(() => ({
 		queryFn: async () => client.request(readMe()),
 		queryKey: ['role'],
 	}));
@@ -27,19 +29,27 @@ function NavWrapper(props: RouteSectionProps) {
 		],
 	};
 
+	createEffect(() => {
+		if (user.isSuccess) {
+			setRole(user.data?.role);
+		}
+	});
+
 	return (
 		<div class='flex flex-col w-full h-fit lg:h-full lg:flex-row'>
 			<Switch>
-				<Match when={role.isSuccess && role.data.role === ADMIN_ROLE}>
-					<SideBarNav pages={pages[role.data?.role]} />
-					<MobileNav pages={pages[role.data?.role]} />
+				<Match when={user.isSuccess && user.data.role === ADMIN_ROLE}>
+					<SideBarNav pages={pages[ADMIN_ROLE]} />
+					<MobileNav pages={pages[ADMIN_ROLE]} />
 					<main class='flex-1 m-2'>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}
 						</Suspense>
 					</main>
 				</Match>
-				<Match when={role.isSuccess}>
+				<Match when={user.isSuccess}>
+					<SideBarNav pages={[]} />
+					<MobileNav pages={[]} />
 					<div>{'empty' /** temporal*/}</div>
 				</Match>
 			</Switch>

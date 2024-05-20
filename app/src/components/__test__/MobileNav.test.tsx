@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { NavPages } from '../NavWrapper';
+import type { NavPages } from '~/modules/auth/components/NavWrapper';
 import MobileNav from '../MobileNav';
 
 const MockA = vi.fn();
