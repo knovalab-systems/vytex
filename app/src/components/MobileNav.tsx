@@ -4,7 +4,7 @@ import { FiMenu } from 'solid-icons/fi';
 import { createEffect, createSignal } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
-import type { NavPages } from './NavWrapper';
+import type { NavPages } from '~/modules/auth/components/NavWrapper';
 import { Button } from './ui/Button';
 
 function MobileNav(props: { pages: NavPages[] }) {
