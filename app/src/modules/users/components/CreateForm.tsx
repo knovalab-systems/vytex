@@ -46,7 +46,7 @@ function CreateForm() {
         <div class="w-3/6">
             <Form class='my-auto md:m-auto md:w-3/5 xl:w-5/6' onSubmit={handleSubmit} >
                 <div class='flex flex-col justify-center gap-6 p-8 m-4 bg-white rounded-md border border-gray-100 shadow-md'>
-                    <h1 class='text-left text-2xl font-bold'>
+                    <h1 class='text-2xl font-bold text-center'>
                         Crear usuario
                     </h1>
                     <Field name='name'>
@@ -135,10 +135,10 @@ function CreateForm() {
                         )}
                     </Field>
                     <div class="flex justify-between">
-                        <Button type="button" onclick={handleGoBack} class="bg-red-500">
+                        <Button type="button" onclick={handleGoBack} class="bg-red-500 hover:bg-red-600">
                             Cancelar
                         </Button>
-                        <Button type='submit' disabled={disabled()} class="bg-green-600 ">
+                        <Button type='submit' disabled={disabled()} class="bg-green-600 hover:bg-green-700">
                             Guardar
                         </Button>
                     </div>
