@@ -10,6 +10,7 @@ import MobileNav from '~/components/MobileNav';
 import { client } from '~/utils/client';
 import { ADMIN_ROLE } from '~/utils/env';
 import RoleRoot from './RoleRoot';
+import * as PATHS from '~/utils/paths';
 
 const SideBarNav = lazy(() => import('~/components/SideBarNav'));
 
@@ -24,8 +25,8 @@ function NavWrapper(props: RouteSectionProps) {
 	const pages: Record<string, NavPages[]> = {
 		[ADMIN_ROLE]: [
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
-			{ name: 'Usuarios', icon: () => <RiUserFacesUserFill size={24} />, path: '/users' },
-			{ name: 'Roles', icon: () => <BsPersonWorkspace size={24} />, path: '/roles' },
+			{ name: 'Usuarios', icon: () => <RiUserFacesUserFill size={24} />, path: PATHS.USERS_PATH },
+			{ name: 'Roles', icon: () => <BsPersonWorkspace size={24} />, path: PATHS.ROLES_PATH },
 		],
 	};
 

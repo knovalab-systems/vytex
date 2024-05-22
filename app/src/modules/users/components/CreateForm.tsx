@@ -9,6 +9,7 @@ import { STATUS_CODE } from '~/utils/constants';
 import { roleList } from '~/utils/roles';
 import { createUserRequest } from '../requests/createUserRequests';
 import { CreateSchema, type CreateType } from '../schemas/createSchema';
+import { USERS_PATH } from '~/utils/paths';
 
 function CreateForm() {
 	const navigate = useNavigate();
@@ -25,7 +26,7 @@ function CreateForm() {
 		createUserRequest(data.name, data.username, data.password, data.role)
 			.then(() => {
 				toast.success('Usuario creado correctamente');
-				navigate('/users');
+				navigate(USERS_PATH);
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
@@ -38,7 +39,7 @@ function CreateForm() {
 	};
 
 	const handleGoBack = () => {
-		navigate('/users');
+		navigate(USERS_PATH);
 	};
 
 	return (
