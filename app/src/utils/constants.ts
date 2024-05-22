@@ -28,28 +28,3 @@ export const USER_ROLES_OPTIONS = [
 	{ label: 'Administrador', value: ADMIN_ROLE },
 	{ label: 'Sin rol', value: NO_ROLE },
 ];
-
-export const MESSAGES = {
-	logout: {
-		title: 'Cerrar sesión',
-		description: '¿Estás seguro que deseas cerrar sesión?',
-		confirm: 'Sessión cerrada correctamente',
-		error: 'Error al cerrar sesión',
-	},
-	session: {
-		expired: 'Tu sesión ha expirado, por favor vuelve a iniciar sesión',
-		successful: 'Sesión iniciada correctamente',
-		error: 'Error al iniciar sesión, por favor intenta de nuevo',
-	},
-	auth: {
-		error: 'Revisa tu usuario y contraseña',
-		password: 'La contraseña debe tener al menos 8 caracteres',
-	},
-	user: {
-		created: 'Usuario creado correctamente',
-		updated: 'Usuario actualizado correctamente',
-		deleted: 'Usuario eliminado correctamente',
-		exists: 'El usuario ya existe',
-		error: 'Error al crear usuario',
-	},
-};

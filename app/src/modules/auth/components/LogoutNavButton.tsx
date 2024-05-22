@@ -13,7 +13,7 @@ function LogoutNavButton() {
 		logoutRequest()
 			.then(() => {
 				navigate(`${LOGIN_PATH}?reason=LOG_OUT`);
-				toast.success(MESSAGES.logout.confirm);
+				toast.success('Sessión cerrada correctamente');
 			})
 			.catch(() => toast.error('Error al cerrar sesión'));
 	};

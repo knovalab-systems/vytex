@@ -5,7 +5,7 @@ import toast from "solid-toast";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
 import { Label } from "~/components/ui/Label";
-import { MESSAGES, STATUS_CODE } from "~/utils/constants";
+import { STATUS_CODE } from "~/utils/constants";
 import { listRole } from "~/utils/roles";
 import { createUserRequest } from "../requests/createUserRequests";
 import { CreateSchema, type CreateType } from "../schemas/createSchema";
@@ -17,7 +17,7 @@ function CreateForm() {
 
     const [_, { Form, Field }] = createForm<CreateType>({
         validate: valiForm(CreateSchema),
-        initialValues: { name: '', username: '', password: '', confirmpassword: '', role: '' },
+        initialValues: { name: '', username: '', password: '', role: '' },
     });
 
     const handleSubmit: SubmitHandler<CreateType> = (data, event) => {
@@ -25,14 +25,14 @@ function CreateForm() {
         setDisable(true);
         createUserRequest(data.name, data.username, data.password, data.role)
             .then(() => {
-                toast.success(MESSAGES.user.created);
+                toast.success('Usuario creado correctamente');
                 navigate('/users');
             })
             .catch((error) => {
                 if (error.response.status === STATUS_CODE.conflict) {
                     toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
                 } else {
-                    toast.error(MESSAGES.user.error);
+                    toast.error('Error al crear usuario');
                 }
                 setDisable(false);
             })
@@ -90,22 +90,6 @@ function CreateForm() {
                                     type='password'
                                     placeholder="********"
                                     id='pass-field'
-                                    aria-errormessage={field.error}
-                                    required
-                                    {...props}
-                                />
-                            </div>
-                        )}
-                    </Field>
-                    <Field name='confirmpassword'>
-                        {(field, props) => (
-                            <div>
-                                <Label for='confirmpass-field'>Confirmar contraseña</Label>
-                                <Input
-                                    value={field.value}
-                                    type='password'
-                                    placeholder="*********"
-                                    id='confirmpass-field'
                                     aria-errormessage={field.error}
                                     required
                                     {...props}
