@@ -1,5 +1,5 @@
-import { type Input, custom, forward, minLength, object, picklist, string } from 'valibot';
-import { listRole } from '~/utils/roles';
+import { type Input, minLength, object, picklist, string } from 'valibot';
+import { roleList } from '~/utils/roles';
 
 export const CreateSchema = object({
 	name: string([minLength(1, 'Por favor ingresa el nombre.')]),
@@ -9,7 +9,7 @@ export const CreateSchema = object({
 		minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.'),
 	]),
 	role: picklist(
-		listRole.map(role => role.role),
+		roleList.map(role => role.key),
 		'Por favor selecciona un rol.',
 	),
 });

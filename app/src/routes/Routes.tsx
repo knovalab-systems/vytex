@@ -1,8 +1,8 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
-import { CREATE_USER_PATH, LOGIN_PATH } from '~/utils/paths';
 import { MatchAdmin } from '~/modules/auth/components/MatchRole';
 import ProtectedWrapper from '~/modules/auth/components/ProtectedWrapper';
+import { CREATE_USER_PATH, LOGIN_PATH } from '~/utils/paths';
 
 const LoginPage = lazy(() => import('~/modules/auth/pages/LoginPage'));
 const NotFoundPage = lazy(() => import('~/pages/NotFoundPage'));
