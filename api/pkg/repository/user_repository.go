@@ -8,5 +8,4 @@ type UserRepository interface {
 	AggregationUsers(*models.AggregateQuery) ([]*models.AggregateData, error)
 	UpdateUser(*models.UpdateUserBody) (*models.User, error)
 	CreateUser(body *models.CreateUserBody) (*models.User, error)
-	CheckUserExistence(username string) (bool, error)
 }

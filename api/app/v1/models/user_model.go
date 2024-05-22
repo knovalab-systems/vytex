@@ -69,6 +69,6 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 type CreateUserBody struct {
 	Username string `json:"username" validate:"required"`
 	Name     string `json:"name" validate:"required"`
-	Password string `json:"password" validate:"required"`
-	Role     string `json:"role" validate:"omitnil,uuid"`
+	Password string `json:"password" validate:"required,lte=20,gte=8"`
+	Role     string `json:"role" validate:"uuid"`
 }

@@ -13,6 +13,7 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
+	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
@@ -497,7 +498,7 @@ func TestCreateUser(t *testing.T) {
 		// context
 		name := "test"
 		username := "test"
-		password := "test"
+		password := "test123t"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})
@@ -511,8 +512,7 @@ func TestCreateUser(t *testing.T) {
 		// mocks
 		mockUser := mocks.UserMock{}
 
-		mockUser.On("CreateUser").Return(&models.User{}, nil)
-		mockUser.On("CheckUserExistence").Return(true, nil)
+		mockUser.On("CreateUser").Return(&models.User{}, problems.UserExists())
 
 		// controller
 		controller := UserController{UserRepository: &mockUser}
@@ -529,7 +529,7 @@ func TestCreateUser(t *testing.T) {
 		// context
 		name := "test"
 		username := "test"
-		password := "test"
+		password := "test1231"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})

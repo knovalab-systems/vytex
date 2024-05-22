@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"net/http"
 	"reflect"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -45,7 +46,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// return data
-	return c.JSON(200, users)
+	return c.JSON(http.StatusOK, users)
 }
 
 // Get the current user
@@ -82,7 +83,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 	}
 
 	// return data
-	return c.JSON(200, users)
+	return c.JSON(http.StatusOK, users)
 }
 
 // Get aggregate from users
@@ -115,7 +116,7 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 	}
 
 	// return data
-	return c.JSON(200, aggregate)
+	return c.JSON(http.StatusOK, aggregate)
 }
 
 // Update role
@@ -148,7 +149,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
 
 // CreateUser Create user
@@ -157,7 +158,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 // @Tags         Users
 // @Produce      json
 // @param		 models.CreateUserBody body string true "User create values"
-// @Success      200 {object} models.User
+// @Success      201 {object} models.User
 // @Failure      400
 // @Failure      500
 // @Router       /users [post]
@@ -180,5 +181,5 @@ func (m *UserController) CreateUser(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(201, user)
+	return c.JSON(http.StatusCreated, user)
 }
