@@ -37,12 +37,12 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 				<Show
 					when={status()}
 					fallback={
-						<div class='inline-flex items-center px-3 py-1 rounded-full text-red-500 gap-x-2 bg-red-100/60 '>
+						<div class='inline-flex items-center px-3 py-1 rounded-full text-red-500 gap-x-2 bg-red-100/60'>
 							Inactivo
 						</div>
 					}
 				>
-					<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60 '>
+					<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
 						Activo
 					</div>
 				</Show>
