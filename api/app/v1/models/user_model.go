@@ -62,30 +62,8 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 }
 
 type CreateUserBody struct {
-	Username string  `json:"username" validate:"required"`
-	Name     string  `json:"name" validate:"required"`
-	Password string  `json:"password" validate:"required"`
-	Role     *string `json:"role" validate:"omitnil,uuid"`
-}
-
-func (m *CreateUserBody) Validate() (map[string]interface{}, error) {
-	if m.Username == "" {
-		return nil, errors.New("INVALID USERNAME")
-	}
-
-	if m.Name == "" {
-		return nil, errors.New("INVALID NAME")
-	}
-
-	if m.Password == "" {
-		return nil, errors.New("INVALID PASSWORD")
-	}
-
-	if m.Role != nil {
-		if !IsRole(*m.Role) {
-			return nil, errors.New("INVALID ROLE")
-		}
-	}
-
-	return nil, nil
+	Username string `json:"username" validate:"required"`
+	Name     string `json:"name" validate:"required"`
+	Password string `json:"password" validate:"required"`
+	Role     string `json:"role" validate:"omitnil,uuid"`
 }
