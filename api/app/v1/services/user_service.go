@@ -3,6 +3,7 @@ package services
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"strconv"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -137,4 +138,50 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 	}
 
 	return user, nil
+}
+
+func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
+	table := query.User
+
+	// check user existence
+	exists, err := m.CheckUserExistence(u.Username)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if exists {
+		return nil, problems.UserExists()
+	}
+
+	// encrypt password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	user := &models.User{
+		Username: u.Username,
+		Name:     u.Name,
+		Password: string(hashedPassword),
+		Role:     u.Role,
+	}
+
+	err = table.Create(user)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return user, nil
+}
+
+func (m *UserService) CheckUserExistence(username string) (bool, error) {
+	table := query.User
+
+	count, err := table.Where(table.Username.Eq(username)).Count()
+	if err != nil {
+		return false, problems.ServerError()
+	}
+
+	return count > 0, nil
 }

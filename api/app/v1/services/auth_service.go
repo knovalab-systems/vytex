@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -20,10 +21,13 @@ func (m *AuthService) ValidUser(username string, password string) (*models.User,
 		return nil, err
 	}
 
-	if user.Password != password { // pending to encrypt pass
+	// Compare the password with the hashed password
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))
+	if err != nil {
 		return nil, errors.New("INVALID CREDENTIALS")
 	}
-	return user, err
+
+	return user, nil
 }
 
 func (m *AuthService) Credentials(user string, role string) (*utils.Tokens, error) {
