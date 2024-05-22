@@ -1,4 +1,10 @@
 import { ADMIN_ROLE, NO_ROLE } from './env';
+import { adminPermissions, noRolePermissions } from './permissions';
+
+export interface RoleItems {
+	name: string;
+	role: string;
+}
 
 export const roles: Record<string, RoleItems> = {
 	[ADMIN_ROLE]: {
@@ -11,12 +17,7 @@ export const roles: Record<string, RoleItems> = {
 	},
 };
 
-export interface RoleItems {
-	name: string;
-	role: string;
-}
-
-export const listRole: RoleItems[] = [
+export const roleList: RoleItems[] = [
 	{
 		name: 'Administrador',
 		role: ADMIN_ROLE,
@@ -26,3 +27,8 @@ export const listRole: RoleItems[] = [
 		role: NO_ROLE,
 	},
 ];
+
+export const rolePermissions: Record<string, Record<string, string | boolean>> = {
+	[ADMIN_ROLE]: adminPermissions,
+	[NO_ROLE]: noRolePermissions,
+};

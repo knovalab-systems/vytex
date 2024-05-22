@@ -1,7 +1,11 @@
+import { roleList, rolePermissions } from '~/utils/roles';
+import RoleTable from '../components/RoleTable';
+import { permissions } from '~/utils/permissions';
+
 function Roles() {
 	return (
 		<div>
-			<h2>Roles</h2>
+			<RoleTable roles={roleList} rolePermmissions={rolePermissions} permissions={Object.values(permissions)} />
 		</div>
 	);
 }
