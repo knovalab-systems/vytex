@@ -8,22 +8,22 @@ window.scrollTo = vi.fn(() => {});
 vi.mock('~/utils/roles', () => ({
 	roles: {
 		admin: {
-			name: 'Administrador',
-			role: 'admin',
+			label: 'Administrador',
+			key: 'admin',
 		},
 		none: {
-			name: 'Sin rol',
-			role: 'none',
+			label: 'Sin rol',
+			key: 'none',
 		},
 	},
-	listRole: [
+	roleList: [
 		{
-			name: 'Administrador',
-			role: 'admin',
+			label: 'Administrador',
+			key: 'admin',
 		},
 		{
-			name: 'Sin rol',
-			role: 'none',
+			label: 'Sin rol',
+			key: 'none',
 		},
 	],
 }));

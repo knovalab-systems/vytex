@@ -4,7 +4,7 @@ import type { RoleItems } from '~/utils/roles';
 
 function RoleTable(props: {
 	roles: RoleItems[];
-	permissions: Record<'key' | 'value', string>[];
+	permissions: Record<'key' | 'label', string>[];
 	rolePermmissions: Record<string, Record<string, string | boolean>>;
 }) {
 	return (
@@ -13,14 +13,14 @@ function RoleTable(props: {
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
 						<TableHead>Función</TableHead>
-						<For each={props.roles}>{role => <TableHead>{role.name}</TableHead>}</For>
+						<For each={props.roles}>{role => <TableHead>{role.label}</TableHead>}</For>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
 					<For each={props.permissions}>
 						{permission => (
 							<TableRow class='bg-white *:w-1/6 group'>
-								<TableCell>{permission.value}</TableCell>
+								<TableCell>{permission.label}</TableCell>
 								<For each={props.roles}>
 									{role => (
 										<Switch
@@ -32,14 +32,14 @@ function RoleTable(props: {
 												</TableCell>
 											}
 										>
-											<Match when={typeof props.rolePermmissions[role.role][permission.key] === 'string'}>
+											<Match when={typeof props.rolePermmissions[role.key][permission.key] === 'string'}>
 												<TableCell>
 													<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
-														{props.rolePermmissions[role.role][permission.key]}
+														{props.rolePermmissions[role.key][permission.key]}
 													</div>
 												</TableCell>
 											</Match>
-											<Match when={!!props.rolePermmissions[role.role][permission.key]}>
+											<Match when={!!props.rolePermmissions[role.key][permission.key]}>
 												<TableCell>
 													<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
 														Sí
