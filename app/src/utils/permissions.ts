@@ -1,15 +1,15 @@
 export const permissions = {
 	readUsers: {
 		key: 'readUsers',
-		value: 'Ver usuarios',
+		label: 'Ver usuarios',
 	},
 	updateUser: {
 		key: 'updateUser',
-		value: 'Actualizar usuarios',
+		label: 'Actualizar usuarios',
 	},
 	readRoles: {
 		key: 'readRoles',
-		value: 'Ver roles',
+		label: 'Ver roles',
 	},
 };
 
