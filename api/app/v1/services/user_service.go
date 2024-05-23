@@ -144,6 +144,13 @@ func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
 func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
 	table := query.User
 
+	if update.Username != nil {
+		err := checkUsername(*update.Username)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	updateMap, err := update.ToUpdate()
 	if err != nil || len(updateMap) == 0 {
 		return nil, problems.UpdateUsersBadRequest()
@@ -170,18 +177,13 @@ func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error)
 	table := query.User
 
 	// check user existence
-	count, err := table.Where(table.Username.Eq(u.Username)).Count()
+	err := checkUsername(u.Username)
 	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	if count > 0 {
-		return nil, problems.UserExists()
+		return nil, err
 	}
 
 	// encrypt password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -199,4 +201,18 @@ func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error)
 	}
 
 	return user, nil
+}
+
+func checkUsername(username string) error {
+	table := query.User
+	count, err := table.Where(table.Username.Eq(username)).Count()
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	if count > 0 {
+		return problems.UserExists()
+	}
+
+	return nil
 }
