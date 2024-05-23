@@ -4,7 +4,7 @@ import RoleTable from '../components/RoleTable';
 
 function Roles() {
 	return (
-		<div>
+		<div class='h-full'>
 			<RoleTable roles={roleList} rolePermmissions={rolePermissions} permissions={Object.values(permissions)} />
 		</div>
 	);

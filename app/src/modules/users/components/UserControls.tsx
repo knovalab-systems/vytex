@@ -7,7 +7,7 @@ import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
 import { USER_STATUS_OPTIONS } from '~/utils/constants';
 import { cleanupDebounce, debounce } from '~/utils/debounce';
-import { CREATE_USER_PATH } from '~/utils/paths';
+import { USER_CREATE_PATH } from '~/utils/paths';
 import { roleList } from '~/utils/roles';
 
 type UserControlsProps = {
@@ -42,7 +42,7 @@ const UserControls = (props: UserControlsProps) => {
 	};
 
 	const goToUserCreationPage = () => {
-		navigate(CREATE_USER_PATH);
+		navigate(USER_CREATE_PATH);
 	};
 
 	return (
