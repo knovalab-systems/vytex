@@ -329,7 +329,114 @@ func TestUpdateUser(t *testing.T) {
 
 	})
 
-	t.Run("Updates user successfully with role", func(t *testing.T) {
+	t.Run("Fail validate, username is a empty string", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"username": ""})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("2312312")
+
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+
+	})
+
+	t.Run("Fail validate, name is a empty string", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"name": ""})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("2312312")
+
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+
+	})
+
+	t.Run("Fail validate, password does not have the expected length", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"password": "123"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("2312312")
+
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+
+	})
+
+	t.Run("Fail username exists", func(t *testing.T) {
+		// context
+		username := "username"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"username": username})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, errors.New("error")) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Update user successfully with role", func(t *testing.T) {
 		// context
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
@@ -356,7 +463,7 @@ func TestUpdateUser(t *testing.T) {
 
 	})
 
-	t.Run("Updates user successfully with delete_at", func(t *testing.T) {
+	t.Run("Update user successfully with delete_at", func(t *testing.T) {
 		// context
 		delete_at := "2020-12-09T16:09:53+00:00"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
@@ -384,13 +491,101 @@ func TestUpdateUser(t *testing.T) {
 		}
 	})
 
-	t.Run("Updates user successfully all values", func(t *testing.T) {
+	t.Run("Update user successfully with username", func(t *testing.T) {
+		// context
+		username := "username"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"username": username})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, nil) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update user successfully with name", func(t *testing.T) {
+		// context
+		name := "Antonio Banderas"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"name": name})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, nil) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update user successfully with password", func(t *testing.T) {
+		// context
+		password := "12345678"
+		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"password": password})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+		mockUser.On("UpdateUser").Return(&models.User{}, nil) // the mock empty for pointer param
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.UpdateUser(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update user successfully all values", func(t *testing.T) {
 		// context
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		delete_at := "2020-12-09T16:09:53+00:00"
+		password := "12345678"
+		name := "Antonio Banderas"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
+		username := "username"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": role, "delete_at": delete_at})
+		json.NewEncoder(body).Encode(map[string]string{"role": role, "delete_at": delete_at, "username": username,
+			"password": password, "name": name})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -465,7 +660,7 @@ func TestCreateUser(t *testing.T) {
 		}
 	})
 
-	t.Run("Fail to create User", func(t *testing.T) {
+	t.Run("Fail create User", func(t *testing.T) {
 		// context
 		name := "test"
 		username := "test"
@@ -494,7 +689,7 @@ func TestCreateUser(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Fail to create, user exist", func(t *testing.T) {
+	t.Run("Fail create, user exist", func(t *testing.T) {
 		// context
 		name := "test"
 		username := "test"
