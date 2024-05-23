@@ -9,8 +9,8 @@ import Loading from '~/components/Loading';
 import MobileNav from '~/components/MobileNav';
 import { client } from '~/utils/client';
 import { ADMIN_ROLE } from '~/utils/env';
-import RoleRoot from './RoleRoot';
 import * as PATHS from '~/utils/paths';
+import RoleRoot from './RoleRoot';
 
 const SideBarNav = lazy(() => import('~/components/SideBarNav'));
 

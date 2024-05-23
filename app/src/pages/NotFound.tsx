@@ -1,6 +1,6 @@
 import { A } from '@solidjs/router';
 
-function NotFoundPage() {
+function NotFound() {
 	return (
 		<main class='h-full flex-1 px-8 flex'>
 			<div class='flex m-auto flex-col items-center justify-center gap-6 p-8 bg-white rounded-md border border-gray-100 shadow-xl'>
@@ -31,4 +31,4 @@ function NotFoundPage() {
 	);
 }
 
-export default NotFoundPage;
+export default NotFound;

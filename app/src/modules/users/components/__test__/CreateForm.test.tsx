@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import CreateForm from '../CreateForm';
+import UserCreateForm from '../UserCreateForm';
 
 vi.mock('~/modules/users/requests/createUserRequests', () => ({
 	createUserRequest: vi.fn(),
@@ -18,7 +18,7 @@ describe('CreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <CreateForm />);
+		render(() => <UserCreateForm />);
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
@@ -35,7 +35,7 @@ describe('CreateForm', () => {
 	});
 
 	it('check change inputs values ', async () => {
-		render(() => <CreateForm />);
+		render(() => <UserCreateForm />);
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
@@ -53,7 +53,7 @@ describe('CreateForm', () => {
 	});
 
 	it('show empty fields error message when submit form', async () => {
-		render(() => <CreateForm />);
+		render(() => <UserCreateForm />);
 		const submitButton = screen.getByText('Guardar');
 		fireEvent.click(submitButton);
 
@@ -67,7 +67,7 @@ describe('CreateForm', () => {
 	});
 
 	it('dont show empty fields error message when submit form', async () => {
-		render(() => <CreateForm />);
+		render(() => <UserCreateForm />);
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
@@ -88,7 +88,7 @@ describe('CreateForm', () => {
 	});
 
 	it('shows bad length password error', async () => {
-		render(() => <CreateForm />);
+		render(() => <UserCreateForm />);
 		const passwordField = screen.getByPlaceholderText('********');
 		const submitButton = screen.getByText('Guardar');
 

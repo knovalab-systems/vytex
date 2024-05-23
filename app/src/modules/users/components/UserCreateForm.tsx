@@ -6,21 +6,21 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { STATUS_CODE } from '~/utils/constants';
+import { USERS_PATH } from '~/utils/paths';
 import { roleList } from '~/utils/roles';
 import { createUserRequest } from '../requests/createUserRequests';
-import { CreateSchema, type CreateType } from '../schemas/createSchema';
-import { USERS_PATH } from '~/utils/paths';
+import { UserCreateSchema, type UserCreateType } from '../schemas/userCreateSchema';
 
-function CreateForm() {
+function UserCreateForm() {
 	const navigate = useNavigate();
 	const [disabled, setDisable] = createSignal(false);
 
-	const [_, { Form, Field }] = createForm<CreateType>({
-		validate: valiForm(CreateSchema),
+	const [_, { Form, Field }] = createForm<UserCreateType>({
+		validate: valiForm(UserCreateSchema),
 		initialValues: { name: '', username: '', password: '', role: '' },
 	});
 
-	const handleSubmit: SubmitHandler<CreateType> = (data, event) => {
+	const handleSubmit: SubmitHandler<UserCreateType> = (data, event) => {
 		event.preventDefault();
 		setDisable(true);
 		createUserRequest(data.name, data.username, data.password, data.role)
@@ -130,4 +130,4 @@ function CreateForm() {
 	);
 }
 
-export default CreateForm;
+export default UserCreateForm;

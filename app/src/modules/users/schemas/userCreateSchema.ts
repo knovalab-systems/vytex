@@ -1,7 +1,7 @@
 import { type Input, minLength, object, picklist, string } from 'valibot';
 import { roleList } from '~/utils/roles';
 
-export const CreateSchema = object({
+export const UserCreateSchema = object({
 	name: string([minLength(1, 'Por favor ingresa el nombre.')]),
 	username: string([minLength(1, 'Por favor ingresa el usuario.')]),
 	password: string([
@@ -14,4 +14,4 @@ export const CreateSchema = object({
 	),
 });
 
-export type CreateType = Input<typeof CreateSchema>;
+export type UserCreateType = Input<typeof UserCreateSchema>;

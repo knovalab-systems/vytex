@@ -42,7 +42,6 @@ function Users() {
 				setRoleIdFilter={setRoleIdFilter}
 				roleIdFilterValue={roleIdFilter()}
 			/>
-
 			<Switch>
 				<Match when={users.isLoading && usersCount.isLoading}>
 					<Loading />
