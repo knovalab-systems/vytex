@@ -13,7 +13,7 @@ import {
 } from '~/components/ui/Dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { TableCell } from '~/components/ui/Table';
-import { type RoleItems, listRole, roles } from '~/utils/roles';
+import { type RoleItems, roleList, roles } from '~/utils/roles';
 import { updateUserRequest } from '../requests/updateUserRequests';
 import type { User } from '../schemas/userSchema';
 
@@ -32,8 +32,8 @@ function RoleCell(props: {
 	});
 
 	const handleSubmit = () => {
-		if (value().role !== role().role) {
-			const user: User = { role: value().role };
+		if (value().key !== role().key) {
+			const user: User = { role: value().key };
 			updateUserRequest(props.userId, user)
 				.then(() => {
 					setRole(value());
@@ -51,10 +51,9 @@ function RoleCell(props: {
 	return (
 		<TableCell>
 			<div class='flex w-full justify-between group-hover:*:visible'>
-				<span class='my-auto'>{role().name}</span>
-
+				<span class='my-auto'>{role().label}</span>
 				<Dialog open={edit()} onOpenChange={setEdit}>
-					<DialogTrigger variant='ghost' class='invisible hover:bg-baby_blue'>
+					<DialogTrigger variant='ghost' class='lg:invisible hover:bg-baby_blue'>
 						<AiFillEdit size={18} />
 					</DialogTrigger>
 					<DialogContent class='w-[90%] sm:max-w-[425px]'>
@@ -67,14 +66,14 @@ function RoleCell(props: {
 						<Select
 							value={value()}
 							onChange={setValue}
-							options={listRole}
-							optionValue='role'
-							optionTextValue='name'
+							options={roleList}
+							optionValue='key'
+							optionTextValue='label'
 							placeholder='Selecciona un rol'
-							itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.name}</SelectItem>}
+							itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
 						>
 							<SelectTrigger aria-label='Roles' role='listbox'>
-								<SelectValue<RoleItems>>{state => state.selectedOption().name}</SelectValue>
+								<SelectValue<RoleItems>>{state => state.selectedOption().label}</SelectValue>
 							</SelectTrigger>
 							<SelectContent />
 						</Select>

@@ -8,7 +8,7 @@ import { Button } from '~/components/ui/Button';
 import { USER_STATUS_OPTIONS } from '~/utils/constants';
 import { cleanupDebounce, debounce } from '~/utils/debounce';
 import { CREATE_USER_PATH } from '~/utils/paths';
-import { listRole } from '~/utils/roles';
+import { roleList } from '~/utils/roles';
 
 type UserControlsProps = {
 	setNameFilter: (value: string) => void;
@@ -43,15 +43,12 @@ const UserControls = (props: UserControlsProps) => {
 
 	const goToUserCreationPage = () => {
 		navigate(CREATE_USER_PATH);
-	}
+	};
 
 	return (
 		<div class='flex flex-wrap justify-between pt-1'>
 			<div class='flex flex-wrap gap-4'>
-				<Button
-					class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
-					onclick={goToUserCreationPage}
-				>
+				<Button class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800' onclick={goToUserCreationPage}>
 					Nuevo
 					<FaSolidPlus class='ml-2' size={20} />
 				</Button>
@@ -73,7 +70,7 @@ const UserControls = (props: UserControlsProps) => {
 					value={props.statusFilterValue}
 				/>
 				<SelectOptions
-					options={listRole.map(role => ({ label: role.name, value: role.role }))}
+					options={roleList.map(role => ({ label: role.label, value: role.key }))}
 					placeholder='Rol de usuario'
 					setSelect={props.setRoleIdFilter}
 					value={props.roleIdFilterValue}

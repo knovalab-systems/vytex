@@ -9,9 +9,12 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
+	"github.com/knovalab-systems/vytex/pkg/problems"
+	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -127,6 +130,70 @@ func TestReadUser(t *testing.T) {
 
 		// test
 		err := userController.ReadUsers(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+}
+
+func TestReadMe(t *testing.T) {
+
+	t.Run("Not find jwt token", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{}})
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadMe(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Not find user", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUser").Return(errors.New("Error"))
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadMe(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Gets user succesfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUser").Return(nil, nil)
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadMe(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
@@ -431,7 +498,7 @@ func TestCreateUser(t *testing.T) {
 		// context
 		name := "test"
 		username := "test"
-		password := "test"
+		password := "test123t"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})
@@ -445,8 +512,7 @@ func TestCreateUser(t *testing.T) {
 		// mocks
 		mockUser := mocks.UserMock{}
 
-		mockUser.On("CreateUser").Return(&models.User{}, nil)
-		mockUser.On("CheckUserExistence").Return(true, nil)
+		mockUser.On("CreateUser").Return(&models.User{}, problems.UserExists())
 
 		// controller
 		controller := UserController{UserRepository: &mockUser}
@@ -463,7 +529,7 @@ func TestCreateUser(t *testing.T) {
 		// context
 		name := "test"
 		username := "test"
-		password := "test"
+		password := "test1231"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})

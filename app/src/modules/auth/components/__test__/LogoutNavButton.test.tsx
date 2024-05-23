@@ -37,7 +37,6 @@ describe('Logout nav button', () => {
 		await waitFor(() => expect(logoutRequest.logoutRequest).toHaveBeenCalled());
 	});
 
-
 	it('redirects to provided path on successful logout', async () => {
 		vi.spyOn(logoutRequest, 'logoutRequest').mockResolvedValueOnce();
 
@@ -45,7 +44,6 @@ describe('Logout nav button', () => {
 
 		const logoutButton = screen.getByText('Cerrar sesión');
 		fireEvent.click(logoutButton);
-
 
 		await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/login?reason=LOG_OUT'));
 	});

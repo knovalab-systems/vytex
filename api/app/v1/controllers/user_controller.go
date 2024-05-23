@@ -1,11 +1,14 @@
 package controllers
 
 import (
+	"net/http"
 	"reflect"
 
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
+	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,7 +21,7 @@ type UserController struct {
 // @Description  Get all the user, limit for query o default limit
 // @Tags         Users
 // @Produce      json
-// @Success      200 {object} models.User
+// @Success      200 {array} models.User
 // @Failure      400
 // @Failure      500
 // @Router       /users [get]
@@ -43,7 +46,44 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// return data
-	return c.JSON(200, users)
+	return c.JSON(http.StatusOK, users)
+}
+
+// Get the current user
+// @Summary      Get the curren user loggged
+// @Description  Get the user who do the request with access token
+// @Tags         Users
+// @Produce      json
+// @Success      200 {object} models.User
+// @Failure      400
+// @Failure      500
+// @Router       /users/me [get]
+func (m *UserController) ReadMe(c echo.Context) error {
+	// for query params
+	u := new(models.ReadUser)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*utils.JWTClaims)
+	u.ID = claims.User
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// get users
+	users, err := m.SelectUser(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, users)
 }
 
 // Get aggregate from users
@@ -76,7 +116,7 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 	}
 
 	// return data
-	return c.JSON(200, aggregate)
+	return c.JSON(http.StatusOK, aggregate)
 }
 
 // Update role
@@ -109,7 +149,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(200, user)
+	return c.JSON(http.StatusOK, user)
 }
 
 // CreateUser Create user
@@ -118,7 +158,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 // @Tags         Users
 // @Produce      json
 // @param		 models.CreateUserBody body string true "User create values"
-// @Success      200 {object} models.User
+// @Success      201 {object} models.User
 // @Failure      400
 // @Failure      500
 // @Router       /users [post]
@@ -141,5 +181,5 @@ func (m *UserController) CreateUser(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(201, user)
+	return c.JSON(http.StatusCreated, user)
 }

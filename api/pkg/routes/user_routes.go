@@ -13,6 +13,7 @@ func privateUsersRoutes(g *echo.Group) {
 
 	route.GET("", userController.ReadUsers)
 	route.POST("", userController.CreateUser)
+	route.GET("/me", userController.ReadMe)
 	route.GET("/aggregate", userController.AggregateUsers)
 	route.PATCH("/:userId", userController.UpdateUser)
 
