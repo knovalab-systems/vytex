@@ -82,65 +82,6 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	return []*models.AggregateData{aggregate}, nil
 }
 
-func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
-
-	if u == "" {
-		return s, nil
-	}
-
-	table := query.User
-	var result map[string]map[string]interface{}
-	err := json.Unmarshal([]byte(u), &result)
-	if err != nil {
-		return nil, err
-	}
-
-	var userFilter models.UserFilter
-	for key, value := range result {
-		switch key {
-		case "username":
-			userFilter.Username = value["_eq"].(string)
-		case "name":
-			userFilter.Name = value["_eq"].(string)
-		case "role":
-			userFilter.Role = fmt.Sprintf("%v", value["_eq"])
-		case "delete_at":
-			userFilter.DeleteAt = fmt.Sprintf("%v", value["_eq"])
-		}
-	}
-
-	if userFilter.Name != "" {
-		condition := table.Name.Lower().Like("%" + userFilter.Name + "%")
-		s = s.Where(condition)
-	}
-
-	if userFilter.Username != "" {
-		condition := table.Username.Lower().Like("%" + userFilter.Username + "%")
-		s = s.Where(condition)
-	}
-
-	if userFilter.Role != "" {
-		condition := table.Role.Eq(userFilter.Role)
-		s = s.Where(condition)
-	}
-
-	if userFilter.DeleteAt != "" {
-		value, err := strconv.ParseBool(userFilter.DeleteAt)
-		if err != nil {
-			return nil, err
-		}
-		if value {
-			condition := table.DeleteAt.IsNull()
-			s = s.Where(condition)
-		} else {
-			condition := table.DeleteAt.IsNotNull()
-			s = s.Where(condition)
-		}
-	}
-
-	return s, nil
-}
-
 func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
 	table := query.User
 
@@ -215,4 +156,63 @@ func checkUsername(username string) error {
 	}
 
 	return nil
+}
+
+func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
+
+	if u == "" {
+		return s, nil
+	}
+
+	table := query.User
+	var result map[string]map[string]interface{}
+	err := json.Unmarshal([]byte(u), &result)
+	if err != nil {
+		return nil, err
+	}
+
+	var userFilter models.UserFilter
+	for key, value := range result {
+		switch key {
+		case "username":
+			userFilter.Username = value["_eq"].(string)
+		case "name":
+			userFilter.Name = value["_eq"].(string)
+		case "role":
+			userFilter.Role = fmt.Sprintf("%v", value["_eq"])
+		case "delete_at":
+			userFilter.DeleteAt = fmt.Sprintf("%v", value["_eq"])
+		}
+	}
+
+	if userFilter.Name != "" {
+		condition := table.Name.Lower().Like("%" + userFilter.Name + "%")
+		s = s.Where(condition)
+	}
+
+	if userFilter.Username != "" {
+		condition := table.Username.Lower().Like("%" + userFilter.Username + "%")
+		s = s.Where(condition)
+	}
+
+	if userFilter.Role != "" {
+		condition := table.Role.Eq(userFilter.Role)
+		s = s.Where(condition)
+	}
+
+	if userFilter.DeleteAt != "" {
+		value, err := strconv.ParseBool(userFilter.DeleteAt)
+		if err != nil {
+			return nil, err
+		}
+		if value {
+			condition := table.DeleteAt.IsNull()
+			s = s.Where(condition)
+		} else {
+			condition := table.DeleteAt.IsNotNull()
+			s = s.Where(condition)
+		}
+	}
+
+	return s, nil
 }
