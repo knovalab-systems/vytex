@@ -15,6 +15,7 @@ func privateUsersRoutes(g *echo.Group) {
 	route.POST("", userController.CreateUser)
 	route.GET("/me", userController.ReadMe)
 	route.GET("/aggregate", userController.AggregateUsers)
+	route.GET("/:userId", userController.ReadUser)
 	route.PATCH("/:userId", userController.UpdateUser)
 
 }

@@ -50,9 +50,14 @@ func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
 	}
 
 	user, err := filter.Where(table.ID.Eq(q.ID)).First()
+	if user == nil {
+		return nil, problems.ReadAccess()
+	}
+
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
 	return user, nil
 }
 
@@ -150,7 +155,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 	}
 
 	if rows.RowsAffected == 0 {
-		return nil, problems.UpdateUsersBadRequest()
+		return nil, problems.ReadAccess()
 	}
 
 	user, err := table.Unscoped().Where(table.ID.Eq(update.ID)).First()

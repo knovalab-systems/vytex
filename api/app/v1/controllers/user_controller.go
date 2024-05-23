@@ -49,6 +49,40 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
+// Get an user
+// @Summary      Get a given user
+// @Description  Get an user by its ID
+// @Tags         Users
+// @Param		 userId path string true "User ID"
+// @Produce      json
+// @Success      200 {object} models.User
+// @Failure      400
+// @Failure      500
+// @Router       /users/userId [get]
+func (m *UserController) ReadUser(c echo.Context) error {
+	// for query params
+	u := new(models.ReadUser)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UsersBadRequest()
+	}
+
+	// get users
+	users, err := m.SelectUser(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, users)
+}
+
 // Get the current user
 // @Summary      Get the curren user loggged
 // @Description  Get the user who do the request with access token
@@ -123,8 +157,8 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 // @Summary      Update role
 // @Description  Updates the role of a user
 // @Tags         Users
-// @param		 userId path string true "User ID"
-// @param		 models.UpdateUserBody body string true "User update values"
+// @Param		 userId path string true "User ID"
+// @Param		 models.UpdateUserBody body string true "User update values"
 // @Produce      json
 // @Success      200 {object} models.User
 // @Failure      400
@@ -157,7 +191,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 // @Description  Create a new user
 // @Tags         Users
 // @Produce      json
-// @param		 models.CreateUserBody body string true "User create values"
+// @Param		 models.CreateUserBody body string true "User create values"
 // @Success      201 {object} models.User
 // @Failure      400
 // @Failure      500
