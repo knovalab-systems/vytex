@@ -73,14 +73,14 @@ func (m *UserController) ReadUser(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	// get users
-	users, err := m.SelectUser(u)
+	// get user
+	user, err := m.SelectUser(u)
 	if err != nil {
 		return err
 	}
 
 	// return data
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, user)
 }
 
 // Get the current user
@@ -101,8 +101,8 @@ func (m *UserController) ReadMe(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(*utils.JWTClaims)
+	userJWT := c.Get("user").(*jwt.Token)
+	claims := userJWT.Claims.(*utils.JWTClaims)
 	u.ID = claims.User
 
 	// validate
@@ -110,14 +110,14 @@ func (m *UserController) ReadMe(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	// get users
-	users, err := m.SelectUser(u)
+	// get user
+	user, err := m.SelectUser(u)
 	if err != nil {
 		return err
 	}
 
 	// return data
-	return c.JSON(http.StatusOK, users)
+	return c.JSON(http.StatusOK, user)
 }
 
 // Get aggregate from users

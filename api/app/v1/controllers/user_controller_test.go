@@ -137,6 +137,92 @@ func TestReadUser(t *testing.T) {
 
 }
 
+func TestGetUser(t *testing.T) {
+
+	t.Run("Fail binding, id is not find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.ReadUser(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail binding, id is number", func(t *testing.T) {
+		// context
+		id := "23232"
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues(id)
+		// mocks
+		mockUser := mocks.UserMock{}
+
+		// controller
+		controller := UserController{UserRepository: &mockUser}
+
+		// test
+		err := controller.ReadUser(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not find user", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("31b63ffb-15f5-48d7-9a24-587f437f07ec")
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUser").Return(errors.New("Error"))
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUser(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Gets user succesfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("userId")
+		c.SetParamValues("31b63ffb-15f5-48d7-9a24-587f437f07ec")
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUser").Return(nil, nil)
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUser(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
 func TestReadMe(t *testing.T) {
 
 	t.Run("Not find jwt token", func(t *testing.T) {
