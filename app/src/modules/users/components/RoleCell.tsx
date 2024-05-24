@@ -53,7 +53,7 @@ function RoleCell(props: {
 			<div class='flex w-full justify-between group-hover:*:visible'>
 				<span class='my-auto'>{role().label}</span>
 				<Dialog open={edit()} onOpenChange={setEdit}>
-					<DialogTrigger variant='ghost' class='lg:invisible hover:bg-baby_blue'>
+					<DialogTrigger variant='ghost' class='lg:invisible hover:bg-baby_blue' title='Actualizar rol'>
 						<AiFillEdit size={18} />
 					</DialogTrigger>
 					<DialogContent class='w-[90%] sm:max-w-[425px]'>

@@ -48,7 +48,11 @@ const UserControls = (props: UserControlsProps) => {
 	return (
 		<div class='flex flex-wrap justify-between pt-1'>
 			<div class='flex flex-wrap gap-4'>
-				<Button class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800' onclick={goToUserCreationPage}>
+				<Button
+					class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
+					title='Nuevo Usuario'
+					onclick={goToUserCreationPage}
+				>
 					Nuevo
 					<FaSolidPlus class='ml-2' size={20} />
 				</Button>

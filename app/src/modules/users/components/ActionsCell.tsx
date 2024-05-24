@@ -7,7 +7,7 @@ import { USER_UPDATE_PATH } from '~/utils/paths';
 function ActionsCell(props: { userId: string }) {
 	return (
 		<TableCell>
-			<A href={`${USER_UPDATE_PATH}/${props.userId}`}>
+			<A href={`${USER_UPDATE_PATH}/${props.userId}`} title='Actualizar Usuario'>
 				<Button variant='ghost' class='flex gap-2 hover:bg-baby_blue p-2'>
 					<AiFillEdit size={18} />
 					Actualizar

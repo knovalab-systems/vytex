@@ -20,6 +20,7 @@ function SideBarNav(props: { pages: NavPages[] }) {
 								activeClass='bg-practice_date'
 								href={page.path}
 								end={page.end}
+								title={page.name}
 								class='w-full flex items-center group p-2 font-semibold text-sm rounded-lg text-white gap-1 transition-colors duration-200 hover:bg-practice_date'
 							>
 								{page.icon()}
@@ -33,6 +34,8 @@ function SideBarNav(props: { pages: NavPages[] }) {
 				</For>
 				<li>
 					<div class='my-2 bg-gray-600 h-[1px]' />
+				</li>
+				<li title='Cerrar sesión'>
 					<LogoutNavButton />
 				</li>
 			</ul>
