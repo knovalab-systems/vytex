@@ -78,8 +78,12 @@ function RoleCell(props: {
 							<SelectContent />
 						</Select>
 						<DialogFooter>
-							<Button onclick={() => setEdit(false)}>Cancelar</Button>
-							<Button onclick={handleSubmit}>Guardar</Button>
+							<Button onclick={() => setEdit(false)} class='bg-red-500 hover:bg-red-600'>
+								Cancelar
+							</Button>
+							<Button onclick={handleSubmit} class='bg-green-600 hover:bg-green-700'>
+								Guardar
+							</Button>
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
