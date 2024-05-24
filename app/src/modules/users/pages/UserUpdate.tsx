@@ -3,6 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { getUserQuery } from '../requests/getUserRequests';
 import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
+import UserUpdateForm from '../components/UserUpdateForm';
 
 function UserUpdate() {
 	const params = useParams();
@@ -14,7 +15,9 @@ function UserUpdate() {
 				<Match when={user.isPending}>
 					<Loading label='Cargando usuario' />
 				</Match>
-				<Match when={user.isSuccess}>{params.id}</Match>
+				<Match when={user.isSuccess}>
+					<UserUpdateForm user={user.data} />
+				</Match>
 			</Switch>
 		</div>
 	);

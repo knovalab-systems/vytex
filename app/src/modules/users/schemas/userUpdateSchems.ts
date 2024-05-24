@@ -1,4 +1,5 @@
-import { type Input, minLength, object, picklist, string, boolean, optional } from 'valibot';
+import { type Input, minLength, object, picklist, string, optional } from 'valibot';
+import { STATUS_OPTIONS } from '~/utils/constants';
 import { roleList } from '~/utils/roles';
 
 export const UserUpdateSchema = object({
@@ -10,11 +11,8 @@ export const UserUpdateSchema = object({
 			minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.'),
 		]),
 	),
-	role: picklist(
-		roleList.map(role => role.key),
-		'Por favor selecciona un rol.',
-	),
-	delete_at: boolean(),
+	role: picklist<string[]>(roleList.map(role => role.key)),
+	delete_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
 });
 
 export type UserUpdateType = Input<typeof UserUpdateSchema>;

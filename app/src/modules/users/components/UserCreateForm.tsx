@@ -1,6 +1,5 @@
 import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
-import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
@@ -13,17 +12,14 @@ import { UserCreateSchema, type UserCreateType } from '../schemas/userCreateSche
 
 function UserCreateForm() {
 	const navigate = useNavigate();
-	const [disabled, setDisable] = createSignal(false);
 
-	const [_, { Form, Field }] = createForm<UserCreateType>({
+	const [form, { Form, Field }] = createForm<UserCreateType>({
 		validate: valiForm(UserCreateSchema),
 		initialValues: { name: '', username: '', password: '', role: '' },
 	});
 
-	const handleSubmit: SubmitHandler<UserCreateType> = (data, event) => {
-		event.preventDefault();
-		setDisable(true);
-		createUserRequest(data.name, data.username, data.password, data.role)
+	const handleSubmit: SubmitHandler<UserCreateType> = async data => {
+		return createUserRequest(data.name, data.username, data.password, data.role)
 			.then(() => {
 				toast.success('Usuario creado correctamente');
 				navigate(USERS_PATH);
@@ -34,11 +30,10 @@ function UserCreateForm() {
 				} else {
 					toast.error('Error al crear usuario');
 				}
-				setDisable(false);
 			});
 	};
 
-	const handleGoBack = () => {
+	const handleCancel = () => {
 		navigate(USERS_PATH);
 	};
 
@@ -117,10 +112,10 @@ function UserCreateForm() {
 						)}
 					</Field>
 					<div class='flex justify-between'>
-						<Button type='button' onclick={handleGoBack} class='bg-red-500 hover:bg-red-600'>
+						<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
 							Cancelar
 						</Button>
-						<Button type='submit' disabled={disabled()} class='bg-green-600 hover:bg-green-700'>
+						<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
 							Guardar
 						</Button>
 					</div>

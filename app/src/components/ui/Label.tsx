@@ -16,4 +16,17 @@ const Label: Component<ComponentProps<'label'>> = props => {
 	);
 };
 
-export { Label };
+const LabelSpan: Component<ComponentProps<'span'>> = props => {
+	const [, rest] = splitProps(props, ['class']);
+	return (
+		<span
+			class={cn(
+				'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+				props.class,
+			)}
+			{...rest}
+		/>
+	);
+};
+
+export { Label, LabelSpan };
