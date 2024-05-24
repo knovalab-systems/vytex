@@ -6,6 +6,7 @@ function Roles() {
 	return (
 		<div class='h-full'>
 			<RoleTable roles={roleList} rolePermmissions={rolePermissions} permissions={Object.values(permissions)} />
+			<span class='text-gray-500 text-sm'>Tener permiso a una función incluye acceder a la interfaz necesaria.</span>
 		</div>
 	);
 }
