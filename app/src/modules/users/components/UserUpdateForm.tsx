@@ -1,16 +1,18 @@
-import { useNavigate } from '@solidjs/router';
-import type { GetUserType } from '../requests/getUserRequests';
-import { type SubmitHandler, createForm, valiForm, setValue } from '@modular-forms/solid';
-import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
-import { Label, LabelSpan } from '~/components/ui/Label';
-import { Input } from '~/components/ui/Input';
-import { roleList, roles } from '~/utils/roles';
-import { USERS_PATH } from '~/utils/paths';
-import { Button } from '~/components/ui/Button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
-import { STATUS_OPTIONS } from '~/utils/constants';
-import type { User } from '../schemas/userSchema';
 import { getLocalTimeZone, now } from '@internationalized/date';
+import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
+import { useNavigate } from '@solidjs/router';
+import toast from 'solid-toast';
+import { Button } from '~/components/ui/Button';
+import { Input } from '~/components/ui/Input';
+import { Label, LabelSpan } from '~/components/ui/Label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
+import { STATUS_CODE, STATUS_OPTIONS } from '~/utils/constants';
+import { USERS_PATH } from '~/utils/paths';
+import { roleList, roles } from '~/utils/roles';
+import type { GetUserType } from '../requests/getUserRequests';
+import { updateUserRequest } from '../requests/updateUserRequests';
+import type { User } from '../schemas/userSchema';
+import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
 
 function UserUpdateForm(props: { user: GetUserType }) {
 	const navigate = useNavigate();
@@ -18,8 +20,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 		validate: valiForm(UserUpdateSchema),
 		initialValues: {
 			name: props.user?.name,
-			password: '12345678',
-			username: props.user?.username || '1',
+			username: props.user?.username,
 			role: props.user?.role,
 			delete_at: props.user?.delete_at ? 'Inactivo' : 'Activo',
 		},
@@ -40,7 +41,18 @@ function UserUpdateForm(props: { user: GetUserType }) {
 			user.delete_at = now(getLocalTimeZone()).toAbsoluteString();
 		}
 
-		return console.log(user);
+		return updateUserRequest(props.user?.id, user)
+			.then(() => {
+				toast.success('Usuario actualizado correctamente');
+				navigate(USERS_PATH);
+			})
+			.catch(error => {
+				if (error.response.status === STATUS_CODE.conflict) {
+					toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
+				} else {
+					toast.error('Error al actualizar usuario');
+				}
+			});
 	};
 
 	const handleCancel = () => {
@@ -48,9 +60,9 @@ function UserUpdateForm(props: { user: GetUserType }) {
 	};
 
 	return (
-		<Form class='w-full md:w-4/6 xl:w-1/3' onSubmit={handleSubmit}>
-			<div class='flex flex-col justify-center p-4 mx-1 my-4 bg-white border-gray-100 shadow-md rounded-md border'>
-				<h1 class='text-center text-2xl font-bold mb-4'>Actualizar usuario</h1>
+		<Form class='w-full md:w-4/6 xl:w-2/5' onSubmit={handleSubmit}>
+			<div class='flex flex-col justify-center p-8 m-4 gap-4 bg-white border-gray-100 shadow-md rounded-md border'>
+				<h1 class='text-center text-2xl font-bold'>Actualizar usuario</h1>
 				<Field name='name'>
 					{(field, props) => (
 						<div>
@@ -141,7 +153,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 						</div>
 					)}
 				</Field>
-				<div class='flex justify-between mt-4'>
+				<div class='flex justify-between'>
 					<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
 						Cancelar
 					</Button>

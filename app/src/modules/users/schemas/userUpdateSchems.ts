@@ -1,4 +1,4 @@
-import { type Input, minLength, object, picklist, string, optional } from 'valibot';
+import { type Input, minLength, object, optional, picklist, string } from 'valibot';
 import { STATUS_OPTIONS } from '~/utils/constants';
 import { roleList } from '~/utils/roles';
 
