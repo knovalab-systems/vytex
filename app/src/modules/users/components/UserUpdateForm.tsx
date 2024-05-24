@@ -135,7 +135,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 				<Field name='delete_at'>
 					{field => (
 						<div>
-							<LabelSpan>Rol</LabelSpan>
+							<LabelSpan>Estado</LabelSpan>
 							<Select<string>
 								value={field.value}
 								onChange={value => {

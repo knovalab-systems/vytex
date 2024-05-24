@@ -33,6 +33,11 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
+	for _, item := range users {
+		item.Password = "********"
+	}
+
 	return users, nil
 }
 
@@ -57,6 +62,8 @@ func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
+	user.Password = "********"
 
 	return user, nil
 }
@@ -111,6 +118,8 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 		return nil, problems.ServerError()
 	}
 
+	user.Password = "********"
+
 	return user, nil
 }
 
@@ -140,6 +149,8 @@ func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
+	user.Password = "********"
 
 	return user, nil
 }
