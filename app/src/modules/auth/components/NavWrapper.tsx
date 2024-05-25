@@ -8,9 +8,9 @@ import { type JSXElement, Match, Show, Suspense, Switch, createEffect, lazy } fr
 import Loading from '~/components/Loading';
 import MobileNav from '~/components/MobileNav';
 import { client } from '~/utils/client';
-import { ADMIN_ROLE } from '~/utils/env';
-import RoleRoot from './RoleRoot';
+import { ADMIN_ROLE, NO_ROLE } from '~/utils/env';
 import * as PATHS from '~/utils/paths';
+import RoleRoot from './RoleRoot';
 
 const SideBarNav = lazy(() => import('~/components/SideBarNav'));
 
@@ -39,6 +39,9 @@ function NavWrapper(props: RouteSectionProps) {
 	return (
 		<div class='flex flex-col w-full h-fit lg:h-full lg:flex-row'>
 			<Switch>
+				<Match when={user.isPending}>
+					<Loading label='Cargando rol' />
+				</Match>
 				<Match when={user.isSuccess && user.data.role === ADMIN_ROLE}>
 					<SideBarNav pages={pages[ADMIN_ROLE]} />
 					<MobileNav pages={pages[ADMIN_ROLE]} />
@@ -48,9 +51,8 @@ function NavWrapper(props: RouteSectionProps) {
 						</Suspense>
 					</main>
 				</Match>
+				<Match when={user.isSuccess && user.data.role === NO_ROLE}>{props.children}</Match>
 				<Match when={user.isSuccess}>
-					<SideBarNav pages={[]} />
-					<MobileNav pages={[]} />
 					<div>{'empty' /** temporal*/}</div>
 				</Match>
 			</Switch>

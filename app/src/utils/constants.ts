@@ -24,6 +24,11 @@ export const USER_STATUS_OPTIONS = [
 	{ label: 'Inactivo', value: USER_STATUS.inactive },
 ];
 
+export const STATUS_OPTIONS = {
+	Activo: true,
+	Inactivo: false,
+};
+
 export const USER_ROLES_OPTIONS = [
 	{ label: 'Administrador', value: ADMIN_ROLE },
 	{ label: 'Sin rol', value: NO_ROLE },

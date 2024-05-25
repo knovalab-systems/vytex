@@ -33,6 +33,7 @@ function Users() {
 	return (
 		<div class='h-full flex flex-col'>
 			<UserControls
+				setPage={() => setPage(1)}
 				setNameFilter={setNameFilter}
 				nameFilterValue={nameFilter()}
 				setUsernameFilter={setUsernameFilter}
@@ -42,7 +43,6 @@ function Users() {
 				setRoleIdFilter={setRoleIdFilter}
 				roleIdFilterValue={roleIdFilter()}
 			/>
-
 			<Switch>
 				<Match when={users.isLoading && usersCount.isLoading}>
 					<Loading />

@@ -33,6 +33,11 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
+	for _, item := range users {
+		item.Password = "********"
+	}
+
 	return users, nil
 }
 
@@ -50,9 +55,16 @@ func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
 	}
 
 	user, err := filter.Where(table.ID.Eq(q.ID)).First()
+	if user == nil {
+		return nil, problems.ReadAccess()
+	}
+
 	if err != nil {
 		return nil, problems.ServerError()
 	}
+
+	user.Password = "********"
+
 	return user, nil
 }
 
@@ -75,6 +87,86 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	}
 
 	return []*models.AggregateData{aggregate}, nil
+}
+
+func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
+	table := query.User
+
+	if update.Username != nil {
+		err := checkUsername(*update.Username)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	updateMap, err := update.ToUpdate()
+	if err != nil || len(updateMap) == 0 {
+		return nil, problems.UpdateUsersBadRequest()
+	}
+
+	rows, err := table.Unscoped().Where(table.ID.Eq(update.ID)).Updates(updateMap)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, problems.ReadAccess()
+	}
+
+	user, err := table.Unscoped().Where(table.ID.Eq(update.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	user.Password = "********"
+
+	return user, nil
+}
+
+func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
+	table := query.User
+
+	// check user existence
+	err := checkUsername(u.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	// encrypt password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	user := &models.User{
+		Username: u.Username,
+		Name:     u.Name,
+		Password: string(hashedPassword),
+		Role:     u.Role,
+	}
+
+	err = table.Create(user)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	user.Password = "********"
+
+	return user, nil
+}
+
+func checkUsername(username string) error {
+	table := query.User
+	count, err := table.Where(table.Username.Eq(username)).Count()
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	if count > 0 {
+		return problems.UserExists()
+	}
+
+	return nil
 }
 
 func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
@@ -134,64 +226,4 @@ func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
 	}
 
 	return s, nil
-}
-
-func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
-	table := query.User
-
-	updateMap, err := update.ToUpdate()
-	if err != nil || len(updateMap) == 0 {
-		return nil, problems.UpdateUsersBadRequest()
-	}
-
-	rows, err := table.Unscoped().Where(table.ID.Eq(update.ID)).Updates(updateMap)
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	if rows.RowsAffected == 0 {
-		return nil, problems.UpdateUsersBadRequest()
-	}
-
-	user, err := table.Unscoped().Where(table.ID.Eq(update.ID)).First()
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	return user, nil
-}
-
-func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
-	table := query.User
-
-	// check user existence
-	count, err := table.Where(table.Username.Eq(u.Username)).Count()
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	if count > 0 {
-		return nil, problems.UserExists()
-	}
-
-	// encrypt password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
-
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	user := &models.User{
-		Username: u.Username,
-		Name:     u.Name,
-		Password: string(hashedPassword),
-		Role:     u.Role,
-	}
-
-	err = table.Create(user)
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	return user, nil
 }

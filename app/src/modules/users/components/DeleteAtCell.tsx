@@ -46,7 +46,7 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 						Activo
 					</div>
 				</Show>
-				<div class='my-auto relative lg:hidden'>
+				<div class='my-auto relative lg:hidden' title='Actualizar estado'>
 					<Switch checked={status()} onChange={handleSubmit} disabled={loading()} />
 				</div>
 			</div>

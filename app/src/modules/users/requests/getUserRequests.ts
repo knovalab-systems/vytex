@@ -1,12 +1,12 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readUsers } from '@vytex/client';
+import { aggregate, readUser, readUsers } from '@vytex/client';
 import { client } from '~/utils/client';
 import { QUERY_LIMIT } from '~/utils/constants';
 
 export function getUsersQuery(name: string, username: string, roleId: string, status: string, page: number) {
 	return queryOptions({
 		queryFn: () => getUsers(name, username, roleId, status, page),
-		queryKey: ['getusers', name, username, roleId, status, page],
+		queryKey: ['getUsers', name, username, roleId, status, page],
 	});
 }
 
@@ -65,3 +65,16 @@ async function countUsers(name: string, username: string, roleId: string, status
 }
 
 export type GetUsersType = Awaited<ReturnType<typeof getUsers>> | undefined;
+
+export function getUserQuery(id: string) {
+	return queryOptions({
+		queryFn: () => getUser(id),
+		queryKey: ['getUser', id],
+	});
+}
+
+async function getUser(id: string) {
+	return await client.request(readUser(id));
+}
+
+export type GetUserType = Awaited<ReturnType<typeof getUser>> | undefined;

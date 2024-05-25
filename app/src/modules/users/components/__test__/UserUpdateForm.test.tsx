@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import CreateForm from '../CreateForm';
+import UserUpdateForm from '../UserUpdateForm';
 
 vi.mock('~/modules/users/requests/createUserRequests', () => ({
 	createUserRequest: vi.fn(),
@@ -12,13 +12,19 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
-describe('CreateForm', () => {
+describe('UserUpdateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly', () => {
-		render(() => <CreateForm />);
+		const user = {
+			name: 'Jose',
+			username: 'jose',
+			delete_at: 'delete',
+		};
+
+		render(() => <UserUpdateForm user={user} />);
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
@@ -35,29 +41,45 @@ describe('CreateForm', () => {
 	});
 
 	it('check change inputs values ', async () => {
-		render(() => <CreateForm />);
+		const user = {
+			name: 'Jose',
+			username: 'jose',
+			delete_at: 'delete',
+		};
+		render(() => <UserUpdateForm user={user} />);
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
-		const roleIdFilterInput = screen.getByText('Selecciona un rol');
 
 		fireEvent.input(nameField, { target: { value: 'John Doe' } });
 		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
 		fireEvent.input(passwordField, { target: { value: '12345678' } });
-		fireEvent.change(roleIdFilterInput, { target: { value: 'admin' } });
 
 		expect(nameField).toHaveValue('John Doe');
 		expect(usernameField).toHaveValue('jdoe');
 		expect(passwordField).toHaveValue('12345678');
-		expect(roleIdFilterInput).toHaveValue('admin');
 	});
 
 	it('show empty fields error message when submit form', async () => {
-		render(() => <CreateForm />);
+		const user = {
+			name: 'Jose',
+			username: 'jose',
+			delete_at: 'delete',
+		};
+		render(() => <UserUpdateForm user={user} />);
+
+		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const usernameField = screen.getByPlaceholderText('jperez');
+		const passwordField = screen.getByPlaceholderText('********');
+
+		fireEvent.input(nameField, { target: { value: '' } });
+		fireEvent.input(usernameField, { target: { value: '' } });
+		fireEvent.input(passwordField, { target: { value: '' } });
+
 		const submitButton = screen.getByText('Guardar');
 		fireEvent.click(submitButton);
 
-		const errorname = await screen.findByText(/Por favor ingresa el nombre./i);
+		const errorname = await screen.findByText('Por favor ingresa el nombre.');
 		const errorusername = await screen.findByText(/Por favor ingresa el usuario./i);
 		const errorpassword = await screen.findByText(/Por favor ingresa la contraseña./i);
 
@@ -67,17 +89,20 @@ describe('CreateForm', () => {
 	});
 
 	it('dont show empty fields error message when submit form', async () => {
-		render(() => <CreateForm />);
+		const user = {
+			name: 'Jose',
+			username: 'jose',
+			delete_at: 'delete',
+		};
+		render(() => <UserUpdateForm user={user} />);
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
-		const roleIdFilterInput = screen.getByText('Selecciona un rol');
 		const submitButton = screen.getByText('Guardar');
 
 		fireEvent.input(nameField, { target: { value: 'John Doe' } });
 		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
 		fireEvent.input(passwordField, { target: { value: '12345678' } });
-		fireEvent.change(roleIdFilterInput, { target: { value: 'admin' } });
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
@@ -88,7 +113,12 @@ describe('CreateForm', () => {
 	});
 
 	it('shows bad length password error', async () => {
-		render(() => <CreateForm />);
+		const user = {
+			name: 'Jose',
+			username: 'jose',
+			delete_at: 'delete',
+		};
+		render(() => <UserUpdateForm user={user} />);
 		const passwordField = screen.getByPlaceholderText('********');
 		const submitButton = screen.getByText('Guardar');
 

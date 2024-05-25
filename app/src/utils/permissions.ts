@@ -3,6 +3,10 @@ export const permissions = {
 		key: 'readUsers',
 		label: 'Ver usuarios',
 	},
+	createUser: {
+		key: 'createUser',
+		label: 'Crear usuarios',
+	},
 	updateUser: {
 		key: 'updateUser',
 		label: 'Actualizar usuarios',
@@ -20,6 +24,7 @@ const handlerProxyPermissions = {
 export const adminPermissions = new Proxy(
 	{
 		[permissions.readUsers.key]: true,
+		[permissions.createUser.key]: true,
 		[permissions.updateUser.key]: true,
 		[permissions.readRoles.key]: true,
 	},

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/knovalab-systems/vytex/pkg/utils"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -40,6 +41,9 @@ type ReadUser struct {
 
 type UpdateUserBody struct {
 	ID       string              `param:"userId" validate:"required,uuid"`
+	Username *string             `json:"username" validate:"omitnil,gt=0"`
+	Name     *string             `json:"name" validate:"omitnil,gt=0"`
+	Password *string             `json:"password" validate:"omitnil,lte=20,gte=8"`
 	Role     *string             `json:"role" validate:"omitnil,uuid"`
 	DeleteAt Optional[time.Time] `json:"delete_at"`
 }
@@ -52,6 +56,22 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 			return nil, errors.New("INVALID ROLE")
 		}
 		updateMap["role"] = *m.Role
+	}
+
+	if m.Username != nil {
+		updateMap["username"] = *m.Username
+	}
+
+	if m.Password != nil {
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(*m.Password), bcrypt.DefaultCost)
+		if err != nil {
+			return nil, errors.New("ENCRYPT ERROR")
+		}
+		updateMap["password"] = hashedPassword
+	}
+
+	if m.Name != nil {
+		updateMap["name"] = *m.Name
 	}
 
 	if !m.DeleteAt.IsNil() {
