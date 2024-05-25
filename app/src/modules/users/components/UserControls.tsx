@@ -1,7 +1,7 @@
 import { useNavigate } from '@solidjs/router';
 import { FaSolidPlus } from 'solid-icons/fa';
 import { TbFilterX } from 'solid-icons/tb';
-import { Show, createEffect, onCleanup } from 'solid-js';
+import { Show, onCleanup } from 'solid-js';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
