@@ -33,6 +33,7 @@ function Users() {
 	return (
 		<div class='h-full flex flex-col'>
 			<UserControls
+				setPage={() => setPage(1)}
 				setNameFilter={setNameFilter}
 				nameFilterValue={nameFilter()}
 				setUsernameFilter={setUsernameFilter}
