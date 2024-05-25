@@ -22,13 +22,14 @@ function UserUpdateForm(props: { user: GetUserType }) {
 			name: props.user?.name,
 			username: props.user?.username,
 			role: props.user?.role,
-			delete_at: props.user?.delete_at ? 'Inactivo' : 'Activo',
+			delete_at: !props.user?.delete_at ? 'Activo' : 'Inactivo',
 		},
 	});
 
 	const handleSubmit: SubmitHandler<UserUpdateType> = async data => {
-		const user: User = Object.keys(data).reduce((p: User, v) => {
-			const field = data[v as keyof typeof data];
+		const { delete_at, ...rest } = data;
+		const user: User = Object.keys(rest).reduce((p: User, v) => {
+			const field = rest[v as keyof typeof rest];
 			const oldField = props.user?.[v];
 			if (field && field !== oldField) {
 				p[v as keyof typeof p] = field;
@@ -36,10 +37,13 @@ function UserUpdateForm(props: { user: GetUserType }) {
 			return p;
 		}, {});
 
-		user.delete_at = undefined;
-		if (!STATUS_OPTIONS[data.delete_at as keyof typeof STATUS_OPTIONS] && !props.user?.delete_at) {
+		if (!STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && !props.user?.delete_at) {
 			user.delete_at = now(getLocalTimeZone()).toAbsoluteString();
+		} else if (STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && !!props.user?.delete_at) {
+			user.delete_at = null;
 		}
+
+		if (Object.keys(user).length === 0) return;
 
 		return updateUserRequest(props.user?.id, user)
 			.then(() => {
@@ -105,7 +109,6 @@ function UserUpdateForm(props: { user: GetUserType }) {
 								placeholder='********'
 								id='pass-field'
 								aria-errormessage={field.error}
-								required
 								{...props}
 							/>
 						</div>
