@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { FaSolidPlus } from 'solid-icons/fa';
+import { AiOutlinePlus } from 'solid-icons/ai';
 import { TbFilterX } from 'solid-icons/tb';
 import { Show, onCleanup } from 'solid-js';
 import FilterInput from '~/components/FilterInput';
@@ -75,7 +75,7 @@ const UserControls = (props: UserControlsProps) => {
 					onclick={goToUserCreationPage}
 				>
 					Nuevo
-					<FaSolidPlus class='ml-2' size={20} />
+					<AiOutlinePlus class='ml-2' size={22} />
 				</Button>
 				<FilterInput
 					class='w-52'
