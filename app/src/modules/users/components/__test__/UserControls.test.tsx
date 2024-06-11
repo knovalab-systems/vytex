@@ -5,6 +5,7 @@ import UserControls from '../UserControls';
 
 // mocks
 const setNameFilter = vi.fn();
+const setPage = vi.fn();
 const setUsernameFilter = vi.fn();
 const setStatusFilter = vi.fn();
 const setRoleIdFilter = vi.fn();
@@ -22,6 +23,7 @@ describe('UserControls', () => {
 	it('renders correctly', () => {
 		render(() => (
 			<UserControls
+				setPage={setPage}
 				setNameFilter={setNameFilter}
 				nameFilterValue=''
 				setUsernameFilter={setUsernameFilter}
@@ -47,6 +49,7 @@ describe('UserControls', () => {
 		render(() => (
 			<UserControls
 				setNameFilter={setNameFilter}
+				setPage={setPage}
 				nameFilterValue=''
 				setUsernameFilter={setUsernameFilter}
 				usernameFilterValue=''
@@ -65,6 +68,7 @@ describe('UserControls', () => {
 		render(() => (
 			<UserControls
 				setNameFilter={setNameFilter}
+				setPage={setPage}
 				nameFilterValue=''
 				setUsernameFilter={setUsernameFilter}
 				usernameFilterValue=''
@@ -83,6 +87,7 @@ describe('UserControls', () => {
 		render(() => (
 			<UserControls
 				setNameFilter={setNameFilter}
+				setPage={setPage}
 				nameFilterValue=''
 				setUsernameFilter={setUsernameFilter}
 				usernameFilterValue=''
@@ -102,6 +107,7 @@ describe('UserControls', () => {
 		render(() => (
 			<UserControls
 				setNameFilter={setNameFilter}
+				setPage={setPage}
 				nameFilterValue=''
 				setUsernameFilter={setUsernameFilter}
 				usernameFilterValue=''
@@ -122,6 +128,7 @@ describe('UserControls', () => {
 		render(() => (
 			<UserControls
 				setNameFilter={setNameFilter}
+				setPage={setPage}
 				nameFilterValue='aa'
 				setUsernameFilter={setUsernameFilter}
 				usernameFilterValue='bb'
@@ -144,6 +151,7 @@ describe('UserControls', () => {
 		render(() => (
 			<UserControls
 				setNameFilter={setNameFilter}
+				setPage={setPage}
 				nameFilterValue=''
 				setUsernameFilter={setUsernameFilter}
 				usernameFilterValue=''
