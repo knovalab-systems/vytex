@@ -4,7 +4,7 @@ import { parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized
 import { Timeline } from '~/components/ui/Timeline';
 import { convertTimeTo12 } from '~/utils/time';
 import { useNavigate } from '@solidjs/router';
-import { USERS_PATH } from '~/utils/paths';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
 import { Button } from '~/components/ui/Button';
 
 function UserCard(props: { user: GetUserType }) {
@@ -37,17 +37,17 @@ function UserCard(props: { user: GetUserType }) {
 	};
 
 	const handleCancel = () => navigate(USERS_PATH);
-	const handleEdit = () => navigate(USERS_PATH);
+	const handleEdit = () => navigate(`${USER_UPDATE_PATH}/${user()?.id}`);
 
 	return (
 		<div class='w-full md:w-4/6 xl:w-2/5'>
 			<div class='flex p-8 m-4 gap-4 bg-white border-gray-100 shadow-md rounded-md border'>
 				<div class='flex flex-col gap-4 flex-1'>
-					<ValuesWithTitles title='ID' value={user()?.id} />
-					<ValuesWithTitles title='Nombre' value={user()?.name} />
-					<ValuesWithTitles title='Nombre de usuario' value={user()?.username} />
-					<ValuesWithTitles title='Estado' value={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
-					<ValuesWithTitles title='Rol' value={roles[user()?.role].label} />
+					<ValuesWithTitles support='ID' title={user()?.id} />
+					<ValuesWithTitles support='Nombre' title={user()?.name} />
+					<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
+					<ValuesWithTitles support='Estado' title={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
+					<ValuesWithTitles support='Rol' title={roles[user()?.role].label} />
 				</div>
 				<div class='mx-auto'>
 					<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />
@@ -65,12 +65,12 @@ function UserCard(props: { user: GetUserType }) {
 	);
 }
 
-function ValuesWithTitles(props: { title: string; value: string }) {
+function ValuesWithTitles(props: { support: string; title: string }) {
 	return (
 		<>
 			<div class='flex-1 space-y-1'>
-				<p class='font-medium leading-none'>{props.value}</p>
-				<p class='text-sm text-muted-foreground'>{props.title}</p>
+				<p class='font-medium leading-none'>{props.title}</p>
+				<p class='text-sm text-muted-foreground'>{props.support}</p>
 			</div>
 		</>
 	);

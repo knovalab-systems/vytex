@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import UserCard from '../UserCard';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -64,7 +65,7 @@ describe('UserCard', () => {
 		expect(items.length).eq(2);
 	});
 
-	it('calls back correctly', () => {
+	it('calls back correctly', async () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
@@ -77,12 +78,14 @@ describe('UserCard', () => {
 		render(() => <UserCard user={user} />);
 
 		const back = screen.getByText('Volver');
+		fireEvent.click(back);
 
-		expect(back).toBeInTheDocument();
+		await waitFor(() => expect(mockNavigate).toBeCalledWith(USERS_PATH));
 	});
 
-	it('calls edit correctly', () => {
+	it('calls edit correctly', async () => {
 		const user = {
+			id: '1',
 			name: 'Jose',
 			username: 'jose',
 			delete_at: '2024-05-10T22:36:52.140901Z',
@@ -94,7 +97,8 @@ describe('UserCard', () => {
 		render(() => <UserCard user={user} />);
 
 		const edit = screen.getByText('Editar');
+		fireEvent.click(edit);
 
-		expect(edit).toBeInTheDocument();
+		await waitFor(() => expect(mockNavigate).toBeCalledWith(`${USER_UPDATE_PATH}/1`));
 	});
 });
