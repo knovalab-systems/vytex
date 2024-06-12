@@ -59,9 +59,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 			});
 	};
 
-	const handleCancel = () => {
-		navigate(USERS_PATH);
-	};
+	const handleCancel = () => navigate(USERS_PATH);
 
 	return (
 		<Form class='w-full md:w-4/6 xl:w-2/5' onSubmit={handleSubmit}>

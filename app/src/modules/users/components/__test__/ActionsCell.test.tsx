@@ -2,12 +2,13 @@ import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ActionsCell from '../ActionsCell';
+import type { JSXElement } from 'solid-js';
 
 const mockA = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	A: () => {
+	A: (props: { children: JSXElement }) => {
 		mockA();
-		return <button type='button'>Actualizar</button>;
+		return <button type='button'>{props.children}</button>;
 	},
 }));
 
@@ -19,18 +20,27 @@ describe('ActionsCell', () => {
 	it('renders correctly', () => {
 		render(() => <ActionsCell userId='1' />);
 
-		const roleName = screen.getByText('Actualizar');
-		const triggerButton = screen.getByRole('button');
+		const updateButton = screen.getByText('Actualizar');
+		const detailsButton = screen.getByText('Detalles');
 
-		expect(triggerButton).toBeInTheDocument();
-		expect(roleName).toBeInTheDocument();
+		expect(updateButton).toBeInTheDocument();
+		expect(detailsButton).toBeInTheDocument();
 	});
 
-	it('calls the A correclty', () => {
+	it('calls the Updates correclty', () => {
 		render(() => <ActionsCell userId='1' />);
 
-		const triggerButton = screen.getByRole('button');
-		fireEvent.click(triggerButton);
+		const updateButton = screen.getByText('Actualizar');
+		fireEvent.click(updateButton);
+
+		expect(mockA).toBeCalled();
+	});
+
+	it('calls the Details correclty', () => {
+		render(() => <ActionsCell userId='1' />);
+
+		const detailsButton = screen.getByText('Detalles');
+		fireEvent.click(detailsButton);
 
 		expect(mockA).toBeCalled();
 	});

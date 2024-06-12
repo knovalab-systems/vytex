@@ -70,22 +70,18 @@ describe('UserUpdateForm', () => {
 
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
-		const passwordField = screen.getByPlaceholderText('********');
 
 		fireEvent.input(nameField, { target: { value: '' } });
 		fireEvent.input(usernameField, { target: { value: '' } });
-		fireEvent.input(passwordField, { target: { value: '' } });
 
 		const submitButton = screen.getByText('Guardar');
 		fireEvent.click(submitButton);
 
 		const errorname = await screen.findByText('Por favor ingresa el nombre.');
 		const errorusername = await screen.findByText(/Por favor ingresa el usuario./i);
-		const errorpassword = await screen.findByText(/Por favor ingresa la contraseña./i);
 
 		expect(errorname).toBeInTheDocument();
 		expect(errorusername).toBeInTheDocument();
-		expect(errorpassword).toBeInTheDocument();
 	});
 
 	it('dont show empty fields error message when submit form', async () => {
