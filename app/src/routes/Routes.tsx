@@ -1,6 +1,6 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
-import { MatchAdmin, MatchNoRole } from '~/modules/auth/components/MatchRole';
+import { MatchAdmin } from '~/modules/auth/components/MatchRole';
 import ProtectedWrapper from '~/modules/auth/components/ProtectedWrapper';
 import * as PATHS from '~/utils/paths';
 
@@ -13,16 +13,12 @@ const UserCreate = lazy(() => import('~/modules/users/pages/UserCreate'));
 const UserUpdate = lazy(() => import('~/modules/users/pages/UserUpdate'));
 const Roles = lazy(() => import('~/modules/users/pages/Roles'));
 const NavWrapper = lazy(() => import('~/modules/auth/components/NavWrapper'));
-const NotPermission = lazy(() => import('~/pages/NotPermission'));
 
 function Routes() {
 	return (
 		<>
 			<Route path={'/'} component={ProtectedWrapper}>
 				<Route path={'/'} component={NavWrapper}>
-					<Route path={'/'} component={MatchNoRole}>
-						<Route path='/' component={NotPermission} />
-					</Route>
 					<Route path={'/'} component={Home} />
 					<Route path={'/'} component={MatchAdmin}>
 						<Route path={PATHS.USERS_PATH}>
