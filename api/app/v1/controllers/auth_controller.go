@@ -88,7 +88,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	}
 
 	// generate tokens
-	tokens, err := m.Credentials(s.UserID, s.Role)
+	tokens, err := m.Credentials(s.UserID, s.User.Role)
 	if err != nil {
 		return problems.ServerError()
 	}
