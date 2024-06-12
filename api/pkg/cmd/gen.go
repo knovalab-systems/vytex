@@ -29,7 +29,7 @@ func main() {
 	g.UseDB(gormdb)
 
 	// Generate basic type-safe DAO API for struct `model.User` following conventions
-	g.ApplyBasic(models.User{}, models.Session{})
+	g.ApplyBasic(models.User{}, models.Session{}, models.Color{})
 
 	// Generate the code
 	g.Execute()

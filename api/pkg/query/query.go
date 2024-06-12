@@ -17,12 +17,14 @@ import (
 
 var (
 	Q       = new(Query)
+	Color   *color
 	Session *session
 	User    *user
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
+	Color = &Q.Color
 	Session = &Q.Session
 	User = &Q.User
 }
@@ -30,6 +32,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:      db,
+		Color:   newColor(db, opts...),
 		Session: newSession(db, opts...),
 		User:    newUser(db, opts...),
 	}
@@ -38,6 +41,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 type Query struct {
 	db *gorm.DB
 
+	Color   color
 	Session session
 	User    user
 }
@@ -47,6 +51,7 @@ func (q *Query) Available() bool { return q.db != nil }
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:      db,
+		Color:   q.Color.clone(db),
 		Session: q.Session.clone(db),
 		User:    q.User.clone(db),
 	}
@@ -63,18 +68,21 @@ func (q *Query) WriteDB() *Query {
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:      db,
+		Color:   q.Color.replaceDB(db),
 		Session: q.Session.replaceDB(db),
 		User:    q.User.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
+	Color   IColorDo
 	Session ISessionDo
 	User    IUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
+		Color:   q.Color.WithContext(ctx),
 		Session: q.Session.WithContext(ctx),
 		User:    q.User.WithContext(ctx),
 	}

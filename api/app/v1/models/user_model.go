@@ -16,7 +16,7 @@ type User struct {
 	Name      string         `json:"name"`
 	Password  string         `json:"password"`
 	Role      string         `json:"role" gorm:"type:uuid"`
-	DeleteAt  gorm.DeletedAt `json:"delete_at"`
+	DeleteAt  gorm.DeletedAt `json:"delete_at" gorm:"index"`
 	CreatedAt time.Time      `json:"create_at"`
 	UpdatedAt time.Time      `json:"update_at"`
 }

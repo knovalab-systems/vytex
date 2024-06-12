@@ -22,6 +22,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 		return nil, problems.UsersBadRequest()
 	}
 
+	// def query
 	table := query.User
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 	filter, err := userFilters(q.Filter, s)
@@ -29,6 +30,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 		return nil, problems.UsersBadRequest()
 	}
 
+	// run query
 	users, err := filter.Find()
 	if err != nil {
 		return nil, problems.ServerError()
