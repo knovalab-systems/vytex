@@ -1,0 +1,79 @@
+import { roles } from '~/utils/roles';
+import type { GetUserType } from '../requests/getUserRequests';
+import { parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
+import { Timeline } from '~/components/ui/Timeline';
+import { convertTimeTo12 } from '~/utils/time';
+import { useNavigate } from '@solidjs/router';
+import { USERS_PATH } from '~/utils/paths';
+import { Button } from '~/components/ui/Button';
+
+function UserCard(props: { user: GetUserType }) {
+	const navigate = useNavigate();
+	const user = () => props.user;
+	const delete_at = () =>
+		!user()?.delete_at ? parseAbsoluteToLocal(user()?.update_at) : parseAbsoluteToLocal(user()?.delete_at);
+	const create_at = () => parseAbsoluteToLocal(user()?.create_at);
+	const update_at = () => parseAbsoluteToLocal(user()?.update_at);
+	const timelineArr = () => {
+		const arr = [
+			{
+				title: 'Fecha de creación',
+				description: `${toCalendarDate(create_at())} ${convertTimeTo12(toTime(create_at()))}`,
+			},
+			{
+				title: 'Fecha de actualización',
+				description: `${toCalendarDate(update_at())} ${convertTimeTo12(toTime(update_at()))}`,
+			},
+		];
+
+		if (user()?.delete_at) {
+			arr.push({
+				title: 'Fecha de inactivación',
+				description: `${toCalendarDate(delete_at())} ${convertTimeTo12(toTime(delete_at()))}`,
+			});
+		}
+
+		return arr;
+	};
+
+	const handleCancel = () => navigate(USERS_PATH);
+	const handleEdit = () => navigate(USERS_PATH);
+
+	return (
+		<div class='w-full md:w-4/6 xl:w-2/5'>
+			<div class='flex p-8 m-4 gap-4 bg-white border-gray-100 shadow-md rounded-md border'>
+				<div class='flex flex-col gap-4 flex-1'>
+					<ValuesWithTitles title='ID' value={user()?.id} />
+					<ValuesWithTitles title='Nombre' value={user()?.name} />
+					<ValuesWithTitles title='Nombre de usuario' value={user()?.username} />
+					<ValuesWithTitles title='Estado' value={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
+					<ValuesWithTitles title='Rol' value={roles[user()?.role].label} />
+				</div>
+				<div class='mx-auto'>
+					<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />
+				</div>
+			</div>
+			<div class='flex m-4  justify-between'>
+				<Button type='button' onclick={handleCancel} class='text-black bg-slate-300 hover:bg-slate-400'>
+					Volver
+				</Button>
+				<Button type='button' onclick={handleEdit} class='bg-practice_date hover:bg-blue-800'>
+					Editar
+				</Button>
+			</div>
+		</div>
+	);
+}
+
+function ValuesWithTitles(props: { title: string; value: string }) {
+	return (
+		<>
+			<div class='flex-1 space-y-1'>
+				<p class='font-medium leading-none'>{props.value}</p>
+				<p class='text-sm text-muted-foreground'>{props.title}</p>
+			</div>
+		</>
+	);
+}
+
+export default UserCard;
