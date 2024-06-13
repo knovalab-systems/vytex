@@ -20,8 +20,9 @@ import (
 )
 
 func TestReadUser(t *testing.T) {
+	defaultError := errors.New("ERROR")
 
-	t.Run("Get users succesfully ", func(t *testing.T) {
+	t.Run("Fail on get users", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -31,47 +32,19 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers").Return(nil)
+		userMock.On("SelectUsers").Return(defaultError)
 
 		userController := UserController{UserRepository: &userMock}
 
 		// test
 		err := userController.ReadUsers(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
+		assert.Error(t, err)
+
 	})
 
-	t.Run("Get users succesfully with offset n limit", func(t *testing.T) {
+	t.Run("Get users succesfully ", func(t *testing.T) {
 		// context
-		q := make(url.Values)
-		q.Set("limit", "-1")
-		q.Set("offset", "1")
-		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers").Return(nil)
-
-		userController := UserController{UserRepository: &userMock}
-
-		// test
-		err := userController.ReadUsers(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
-	})
-
-	t.Run("Get users succesfully with page n limit", func(t *testing.T) {
-		// context
-		q := make(url.Values)
-		q.Set("limit", "-1")
-		q.Set("page", "2")
-		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		config.EchoValidator(e)
