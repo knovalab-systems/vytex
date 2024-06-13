@@ -22,9 +22,3 @@ type Session struct {
 	UserID       string
 	User         User
 }
-
-type SessionWithRole struct {
-	ID     int
-	UserID string
-	Role   string
-}

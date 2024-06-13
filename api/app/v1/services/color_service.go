@@ -13,7 +13,7 @@ func (m *ColorService) SelectColors(q *models.Query) ([]*models.Color, error) {
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.UsersBadRequest()
+		return nil, problems.ColorsBadRequest()
 	}
 
 	// def query

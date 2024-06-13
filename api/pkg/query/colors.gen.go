@@ -28,12 +28,12 @@ func newColor(db *gorm.DB, opts ...gen.DOOption) color {
 	tableName := _color.colorDo.TableName()
 	_color.ALL = field.NewAsterisk(tableName)
 	_color.ID = field.NewUint(tableName, "id")
-	_color.CreatedAt = field.NewTime(tableName, "created_at")
-	_color.UpdatedAt = field.NewTime(tableName, "updated_at")
-	_color.DeletedAt = field.NewField(tableName, "deleted_at")
 	_color.Name = field.NewString(tableName, "name")
 	_color.Code = field.NewString(tableName, "code")
 	_color.Hex = field.NewString(tableName, "hex")
+	_color.CreatedAt = field.NewTime(tableName, "created_at")
+	_color.UpdatedAt = field.NewTime(tableName, "updated_at")
+	_color.DeletedAt = field.NewField(tableName, "deleted_at")
 
 	_color.fillFieldMap()
 
@@ -45,12 +45,12 @@ type color struct {
 
 	ALL       field.Asterisk
 	ID        field.Uint
-	CreatedAt field.Time
-	UpdatedAt field.Time
-	DeletedAt field.Field
 	Name      field.String
 	Code      field.String
 	Hex       field.String
+	CreatedAt field.Time
+	UpdatedAt field.Time
+	DeletedAt field.Field
 
 	fieldMap map[string]field.Expr
 }
@@ -68,12 +68,12 @@ func (c color) As(alias string) *color {
 func (c *color) updateTableName(table string) *color {
 	c.ALL = field.NewAsterisk(table)
 	c.ID = field.NewUint(table, "id")
-	c.CreatedAt = field.NewTime(table, "created_at")
-	c.UpdatedAt = field.NewTime(table, "updated_at")
-	c.DeletedAt = field.NewField(table, "deleted_at")
 	c.Name = field.NewString(table, "name")
 	c.Code = field.NewString(table, "code")
 	c.Hex = field.NewString(table, "hex")
+	c.CreatedAt = field.NewTime(table, "created_at")
+	c.UpdatedAt = field.NewTime(table, "updated_at")
+	c.DeletedAt = field.NewField(table, "deleted_at")
 
 	c.fillFieldMap()
 
@@ -92,12 +92,12 @@ func (c *color) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 func (c *color) fillFieldMap() {
 	c.fieldMap = make(map[string]field.Expr, 7)
 	c.fieldMap["id"] = c.ID
-	c.fieldMap["created_at"] = c.CreatedAt
-	c.fieldMap["updated_at"] = c.UpdatedAt
-	c.fieldMap["deleted_at"] = c.DeletedAt
 	c.fieldMap["name"] = c.Name
 	c.fieldMap["code"] = c.Code
 	c.fieldMap["hex"] = c.Hex
+	c.fieldMap["created_at"] = c.CreatedAt
+	c.fieldMap["updated_at"] = c.UpdatedAt
+	c.fieldMap["deleted_at"] = c.DeletedAt
 }
 
 func (c color) clone(db *gorm.DB) color {

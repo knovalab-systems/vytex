@@ -9,31 +9,31 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type ColorController struct {
-	repository.ColorRepository
+type ResourceController struct {
+	repository.ResourceRepository
 }
 
-func (m *ColorController) ReadColors(c echo.Context) error {
+func (m *ResourceController) ReadResources(c echo.Context) error {
 
 	u := new(models.Query)
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.ColorsBadRequest()
+		return problems.ResourcesBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.ColorsBadRequest()
+		return problems.ResourcesBadRequest()
 	}
 
-	// get colors
-	colors, err := m.SelectColors(u)
+	// get resources
+	resources, err := m.SelectResources(u)
 	if err != nil {
 		return err
 	}
 
 	// return data
-	return c.JSON(http.StatusOK, colors)
+	return c.JSON(http.StatusOK, resources)
 
 }
