@@ -1,11 +1,11 @@
-import { roles } from '~/utils/roles';
-import type { GetUserType } from '../requests/getUserRequests';
 import { parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
-import { Timeline } from '~/components/ui/Timeline';
-import { convertTimeTo12 } from '~/utils/time';
 import { useNavigate } from '@solidjs/router';
-import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
 import { Button } from '~/components/ui/Button';
+import { Timeline } from '~/components/ui/Timeline';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
+import { roles } from '~/utils/roles';
+import { convertTimeTo12 } from '~/utils/time';
+import type { GetUserType } from '../requests/getUserRequests';
 
 function UserCard(props: { user: GetUserType }) {
 	const navigate = useNavigate();

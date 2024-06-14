@@ -1,9 +1,8 @@
-import { Navigate, type RouteSectionProps } from '@solidjs/router';
+import { Navigate } from '@solidjs/router';
 import { type JSXElement, Match, Switch } from 'solid-js';
-import { ADMIN_ROLE } from '~/utils/env';
 import RoleRoot from './RoleRoot';
 
-function MatchRole(props: {
+export default function MatchRole(props: {
 	children: JSXElement;
 	role: string;
 }) {
@@ -17,8 +16,4 @@ function MatchRole(props: {
 			</Match>
 		</Switch>
 	);
-}
-
-export function MatchAdmin(props: RouteSectionProps) {
-	return <MatchRole role={ADMIN_ROLE}>{props.children}</MatchRole>;
 }
