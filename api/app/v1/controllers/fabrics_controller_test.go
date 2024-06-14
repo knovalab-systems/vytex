@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadColors(t *testing.T) {
+func TestFabricsColors(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
-	t.Run("Fail on get colors", func(t *testing.T) {
+	t.Run("Fail on get fabrics", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -24,19 +24,19 @@ func TestReadColors(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		colorMock := mocks.ColorMock{}
-		colorMock.On("SelectColors").Return(defaultError)
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabrics").Return(defaultError)
 
 		// controller
-		userController := ColorController{ColorRepository: &colorMock}
+		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := userController.ReadColors(c)
+		err := fabricController.ReadResources(c)
 		assert.Error(t, err)
 
 	})
 
-	t.Run("Get colors succesfully ", func(t *testing.T) {
+	t.Run("Get fabrics succesfully ", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -45,14 +45,14 @@ func TestReadColors(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		colorMock := mocks.ColorMock{}
-		colorMock.On("SelectColors").Return(nil)
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabrics").Return(nil)
 
 		// controller
-		userController := ColorController{ColorRepository: &colorMock}
+		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := userController.ReadColors(c)
+		err := fabricController.ReadResources(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
