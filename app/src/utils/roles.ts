@@ -1,5 +1,5 @@
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from './env';
-import { designerRolePermissions, adminPermissions, noRolePermissions } from './permissions';
+import { adminPermissions, designerRolePermissions, noRolePermissions } from './permissions';
 
 export interface RoleItems {
 	label: string;

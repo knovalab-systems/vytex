@@ -20,7 +20,9 @@ function Home() {
 				</div>
 			}
 		>
-			<Match when={role() === NO_ROLE || role() === null}>{<NotPermission />}</Match>
+			<Match when={role() === NO_ROLE || role() === null}>
+				<NotPermission />
+			</Match>
 		</Switch>
 	);
 }

@@ -15,7 +15,7 @@ export default function MatchRole(props: {
 			</Match>
 			<Match when={role() === props.role}>{props.children}</Match>
 			<Match when={role() !== props.role}>
-				<Navigate href={'/'} />
+				<Navigate href={'/404'} />
 			</Match>
 		</Switch>
 	);

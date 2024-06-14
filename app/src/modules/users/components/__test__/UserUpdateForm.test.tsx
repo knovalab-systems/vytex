@@ -28,7 +28,7 @@ describe('UserUpdateForm', () => {
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
-		const roleIdFilterInput = screen.getByText('Selecciona un rol');
+		const roleIdFilterInput = screen.getByText('Rol');
 		const submitButton = screen.getByText('Guardar');
 		const cancelButton = screen.getByText('Cancelar');
 
