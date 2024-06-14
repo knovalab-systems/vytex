@@ -9,7 +9,10 @@ export default function MatchRole(props: {
 	const { role } = RoleRoot;
 
 	return (
-		<Switch fallback={<div />}>
+		<Switch>
+			<Match when={role() === null}>
+				<div />
+			</Match>
 			<Match when={role() === props.role}>{props.children}</Match>
 			<Match when={role() !== props.role}>
 				<Navigate href={'/'} />

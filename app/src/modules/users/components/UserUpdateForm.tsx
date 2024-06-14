@@ -13,6 +13,7 @@ import type { GetUserType } from '../requests/getUserRequests';
 import { updateUserRequest } from '../requests/updateUserRequests';
 import type { User } from '../schemas/userSchema';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
+import { NO_ROLE } from '~/utils/env';
 
 function UserUpdateForm(props: { user: GetUserType }) {
 	const navigate = useNavigate();
@@ -21,7 +22,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 		initialValues: {
 			name: props.user?.name,
 			username: props.user?.username,
-			role: props.user?.role,
+			role: props.user?.role || NO_ROLE,
 			delete_at: !props.user?.delete_at ? 'Activo' : 'Inactivo',
 		},
 	});

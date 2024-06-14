@@ -6,6 +6,7 @@ import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
 import { roles } from '~/utils/roles';
 import { convertTimeTo12 } from '~/utils/time';
 import type { GetUserType } from '../requests/getUserRequests';
+import { NO_ROLE } from '~/utils/env';
 
 function UserCard(props: { user: GetUserType }) {
 	const navigate = useNavigate();
@@ -47,7 +48,7 @@ function UserCard(props: { user: GetUserType }) {
 					<ValuesWithTitles support='Nombre' title={user()?.name} />
 					<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
 					<ValuesWithTitles support='Estado' title={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
-					<ValuesWithTitles support='Rol' title={roles[user()?.role].label} />
+					<ValuesWithTitles support='Rol' title={roles[user()?.role || NO_ROLE].label} />
 				</div>
 				<div class='mx-auto'>
 					<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />

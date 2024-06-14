@@ -16,12 +16,13 @@ import { TableCell } from '~/components/ui/Table';
 import { type RoleItems, roleList, roles } from '~/utils/roles';
 import { updateUserRequest } from '../requests/updateUserRequests';
 import type { User } from '../schemas/userSchema';
+import { NO_ROLE } from '~/utils/env';
 
 function RoleCell(props: {
 	roleValue: string;
 	userId: string;
 }) {
-	const [role, setRole] = createSignal(roles[props.roleValue]);
+	const [role, setRole] = createSignal(roles[props.roleValue] || roles[NO_ROLE]);
 	const [value, setValue] = createSignal(roles[props.roleValue]);
 	const [edit, setEdit] = createSignal(false);
 
