@@ -7,35 +7,35 @@ import (
 	"gorm.io/gen/field"
 )
 
-type ResourceService struct {
+type FabricService struct {
 }
 
-func (m *ResourceService) SelectResources(q *models.Query) ([]*models.ResourceV, error) {
+func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.FabricV, error) {
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ResourcesBadRequest()
+		return nil, problems.FabricBadRequest()
 	}
 
 	// def query
-	table := query.ResourceV
+	table := query.FabricV
 	table2 := table.As("u2")
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// def subquery
 	subQuery := table.Unscoped().
-		Group(table.ResourceId).
-		Select(table.ResourceId, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.FabricId).
+		Select(table.FabricId, table.CreatedAt.Max().As("created_at_max")).
 		As("u2")
 
 	// run query
-	resources, err := s.Unscoped().Preload(table.Resource.Color).Preload(table.Resource).
-		LeftJoin(subQuery, table2.ResourceId.EqCol(table.ResourceId)).
+	fabrics, err := s.Unscoped().Preload(table.Fabric.Color).Preload(table.Fabric).
+		LeftJoin(subQuery, table2.FabricId.EqCol(table.FabricId)).
 		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
-	return resources, nil
+	return fabrics, nil
 }
