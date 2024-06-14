@@ -11,6 +11,6 @@ func privateResourceRoutes(g *echo.Group) {
 
 	resourceController := controllers.ResourceController{ResourceRepository: &services.ResourceService{}}
 
-	route.GET("/", resourceController.ReadResources)
+	route.GET("", resourceController.ReadResources)
 
 }

@@ -11,6 +11,6 @@ func privateColorRoutes(g *echo.Group) {
 
 	colorController := controllers.ColorController{ColorRepository: &services.ColorService{}}
 
-	route.GET("/", colorController.ReadColors)
+	route.GET("", colorController.ReadColors)
 
 }
