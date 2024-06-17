@@ -30,7 +30,7 @@ function NavWrapper(props: RouteSectionProps) {
 		],
 		[DESIGNER_ROLE]: [
 			{ name: 'Home', icon: () => null, path: '/', end: true },
-			{ name: 'Usuarios', icon: () => null, path: PATHS.USERS_PATH },
+			{ name: 'Referencias', icon: () => null, path: PATHS.REFS_PATH },
 		],
 	};
 
