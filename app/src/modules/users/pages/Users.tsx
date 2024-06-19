@@ -45,7 +45,7 @@ function Users() {
 			/>
 			<Switch>
 				<Match when={users.isLoading && usersCount.isLoading}>
-					<Loading />
+					<Loading label='Cargando usuario' />
 				</Match>
 				<Match when={users.isSuccess && usersCount.isSuccess}>
 					<UserTable users={users.data} />

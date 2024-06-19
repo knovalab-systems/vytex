@@ -5,7 +5,7 @@ import { cn } from '~/lib/utils';
 
 const TableContainer: Component<ComponentProps<'div'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
-	return <div class={cn('rounded-lg shadow-md overflow-auto')} {...rest} />;
+	return <div class={cn('rounded-lg shadow-md overflow-auto', props.class)} {...rest} />;
 };
 
 const Table: Component<ComponentProps<'table'>> = props => {
