@@ -86,7 +86,6 @@ function ReferenceCreateForm(props: {
 												<div class='flex gap-4 w-full'>
 													<LabelSpan class='my-auto whitespace-nowrap'>Color de la referencia</LabelSpan>
 													<Select
-														aria-errormessage={field.error}
 														class='whitespace-nowrap min-w-48'
 														value={field.value}
 														onChange={value => {
@@ -106,7 +105,7 @@ function ReferenceCreateForm(props: {
 														)}
 														options={props.colors.map(color => color.id)}
 													>
-														<SelectTrigger aria-label='Colores' role='listbox'>
+														<SelectTrigger aria-errormessage={field.error} aria-label='Colores' role='listbox'>
 															<SelectValue<string>>
 																{state => (
 																	<div class='flex gap-2'>

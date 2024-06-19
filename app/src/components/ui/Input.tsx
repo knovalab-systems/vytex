@@ -10,9 +10,10 @@ const Input: Component<ComponentProps<'input'>> = props => {
 			<input
 				type={props.type}
 				class={cn(
+					'w-full p-2 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300',
 					props['aria-errormessage']
-						? 'w-full p-2 border text-sm border-gray-300 rounded-md outline-none ring-2 ring-red-600 transition-colors duration-300'
-						: 'w-full p-2 border text-sm border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-300',
+						? 'w-full p-2 border text-sm border-gray-300 rounded-md outline-none ring-2 ring-red-600 focus:ring-red-700 transition-colors duration-300'
+						: '',
 					props.class,
 				)}
 				{...rest}
