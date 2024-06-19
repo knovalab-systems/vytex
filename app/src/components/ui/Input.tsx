@@ -1,5 +1,5 @@
 import type { Component, ComponentProps } from 'solid-js';
-import { splitProps } from 'solid-js';
+import { Show, splitProps } from 'solid-js';
 
 import { cn } from '~/lib/utils';
 
@@ -17,7 +17,9 @@ const Input: Component<ComponentProps<'input'>> = props => {
 				)}
 				{...rest}
 			/>
-			{props['aria-errormessage'] && <div class={'text-sm text-red-600'}>{props['aria-errormessage']}</div>}
+			<Show when={!!props['aria-errormessage']}>
+				<div class={'text-sm text-red-600'}>{props['aria-errormessage']}</div>
+			</Show>
 		</>
 	);
 };

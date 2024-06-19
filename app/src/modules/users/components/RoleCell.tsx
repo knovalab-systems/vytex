@@ -13,10 +13,10 @@ import {
 } from '~/components/ui/Dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { TableCell } from '~/components/ui/Table';
+import type { User } from '~/schemas/coreSchema';
 import { NO_ROLE } from '~/utils/env';
 import { type RoleItems, roleList, roles } from '~/utils/roles';
 import { updateUserRequest } from '../requests/updateUserRequests';
-import type { User } from '../schemas/userSchema';
 
 function RoleCell(props: {
 	roleValue: string;

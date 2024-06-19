@@ -17,6 +17,8 @@ async function getColorsByRefCreate() {
 	);
 }
 
+export type colorsByRefCreate = Awaited<ReturnType<typeof getColorsByRefCreate>>;
+
 export function getFabricsByRefCreateQuery() {
 	return queryOptions({
 		queryFn: getFabricsByRefCreate,
@@ -32,6 +34,8 @@ async function getFabricsByRefCreate() {
 	);
 }
 
+export type FabricsByRefCreate = Awaited<ReturnType<typeof getFabricsByRefCreate>>;
+
 export function getResourcesByRefCreateQuery() {
 	return queryOptions({
 		queryFn: getResourcesByRefCreate,
@@ -46,3 +50,5 @@ async function getResourcesByRefCreate() {
 		}),
 	);
 }
+
+export type ResourcesByRefCreate = Awaited<ReturnType<typeof getResourcesByRefCreate>>;

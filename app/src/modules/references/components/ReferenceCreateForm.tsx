@@ -1,24 +1,35 @@
-import { type SubmitHandler, createForm, getValues, insert, remove, valiForm } from '@modular-forms/solid';
+import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
-import { FiPlus, FiCopy, FiTrash2 } from 'solid-icons/fi';
-import { For } from 'solid-js';
+import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
+import { For, Show } from 'solid-js';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import type { Color } from '~/schemas/coreSchema';
 import { SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
 import { REFS_PATH } from '~/utils/paths';
+import type { FabricsByRefCreate, ResourcesByRefCreate, colorsByRefCreate } from '../request/ReferenceCreateRequest';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreateSchema';
 
-function ReferenceCreateForm() {
+function ReferenceCreateForm(props: {
+	colors: colorsByRefCreate;
+	fabrics?: FabricsByRefCreate;
+	resources?: ResourcesByRefCreate;
+}) {
 	const navigate = useNavigate();
+	const colorsObject = () =>
+		props.colors.reduce((prev: Record<string, Color>, v) => {
+			prev[v.id] = v;
+			return prev;
+		}, {});
 
 	const [form, { Form, Field, FieldArray }] = createForm<ReferenceCreateType>({
 		validate: valiForm(ReferenceCreateSchema),
 		initialValues: {
 			colors: [
 				{
-					color: 0,
 					resources: [{ resource: '', sizes: defaultSizeSchema }],
 				},
 			],
@@ -71,20 +82,53 @@ function ReferenceCreateForm() {
 								<div class='overflow-x-auto mb-auto justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 									<div class='flex flex-col gap-2 w-fit'>
 										<Field name={`${fieldColors.name}.${iColor()}.color`} type='number'>
-											{(field, props) => (
+											{field => (
 												<div class='flex gap-4 w-full'>
 													<LabelSpan class='my-auto whitespace-nowrap'>Color de la referencia</LabelSpan>
-													<Input
-														type='number'
-														placeholder='3453 '
-														autocomplete='on'
+													<Select
 														aria-errormessage={field.error}
-														required
+														class='whitespace-nowrap min-w-48'
 														value={field.value}
-														{...props}
-													/>
+														onChange={value => {
+															setValue(form, `${fieldColors.name}.${iColor()}.color`, value);
+														}}
+														placeholder='Selecciona un color'
+														itemComponent={props => (
+															<SelectItem item={props.item}>
+																<div class='flex gap-2'>
+																	<div
+																		class='h-5 w-5 m-auto border'
+																		style={{ background: colorsObject()[props.item.rawValue]?.hex || '' }}
+																	/>
+																	{colorsObject()[props.item.rawValue]?.name}
+																</div>
+															</SelectItem>
+														)}
+														options={props.colors.map(color => color.id)}
+													>
+														<SelectTrigger aria-label='Colores' role='listbox'>
+															<SelectValue<string>>
+																{state => (
+																	<div class='flex gap-2'>
+																		<Show when={!!colorsObject()[state.selectedOption()]}>
+																			<div
+																				class='h-5 w-5 m-auto border'
+																				style={{ background: colorsObject()[state.selectedOption()]?.hex || '' }}
+																			/>
+																		</Show>
+
+																		{colorsObject()[state.selectedOption()]?.name || 'Selecciona un color'}
+																	</div>
+																)}
+															</SelectValue>
+														</SelectTrigger>
+														<SelectContent />
+													</Select>
+													<Show when={!!field.error}>
+														<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+													</Show>
 													<Button
-														class='whitespace-nowrap gap-1 bg-red-500 hover:bg-red-600'
+														class='ml-auto whitespace-nowrap gap-1 bg-red-500 hover:bg-red-600'
 														disabled={fieldColors.items.length === 1}
 														onClick={() => remove(form, fieldColors.name, { at: iColor() })}
 													>

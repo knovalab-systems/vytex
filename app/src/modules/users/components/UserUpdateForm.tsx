@@ -6,13 +6,13 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
+import type { User } from '~/schemas/coreSchema';
 import { STATUS_CODE, STATUS_OPTIONS } from '~/utils/constants';
 import { NO_ROLE } from '~/utils/env';
 import { USERS_PATH } from '~/utils/paths';
 import { roleList, roles } from '~/utils/roles';
 import type { GetUserType } from '../requests/getUserRequests';
 import { updateUserRequest } from '../requests/updateUserRequests';
-import type { User } from '../schemas/userSchema';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
 
 function UserUpdateForm(props: { user: GetUserType }) {
@@ -117,7 +117,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 					{field => (
 						<div>
 							<LabelSpan>Rol</LabelSpan>
-							<Select<string>
+							<Select
 								value={field.value}
 								onChange={value => {
 									setValue(form, 'role', value);

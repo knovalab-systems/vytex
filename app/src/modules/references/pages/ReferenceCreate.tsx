@@ -1,12 +1,13 @@
 import { createQueries } from '@tanstack/solid-query';
+import { Match, Switch } from 'solid-js';
+import Loading from '~/components/Loading';
 import ReferenceCreateForm from '../components/ReferenceCreateForm';
 import {
+	type colorsByRefCreate,
 	getColorsByRefCreateQuery,
 	getFabricsByRefCreateQuery,
 	getResourcesByRefCreateQuery,
 } from '../request/ReferenceCreateRequest';
-import { Match, Switch } from 'solid-js';
-import Loading from '~/components/Loading';
 
 function ReferenceCreate() {
 	const data = createQueries(() => ({
@@ -24,7 +25,7 @@ function ReferenceCreate() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<ReferenceCreateForm />
+					<ReferenceCreateForm colors={data[0].data as colorsByRefCreate} />
 				</Match>
 			</Switch>
 		</div>
