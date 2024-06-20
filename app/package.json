@@ -17,10 +17,10 @@
 	},
 	"dependencies": {
 		"@internationalized/date": "^3.5.4",
-		"@kobalte/core": "^0.13.3",
+		"@kobalte/core": "^0.13.2",
 		"@modular-forms/solid": "^0.21.0",
 		"@solidjs/router": "^0.12.5",
-		"@tanstack/solid-query": "^5.35.5",
+		"@tanstack/solid-query": "^5.40.0",
 		"@vytex/client": "0.0.0",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
