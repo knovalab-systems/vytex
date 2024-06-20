@@ -3,6 +3,16 @@ import { useNavigate } from '@solidjs/router';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
 import { For, Show } from 'solid-js';
 import { Button } from '~/components/ui/Button';
+import {
+	Combobox,
+	ComboboxContent,
+	ComboboxControl,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxItemIndicator,
+	ComboboxItemLabel,
+	ComboboxTrigger,
+} from '~/components/ui/Combobox';
 import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
@@ -13,12 +23,33 @@ import { REFS_PATH } from '~/utils/paths';
 import type { FabricsByRefCreate, ResourcesByRefCreate, colorsByRefCreate } from '../request/ReferenceCreateRequest';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreateSchema';
 
+type Combined = {
+	isFabric: boolean;
+	id: string;
+	name: string;
+};
+
 function ReferenceCreateForm(props: {
 	colors: colorsByRefCreate;
-	fabrics?: FabricsByRefCreate;
-	resources?: ResourcesByRefCreate;
+	fabrics: FabricsByRefCreate;
+	resources: ResourcesByRefCreate;
 }) {
 	const navigate = useNavigate();
+
+	const resources: () => Combined[] = () => [
+		...props.resources.map(i => ({ isFabric: false, id: `r${i.id}`, name: i.resource.name })),
+		...props.fabrics.map(i => ({ isFabric: true, id: `f${i.id}`, name: i.fabric.name })),
+	];
+
+	const resourceObject = () =>
+		resources().reduce(
+			(prev: Record<string, Combined>, v) => {
+				prev[v.id] = v;
+				return prev;
+			},
+			{ '': { name: 'Nada', id: '', isFabric: false } },
+		);
+
 	const colorsObject = () =>
 		props.colors.reduce((prev: Record<string, Color>, v) => {
 			prev[v.id] = v;
@@ -156,14 +187,48 @@ function ReferenceCreateForm(props: {
 																	<TableBody>
 																		<TableRow class='*:p-2'>
 																			<Field name={`${fieldResources.name}.${iResource()}.resource`}>
-																				{(field, props) => (
+																				{field => (
 																					<TableCell>
-																						<Input
-																							placeholder='3453'
-																							aria-errormessage={field.error}
-																							value={field.value}
-																							{...props}
-																						/>
+																						<Combobox<Combined>
+																							class='whitespace-nowrap min-w-48'
+																							value={resourceObject()[field.value || '']}
+																							onChange={value => {
+																								setValue(
+																									form,
+																									`${fieldResources.name}.${iResource()}.resource`,
+																									value ? value.id : '',
+																								);
+																							}}
+																							onInputChange={value => {
+																								if (value === '') {
+																									setValue(form, `${fieldResources.name}.${iResource()}.resource`, '');
+																								}
+																							}}
+																							multiple={false}
+																							optionLabel='name'
+																							optionValue='id'
+																							placeholder='Selecciona un color'
+																							itemComponent={props => (
+																								<ComboboxItem item={props.item}>
+																									<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
+																									<ComboboxItemIndicator />
+																								</ComboboxItem>
+																							)}
+																							options={resources()}
+																						>
+																							<ComboboxControl
+																								aria-errormessage={field.error}
+																								aria-label='Colores'
+																								role='listbox'
+																							>
+																								<ComboboxInput />
+																								<ComboboxTrigger />
+																							</ComboboxControl>
+																							<Show when={!!field.error}>
+																								<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+																							</Show>
+																							<ComboboxContent />
+																						</Combobox>
 																					</TableCell>
 																				)}
 																			</Field>

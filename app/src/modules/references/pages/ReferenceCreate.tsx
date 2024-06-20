@@ -3,6 +3,8 @@ import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
 import ReferenceCreateForm from '../components/ReferenceCreateForm';
 import {
+	type FabricsByRefCreate,
+	type ResourcesByRefCreate,
 	type colorsByRefCreate,
 	getColorsByRefCreateQuery,
 	getFabricsByRefCreateQuery,
@@ -25,7 +27,11 @@ function ReferenceCreate() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<ReferenceCreateForm colors={data[0].data as colorsByRefCreate} />
+					<ReferenceCreateForm
+						colors={data[0].data as colorsByRefCreate}
+						fabrics={data[1].data as FabricsByRefCreate}
+						resources={data[2].data as ResourcesByRefCreate}
+					/>
 				</Match>
 			</Switch>
 		</div>
