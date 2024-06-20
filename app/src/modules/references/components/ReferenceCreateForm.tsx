@@ -121,11 +121,12 @@ function ReferenceCreateForm(props: {
 																)}
 															</SelectValue>
 														</SelectTrigger>
+														<Show when={!!field.error}>
+															<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+														</Show>
 														<SelectContent />
 													</Select>
-													<Show when={!!field.error}>
-														<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
-													</Show>
+
 													<Button
 														class='ml-auto whitespace-nowrap gap-1 bg-red-500 hover:bg-red-600'
 														disabled={fieldColors.items.length === 1}
