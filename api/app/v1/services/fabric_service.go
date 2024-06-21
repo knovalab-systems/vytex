@@ -10,7 +10,7 @@ import (
 type FabricService struct {
 }
 
-func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.FabricV, error) {
+func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error) {
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
@@ -18,19 +18,18 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.FabricV, error
 	}
 
 	// def query
-	table := query.FabricV
+	table := query.Fabric
 	table2 := table.As("u2")
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// def subquery
 	subQuery := table.Unscoped().
-		Group(table.FabricId).
-		Select(table.FabricId, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.Key).
+		Select(table.Key, table.CreatedAt.Max().As("created_at_max")).
 		As("u2")
 
 	// run query
-	fabrics, err := s.Unscoped().Preload(table.Fabric.Color).Preload(table.Fabric).
-		LeftJoin(subQuery, table2.FabricId.EqCol(table.FabricId)).
+	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).
 		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
 		Find()
 	if err != nil {

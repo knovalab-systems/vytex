@@ -37,8 +37,8 @@ function ReferenceCreateForm(props: {
 	const navigate = useNavigate();
 
 	const resources: () => Combined[] = () => [
-		...props.resources.map(i => ({ isFabric: false, id: `r${i.id}`, name: i.resource.name })),
-		...props.fabrics.map(i => ({ isFabric: true, id: `f${i.id}`, name: i.fabric.name })),
+		...props.resources.map(i => ({ isFabric: false, id: `r${i.id}`, name: i.name })),
+		...props.fabrics.map(i => ({ isFabric: true, id: `f${i.id}`, name: i.name })),
 	];
 
 	const resourceObject = () =>
@@ -290,14 +290,14 @@ function ReferenceCreateForm(props: {
 								</div>
 							)}
 						</For>
-						<div class='flex justify-end m-2 gap-2'>
+						<div class='flex justify-end my-2 gap-2'>
 							<Button
 								class='whitespace-nowrap gap-1 bg-blue-600 hover:bg-blue-700'
 								onClick={() => {
 									const values = getValues(form, fieldColors.name);
 									const value = values[fieldColors.items.length - 1];
 									insert(form, fieldColors.name, {
-										// @ts-ignore maybe value is conflict
+										// @ts-ignore values can be undefined
 										value: value,
 									});
 								}}

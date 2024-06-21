@@ -9,7 +9,7 @@ type FabricMock struct {
 	mock.Mock
 }
 
-func (m *FabricMock) SelectFabrics(req *models.Query) ([]*models.FabricV, error) {
+func (m *FabricMock) SelectFabrics(req *models.Query) ([]*models.Fabric, error) {
 	args := m.Called()
-	return []*models.FabricV{}, args.Error(0)
+	return []*models.Fabric{}, args.Error(0)
 }

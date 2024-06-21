@@ -10,7 +10,7 @@ import (
 type ResourceService struct {
 }
 
-func (m *ResourceService) SelectResources(q *models.Query) ([]*models.ResourceV, error) {
+func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, error) {
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
@@ -18,20 +18,19 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.ResourceV,
 	}
 
 	// def query
-	table := query.ResourceV
-	table2 := table.As("u2")
+	table := query.Resource
+	table2 := table.As("table2")
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// def subquery
 	subQuery := table.Unscoped().
-		Group(table.ResourceId).
-		Select(table.ResourceId, table.CreatedAt.Max().As("created_at_max")).
-		As("u2")
+		Group(table.Key).
+		Select(table.Key, table.CreatedAt.Max().As("created_at_max")).
+		As("table2")
 
 	// run query
-	resources, err := s.Unscoped().Preload(table.Resource.Color).Preload(table.Resource).
-		LeftJoin(subQuery, table2.ResourceId.EqCol(table.ResourceId)).
-		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
+	resources, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).
+		Where(field.NewInt64("table2", "created_at_max").EqCol(table.CreatedAt)).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()

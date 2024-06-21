@@ -21,7 +21,7 @@ type User struct {
 	UpdatedAt time.Time      `json:"update_at"`
 }
 
-// BeforeCreate will set a UUID rather than numeric ID.
+// BeforeCreate will set a UUID
 func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 	if len(b.ID) == 0 {
 		b.ID = uuid.New().String()
@@ -31,7 +31,7 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 		b.Role = utils.NoRole()
 
 	}
-	return
+	return nil
 }
 
 type ReadUser struct {

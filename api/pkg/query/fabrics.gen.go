@@ -28,9 +28,13 @@ func newFabric(db *gorm.DB, opts ...gen.DOOption) fabric {
 	tableName := _fabric.fabricDo.TableName()
 	_fabric.ALL = field.NewAsterisk(tableName)
 	_fabric.ID = field.NewUint(tableName, "id")
+	_fabric.Key = field.NewString(tableName, "key")
 	_fabric.Name = field.NewString(tableName, "name")
+	_fabric.Cost = field.NewFloat64(tableName, "cost")
 	_fabric.Code = field.NewString(tableName, "code")
 	_fabric.ColorID = field.NewUint(tableName, "color_id")
+	_fabric.CreatedAt = field.NewTime(tableName, "created_at")
+	_fabric.DeletedAt = field.NewField(tableName, "deleted_at")
 	_fabric.Color = fabricBelongsToColor{
 		db: db.Session(&gorm.Session{}),
 
@@ -45,12 +49,16 @@ func newFabric(db *gorm.DB, opts ...gen.DOOption) fabric {
 type fabric struct {
 	fabricDo
 
-	ALL     field.Asterisk
-	ID      field.Uint
-	Name    field.String
-	Code    field.String
-	ColorID field.Uint
-	Color   fabricBelongsToColor
+	ALL       field.Asterisk
+	ID        field.Uint
+	Key       field.String
+	Name      field.String
+	Cost      field.Float64
+	Code      field.String
+	ColorID   field.Uint
+	CreatedAt field.Time
+	DeletedAt field.Field
+	Color     fabricBelongsToColor
 
 	fieldMap map[string]field.Expr
 }
@@ -68,9 +76,13 @@ func (f fabric) As(alias string) *fabric {
 func (f *fabric) updateTableName(table string) *fabric {
 	f.ALL = field.NewAsterisk(table)
 	f.ID = field.NewUint(table, "id")
+	f.Key = field.NewString(table, "key")
 	f.Name = field.NewString(table, "name")
+	f.Cost = field.NewFloat64(table, "cost")
 	f.Code = field.NewString(table, "code")
 	f.ColorID = field.NewUint(table, "color_id")
+	f.CreatedAt = field.NewTime(table, "created_at")
+	f.DeletedAt = field.NewField(table, "deleted_at")
 
 	f.fillFieldMap()
 
@@ -87,11 +99,15 @@ func (f *fabric) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *fabric) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 5)
+	f.fieldMap = make(map[string]field.Expr, 9)
 	f.fieldMap["id"] = f.ID
+	f.fieldMap["key"] = f.Key
 	f.fieldMap["name"] = f.Name
+	f.fieldMap["cost"] = f.Cost
 	f.fieldMap["code"] = f.Code
 	f.fieldMap["color_id"] = f.ColorID
+	f.fieldMap["created_at"] = f.CreatedAt
+	f.fieldMap["deleted_at"] = f.DeletedAt
 
 }
 

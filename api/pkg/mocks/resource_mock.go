@@ -9,7 +9,7 @@ type ResourceMock struct {
 	mock.Mock
 }
 
-func (m *ResourceMock) SelectResources(req *models.Query) ([]*models.ResourceV, error) {
+func (m *ResourceMock) SelectResources(req *models.Query) ([]*models.Resource, error) {
 	args := m.Called()
-	return []*models.ResourceV{}, args.Error(0)
+	return []*models.Resource{}, args.Error(0)
 }
