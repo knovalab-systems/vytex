@@ -7,7 +7,7 @@ import { Label } from '~/components/ui/Label';
 import { STATUS_CODE } from '~/utils/constants';
 import { USERS_PATH } from '~/utils/paths';
 import { roleList } from '~/utils/roles';
-import { createUserRequest } from '../requests/createUserRequests';
+import { createUserRequest } from '../requests/userCreateRequests';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreateSchema';
 
 function UserCreateForm() {

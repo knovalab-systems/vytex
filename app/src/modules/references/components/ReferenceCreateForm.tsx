@@ -20,7 +20,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, Ta
 import type { Color } from '~/schemas/coreSchema';
 import { SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
 import { REFS_PATH } from '~/utils/paths';
-import type { FabricsByRefCreate, ResourcesByRefCreate, colorsByRefCreate } from '../request/ReferenceCreateRequest';
+import type { FabricsByRefCreate, ResourcesByRefCreate, colorsByRefCreate } from '../request/referenceCreateRequest';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreateSchema';
 
 type Combined = {

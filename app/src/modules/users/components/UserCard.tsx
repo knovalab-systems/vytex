@@ -6,7 +6,7 @@ import { NO_ROLE } from '~/utils/env';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
 import { roles } from '~/utils/roles';
 import { convertTimeTo12 } from '~/utils/time';
-import type { GetUserType } from '../requests/getUserRequests';
+import type { GetUserType } from '../requests/userGetRequests';
 
 function UserCard(props: { user: GetUserType }) {
 	const navigate = useNavigate();

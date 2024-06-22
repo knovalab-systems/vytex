@@ -4,7 +4,7 @@ import toast from 'solid-toast';
 import { Switch } from '~/components/ui/Switch';
 import { TableCell } from '~/components/ui/Table';
 import type { User } from '~/schemas/coreSchema';
-import { updateUserRequest } from '../requests/updateUserRequests';
+import { updateUserRequest } from '../requests/userUpdateRequests';
 
 function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 	const [status, setStatus] = createSignal(!props.delete_at);

@@ -1,7 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GetUsersType } from '../../requests/getUserRequests';
+import type { GetUsersType } from '../../requests/userGetRequests';
 import UserTable from '../UserTable';
 
 const mockRole = vi.fn();

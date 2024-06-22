@@ -11,8 +11,8 @@ import { STATUS_CODE, STATUS_OPTIONS } from '~/utils/constants';
 import { NO_ROLE } from '~/utils/env';
 import { USERS_PATH } from '~/utils/paths';
 import { roleList, roles } from '~/utils/roles';
-import type { GetUserType } from '../requests/getUserRequests';
-import { updateUserRequest } from '../requests/updateUserRequests';
+import type { GetUserType } from '../requests/userGetRequests';
+import { updateUserRequest } from '../requests/userUpdateRequests';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
 
 function UserUpdateForm(props: { user: GetUserType }) {
