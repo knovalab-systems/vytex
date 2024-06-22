@@ -40,7 +40,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// get users
-	users, err := m.SelectUsers(u)
+	users, err := m.UserRepository.ReadUsers(u)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (m *UserController) ReadUser(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.SelectUser(u)
+	user, err := m.UserRepository.ReadUser(u)
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.SelectUser(u)
+	user, err := m.UserRepository.ReadUser(u)
 	if err != nil {
 		return err
 	}
@@ -197,7 +197,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 // @Failure      500
 // @Router       /users [post]
 func (m *UserController) CreateUser(c echo.Context) error {
-	u := new(models.CreateUserBody)
+	u := new(models.UserCreateBody)
 
 	// bind
 	if err := c.Bind(u); err != nil {

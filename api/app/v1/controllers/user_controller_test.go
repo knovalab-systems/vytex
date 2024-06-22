@@ -32,7 +32,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers").Return(defaultError)
+		userMock.On("ReadUsers").Return(defaultError)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -52,7 +52,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUsers").Return(nil)
+		userMock.On("ReadUsers").Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -120,7 +120,7 @@ func TestGetUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUser").Return(errors.New("Error"))
+		userMock.On("ReadUser").Return(errors.New("Error"))
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -140,7 +140,7 @@ func TestGetUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUser").Return(nil, nil)
+		userMock.On("ReadUser").Return(nil, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -184,7 +184,7 @@ func TestReadMe(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUser").Return(errors.New("Error"))
+		userMock.On("ReadUser").Return(errors.New("Error"))
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -203,7 +203,7 @@ func TestReadMe(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("SelectUser").Return(nil, nil)
+		userMock.On("ReadUser").Return(nil, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test

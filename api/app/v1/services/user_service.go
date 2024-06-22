@@ -15,7 +15,7 @@ import (
 type UserService struct {
 }
 
-func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
+func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
@@ -43,7 +43,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	return users, nil
 }
 
-func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
+func (m *UserService) ReadUser(q *models.ReadUser) (*models.User, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()
@@ -125,7 +125,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 	return user, nil
 }
 
-func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
+func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error) {
 	table := query.User
 
 	// check user existence
