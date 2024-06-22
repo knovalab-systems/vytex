@@ -13,7 +13,7 @@ export type VytexResource<Schema extends object> = MergeCoreCollection<
 		cost: number | null;
 		name: string | null;
 		code: string | null;
-		colorId: number | null;
+		color_id: number | null;
 		color: VytexColor<Schema[]>;
 		delete_at: string | null;
 		create_at: string | null;

@@ -13,7 +13,7 @@ type Fabric struct {
 	Name      string         `json:"name"`
 	Cost      float64        `json:"cost" gorm:"type:float"`
 	Code      string         `json:"code"`
-	ColorID   uint           `json:"colorId"`
+	ColorID   uint           `json:"color_id"`
 	Color     *Color         `json:"color,omitempty"`
 	CreatedAt time.Time      `json:"create_at"`
 	DeletedAt gorm.DeletedAt `json:"delete_at" gorm:"index"`
