@@ -37,7 +37,10 @@ func Db(host string) *gorm.DB {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
 
-	err = db.AutoMigrate(&models.User{}, &models.Session{}, &models.Color{}, &models.Resource{}, &models.Fabric{})
+	err = db.AutoMigrate(&models.User{}, &models.Session{},
+		&models.Color{}, &models.Resource{}, &models.Fabric{},
+		&models.Reference{}, &models.ColorByReference{},
+		&models.ResourceByReferenceCreate{}, &models.FabricByReferenceCreate{})
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}
