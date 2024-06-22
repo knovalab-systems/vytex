@@ -101,6 +101,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
+	// get user id from jwt
 	userJWT := c.Get("user").(*jwt.Token)
 	claims := userJWT.Claims.(*utils.JWTClaims)
 	u.ID = claims.User
@@ -211,9 +212,9 @@ func (m *UserController) CreateUser(c echo.Context) error {
 
 	// create
 	user, err := m.UserRepository.CreateUser(u)
-
 	if err != nil {
 		return err
 	}
+
 	return c.JSON(http.StatusCreated, user)
 }

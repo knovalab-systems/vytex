@@ -2,10 +2,12 @@ package services
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -126,8 +128,6 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 }
 
 func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error) {
-	table := query.User
-
 	// check user existence
 	err := checkUsername(u.Username)
 	if err != nil {
@@ -147,7 +147,7 @@ func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error)
 		Role:     u.Role,
 	}
 
-	err = table.Create(user)
+	err = query.User.Create(user)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -159,16 +159,15 @@ func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error)
 
 func checkUsername(username string) error {
 	table := query.User
-	count, err := table.Where(table.Username.Eq(username)).Count()
+
+	_, err := table.Unscoped().Where(table.Username.Eq(username)).First()
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
 		return problems.ServerError()
 	}
-
-	if count > 0 {
-		return problems.UserExists()
-	}
-
-	return nil
+	return problems.UserExists()
 }
 
 func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
