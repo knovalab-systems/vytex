@@ -40,7 +40,7 @@ func Db(host string) *gorm.DB {
 	err = db.AutoMigrate(&models.User{}, &models.Session{},
 		&models.Color{}, &models.Resource{}, &models.Fabric{},
 		&models.Reference{}, &models.ColorByReference{},
-		&models.ResourceByReferenceCreate{}, &models.FabricByReferenceCreate{})
+		&models.ResourceByReference{}, &models.FabricByReference{})
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}

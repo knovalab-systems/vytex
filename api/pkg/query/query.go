@@ -16,16 +16,16 @@ import (
 )
 
 var (
-	Q                         = new(Query)
-	Color                     *color
-	ColorByReference          *colorByReference
-	Fabric                    *fabric
-	FabricByReferenceCreate   *fabricByReferenceCreate
-	Reference                 *reference
-	Resource                  *resource
-	ResourceByReferenceCreate *resourceByReferenceCreate
-	Session                   *session
-	User                      *user
+	Q                   = new(Query)
+	Color               *color
+	ColorByReference    *colorByReference
+	Fabric              *fabric
+	FabricByReference   *fabricByReference
+	Reference           *reference
+	Resource            *resource
+	ResourceByReference *resourceByReference
+	Session             *session
+	User                *user
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -33,57 +33,57 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Color = &Q.Color
 	ColorByReference = &Q.ColorByReference
 	Fabric = &Q.Fabric
-	FabricByReferenceCreate = &Q.FabricByReferenceCreate
+	FabricByReference = &Q.FabricByReference
 	Reference = &Q.Reference
 	Resource = &Q.Resource
-	ResourceByReferenceCreate = &Q.ResourceByReferenceCreate
+	ResourceByReference = &Q.ResourceByReference
 	Session = &Q.Session
 	User = &Q.User
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:                        db,
-		Color:                     newColor(db, opts...),
-		ColorByReference:          newColorByReference(db, opts...),
-		Fabric:                    newFabric(db, opts...),
-		FabricByReferenceCreate:   newFabricByReferenceCreate(db, opts...),
-		Reference:                 newReference(db, opts...),
-		Resource:                  newResource(db, opts...),
-		ResourceByReferenceCreate: newResourceByReferenceCreate(db, opts...),
-		Session:                   newSession(db, opts...),
-		User:                      newUser(db, opts...),
+		db:                  db,
+		Color:               newColor(db, opts...),
+		ColorByReference:    newColorByReference(db, opts...),
+		Fabric:              newFabric(db, opts...),
+		FabricByReference:   newFabricByReference(db, opts...),
+		Reference:           newReference(db, opts...),
+		Resource:            newResource(db, opts...),
+		ResourceByReference: newResourceByReference(db, opts...),
+		Session:             newSession(db, opts...),
+		User:                newUser(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Color                     color
-	ColorByReference          colorByReference
-	Fabric                    fabric
-	FabricByReferenceCreate   fabricByReferenceCreate
-	Reference                 reference
-	Resource                  resource
-	ResourceByReferenceCreate resourceByReferenceCreate
-	Session                   session
-	User                      user
+	Color               color
+	ColorByReference    colorByReference
+	Fabric              fabric
+	FabricByReference   fabricByReference
+	Reference           reference
+	Resource            resource
+	ResourceByReference resourceByReference
+	Session             session
+	User                user
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:                        db,
-		Color:                     q.Color.clone(db),
-		ColorByReference:          q.ColorByReference.clone(db),
-		Fabric:                    q.Fabric.clone(db),
-		FabricByReferenceCreate:   q.FabricByReferenceCreate.clone(db),
-		Reference:                 q.Reference.clone(db),
-		Resource:                  q.Resource.clone(db),
-		ResourceByReferenceCreate: q.ResourceByReferenceCreate.clone(db),
-		Session:                   q.Session.clone(db),
-		User:                      q.User.clone(db),
+		db:                  db,
+		Color:               q.Color.clone(db),
+		ColorByReference:    q.ColorByReference.clone(db),
+		Fabric:              q.Fabric.clone(db),
+		FabricByReference:   q.FabricByReference.clone(db),
+		Reference:           q.Reference.clone(db),
+		Resource:            q.Resource.clone(db),
+		ResourceByReference: q.ResourceByReference.clone(db),
+		Session:             q.Session.clone(db),
+		User:                q.User.clone(db),
 	}
 }
 
@@ -97,42 +97,42 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:                        db,
-		Color:                     q.Color.replaceDB(db),
-		ColorByReference:          q.ColorByReference.replaceDB(db),
-		Fabric:                    q.Fabric.replaceDB(db),
-		FabricByReferenceCreate:   q.FabricByReferenceCreate.replaceDB(db),
-		Reference:                 q.Reference.replaceDB(db),
-		Resource:                  q.Resource.replaceDB(db),
-		ResourceByReferenceCreate: q.ResourceByReferenceCreate.replaceDB(db),
-		Session:                   q.Session.replaceDB(db),
-		User:                      q.User.replaceDB(db),
+		db:                  db,
+		Color:               q.Color.replaceDB(db),
+		ColorByReference:    q.ColorByReference.replaceDB(db),
+		Fabric:              q.Fabric.replaceDB(db),
+		FabricByReference:   q.FabricByReference.replaceDB(db),
+		Reference:           q.Reference.replaceDB(db),
+		Resource:            q.Resource.replaceDB(db),
+		ResourceByReference: q.ResourceByReference.replaceDB(db),
+		Session:             q.Session.replaceDB(db),
+		User:                q.User.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Color                     IColorDo
-	ColorByReference          IColorByReferenceDo
-	Fabric                    IFabricDo
-	FabricByReferenceCreate   IFabricByReferenceCreateDo
-	Reference                 IReferenceDo
-	Resource                  IResourceDo
-	ResourceByReferenceCreate IResourceByReferenceCreateDo
-	Session                   ISessionDo
-	User                      IUserDo
+	Color               IColorDo
+	ColorByReference    IColorByReferenceDo
+	Fabric              IFabricDo
+	FabricByReference   IFabricByReferenceDo
+	Reference           IReferenceDo
+	Resource            IResourceDo
+	ResourceByReference IResourceByReferenceDo
+	Session             ISessionDo
+	User                IUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Color:                     q.Color.WithContext(ctx),
-		ColorByReference:          q.ColorByReference.WithContext(ctx),
-		Fabric:                    q.Fabric.WithContext(ctx),
-		FabricByReferenceCreate:   q.FabricByReferenceCreate.WithContext(ctx),
-		Reference:                 q.Reference.WithContext(ctx),
-		Resource:                  q.Resource.WithContext(ctx),
-		ResourceByReferenceCreate: q.ResourceByReferenceCreate.WithContext(ctx),
-		Session:                   q.Session.WithContext(ctx),
-		User:                      q.User.WithContext(ctx),
+		Color:               q.Color.WithContext(ctx),
+		ColorByReference:    q.ColorByReference.WithContext(ctx),
+		Fabric:              q.Fabric.WithContext(ctx),
+		FabricByReference:   q.FabricByReference.WithContext(ctx),
+		Reference:           q.Reference.WithContext(ctx),
+		Resource:            q.Resource.WithContext(ctx),
+		ResourceByReference: q.ResourceByReference.WithContext(ctx),
+		Session:             q.Session.WithContext(ctx),
+		User:                q.User.WithContext(ctx),
 	}
 }
 
