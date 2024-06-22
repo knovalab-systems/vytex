@@ -1,6 +1,6 @@
 export const LOGIN_PATH = '/login';
 
-export const CREATE_PATH = '/create';
+export const CREATE_PATH = '/new';
 export const UPDATE_PATH = '/update';
 
 export const USERS_PATH = '/users';

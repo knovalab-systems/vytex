@@ -1,3 +1,4 @@
+import type { VytexFabricsBySize, VytexResourcesBySize } from '@vytex/client';
 import { type InferInput, minValue, number, object, pipe } from 'valibot';
 
 const ERROR_TEXT = 'Ingresa un valor igual o mayor a 0.';
@@ -40,3 +41,8 @@ export const defaultSizeSchema = SIZES.reduce<SizesType>((p: SizesType, v) => {
 	p[v] = 0;
 	return p;
 }, {} as SizesType);
+
+export type ResourceFabric = {
+	fabrics: VytexFabricsBySize[];
+	resources: VytexResourcesBySize[];
+};

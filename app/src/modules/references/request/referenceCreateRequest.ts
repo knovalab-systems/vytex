@@ -1,13 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
-import {
-	type CoreSchema,
-	type VytexCreateReference,
-	createReference,
-	readColors,
-	readFabrics,
-	readResources,
-} from '@vytex/client';
+import { createReference, readColors, readFabrics, readResources } from '@vytex/client';
 import { client } from '~/utils/client';
+import type { ReferenceCreateRequest } from '../schemas/referenceCreateSchema';
 
 export function getColorsByRefCreateQuery() {
 	return queryOptions({
@@ -60,8 +54,6 @@ async function getResourcesByRefCreate() {
 
 export type ResourcesByRefCreate = Awaited<ReturnType<typeof getResourcesByRefCreate>>;
 
-type Reference = Partial<VytexCreateReference<CoreSchema>>;
-
-export async function createReferenceRequest(reference: Reference) {
+export async function createReferenceRequest(reference: ReferenceCreateRequest) {
 	return await client.request(createReference(reference));
 }

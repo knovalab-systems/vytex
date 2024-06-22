@@ -8,8 +8,9 @@ const ReferenceCreate = lazy(() => import('~/modules/references/pages/ReferenceC
 function DesignerRoutes() {
 	return (
 		<Route path='/' component={MatchDesigner}>
-			<Route path={PATHS.REFS_PATH} component={ReferenceCreate}>
-				<Route path='/' component={ReferenceCreate} />
+			<Route path={PATHS.REFS_PATH}>
+				<Route path={'/'} component={() => <div>1</div>} />
+				<Route path={PATHS.CREATE_PATH} component={ReferenceCreate} />
 			</Route>
 		</Route>
 	);

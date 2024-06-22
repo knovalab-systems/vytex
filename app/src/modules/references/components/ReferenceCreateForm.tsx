@@ -18,10 +18,21 @@ import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { Color } from '~/schemas/coreSchema';
-import { SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
+import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
 import { REFS_PATH } from '~/utils/paths';
-import type { FabricsByRefCreate, ResourcesByRefCreate, colorsByRefCreate } from '../request/referenceCreateRequest';
-import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreateSchema';
+import {
+	createReferenceRequest,
+	type FabricsByRefCreate,
+	type ResourcesByRefCreate,
+	type colorsByRefCreate,
+} from '../request/referenceCreateRequest';
+import {
+	type ReferenceCreateRequest,
+	ReferenceCreateSchema,
+	type ReferenceCreateType,
+} from '../schemas/referenceCreateSchema';
+import toast from 'solid-toast';
+import { STATUS_CODE } from '~/utils/constants';
 
 type Combined = {
 	isFabric: boolean;
@@ -68,7 +79,47 @@ function ReferenceCreateForm(props: {
 	});
 
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
-		console.log(data);
+		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
+		const reference: ReferenceCreateRequest = {
+			reference: data.reference.toString(),
+			colors: data.colors.map((color, i) => ({
+				color: color.color,
+				...color.resources.reduce(
+					(p: ResourceFabric, v) => {
+						const r = Number(v.resource.slice(1));
+						if (v.resource.startsWith('r')) {
+							checkFabricResources[i].resource = true;
+							p.resources.push({ ...v.sizes, resource: r });
+						} else {
+							checkFabricResources[i].fabric = true;
+							p.fabrics.push({ ...v.sizes, fabric: r });
+						}
+						return p;
+					},
+					{ resources: [], fabrics: [] },
+				),
+			})),
+		};
+
+		if (checkFabricResources.some(e => e.fabric === false || e.resource === false)) {
+			toast.error('Cada color de la referencia debe tener al menos un insumo y una tela.');
+			return;
+		}
+
+		return createReferenceRequest(reference)
+			.then(() => {
+				toast.success('Referencia creada correctamente');
+				navigate(REFS_PATH);
+			})
+			.catch(error => {
+				if (error.response.status === STATUS_CODE.conflict) {
+					toast.error(
+						`El código de la referencia "${data.reference}" no está disponible. Por favor, intente con otro.`,
+					);
+				} else {
+					toast.error('Error al crear referencia');
+				}
+			});
 	};
 
 	const handleCancel = () => navigate(REFS_PATH);
@@ -177,7 +228,7 @@ function ReferenceCreateForm(props: {
 														<Table>
 															<TableHeader>
 																<TableRow class='*:text-center *:p-2'>
-																	<TableHead class=' 2xl:w-1/8'>Insumo</TableHead>
+																	<TableHead class=' 2xl:w-1/8'>Insumo/Tela</TableHead>
 																	<For each={SIZES}>{size => <TableHead class='min-w-16'>{size}</TableHead>}</For>
 																	<TableHead class='p-0'>Remover</TableHead>
 																</TableRow>
