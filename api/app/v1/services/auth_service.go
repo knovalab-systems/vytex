@@ -2,8 +2,9 @@ package services
 
 import (
 	"errors"
-	"golang.org/x/crypto/bcrypt"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -46,13 +47,11 @@ func (m *AuthService) Credentials(user string, role string) (*utils.Tokens, erro
 	return tokens, err
 }
 
-func (m *AuthService) ValidRefresh(token string) (*models.SessionWithRole, error) {
+func (m *AuthService) ValidRefresh(token string) (*models.Session, error) {
 
 	s := query.Session
-	u := query.User
 
-	session := &models.SessionWithRole{}
-	err := s.Select(s.ID, s.UserID, u.Role).Where(s.RefreshToken.Eq(token)).Where(s.ExpiresAt.Gt(time.Now())).Join(u, u.ID.EqCol(s.UserID)).Scan(session)
+	session, err := s.Preload(s.User).Where(s.RefreshToken.Eq(token)).Where(s.ExpiresAt.Gt(time.Now())).First()
 	if err != nil {
 		return nil, err
 	}

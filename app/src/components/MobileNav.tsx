@@ -36,7 +36,7 @@ function MobileNav(props: { pages: NavPages[] }) {
 						open() ? 'translate-x' : '-translate-x-full'
 					}`}
 				>
-					<ul class='py-4 px-8 space-y-2'>
+					<ul class='p-4 space-y-2'>
 						<li>
 							<Button
 								variant={'ghost'}
@@ -55,7 +55,7 @@ function MobileNav(props: { pages: NavPages[] }) {
 									end={page.end}
 									onClick={handleClose}
 									activeClass='bg-practice_date text-white'
-									class='w-full flex items-center group p-2 font-semibold text-lg rounded-lg gap-1 transition-colors duration-200 hover:text-white hover:bg-practice_date'
+									class='w-full flex items-center group p-2 font-semibold text-lg rounded-lg gap-1 transition-colors duration-200 hover:text-white hover:bg-practice_date hover:shadow'
 								>
 									{page.icon()}
 									<span class='ml-3'>{page.name}</span>

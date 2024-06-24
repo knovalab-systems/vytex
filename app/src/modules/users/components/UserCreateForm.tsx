@@ -7,7 +7,7 @@ import { Label } from '~/components/ui/Label';
 import { STATUS_CODE } from '~/utils/constants';
 import { USERS_PATH } from '~/utils/paths';
 import { roleList } from '~/utils/roles';
-import { createUserRequest } from '../requests/createUserRequests';
+import { createUserRequest } from '../requests/userCreateRequests';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreateSchema';
 
 function UserCreateForm() {
@@ -26,7 +26,7 @@ function UserCreateForm() {
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
+					toast.error(`El nombre de usuario "${data.username}" no está disponible. Intente con otro.`);
 				} else {
 					toast.error('Error al crear usuario');
 				}

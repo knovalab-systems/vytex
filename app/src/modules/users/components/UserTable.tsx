@@ -1,6 +1,6 @@
 import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetUsersType } from '../requests/getUserRequests';
+import type { GetUsersType } from '../requests/userGetRequests';
 import ActionsCell from './ActionsCell';
 import DeleteAtCell from './DeleteAtCell';
 import RoleCell from './RoleCell';

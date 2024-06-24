@@ -20,7 +20,8 @@ const SelectTrigger: Component<TriggerProps> = props => {
 	return (
 		<SelectPrimitive.Trigger
 			class={cn(
-				'flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+				'flex h-10 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:opacity-50',
+				props['aria-errormessage'] ? ' focus:ring-red-700 ring-2 ring-red-600 transition-colors duration-300' : '',
 				props.class,
 			)}
 			{...rest}
@@ -39,7 +40,7 @@ const SelectTrigger: Component<TriggerProps> = props => {
 					stroke-linejoin='round'
 					class='size-4 opacity-50'
 				>
-					<title>Down arrow</title>
+					<title>Ver opciones</title>
 					<path d='M6 9l6 6l6 -6' />
 				</svg>
 			</SelectPrimitive.Icon>
@@ -88,7 +89,7 @@ const SelectItem: Component<ItemProps> = props => {
 						stroke-linejoin='round'
 						class='size-4'
 					>
-						<title>1</title>
+						<title>Seleccionado</title>
 						<path stroke='none' d='M0 0h24v24H0z' fill='none' />
 						<path d='M5 12l5 5l10 -10' />
 					</svg>
