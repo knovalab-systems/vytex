@@ -19,7 +19,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadUser(t *testing.T) {
+func TestReadUsers(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get users", func(t *testing.T) {
@@ -65,7 +65,7 @@ func TestReadUser(t *testing.T) {
 
 }
 
-func TestGetUser(t *testing.T) {
+func TestReadUser(t *testing.T) {
 
 	t.Run("Fail binding, id is not find", func(t *testing.T) {
 		// context
