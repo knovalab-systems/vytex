@@ -26,7 +26,7 @@ function UserCreateForm() {
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
+					toast.error(`El nombre de usuario "${data.username}" no está disponible. Intente con otro.`);
 				} else {
 					toast.error('Error al crear usuario');
 				}

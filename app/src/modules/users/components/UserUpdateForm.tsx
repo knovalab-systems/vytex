@@ -53,7 +53,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
+					toast.error(`El nombre de usuario "${data.username}" no está disponible. Intente con otro.`);
 				} else {
 					toast.error('Error al actualizar usuario');
 				}
@@ -160,7 +160,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 						Cancelar
 					</Button>
 					<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
-						Guardar
+						Actualizar
 					</Button>
 				</div>
 			</div>

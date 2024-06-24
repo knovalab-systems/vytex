@@ -3,8 +3,8 @@ import { STATUS_OPTIONS } from '~/utils/constants';
 import { roleList } from '~/utils/roles';
 
 export const UserUpdateSchema = object({
-	name: pipe(string(), minLength(1, 'Por favor ingresa el nombre.')),
-	username: pipe(string(), minLength(1, 'Por favor ingresa el usuario.')),
+	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),
+	username: pipe(string(), minLength(1, 'Ingresa el usuario.')),
 	password: union(
 		[pipe(string(), minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.')), literal('')],
 		'La contraseña debe ser de mínimo 8 caracteres.',

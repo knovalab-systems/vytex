@@ -40,7 +40,7 @@ const SelectTrigger: Component<TriggerProps> = props => {
 					stroke-linejoin='round'
 					class='size-4 opacity-50'
 				>
-					<title>Down arrow</title>
+					<title>Ver opciones</title>
 					<path d='M6 9l6 6l6 -6' />
 				</svg>
 			</SelectPrimitive.Icon>
@@ -89,7 +89,7 @@ const SelectItem: Component<ItemProps> = props => {
 						stroke-linejoin='round'
 						class='size-4'
 					>
-						<title>1</title>
+						<title>Seleccionado</title>
 						<path stroke='none' d='M0 0h24v24H0z' fill='none' />
 						<path d='M5 12l5 5l10 -10' />
 					</svg>

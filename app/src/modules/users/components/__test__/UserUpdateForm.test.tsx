@@ -29,7 +29,7 @@ describe('UserUpdateForm', () => {
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
 		const roleIdFilterInput = screen.getByText('Rol');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Actualizar');
 		const cancelButton = screen.getByText('Cancelar');
 
 		expect(nameField).toBeInTheDocument();
@@ -74,11 +74,11 @@ describe('UserUpdateForm', () => {
 		fireEvent.input(nameField, { target: { value: '' } });
 		fireEvent.input(usernameField, { target: { value: '' } });
 
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Actualizar');
 		fireEvent.click(submitButton);
 
-		const errorname = await screen.findByText('Por favor ingresa el nombre.');
-		const errorusername = await screen.findByText(/Por favor ingresa el usuario./i);
+		const errorname = await screen.findByText('Ingresa el nombre.');
+		const errorusername = await screen.findByText(/Ingresa el usuario./i);
 
 		expect(errorname).toBeInTheDocument();
 		expect(errorusername).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe('UserUpdateForm', () => {
 		const nameField = screen.getByPlaceholderText(/jose perez/i);
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Actualizar');
 
 		fireEvent.input(nameField, { target: { value: 'John Doe' } });
 		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
@@ -102,9 +102,9 @@ describe('UserUpdateForm', () => {
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
-			expect(screen.queryByText(/Por favor ingresa el nombre./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Por favor ingresa el usuario./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Por favor ingresa la contraseña./i)).not.toBeInTheDocument();
+			expect(screen.queryByText(/Ingresa el nombre./i)).not.toBeInTheDocument();
+			expect(screen.queryByText(/Ingresa el usuario./i)).not.toBeInTheDocument();
+			expect(screen.queryByText(/La contraseña debe ser de mínimo 8 caracteres./i)).not.toBeInTheDocument();
 		});
 	});
 
@@ -116,7 +116,7 @@ describe('UserUpdateForm', () => {
 		};
 		render(() => <UserUpdateForm user={user} />);
 		const passwordField = screen.getByPlaceholderText('********');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Actualizar');
 
 		fireEvent.input(passwordField, { target: { value: '1' } });
 		fireEvent.click(submitButton);

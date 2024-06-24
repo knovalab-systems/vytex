@@ -25,7 +25,7 @@ import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
 	type colorsByRefCreate,
-} from '../request/referenceCreateRequest';
+} from '~/modules/references/requests/referenceCreateRequest';
 import {
 	type ReferenceCreateRequest,
 	ReferenceCreateSchema,
@@ -35,11 +35,9 @@ import toast from 'solid-toast';
 import { STATUS_CODE } from '~/utils/constants';
 
 type Combined = {
-	isFabric: boolean;
 	id: string;
 	name: string;
 };
-
 function ReferenceCreateForm(props: {
 	colors: colorsByRefCreate;
 	fabrics: FabricsByRefCreate;
@@ -48,8 +46,8 @@ function ReferenceCreateForm(props: {
 	const navigate = useNavigate();
 
 	const resources: () => Combined[] = () => [
-		...props.resources.map(i => ({ isFabric: false, id: `r${i.id}`, name: i.name })),
-		...props.fabrics.map(i => ({ isFabric: true, id: `f${i.id}`, name: i.name })),
+		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
+		...props.fabrics.map(i => ({ id: `f${i.id}`, name: i.name })),
 	];
 
 	const resourceObject = () =>
@@ -58,7 +56,7 @@ function ReferenceCreateForm(props: {
 				prev[v.id] = v;
 				return prev;
 			},
-			{ '': { name: 'Nada', id: '', isFabric: false } },
+			{ '': { name: 'Nada', id: '' } },
 		);
 
 	const colorsObject = () =>
@@ -101,8 +99,13 @@ function ReferenceCreateForm(props: {
 			})),
 		};
 
-		if (checkFabricResources.some(e => e.fabric === false || e.resource === false)) {
-			toast.error('Cada color de la referencia debe tener al menos un insumo y una tela.');
+		if (checkFabricResources.some(e => e.resource === false)) {
+			toast.error('Cada color de la referencia debe tener al menos un insumo ');
+			return;
+		}
+
+		if (checkFabricResources.some(e => e.fabric === false)) {
+			toast.error('Cada color de la referencia debe tener al menos una tela.');
 			return;
 		}
 
@@ -113,9 +116,7 @@ function ReferenceCreateForm(props: {
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(
-						`El código de la referencia "${data.reference}" no está disponible. Por favor, intente con otro.`,
-					);
+					toast.error(`El código de la referencia "${data.reference}" no está disponible. Intente con otro.`);
 				} else {
 					toast.error('Error al crear referencia');
 				}
@@ -152,7 +153,7 @@ function ReferenceCreateForm(props: {
 						Cancelar
 					</Button>
 					<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
-						Guardar
+						Crear
 					</Button>
 				</div>
 			</div>
@@ -187,7 +188,7 @@ function ReferenceCreateForm(props: {
 														)}
 														options={props.colors.map(color => color.id)}
 													>
-														<SelectTrigger aria-errormessage={field.error} aria-label='Colores' role='listbox'>
+														<SelectTrigger title='Ver colores' aria-errormessage={field.error} aria-label='Colores'>
 															<SelectValue<string>>
 																{state => (
 																	<div class='flex gap-2'>
@@ -258,7 +259,7 @@ function ReferenceCreateForm(props: {
 																							multiple={false}
 																							optionLabel='name'
 																							optionValue='id'
-																							placeholder='Selecciona un color'
+																							placeholder='Selecciona un insumo/tela'
 																							itemComponent={props => (
 																								<ComboboxItem item={props.item}>
 																									<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
@@ -267,13 +268,9 @@ function ReferenceCreateForm(props: {
 																							)}
 																							options={resources()}
 																						>
-																							<ComboboxControl
-																								aria-errormessage={field.error}
-																								aria-label='Colores'
-																								role='listbox'
-																							>
+																							<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
 																								<ComboboxInput />
-																								<ComboboxTrigger />
+																								<ComboboxTrigger title='Ver insumos y telas' />
 																							</ComboboxControl>
 																							<Show when={!!field.error}>
 																								<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
@@ -331,7 +328,7 @@ function ReferenceCreateForm(props: {
 															}}
 														>
 															<FiPlus size={22} />
-															Nuevo insumo
+															Nuevo insumo/tela
 														</Button>
 													</div>
 												</>
@@ -379,7 +376,7 @@ function ReferenceCreateForm(props: {
 					Cancelar
 				</Button>
 				<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
-					Guardar
+					Crear
 				</Button>
 			</div>
 		</Form>

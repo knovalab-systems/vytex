@@ -9,7 +9,7 @@ import {
 	getColorsByRefCreateQuery,
 	getFabricsByRefCreateQuery,
 	getResourcesByRefCreateQuery,
-} from '../request/referenceCreateRequest';
+} from '../requests/referenceCreateRequest';
 
 function ReferenceCreate() {
 	const data = createQueries(() => ({
