@@ -73,7 +73,7 @@ function RoleCell(props: {
 							placeholder='Selecciona un rol'
 							itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
 						>
-							<SelectTrigger aria-label='Roles' role='listbox'>
+							<SelectTrigger aria-label='Roles' title='Ver roles'>
 								<SelectValue<RoleItems>>{state => state.selectedOption().label}</SelectValue>
 							</SelectTrigger>
 							<SelectContent />

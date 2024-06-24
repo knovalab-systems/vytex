@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ReferenceCreateForm from '../ReferenceCreateForm';
-import { createPointerEvent } from '~/utils/event';
+import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import toast from 'solid-toast';
 import * as requests from '../../requests/referenceCreateRequest';
 
@@ -17,6 +17,7 @@ vi.mock('@solidjs/router', () => ({
 }));
 
 describe('ReferenceCreateForm', () => {
+	installPointerEvent();
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});

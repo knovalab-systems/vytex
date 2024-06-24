@@ -126,7 +126,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 								placeholder='Selecciona un rol'
 								itemComponent={props => <SelectItem item={props.item}>{roles[props.item.rawValue].label}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Roles' role='listbox'>
+								<SelectTrigger aria-label='Roles'>
 									<SelectValue<string>>{state => roles[state.selectedOption()].label}</SelectValue>
 								</SelectTrigger>
 								<SelectContent />
@@ -147,7 +147,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 								placeholder='Selecciona un rol'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Roles' role='listbox'>
+								<SelectTrigger aria-label='Roles'>
 									<SelectValue<string>>{state => state.selectedOption()}</SelectValue>
 								</SelectTrigger>
 								<SelectContent />
