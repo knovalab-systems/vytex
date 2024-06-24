@@ -13,6 +13,15 @@ type ResourceController struct {
 	repository.ResourceRepository
 }
 
+// Get the resources
+// @Summary      Get resources from db
+// @Description  Get all the resources, limit for query o default limit
+// @Tags         resources
+// @Produce      json
+// @Success      200 {array} models.Resource
+// @Failure      400
+// @Failure      500
+// @Router       /resources [get]
 func (m *ResourceController) ReadResources(c echo.Context) error {
 
 	u := new(models.Query)

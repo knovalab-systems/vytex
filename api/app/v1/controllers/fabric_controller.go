@@ -13,7 +13,16 @@ type FabricController struct {
 	repository.FabricRepository
 }
 
-func (m *FabricController) ReadResources(c echo.Context) error {
+// Get the fabrics
+// @Summary      Get fabrics from db
+// @Description  Get all the fabrics, limit for query o default limit
+// @Tags         fabrics
+// @Produce      json
+// @Success      200 {array} models.Fabric
+// @Failure      400
+// @Failure      500
+// @Router       /fabrics [get]
+func (m *FabricController) ReadFabrics(c echo.Context) error {
 
 	u := new(models.Query)
 

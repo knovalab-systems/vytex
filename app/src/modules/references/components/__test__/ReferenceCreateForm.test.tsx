@@ -1,10 +1,10 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import ReferenceCreateForm from '../ReferenceCreateForm';
-import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import toast from 'solid-toast';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/referenceCreateRequest';
+import ReferenceCreateForm from '../ReferenceCreateForm';
 
 const mockRequest = vi.fn();
 vi.mock('~/modules/references/requests/referenceCreateRequest', () => ({

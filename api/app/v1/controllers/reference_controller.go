@@ -15,6 +15,16 @@ type ReferenceController struct {
 	repository.ReferenceRepository
 }
 
+// CreateReference Create reference
+// @Summary      Create reference
+// @Description  Create a new reference
+// @Tags         References
+// @Produce      json
+// @Param		 models.ReferenceCreateBody body string true "Reference create values"
+// @Success      201 {object} models.Reference
+// @Failure      400
+// @Failure      500
+// @Router       /reference [post]
 func (m *ReferenceController) CreateReference(c echo.Context) error {
 	u := new(models.ReferenceCreateBody)
 

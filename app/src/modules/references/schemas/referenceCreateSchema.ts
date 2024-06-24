@@ -1,4 +1,4 @@
-import type { VytexCreateReference, CoreSchema } from '@vytex/client';
+import type { CoreSchema, VytexCreateReference } from '@vytex/client';
 import { type InferInput, array, minLength, minValue, number, object, pipe, string } from 'valibot';
 import { SizesSchema } from '~/schemas/sizesSchema';
 

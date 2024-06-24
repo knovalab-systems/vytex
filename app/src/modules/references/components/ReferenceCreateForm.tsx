@@ -2,6 +2,7 @@ import { type SubmitHandler, createForm, getValues, insert, remove, setValue, va
 import { useNavigate } from '@solidjs/router';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
 import { For, Show } from 'solid-js';
+import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -17,22 +18,21 @@ import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { Color } from '~/schemas/coreSchema';
-import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
-import { REFS_PATH } from '~/utils/paths';
 import {
-	createReferenceRequest,
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
 	type colorsByRefCreate,
+	createReferenceRequest,
 } from '~/modules/references/requests/referenceCreateRequest';
+import type { Color } from '~/schemas/coreSchema';
+import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
+import { STATUS_CODE } from '~/utils/constants';
+import { REFS_PATH } from '~/utils/paths';
 import {
 	type ReferenceCreateRequest,
 	ReferenceCreateSchema,
 	type ReferenceCreateType,
 } from '../schemas/referenceCreateSchema';
-import toast from 'solid-toast';
-import { STATUS_CODE } from '~/utils/constants';
 
 type Combined = {
 	id: string;

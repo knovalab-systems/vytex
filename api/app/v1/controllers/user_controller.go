@@ -18,7 +18,7 @@ type UserController struct {
 
 // Get the users
 // @Summary      Get users from db
-// @Description  Get all the user, limit for query o default limit
+// @Description  Get all the users, limit for query o default limit
 // @Tags         Users
 // @Produce      json
 // @Success      200 {array} models.User
@@ -192,7 +192,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 // @Description  Create a new user
 // @Tags         Users
 // @Produce      json
-// @Param		 models.CreateUserBody body string true "User create values"
+// @Param		 models.UserCreateBody body string true "User create values"
 // @Success      201 {object} models.User
 // @Failure      400
 // @Failure      500

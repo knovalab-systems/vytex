@@ -11,6 +11,6 @@ func privateFabricRoutes(g *echo.Group) {
 
 	fabricController := controllers.FabricController{FabricRepository: &services.FabricService{}}
 
-	route.GET("", fabricController.ReadResources)
+	route.GET("", fabricController.ReadFabrics)
 
 }

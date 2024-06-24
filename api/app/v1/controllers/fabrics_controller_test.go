@@ -31,7 +31,7 @@ func TestFabricsColors(t *testing.T) {
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := fabricController.ReadResources(c)
+		err := fabricController.ReadFabrics(c)
 		assert.Error(t, err)
 
 	})
@@ -52,7 +52,7 @@ func TestFabricsColors(t *testing.T) {
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := fabricController.ReadResources(c)
+		err := fabricController.ReadFabrics(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}

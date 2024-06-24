@@ -13,6 +13,15 @@ type ColorController struct {
 	repository.ColorRepository
 }
 
+// Get the colors
+// @Summary      Get colors from db
+// @Description  Get all the colors, limit for query o default limit
+// @Tags         colors
+// @Produce      json
+// @Success      200 {array} models.Color
+// @Failure      400
+// @Failure      500
+// @Router       /colors [get]
 func (m *ColorController) ReadColors(c echo.Context) error {
 
 	u := new(models.Query)
