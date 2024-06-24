@@ -16,12 +16,12 @@ type User struct {
 	Name      string         `json:"name"`
 	Password  string         `json:"password"`
 	Role      string         `json:"role" gorm:"type:uuid"`
-	DeleteAt  gorm.DeletedAt `json:"delete_at" gorm:"index"`
+	DeleteAt  gorm.DeletedAt `json:"delete_at"`
 	CreatedAt time.Time      `json:"create_at"`
 	UpdatedAt time.Time      `json:"update_at"`
 }
 
-// BeforeCreate will set a UUID
+// BeforeCreate will set a UUID rather than numeric ID.
 func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 	if len(b.ID) == 0 {
 		b.ID = uuid.New().String()
@@ -31,7 +31,7 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 		b.Role = utils.NoRole()
 
 	}
-	return nil
+	return
 }
 
 type ReadUser struct {
@@ -86,7 +86,7 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 	return updateMap, nil
 }
 
-type UserCreateBody struct {
+type CreateUserBody struct {
 	Username string `json:"username" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Password string `json:"password" validate:"required,lte=20,gte=8"`

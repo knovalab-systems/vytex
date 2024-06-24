@@ -1,5 +1,5 @@
 import type { ComponentProps, ParentComponent } from 'solid-js';
-import { type Component, For, type JSXElement, Show, mergeProps, splitProps } from 'solid-js';
+import { For, mergeProps, Show, splitProps, type Component, type JSXElement } from 'solid-js';
 
 import { cn } from '~/lib/utils';
 

@@ -57,9 +57,9 @@ describe('UserCreateForm', () => {
 		const submitButton = screen.getByText('Guardar');
 		fireEvent.click(submitButton);
 
-		const errorname = await screen.findByText(/Ingresa el nombre./i);
-		const errorusername = await screen.findByText(/Ingresa el usuario./i);
-		const errorpassword = await screen.findByText(/Ingresa la contraseña./i);
+		const errorname = await screen.findByText(/Por favor ingresa el nombre./i);
+		const errorusername = await screen.findByText(/Por favor ingresa el usuario./i);
+		const errorpassword = await screen.findByText(/Por favor ingresa la contraseña./i);
 
 		expect(errorname).toBeInTheDocument();
 		expect(errorusername).toBeInTheDocument();
@@ -81,9 +81,9 @@ describe('UserCreateForm', () => {
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
-			expect(screen.queryByText(/Ingresa el nombre./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Ingresa el usuario./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Ingresa la contraseña./i)).not.toBeInTheDocument();
+			expect(screen.queryByText(/Por favor ingresa el nombre./i)).not.toBeInTheDocument();
+			expect(screen.queryByText(/Por favor ingresa el usuario./i)).not.toBeInTheDocument();
+			expect(screen.queryByText(/Por favor ingresa la contraseña./i)).not.toBeInTheDocument();
 		});
 	});
 

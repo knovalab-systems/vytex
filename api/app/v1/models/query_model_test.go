@@ -1,87 +1,11 @@
 package models
 
 import (
-	"net/http"
-	"net/http/httptest"
-	"net/url"
 	"testing"
 
-	"github.com/knovalab-systems/vytex/config"
-	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/utils"
-	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
-
-func controller(c echo.Context) error {
-	u := new(Query)
-
-	// bind
-	if err := c.Bind(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
-		return problems.UsersBadRequest()
-	}
-
-	return nil
-}
-
-func TestQueryInRequest(t *testing.T) {
-
-	t.Run("Fail binding", func(t *testing.T) {
-		// context
-		q := make(url.Values)
-		q.Set("limit", "uno")
-		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// test
-		err := controller(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Fail validation, bad value for limit", func(t *testing.T) {
-		// context
-		q := make(url.Values)
-		q.Set("limit", "-2")
-		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// test
-		err := controller(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Fail validation, bad value for page", func(t *testing.T) {
-		// context
-		q := make(url.Values)
-		q.Set("page", "-1")
-		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// test
-		err := controller(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-}
 
 func TestSanitizedLimit(t *testing.T) {
 

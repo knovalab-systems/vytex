@@ -2,12 +2,10 @@ package services
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -17,14 +15,13 @@ import (
 type UserService struct {
 }
 
-func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
+func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()
 	}
 
-	// def query
 	table := query.User
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 	filter, err := userFilters(q.Filter, s)
@@ -32,7 +29,6 @@ func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 		return nil, problems.UsersBadRequest()
 	}
 
-	// run query
 	users, err := filter.Find()
 	if err != nil {
 		return nil, problems.ServerError()
@@ -45,7 +41,7 @@ func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 	return users, nil
 }
 
-func (m *UserService) ReadUser(q *models.ReadUser) (*models.User, error) {
+func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()
@@ -127,7 +123,9 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 	return user, nil
 }
 
-func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error) {
+func (m *UserService) CreateUser(u *models.CreateUserBody) (*models.User, error) {
+	table := query.User
+
 	// check user existence
 	err := checkUsername(u.Username)
 	if err != nil {
@@ -147,7 +145,7 @@ func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error)
 		Role:     u.Role,
 	}
 
-	err = query.User.Create(user)
+	err = table.Create(user)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -159,15 +157,16 @@ func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error)
 
 func checkUsername(username string) error {
 	table := query.User
-
-	_, err := table.Unscoped().Where(table.Username.Eq(username)).First()
+	count, err := table.Where(table.Username.Eq(username)).Count()
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
 		return problems.ServerError()
 	}
-	return problems.UserExists()
+
+	if count > 0 {
+		return problems.UserExists()
+	}
+
+	return nil
 }
 
 func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {

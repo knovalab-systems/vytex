@@ -30,7 +30,7 @@ function LogoutNavButton(props: { class?: string }) {
 		<Button
 			onclick={handleLogOut}
 			class={cn(
-				'w-full h-auto flex items-center group bg-transparent p-2 font-semibold text-sm rounded-lg text-white gap-1 transition-colors duration-200 hover:bg-red-500 hover:shadow',
+				'w-full h-auto flex items-center group bg-transparent p-2 font-semibold text-sm rounded-lg text-white gap-1 transition-colors duration-200 hover:bg-red-500 ',
 				props.class,
 			)}
 		>

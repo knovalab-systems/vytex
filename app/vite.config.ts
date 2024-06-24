@@ -2,7 +2,6 @@
 import path from 'node:path';
 import { defineConfig } from 'vite';
 import solid from 'vite-plugin-solid';
-import { compression } from 'vite-plugin-compression2';
 
 export default defineConfig({
 	test: {
@@ -19,7 +18,7 @@ export default defineConfig({
 		// threads: false,
 		// isolate: false,
 	},
-	plugins: [solid(), compression({ algorithm: 'brotliCompress' })],
+	plugins: [solid()],
 	server: {
 		host: true,
 		port: 4040,

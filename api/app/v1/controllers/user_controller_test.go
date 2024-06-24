@@ -19,12 +19,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadUsers(t *testing.T) {
-	defaultError := errors.New("ERROR")
+func TestReadUser(t *testing.T) {
 
-	t.Run("Fail on get users", func(t *testing.T) {
+	t.Run("Fail binding", func(t *testing.T) {
 		// context
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		q := make(url.Values)
+		q.Set("limit", "uno")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		config.EchoValidator(e)
@@ -32,19 +33,21 @@ func TestReadUsers(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUsers").Return(defaultError)
 
 		userController := UserController{UserRepository: &userMock}
 
 		// test
 		err := userController.ReadUsers(c)
-		assert.Error(t, err)
-
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
 	})
 
-	t.Run("Get users succesfully ", func(t *testing.T) {
+	t.Run("Fail validation, bad value for limit", func(t *testing.T) {
 		// context
-		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		q := make(url.Values)
+		q.Set("limit", "-2")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		config.EchoValidator(e)
@@ -52,7 +55,76 @@ func TestReadUsers(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUsers").Return(nil)
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsers(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail validation, bad value for page", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("page", "-1")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsers(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Get users succesfully with offset n limit", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("limit", "-1")
+		q.Set("offset", "1")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUsers").Return(nil)
+
+		userController := UserController{UserRepository: &userMock}
+
+		// test
+		err := userController.ReadUsers(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Get users succesfully with page n limit", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("limit", "-1")
+		q.Set("page", "2")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		userMock := mocks.UserMock{}
+		userMock.On("SelectUsers").Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -65,7 +137,7 @@ func TestReadUsers(t *testing.T) {
 
 }
 
-func TestReadUser(t *testing.T) {
+func TestGetUser(t *testing.T) {
 
 	t.Run("Fail binding, id is not find", func(t *testing.T) {
 		// context
@@ -120,7 +192,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(errors.New("Error"))
+		userMock.On("SelectUser").Return(errors.New("Error"))
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -140,7 +212,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(nil, nil)
+		userMock.On("SelectUser").Return(nil, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -184,7 +256,7 @@ func TestReadMe(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(errors.New("Error"))
+		userMock.On("SelectUser").Return(errors.New("Error"))
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -203,7 +275,7 @@ func TestReadMe(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(nil, nil)
+		userMock.On("SelectUser").Return(nil, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test

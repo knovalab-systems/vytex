@@ -6,13 +6,12 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
-import type { User } from '~/schemas/coreSchema';
 import { STATUS_CODE, STATUS_OPTIONS } from '~/utils/constants';
-import { NO_ROLE } from '~/utils/env';
 import { USERS_PATH } from '~/utils/paths';
 import { roleList, roles } from '~/utils/roles';
-import type { GetUserType } from '../requests/userGetRequests';
-import { updateUserRequest } from '../requests/userUpdateRequests';
+import type { GetUserType } from '../requests/getUserRequests';
+import { updateUserRequest } from '../requests/updateUserRequests';
+import type { User } from '../schemas/userSchema';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
 
 function UserUpdateForm(props: { user: GetUserType }) {
@@ -22,7 +21,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 		initialValues: {
 			name: props.user?.name,
 			username: props.user?.username,
-			role: props.user?.role || NO_ROLE,
+			role: props.user?.role,
 			delete_at: !props.user?.delete_at ? 'Activo' : 'Inactivo',
 		},
 	});
@@ -53,7 +52,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(`El nombre de usuario "${data.username}" no está disponible. Intente con otro.`);
+					toast.error(`El nombre de usuario "${data.username}" no está disponible. Por favor, intente con otro.`);
 				} else {
 					toast.error('Error al actualizar usuario');
 				}
@@ -117,7 +116,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 					{field => (
 						<div>
 							<LabelSpan>Rol</LabelSpan>
-							<Select
+							<Select<string>
 								value={field.value}
 								onChange={value => {
 									setValue(form, 'role', value);
@@ -126,7 +125,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 								placeholder='Selecciona un rol'
 								itemComponent={props => <SelectItem item={props.item}>{roles[props.item.rawValue].label}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Roles'>
+								<SelectTrigger aria-label='Roles' role='listbox'>
 									<SelectValue<string>>{state => roles[state.selectedOption()].label}</SelectValue>
 								</SelectTrigger>
 								<SelectContent />
@@ -147,7 +146,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 								placeholder='Selecciona un rol'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Roles'>
+								<SelectTrigger aria-label='Roles' role='listbox'>
 									<SelectValue<string>>{state => state.selectedOption()}</SelectValue>
 								</SelectTrigger>
 								<SelectContent />
@@ -160,7 +159,7 @@ function UserUpdateForm(props: { user: GetUserType }) {
 						Cancelar
 					</Button>
 					<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
-						Actualizar
+						Guardar
 					</Button>
 				</div>
 			</div>

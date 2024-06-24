@@ -1,18 +1,17 @@
-import { type InferInput, minLength, object, picklist, pipe, string } from 'valibot';
+import { type Input, minLength, object, picklist, string } from 'valibot';
 import { roleList } from '~/utils/roles';
 
 export const UserCreateSchema = object({
-	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),
-	username: pipe(string(), minLength(1, 'Ingresa el usuario.')),
-	password: pipe(
-		string(),
-		minLength(1, 'Ingresa la contraseña.'),
+	name: string([minLength(1, 'Por favor ingresa el nombre.')]),
+	username: string([minLength(1, 'Por favor ingresa el usuario.')]),
+	password: string([
+		minLength(1, 'Por favor ingresa la contraseña.'),
 		minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.'),
-	),
+	]),
 	role: picklist(
 		roleList.map(role => role.key),
-		'Selecciona un rol.',
+		'Por favor selecciona un rol.',
 	),
 });
 
-export type UserCreateType = InferInput<typeof UserCreateSchema>;
+export type UserCreateType = Input<typeof UserCreateSchema>;

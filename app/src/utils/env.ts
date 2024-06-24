@@ -13,4 +13,3 @@ function getEnvVar(name: string) {
 export const API_ENV = getEnvVar('VITE_API');
 export const ADMIN_ROLE: string = getEnvVar('VITE_ADMIN_ROLE');
 export const NO_ROLE: string = getEnvVar('VITE_NO_ROLE');
-export const DESIGNER_ROLE: string = getEnvVar('VITE_DESIGNER_ROLE');

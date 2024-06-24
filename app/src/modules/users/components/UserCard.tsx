@@ -1,12 +1,11 @@
-import { parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
-import { useNavigate } from '@solidjs/router';
-import { Button } from '~/components/ui/Button';
-import { Timeline } from '~/components/ui/Timeline';
-import { NO_ROLE } from '~/utils/env';
-import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
 import { roles } from '~/utils/roles';
+import type { GetUserType } from '../requests/getUserRequests';
+import { parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
+import { Timeline } from '~/components/ui/Timeline';
 import { convertTimeTo12 } from '~/utils/time';
-import type { GetUserType } from '../requests/userGetRequests';
+import { useNavigate } from '@solidjs/router';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
+import { Button } from '~/components/ui/Button';
 
 function UserCard(props: { user: GetUserType }) {
 	const navigate = useNavigate();
@@ -42,23 +41,20 @@ function UserCard(props: { user: GetUserType }) {
 
 	return (
 		<div class='w-full md:w-4/6 xl:w-2/5'>
-			<div class='p-8 m-4 gap-4 bg-white border-gray-100 shadow-md rounded-md border'>
-				<h1 class='text-2xl font-bold text-center mb-8'>Detalles del usuario</h1>
-				<div class='flex gap-4'>
-					<div class='flex flex-col gap-4 flex-1'>
-						<ValuesWithTitles support='ID' title={user()?.id} />
-						<ValuesWithTitles support='Nombre' title={user()?.name} />
-						<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
-						<ValuesWithTitles support='Estado' title={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
-						<ValuesWithTitles support='Rol' title={roles[user()?.role || NO_ROLE].label} />
-					</div>
-					<div class='mx-auto'>
-						<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />
-					</div>
+			<div class='flex p-8 m-4 gap-4 bg-white border-gray-100 shadow-md rounded-md border'>
+				<div class='flex flex-col gap-4 flex-1'>
+					<ValuesWithTitles support='ID' title={user()?.id} />
+					<ValuesWithTitles support='Nombre' title={user()?.name} />
+					<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
+					<ValuesWithTitles support='Estado' title={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
+					<ValuesWithTitles support='Rol' title={roles[user()?.role].label} />
+				</div>
+				<div class='mx-auto'>
+					<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />
 				</div>
 			</div>
-			<div class='flex m-4 justify-between'>
-				<Button type='button' onclick={handleCancel} class='bg-orange-400 hover:bg-orange-600'>
+			<div class='flex m-4  justify-between'>
+				<Button type='button' onclick={handleCancel} class='text-black bg-slate-300 hover:bg-slate-400'>
 					Volver
 				</Button>
 				<Button type='button' onclick={handleEdit} class='bg-practice_date hover:bg-blue-800'>

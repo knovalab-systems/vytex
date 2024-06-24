@@ -9,12 +9,12 @@ type UserMock struct {
 	mock.Mock
 }
 
-func (m *UserMock) ReadUsers(req *models.Query) ([]*models.User, error) {
+func (m *UserMock) SelectUsers(req *models.Query) ([]*models.User, error) {
 	args := m.Called()
 	return []*models.User{}, args.Error(0)
 }
 
-func (m *UserMock) ReadUser(req *models.ReadUser) (*models.User, error) {
+func (m *UserMock) SelectUser(req *models.ReadUser) (*models.User, error) {
 	args := m.Called()
 	return &models.User{}, args.Error(0)
 }
@@ -29,7 +29,7 @@ func (m *UserMock) UpdateUser(update *models.UpdateUserBody) (*models.User, erro
 	return args.Get(0).(*models.User), args.Error(1)
 }
 
-func (m *UserMock) CreateUser(body *models.UserCreateBody) (*models.User, error) {
+func (m *UserMock) CreateUser(body *models.CreateUserBody) (*models.User, error) {
 	args := m.Called()
 	return args.Get(0).(*models.User), args.Error(1)
 }

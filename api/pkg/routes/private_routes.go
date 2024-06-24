@@ -13,9 +13,6 @@ func PrivateRoutes(e *echo.Echo) {
 	middlewares.JwtMiddleware(route)
 
 	// add routes
-	privateUserRoutes(route)
-	privateColorRoutes(route)
-	privateFabricRoutes(route)
-	privateResourceRoutes(route)
-	privateReferenceRoutes(route)
+	privateUsersRoutes(route)
+
 }

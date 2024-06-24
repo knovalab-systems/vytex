@@ -13,16 +13,15 @@ import {
 } from '~/components/ui/Dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { TableCell } from '~/components/ui/Table';
-import type { User } from '~/schemas/coreSchema';
-import { NO_ROLE } from '~/utils/env';
 import { type RoleItems, roleList, roles } from '~/utils/roles';
-import { updateUserRequest } from '../requests/userUpdateRequests';
+import { updateUserRequest } from '../requests/updateUserRequests';
+import type { User } from '../schemas/userSchema';
 
 function RoleCell(props: {
 	roleValue: string;
 	userId: string;
 }) {
-	const [role, setRole] = createSignal(roles[props.roleValue] || roles[NO_ROLE]);
+	const [role, setRole] = createSignal(roles[props.roleValue]);
 	const [value, setValue] = createSignal(roles[props.roleValue]);
 	const [edit, setEdit] = createSignal(false);
 
@@ -73,7 +72,7 @@ function RoleCell(props: {
 							placeholder='Selecciona un rol'
 							itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
 						>
-							<SelectTrigger aria-label='Roles' title='Ver roles'>
+							<SelectTrigger aria-label='Roles' role='listbox'>
 								<SelectValue<RoleItems>>{state => state.selectedOption().label}</SelectValue>
 							</SelectTrigger>
 							<SelectContent />

@@ -1,16 +1,21 @@
-import { type InferInput, literal, minLength, object, picklist, pipe, string, union } from 'valibot';
+import { type Input, literal, minLength, object, optional, picklist, string, union } from 'valibot';
 import { STATUS_OPTIONS } from '~/utils/constants';
 import { roleList } from '~/utils/roles';
 
 export const UserUpdateSchema = object({
-	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),
-	username: pipe(string(), minLength(1, 'Ingresa el usuario.')),
-	password: union(
-		[pipe(string(), minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.')), literal('')],
-		'La contraseña debe ser de mínimo 8 caracteres.',
-	),
+	name: string([minLength(1, 'Por favor ingresa el nombre.')]),
+	username: string([minLength(1, 'Por favor ingresa el usuario.')]),
+	password: union([
+		literal(''),
+		optional(
+			string([
+				minLength(1, 'Por favor ingresa la contraseña.'),
+				minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.'),
+			]),
+		),
+	]),
 	role: picklist<string[]>(roleList.map(role => role.key)),
 	delete_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
 });
 
-export type UserUpdateType = InferInput<typeof UserUpdateSchema>;
+export type UserUpdateType = Input<typeof UserUpdateSchema>;

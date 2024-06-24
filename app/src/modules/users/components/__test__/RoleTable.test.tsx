@@ -1,9 +1,13 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import RoleTable from '../RoleTable';
 
 describe('Role Table', () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
 	it('renders correctly on empty roles', () => {
 		render(() => <RoleTable roles={[]} rolePermmissions={{}} permissions={[]} />);
 		const tableHeader = screen.getByText('Función');

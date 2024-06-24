@@ -35,8 +35,3 @@ export const noRolePermissions = new Proxy(
 	{ [permissions.readUsers.key]: 'Solo el mismo usuario' },
 	handlerProxyPermissions,
 );
-
-export const designerRolePermissions = new Proxy(
-	{ [permissions.readUsers.key]: 'Solo el mismo usuario' },
-	handlerProxyPermissions,
-);

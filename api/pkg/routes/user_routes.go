@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func privateUserRoutes(g *echo.Group) {
+func privateUsersRoutes(g *echo.Group) {
 	route := g.Group("/users")
 
 	userController := controllers.UserController{UserRepository: &services.UserService{}}

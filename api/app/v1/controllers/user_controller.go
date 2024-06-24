@@ -18,7 +18,7 @@ type UserController struct {
 
 // Get the users
 // @Summary      Get users from db
-// @Description  Get all the users, limit for query o default limit
+// @Description  Get all the user, limit for query o default limit
 // @Tags         Users
 // @Produce      json
 // @Success      200 {array} models.User
@@ -40,7 +40,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// get users
-	users, err := m.UserRepository.ReadUsers(u)
+	users, err := m.SelectUsers(u)
 	if err != nil {
 		return err
 	}
@@ -74,7 +74,7 @@ func (m *UserController) ReadUser(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.UserRepository.ReadUser(u)
+	user, err := m.SelectUser(u)
 	if err != nil {
 		return err
 	}
@@ -101,7 +101,6 @@ func (m *UserController) ReadMe(c echo.Context) error {
 		return problems.UsersBadRequest()
 	}
 
-	// get user id from jwt
 	userJWT := c.Get("user").(*jwt.Token)
 	claims := userJWT.Claims.(*utils.JWTClaims)
 	u.ID = claims.User
@@ -112,7 +111,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.UserRepository.ReadUser(u)
+	user, err := m.SelectUser(u)
 	if err != nil {
 		return err
 	}
@@ -192,13 +191,13 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 // @Description  Create a new user
 // @Tags         Users
 // @Produce      json
-// @Param		 models.UserCreateBody body string true "User create values"
+// @Param		 models.CreateUserBody body string true "User create values"
 // @Success      201 {object} models.User
 // @Failure      400
 // @Failure      500
 // @Router       /users [post]
 func (m *UserController) CreateUser(c echo.Context) error {
-	u := new(models.UserCreateBody)
+	u := new(models.CreateUserBody)
 
 	// bind
 	if err := c.Bind(u); err != nil {
@@ -212,9 +211,9 @@ func (m *UserController) CreateUser(c echo.Context) error {
 
 	// create
 	user, err := m.UserRepository.CreateUser(u)
+
 	if err != nil {
 		return err
 	}
-
 	return c.JSON(http.StatusCreated, user)
 }

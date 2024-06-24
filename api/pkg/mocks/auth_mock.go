@@ -25,7 +25,7 @@ func (m *AuthMock) Credentials(user string, role string) (*utils.Tokens, error) 
 	return args.Get(0).(*utils.Tokens), args.Error(1)
 }
 
-func (m *AuthMock) ValidRefresh(token string) (*models.Session, error) {
+func (m *AuthMock) ValidRefresh(token string) (*models.SessionWithRole, error) {
 	args := m.Called(token)
-	return args.Get(0).(*models.Session), args.Error(1)
+	return args.Get(0).(*models.SessionWithRole), args.Error(1)
 }

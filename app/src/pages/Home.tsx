@@ -1,4 +1,4 @@
-import { Match, Switch, lazy } from 'solid-js';
+import { Switch, Match, lazy } from 'solid-js';
 import RoleRoot from '~/modules/auth/components/RoleRoot';
 import { NO_ROLE } from '~/utils/env';
 
@@ -20,9 +20,7 @@ function Home() {
 				</div>
 			}
 		>
-			<Match when={role() === NO_ROLE || role() === null}>
-				<NotPermission />
-			</Match>
+			<Match when={role() === NO_ROLE}>{<NotPermission />}</Match>
 		</Switch>
 	);
 }
