@@ -3,7 +3,7 @@ import { lazy } from 'solid-js';
 import * as PATHS from '~/utils/paths';
 
 const MatchDesigner = lazy(() => import('~/modules/auth/components/MatchDesigner'));
-const ReferenceCreate = lazy(() => import('~/modules/references/pages/ReferenceCreate'));
+const ReferenceCreate = lazy(() => import('~/modules/reference/pages/ReferenceCreate'));
 const Colors = lazy(() => import('~/modules/color/pages/Colors'));
 
 function DesignerRoutes() {

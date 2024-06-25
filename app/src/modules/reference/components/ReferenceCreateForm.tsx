@@ -23,7 +23,7 @@ import {
 	type ResourcesByRefCreate,
 	type colorsByRefCreate,
 	createReferenceRequest,
-} from '~/modules/references/requests/referenceCreateRequest';
+} from '~/modules/reference/requests/referenceCreateRequest';
 import type { Color } from '~/schemas/coreSchema';
 import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
 import { STATUS_CODE } from '~/utils/constants';
