@@ -28,3 +28,19 @@ func (m *ColorService) SelectColors(q *models.Query) ([]*models.Color, error) {
 
 	return colors, nil
 }
+
+func (m *ColorService) AggregationColors(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+	table := query.Color
+	aggregate := []*models.AggregateData{}
+
+	if q.Count != "" {
+		count, err := table.Unscoped().Count()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		aggCount := &models.AggregateData{Count: count}
+		aggregate = append(aggregate, aggCount)
+	}
+
+	return aggregate, nil
+}

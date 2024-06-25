@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-	"reflect"
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -140,7 +139,7 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 	}
 
 	// validate
-	if reflect.ValueOf(u).Elem().IsZero() {
+	if err := c.Validate(u); err != nil {
 		return problems.AggregateUsersBadRequest()
 	}
 
