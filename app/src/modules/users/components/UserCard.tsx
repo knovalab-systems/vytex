@@ -8,7 +8,7 @@ import { roles } from '~/utils/roles';
 import { convertTimeTo12 } from '~/utils/time';
 import type { GetUserType } from '../requests/userGetRequests';
 
-function UserCard(props: { user: GetUserType }) {
+function UserCard(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
 	const user = () => props.user;
 	const delete_at = () =>

@@ -64,7 +64,7 @@ async function countUsers(name: string, username: string, roleId: string, status
 	);
 }
 
-export type GetUsersType = Awaited<ReturnType<typeof getUsers>> | undefined;
+export type GetUsersType = Awaited<ReturnType<typeof getUsers>>;
 
 export function getUserQuery(id: string) {
 	return queryOptions({
@@ -77,4 +77,4 @@ async function getUser(id: string) {
 	return await client.request(readUser(id));
 }
 
-export type GetUserType = Awaited<ReturnType<typeof getUser>> | undefined;
+export type GetUserType = Awaited<ReturnType<typeof getUser>>;

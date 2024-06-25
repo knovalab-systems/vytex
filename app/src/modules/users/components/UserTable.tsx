@@ -5,12 +5,12 @@ import ActionsCell from './ActionsCell';
 import DeleteAtCell from './DeleteAtCell';
 import RoleCell from './RoleCell';
 
-function UserTable(props: { users: GetUsersType }) {
+function UserTable(props: { users?: GetUsersType }) {
 	return (
 		<TableContainer>
 			<Table class='table-auto'>
 				<TableHeader class='sticky top-0 z-10'>
-					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
+					<TableRow class=' bg-trailway *:text-white hover:bg-trailway'>
 						<TableHead>ID</TableHead>
 						<TableHead>Usuario</TableHead>
 						<TableHead>Nombre</TableHead>
@@ -22,7 +22,7 @@ function UserTable(props: { users: GetUsersType }) {
 				<TableBody>
 					<Show when={(props.users?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>No se han encontraron resultados.</TableCell>
+							<TableCell colspan={6}>No se han encontraron usuarios.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.users}>

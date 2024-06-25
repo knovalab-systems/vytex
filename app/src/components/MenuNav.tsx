@@ -20,15 +20,14 @@ function MenuNav(props: { pages: NavPages[] }) {
 								inactiveClass='text-gray-600 '
 								href={page.path}
 								end={page.end}
-								title={page.name}
-								class='w-full my-auto p-3 font-semibold rounded-lg transition-colors duration-200 hover:text-gray-600 hover:shadow hover:bg-slate-300'
+								class='w-full my-auto p-3 font-semibold rounded-lg transition-colors duration-200 hover:text-gray-700 hover:shadow hover:bg-slate-300'
 							>
 								<span>{page.name}</span>
 							</A>
 						</li>
 					)}
 				</For>
-				<li class='my-auto' title='Cerrar sesión'>
+				<li class='my-auto'>
 					<LogoutMenuButton />
 				</li>
 			</ul>

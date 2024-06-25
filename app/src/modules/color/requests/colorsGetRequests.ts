@@ -18,3 +18,5 @@ async function getColors(page: number) {
 		}),
 	);
 }
+
+export type GetColorsType = Awaited<ReturnType<typeof getColors>>;

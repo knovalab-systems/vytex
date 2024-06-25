@@ -1,7 +1,8 @@
 import { createQuery } from '@tanstack/solid-query';
-import { getColorsQuery } from '../requests/colorsGetRequests';
 import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
+import ColorTable from '../components/ColorTable';
+import { getColorsQuery } from '../requests/colorsGetRequests';
 
 function Colors() {
 	const colors = createQuery(() => getColorsQuery(0));
@@ -12,7 +13,7 @@ function Colors() {
 					<Loading label='Cargando colores' />
 				</Match>
 				<Match when={colors.isSuccess}>
-					<h2>Colors</h2>
+					<ColorTable colors={colors.data} />
 				</Match>
 			</Switch>
 		</div>
