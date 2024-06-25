@@ -13,7 +13,7 @@ export function getUsersQuery(name: string, username: string, roleId: string, st
 async function getUsers(name: string, username: string, roleId: string, status: string, page: number) {
 	return await client.request(
 		readUsers({
-			page: page | 0,
+			page: page,
 			limit: QUERY_LIMIT,
 			filter: {
 				name: {
