@@ -14,6 +14,11 @@ async function getColorsByRefCreate() {
 	return await client.request(
 		readColors({
 			limit: -1,
+			filter: {
+				delete_at: {
+					_null: true,
+				},
+			},
 		}),
 	);
 }
@@ -31,6 +36,11 @@ async function getFabricsByRefCreate() {
 	return await client.request(
 		readFabrics({
 			limit: -1,
+			filter: {
+				delete_at: {
+					_null: true,
+				},
+			},
 		}),
 	);
 }
@@ -48,6 +58,11 @@ async function getResourcesByRefCreate() {
 	return await client.request(
 		readResources({
 			limit: -1,
+			filter: {
+				delete_at: {
+					_null: true,
+				},
+			},
 		}),
 	);
 }
