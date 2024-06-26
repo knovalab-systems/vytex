@@ -26,15 +26,15 @@ function ColorTable(props: { colors?: GetColorsType }) {
 					</Show>
 					<For each={props.colors}>
 						{color => (
-							<TableRow class='bg-white group'>
+							<TableRow class='bg-white group *:w-1/6'>
 								<TableCell>{color.id}</TableCell>
+								<TableCell>{color.name}</TableCell>
 								<TableCell class='py-0'>
-									<div class='flex  gap-2'>
-										<div class='my-auto'>{color.name}</div>
+									<div class='flex gap-4'>
+										<div class='my-auto'>{color.hex}</div>
 										<div class='h-10 w-10 border-2' style={{ background: color.hex || '' }} />
 									</div>
 								</TableCell>
-								<TableCell>{color.hex}</TableCell>
 								<TableCell>{color.code || 'Code'}</TableCell>
 								<TableCell>
 									<StatusLabel status={!color.delete_at} />
