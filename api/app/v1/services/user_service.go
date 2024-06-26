@@ -73,9 +73,8 @@ func (m *UserService) ReadUser(q *models.ReadUser) (*models.User, error) {
 }
 
 func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
-
 	table := query.User
-	aggregate := &models.AggregateData{}
+	aggregate := []*models.AggregateData{}
 
 	if q.Count != "" {
 		s := table.Unscoped()
@@ -87,10 +86,11 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 		if err != nil {
 			return nil, problems.ServerError()
 		}
-		aggregate.Count = count
+		aggCount := &models.AggregateData{Count: count}
+		aggregate = append(aggregate, aggCount)
 	}
 
-	return []*models.AggregateData{aggregate}, nil
+	return aggregate, nil
 }
 
 func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {

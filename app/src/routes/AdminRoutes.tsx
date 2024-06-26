@@ -2,11 +2,11 @@ import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
 import * as PATHS from '~/utils/paths';
 
-const User = lazy(() => import('~/modules/users/pages/User'));
-const Users = lazy(() => import('~/modules/users/pages/Users'));
-const UserCreate = lazy(() => import('~/modules/users/pages/UserCreate'));
-const UserUpdate = lazy(() => import('~/modules/users/pages/UserUpdate'));
-const Roles = lazy(() => import('~/modules/users/pages/Roles'));
+const User = lazy(() => import('~/modules/user/pages/User'));
+const Users = lazy(() => import('~/modules/user/pages/Users'));
+const UserCreate = lazy(() => import('~/modules/user/pages/UserCreate'));
+const UserUpdate = lazy(() => import('~/modules/user/pages/UserUpdate'));
+const Roles = lazy(() => import('~/modules/user/pages/Roles'));
 const MatchAdmin = lazy(() => import('~/modules/auth/components/MatchAdmin'));
 
 function AdminRoutes() {

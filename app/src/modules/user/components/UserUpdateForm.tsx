@@ -15,7 +15,7 @@ import type { GetUserType } from '../requests/userGetRequests';
 import { updateUserRequest } from '../requests/userUpdateRequests';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
 
-function UserUpdateForm(props: { user: GetUserType }) {
+function UserUpdateForm(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
 	const [form, { Form, Field }] = createForm<UserUpdateType>({
 		validate: valiForm(UserUpdateSchema),

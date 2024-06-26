@@ -46,3 +46,28 @@ func (m *ColorController) ReadColors(c echo.Context) error {
 	return c.JSON(http.StatusOK, colors)
 
 }
+
+func (m *ColorController) AggregateColors(c echo.Context) error {
+	// for query params
+	u := new(models.AggregateQuery)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// aggegation
+	aggregate, err := m.ColorRepository.AggregationColors(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, aggregate)
+
+}
