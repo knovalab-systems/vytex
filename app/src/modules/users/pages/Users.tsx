@@ -12,7 +12,7 @@ import {
 import { QUERY_LIMIT } from '~/utils/constants';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
-import { countUsersQuery, getUsersQuery } from '../requests/getUserRequests';
+import { countUsersQuery, getUsersQuery } from '../requests/userGetRequests';
 
 function Users() {
 	const [page, setPage] = createSignal(1);
@@ -45,7 +45,7 @@ function Users() {
 			/>
 			<Switch>
 				<Match when={users.isLoading && usersCount.isLoading}>
-					<Loading />
+					<Loading label='Cargando usuario' />
 				</Match>
 				<Match when={users.isSuccess && usersCount.isSuccess}>
 					<UserTable users={users.data} />

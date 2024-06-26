@@ -77,6 +77,13 @@ func Test_WithContext(t *testing.T) {
 	qCtx := query.WithContext(context.WithValue(context.Background(), key, value))
 
 	for _, ctx := range []context.Context{
+		qCtx.Color.UnderlyingDB().Statement.Context,
+		qCtx.ColorByReference.UnderlyingDB().Statement.Context,
+		qCtx.Fabric.UnderlyingDB().Statement.Context,
+		qCtx.FabricByReference.UnderlyingDB().Statement.Context,
+		qCtx.Reference.UnderlyingDB().Statement.Context,
+		qCtx.Resource.UnderlyingDB().Statement.Context,
+		qCtx.ResourceByReference.UnderlyingDB().Statement.Context,
 		qCtx.Session.UnderlyingDB().Statement.Context,
 		qCtx.User.UnderlyingDB().Statement.Context,
 	} {

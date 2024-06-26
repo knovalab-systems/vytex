@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { installPointerEvent } from '~/utils/event';
 import RoleCell from '../RoleCell';
 
 window.scrollTo = vi.fn(() => {});
@@ -29,6 +30,8 @@ vi.mock('~/utils/roles', () => ({
 }));
 
 describe('RoleCell', () => {
+	installPointerEvent();
+
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
@@ -46,7 +49,7 @@ describe('RoleCell', () => {
 	it('renders correctly dialog', () => {
 		render(() => <RoleCell roleValue='admin' userId='1' />);
 
-		const triggerButton = screen.getByRole('button');
+		const triggerButton = screen.getByTitle('Actualizar rol');
 		fireEvent.click(triggerButton);
 
 		const dialgoTitle = screen.getByText('Actualizar rol');
@@ -60,11 +63,11 @@ describe('RoleCell', () => {
 		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
 		expect(roleNameBefore).toBeInTheDocument();
 
-		const triggerButton = screen.getByRole('button');
+		const triggerButton = screen.getByTitle('Actualizar rol');
 		fireEvent.click(triggerButton);
 
 		const roleNameInDialog = screen.getAllByText('Administrador'); // getByText error, there is more than one by select
-		expect(roleNameInDialog).not.toBeNull();
+		expect(roleNameInDialog.length).greaterThan(0);
 
 		const closeButton = screen.getByText('Cancelar');
 		fireEvent.click(closeButton);
@@ -79,11 +82,11 @@ describe('RoleCell', () => {
 		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
 		expect(roleNameBefore).toBeInTheDocument();
 
-		const triggerButton = screen.getByRole('button');
+		const triggerButton = screen.getByTitle('Actualizar rol');
 		fireEvent.click(triggerButton);
 
 		const roleNameInDialog = screen.getAllByText('Administrador'); // getByText error there is more than one by select
-		expect(roleNameInDialog).not.toBeNull();
+		expect(roleNameInDialog.length).greaterThan(0);
 
 		const saveButton = screen.getByText('Guardar');
 		fireEvent.click(saveButton);

@@ -95,8 +95,8 @@ describe('LoginForm', () => {
 		fireEvent.input(usernameField, { target: { value: '' } });
 		fireEvent.input(passwordField, { target: { value: '' } });
 		fireEvent.click(submitButton);
-		const errorusernameField = await screen.findByText('Por favor ingresa el usuario.');
-		const errorPasswordField = await screen.findByText('Por favor ingresa la contraseña.');
+		const errorusernameField = await screen.findByText('Ingresa el usuario.');
+		const errorPasswordField = await screen.findByText('Ingresa la contraseña.');
 		expect(errorusernameField).toBeInTheDocument();
 		expect(errorPasswordField).toBeInTheDocument();
 	});

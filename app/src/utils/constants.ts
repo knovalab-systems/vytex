@@ -1,5 +1,3 @@
-import { ADMIN_ROLE, NO_ROLE } from './env';
-
 export const QUERY_LIMIT = 20;
 
 export const STATUS_CODE = {
@@ -28,8 +26,3 @@ export const STATUS_OPTIONS = {
 	Activo: true,
 	Inactivo: false,
 };
-
-export const USER_ROLES_OPTIONS = [
-	{ label: 'Administrador', value: ADMIN_ROLE },
-	{ label: 'Sin rol', value: NO_ROLE },
-];

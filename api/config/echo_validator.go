@@ -19,6 +19,6 @@ func (cv *EchoValidatorStruct) Validate(i interface{}) error {
 
 func EchoValidator(e *echo.Echo) {
 
-	e.Validator = &EchoValidatorStruct{validator: validator.New()}
+	e.Validator = &EchoValidatorStruct{validator: validator.New(validator.WithRequiredStructEnabled())}
 
 }
