@@ -122,7 +122,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 
 // Get aggregate from users
 // @Summary      Get aggregate from users
-// @Description  Get an aggregate function from users resource
+// @Description  Get result of aggregate function from users
 // @Tags         Users
 // @Produce      json
 // @Success      200 {object} models.AggregateData
@@ -135,11 +135,6 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.AggregateUsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
 		return problems.AggregateUsersBadRequest()
 	}
 
