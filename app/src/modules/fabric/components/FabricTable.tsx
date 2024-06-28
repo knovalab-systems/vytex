@@ -10,10 +10,12 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
                 <TableHeader class='sticky top-0 z-10'>
                     <TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
                         <TableHead>ID</TableHead>
+                        <TableHead>Key</TableHead>
                         <TableHead>Nombre</TableHead>
                         <TableHead>Color</TableHead>
                         <TableHead>Costo</TableHead>
                         <TableHead>Estado</TableHead>
+                        <TableHead>Proveedor</TableHead>
                         <TableHead>Acciones</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -26,6 +28,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
                     {fabric => (
                         <TableRow class='bg-white'>
                             <TableCell>{fabric.id}</TableCell>
+                            <TableCell>{fabric.key}</TableCell>
                             <TableCell>{fabric.name}</TableCell>
                             <TableCell class='py-0'>
                                 <div class='flex gap-4'>
@@ -37,6 +40,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
                             <TableCell>
                                 <StatusLabel status={!fabric.delete_at} />
                             </TableCell>
+                            <TableCell>Proveedor</TableCell>
                             <TableCell>Acciones</TableCell>
                         </TableRow>
                     )}

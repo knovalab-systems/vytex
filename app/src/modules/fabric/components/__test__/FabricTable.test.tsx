@@ -33,13 +33,14 @@ describe('Fabric Table', () => {
 
         render(() => <FabricTable fabrics={fabrics} />);
         const fabricId = screen.getByText('123');
+        const fabricKey = screen.getByText('uniqueKey123');
         const fabricName = screen.getByText('Algodon');
         const fabricColor = screen.getByText('#FFFFFF');
         const fabricCost = screen.getByText('$1000 COP');
         const fabricStatus = screen.getByText('Activo');
 
-
         expect(fabricId).toBeInTheDocument();
+        expect(fabricKey).toBeInTheDocument();
         expect(fabricName).toBeInTheDocument();
         expect(fabricColor).toBeInTheDocument();
         expect(fabricCost).toBeInTheDocument();
