@@ -12,11 +12,13 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import ResourceTable from '../components/ResourceTable';
+import { useColors } from '~/hooks/useColor';
 
 function Resources() {
 	const [page, setPage] = createSignal(1);
 	const resources = createQuery(() => getResourcesQuery(page()));
 	const countResources = createQuery(() => countResourcesQuery());
+	const { colorsArray } = useColors();
 	const pages = createMemo<number>(() => {
 		const count = countResources.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
@@ -26,10 +28,10 @@ function Resources() {
 	return (
 		<div class='h-full w-full flex flex-col'>
 			<Switch>
-				<Match when={resources.isLoading || countResources.isLoading}>
+				<Match when={resources.isLoading || countResources.isLoading || colorsArray.isLoading}>
 					<Loading label='Cargando insumos' />
 				</Match>
-				<Match when={resources.isSuccess && countResources.isSuccess}>
+				<Match when={resources.isSuccess && countResources.isSuccess && colorsArray.isSuccess}>
 					<ResourceTable resources={resources.data} />
 					<Pagination
 						class='pt-2 [&>*]:justify-center'
