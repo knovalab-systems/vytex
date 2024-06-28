@@ -3,7 +3,14 @@ import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourcesGetRequests';
 import { QUERY_LIMIT } from '~/utils/constants';
 import Loading from '~/components/Loading';
-
+import {
+	Pagination,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationItems,
+	PaginationNext,
+	PaginationPrevious,
+} from '~/components/ui/Pagination';
 import ResourceTable from '../components/ResourceTable';
 
 function Resources() {
@@ -17,13 +24,25 @@ function Resources() {
 	});
 
 	return (
-		<div class='h-full flex flex-col'>
+		<div class='h-full w-full flex flex-col'>
 			<Switch>
 				<Match when={resources.isLoading || countResources.isLoading}>
 					<Loading label='Cargando insumos' />
 				</Match>
 				<Match when={resources.isSuccess && countResources.isSuccess}>
-					<ResourceTable />
+					<ResourceTable resources={resources.data} />
+					<Pagination
+						class='pt-2 [&>*]:justify-center'
+						count={pages()}
+						page={page()}
+						onPageChange={setPage}
+						itemComponent={props => <PaginationItem page={props.page}>{props.page}</PaginationItem>}
+						ellipsisComponent={() => <PaginationEllipsis />}
+					>
+						<PaginationPrevious />
+						<PaginationItems />
+						<PaginationNext />
+					</Pagination>
 				</Match>
 			</Switch>
 		</div>
