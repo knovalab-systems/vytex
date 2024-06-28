@@ -15,4 +15,8 @@ export const COLORS_PATH = '/colors';
 export const COLORS_CREATE_PATH = COLORS_PATH + CREATE_PATH;
 export const COLORS_UPDATE_PATH = COLORS_PATH + UPDATE_PATH;
 
+export const RESOURCES_PATH = '/resources';
+export const RESOURCES_CREATE_PATH = RESOURCES_PATH + CREATE_PATH;
+export const RESOURCES_UPDATE_PATH = RESOURCES_PATH + UPDATE_PATH;
+
 export const ROLES_PATH = '/roles';

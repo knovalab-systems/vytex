@@ -216,13 +216,14 @@ func TestReadMe(t *testing.T) {
 }
 
 func TestAggregateUser(t *testing.T) {
+	defaultError := errors.New("ERROR")
 
 	// dont fail binding on any case
 
-	t.Run("Fail validation empty fields", func(t *testing.T) {
+	t.Run("fail on get aggregate succesfully", func(t *testing.T) {
 		// context
 		q := make(url.Values)
-		q.Set("count", "")
+		q.Set("count", "*")
 		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
@@ -231,13 +232,12 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
 		userController := UserController{UserRepository: &userMock}
 
 		// test
 		err := userController.AggregateUsers(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
+		assert.Error(t, err)
 	})
 
 	t.Run("Get aggregate succesfully", func(t *testing.T) {

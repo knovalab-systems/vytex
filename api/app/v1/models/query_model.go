@@ -1,6 +1,8 @@
 package models
 
-import "github.com/knovalab-systems/vytex/pkg/utils"
+import (
+	"github.com/knovalab-systems/vytex/pkg/utils"
+)
 
 type Query struct {
 	Limit  *int   `query:"limit" validate:"omitnil,gte=-1"`
@@ -46,6 +48,6 @@ func sanitizeOffset(offset int, page int, limit int) int {
 }
 
 type AggregateQuery struct {
-	Count  string `query:"count" validate:"omitnil,min=1"`
+	Count  string `query:"count"`
 	Filter string `query:"filter"`
 }

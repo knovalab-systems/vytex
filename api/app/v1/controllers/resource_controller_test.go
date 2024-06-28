@@ -4,8 +4,10 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/labstack/echo/v4"
@@ -58,4 +60,52 @@ func TestResourcesColors(t *testing.T) {
 		}
 	})
 
+}
+
+func TestAggregateResource(t *testing.T) {
+	defaultError := errors.New("ERROR")
+
+	// dont fail binding on any case
+
+	t.Run("fail on get aggregate succesfully", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
+		colorController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := colorController.AggregateResources(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get aggregate succesfully", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		colorController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := colorController.AggregateResources(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }
