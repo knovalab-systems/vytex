@@ -24,7 +24,7 @@ function Fabrics() {
     });
 
     return (
-        <div class='h-full flex flex-col'>
+        <div class='h-full w-full flex flex-col'>
             <Switch>
                 <Match when={fabrics.isLoading || countFabrics.isLoading}>
                     <Loading label="Cargando telas" />

@@ -24,7 +24,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
                 </Show>
                 <For each={props.fabrics} >
                     {fabric => (
-                        <TableRow class='bg-white group'>
+                        <TableRow class='bg-white'>
                             <TableCell>{fabric.id}</TableCell>
                             <TableCell>{fabric.name}</TableCell>
                             <TableCell class='py-0'>
@@ -39,12 +39,10 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
                             </TableCell>
                             <TableCell>Acciones</TableCell>
                         </TableRow>
-
                     )}
                 </For>
             </Table>
         </TableContainer>
-
     )
 }
 
