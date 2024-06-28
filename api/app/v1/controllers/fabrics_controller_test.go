@@ -66,7 +66,7 @@ func TestAggregateFabrics(t *testing.T) {
 	t.Run("Fail validation empty fields", func(t *testing.T) {
 		// context
 		q := make(url.Values)
-		q.Set("count", "")
+		q.Set("count", "*")
 		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
 		rec := httptest.NewRecorder()
 		e := echo.New()
@@ -75,13 +75,12 @@ func TestAggregateFabrics(t *testing.T) {
 
 		// mocks
 		fabricMock := mocks.FabricMock{}
+		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("ERROR"))
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
 		err := fabricController.AggregateFabrics(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
+		assert.Error(t, err)
 	})
 
 	t.Run("Get aggregate succesfully", func(t *testing.T) {

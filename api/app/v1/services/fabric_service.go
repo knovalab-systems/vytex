@@ -5,6 +5,8 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
+	"regexp"
+	"strings"
 )
 
 type FabricService struct {
@@ -42,16 +44,39 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 
 func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.Fabric
-	var aggregate []*models.AggregateData
+	s := table.Unscoped().Group(table.Key)
+	aggregateElem := models.AggregateData{Count: nil}
 
 	if q.Count != "" {
-		count, err := table.Unscoped().Count()
-		if err != nil {
-			return nil, problems.ServerError()
+		re := regexp.MustCompile(`[\[\]]`)
+		countArr := strings.Split(re.ReplaceAllString(q.Count, ""), ",")
+		countObj := make(map[string]int64)
+
+		for _, v := range countArr {
+			switch v {
+			case "id":
+				count, err := s.Select(table.ID).Count()
+				if err != nil {
+					return nil, problems.ServerError()
+				}
+				countObj["id"] = count
+			default:
+
+				if aggregateElem.Count == nil {
+					count, err := s.Count()
+					if err != nil {
+						return nil, problems.ServerError()
+					}
+					aggregateElem.Count = count
+				}
+
+			}
+
 		}
-		aggCount := &models.AggregateData{Count: count}
-		aggregate = append(aggregate, aggCount)
+		if len(countObj) > 0 {
+			aggregateElem.Count = countObj
+		}
 	}
 
-	return aggregate, nil
+	return []*models.AggregateData{&aggregateElem}, nil
 }
