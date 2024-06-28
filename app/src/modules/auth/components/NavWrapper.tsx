@@ -32,6 +32,7 @@ function NavWrapper(props: RouteSectionProps) {
 			{ name: 'Home', icon: () => null, path: '/', end: true },
 			{ name: 'Referencias', icon: () => null, path: PATHS.REFS_PATH },
 			{ name: 'Colores', icon: () => null, path: PATHS.COLORS_PATH },
+			{ name: 'Telas', icon: () => null, path: PATHS.FABRICS_PATH },
 		],
 	};
 

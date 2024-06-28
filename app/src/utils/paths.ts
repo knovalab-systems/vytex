@@ -15,4 +15,8 @@ export const COLORS_PATH = '/colors';
 export const COLORS_CREATE_PATH = COLORS_PATH + CREATE_PATH;
 export const COLORS_UPDATE_PATH = COLORS_PATH + UPDATE_PATH;
 
+export const FABRICS_PATH = '/fabrics';
+export const FABRICS_CREATE_PATH = FABRICS_PATH + CREATE_PATH;
+export const FABRICS_UPDATE_PATH = FABRICS_PATH + UPDATE_PATH;
+
 export const ROLES_PATH = '/roles';

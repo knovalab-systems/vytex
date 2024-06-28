@@ -5,6 +5,7 @@ import * as PATHS from '~/utils/paths';
 const MatchDesigner = lazy(() => import('~/modules/auth/components/MatchDesigner'));
 const ReferenceCreate = lazy(() => import('~/modules/reference/pages/ReferenceCreate'));
 const Colors = lazy(() => import('~/modules/color/pages/Colors'));
+const Fabrics = lazy(() => import('~/modules/fabric/pages/Fabrics'))
 
 function DesignerRoutes() {
 	return (
@@ -15,6 +16,9 @@ function DesignerRoutes() {
 			</Route>
 			<Route path={PATHS.COLORS_PATH}>
 				<Route path={'/'} component={Colors} />
+			</Route>
+			<Route path={PATHS.FABRICS_PATH}>
+				<Route path={'/'} component={Fabrics} />
 			</Route>
 		</Route>
 	);
