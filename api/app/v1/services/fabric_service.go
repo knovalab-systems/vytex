@@ -31,10 +31,27 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	// run query
 	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).
 		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
+		Preload(table.Color).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
 	return fabrics, nil
+}
+
+func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+	table := query.Fabric
+	var aggregate []*models.AggregateData
+
+	if q.Count != "" {
+		count, err := table.Unscoped().Count()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		aggCount := &models.AggregateData{Count: count}
+		aggregate = append(aggregate, aggCount)
+	}
+
+	return aggregate, nil
 }

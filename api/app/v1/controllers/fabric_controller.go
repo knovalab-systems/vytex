@@ -46,3 +46,27 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 	return c.JSON(http.StatusOK, fabrics)
 
 }
+
+func (m *FabricController) AggregateFabrics(c echo.Context) error {
+	// for query params
+	u := new(models.AggregateQuery)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.AggregateUsersBadRequest()
+	}
+
+	// aggregate
+	aggregate, err := m.FabricRepository.AggregationFabrics(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, aggregate)
+
+}
