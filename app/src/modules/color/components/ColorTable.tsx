@@ -4,10 +4,9 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, Ta
 import type { GetColorsType } from '../requests/colorsGetRequests';
 
 function ColorTable(props: { colors?: GetColorsType }) {
-	props.colors;
 	return (
 		<TableContainer>
-			<Table>
+			<Table class='table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
 						<TableHead>ID</TableHead>
@@ -26,7 +25,7 @@ function ColorTable(props: { colors?: GetColorsType }) {
 					</Show>
 					<For each={props.colors}>
 						{color => (
-							<TableRow class='bg-white group *:w-1/6'>
+							<TableRow class='bg-white group'>
 								<TableCell>{color.id}</TableCell>
 								<TableCell>{color.name}</TableCell>
 								<TableCell class='py-0'>
