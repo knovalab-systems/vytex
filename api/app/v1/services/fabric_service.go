@@ -20,13 +20,13 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	// def query
 	table := query.Fabric
 	table2 := table.As("u2")
-	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+	s := table.Unscoped()
 
 	// def subquery
 	subQuery := table.Unscoped().
 		Group(table.Key).
 		Select(table.Key, table.CreatedAt.Max().As("created_at_max")).
-		As("u2")
+		As("u2").Limit(*q.Limit).Offset(q.Offset)
 
 	// run query
 	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).

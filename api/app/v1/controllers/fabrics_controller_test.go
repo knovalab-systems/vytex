@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"errors"
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/knovalab-systems/vytex/config"
@@ -58,4 +60,49 @@ func TestFabricsColors(t *testing.T) {
 		}
 	})
 
+}
+
+func TestAggregateFabrics(t *testing.T) {
+	t.Run("Fail validation empty fields", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.AggregateFabrics(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Get aggregate succesfully", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.AggregateFabrics(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }
