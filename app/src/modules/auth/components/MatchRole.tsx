@@ -1,6 +1,6 @@
 import { Navigate } from '@solidjs/router';
 import { type JSXElement, Match, Switch } from 'solid-js';
-import RoleRoot from './RoleRoot';
+import RoleRoot from '../../../hooks/roleRoot';
 
 export default function MatchRole(props: {
 	children: JSXElement;
