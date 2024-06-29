@@ -33,7 +33,6 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	// run query
 	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).
 		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
-		Preload(table.Color).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()

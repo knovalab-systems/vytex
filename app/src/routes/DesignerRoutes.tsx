@@ -20,6 +20,7 @@ function DesignerRoutes() {
 			</Route>
 			<Route path={PATHS.FABRICS_PATH}>
 				<Route path={'/'} component={Fabrics} />
+			</Route>
 			<Route path={PATHS.RESOURCES_PATH}>
 				<Route path={'/'} component={Resources} />
 			</Route>

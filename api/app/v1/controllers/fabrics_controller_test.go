@@ -63,7 +63,7 @@ func TestFabricsColors(t *testing.T) {
 }
 
 func TestAggregateFabrics(t *testing.T) {
-	t.Run("Fail validation empty fields", func(t *testing.T) {
+	t.Run("Fail on get aggregate", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("count", "*")
