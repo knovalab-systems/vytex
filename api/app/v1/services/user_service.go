@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
+	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -74,23 +76,47 @@ func (m *UserService) ReadUser(q *models.ReadUser) (*models.User, error) {
 
 func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.User
-	aggregate := []*models.AggregateData{}
+	s := table.Unscoped()
+	aggregateElem := models.AggregateData{Count: nil}
 
 	if q.Count != "" {
-		s := table.Unscoped()
+		re := regexp.MustCompile(`[\[\]]`)
+		countArr := strings.Split(re.ReplaceAllString(q.Count, ""), ",")
+		countObj := make(map[string]int64)
+
 		filter, err := userFilters(q.Filter, s)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
-		count, err := filter.Count()
-		if err != nil {
-			return nil, problems.ServerError()
+
+		for _, v := range countArr {
+			switch v {
+			case "id":
+				count, err := filter.Select(table.ID).Count()
+				if err != nil {
+					return nil, problems.ServerError()
+				}
+				countObj["id"] = count
+			default:
+
+				if aggregateElem.Count == nil {
+					count, err := filter.Count()
+					if err != nil {
+						return nil, problems.ServerError()
+					}
+					aggregateElem.Count = count
+				}
+
+			}
+
 		}
-		aggCount := &models.AggregateData{Count: count}
-		aggregate = append(aggregate, aggCount)
+		if len(countObj) > 0 {
+			aggregateElem.Count = countObj
+		}
+
 	}
 
-	return aggregate, nil
+	return []*models.AggregateData{&aggregateElem}, nil
 }
 
 func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {

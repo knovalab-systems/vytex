@@ -47,17 +47,21 @@ func (m *ColorController) ReadColors(c echo.Context) error {
 
 }
 
+// Get aggregate from colors
+// @Summary      Get aggregate from colors
+// @Description  Get result of aggregate function from colors
+// @Tags         Colors
+// @Produce      json
+// @Success      200 {object} models.AggregateData
+// @Failure      400
+// @Failure      500
+// @Router       /colors/aggregate [get]
 func (m *ColorController) AggregateColors(c echo.Context) error {
 	// for query params
 	u := new(models.AggregateQuery)
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.AggregateUsersBadRequest()
-	}
-
-	// validate
-	if err := c.Validate(u); err != nil {
 		return problems.AggregateUsersBadRequest()
 	}
 
@@ -69,5 +73,4 @@ func (m *ColorController) AggregateColors(c echo.Context) error {
 
 	// return data
 	return c.JSON(http.StatusOK, aggregate)
-
 }

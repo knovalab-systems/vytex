@@ -34,7 +34,7 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 
 	return (
 		<TableCell>
-			<div class='flex h-full gap-2 group-hover:*:block'>
+			<div class='flex h-full gap-2 group-hover:*:flex'>
 				<StatusLabel status={status()} />
 				<div class='my-auto relative lg:hidden' title='Actualizar estado'>
 					<Switch checked={status()} onChange={handleSubmit} disabled={loading()} />

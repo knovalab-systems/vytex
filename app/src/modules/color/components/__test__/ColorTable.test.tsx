@@ -4,22 +4,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { GetColorsType } from '../../requests/colorsGetRequests';
 import ColorTable from '../ColorTable';
 
-const mockRole = vi.fn();
-vi.mock('../RoleCell', () => ({
-	default: () => {
-		mockRole();
-		return <td>Role</td>;
-	},
-}));
-
-const mockActions = vi.fn();
-vi.mock('../ActionsCell', () => ({
-	default: () => {
-		mockActions();
-		return <td>Actions</td>;
-	},
-}));
-
 describe('Color Table', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -33,8 +17,8 @@ describe('Color Table', () => {
 	});
 
 	it('renders correctly on colors', () => {
-		const users: GetColorsType = [{ id: 123 }, { name: 'blanco' }];
-		render(() => <ColorTable colors={users} />);
+		const colors: GetColorsType = [{ id: 123 }, { name: 'blanco' }];
+		render(() => <ColorTable colors={colors} />);
 		const colorId = screen.getByText('123');
 		const colorName = screen.getByText('blanco');
 

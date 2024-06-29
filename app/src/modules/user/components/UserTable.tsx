@@ -8,7 +8,7 @@ import RoleCell from './RoleCell';
 function UserTable(props: { users?: GetUsersType }) {
 	return (
 		<TableContainer>
-			<Table class='table-auto'>
+			<Table class='table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class=' bg-trailway *:text-white hover:bg-trailway'>
 						<TableHead>ID</TableHead>
@@ -27,7 +27,7 @@ function UserTable(props: { users?: GetUsersType }) {
 					</Show>
 					<For each={props.users}>
 						{user => (
-							<TableRow class='bg-white *:w-1/6 group'>
+							<TableRow class='bg-white group'>
 								<TableCell>{user.id}</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>{user.name}</TableCell>
