@@ -88,7 +88,9 @@ export const queryToParams = <Schema extends object, Item>(
 	}
 
 	if (query.aggregate && Object.keys(query.aggregate).length > 0) {
-		params.aggregate = JSON.stringify(query.aggregate);
+		for (const [key, value] of Object.entries(query.aggregate)) {
+			params[key] = value;
+		}
 	}
 
 	if (query.groupBy && query.groupBy.length > 0) {
@@ -97,7 +99,7 @@ export const queryToParams = <Schema extends object, Item>(
 
 	for (const [key, value] of Object.entries(query)) {
 		if (key in params) continue;
-
+		if (key === 'aggregate') continue;
 		if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
 			params[key] = String(value);
 		} else {
