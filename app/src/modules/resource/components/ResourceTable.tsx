@@ -18,7 +18,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 						<TableHead>Color</TableHead>
 						<TableHead class='p-0 w-auto' />
 						<TableHead>Code</TableHead>
-						<TableHead>Cost</TableHead>
+						<TableHead>Costo</TableHead>
 						<TableHead>Proveedor</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
@@ -43,7 +43,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 									<div class='h-10 w-10 border-2' style={{ background: colorRecord()[resource.color_id]?.hex || '' }} />
 								</TableCell>
 								<TableCell>{resource.code || 'Code'}</TableCell>
-								<TableCell>{resource.cost}</TableCell>
+								<TableCell>${resource.cost}</TableCell>
 								<TableCell>Proveedor</TableCell>
 								<TableCell>
 									<StatusLabel status={!resource.delete_at} />
