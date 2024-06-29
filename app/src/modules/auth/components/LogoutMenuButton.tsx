@@ -4,7 +4,7 @@ import { Button } from '~/components/ui/Button';
 import { cn } from '~/lib/utils';
 import { LOGIN_PATH } from '~/utils/paths';
 import { logoutRequest } from '../requests/authRequests';
-import RoleRoot from './RoleRoot';
+import RoleRoot from '../../../hooks/roleRoot';
 
 /**
  *

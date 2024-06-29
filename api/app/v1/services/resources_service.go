@@ -1,7 +1,6 @@
 package services
 
 import (
-	"regexp"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -48,8 +47,7 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 	aggregateElem := models.AggregateData{Count: nil}
 
 	if q.Count != "" {
-		re := regexp.MustCompile(`[\[\]]`)
-		countArr := strings.Split(re.ReplaceAllString(q.Count, ""), ",")
+		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
 
 		for _, v := range countArr {
@@ -69,9 +67,7 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 					}
 					aggregateElem.Count = count
 				}
-
 			}
-
 		}
 		if len(countObj) > 0 {
 			aggregateElem.Count = countObj

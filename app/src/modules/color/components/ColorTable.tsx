@@ -31,7 +31,7 @@ function ColorTable(props: { colors?: GetColorsType }) {
 								<TableCell class='py-0'>
 									<div class='flex gap-4'>
 										<div class='my-auto'>{color.hex}</div>
-										<div class='h-10 w-10 border-2' style={{ background: color.hex || '' }} />
+										<div class='h-10 mx-auto w-10 border-2' style={{ background: color.hex || '' }} />
 									</div>
 								</TableCell>
 								<TableCell>{color.code || 'Code'}</TableCell>

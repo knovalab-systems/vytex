@@ -21,10 +21,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, Ta
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
-	type colorsByRefCreate,
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreateRequest';
-import type { Color } from '~/schemas/coreSchema';
 import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
 import { STATUS_CODE } from '~/utils/constants';
 import { REFS_PATH } from '~/utils/paths';
@@ -33,16 +31,18 @@ import {
 	ReferenceCreateSchema,
 	type ReferenceCreateType,
 } from '../schemas/referenceCreateSchema';
+import { type colorsArray, useColors } from '~/hooks/useColors';
 
 type Combined = {
 	id: string;
 	name: string;
 };
 function ReferenceCreateForm(props: {
-	colors: colorsByRefCreate;
+	colors: colorsArray;
 	fabrics: FabricsByRefCreate;
 	resources: ResourcesByRefCreate;
 }) {
+	const { colorRecord } = useColors();
 	const navigate = useNavigate();
 
 	const resources: () => Combined[] = () => [
@@ -58,12 +58,6 @@ function ReferenceCreateForm(props: {
 			},
 			{ '': { name: 'Nada', id: '' } },
 		);
-
-	const colorsObject = () =>
-		props.colors.reduce((prev: Record<string, Color>, v) => {
-			prev[v.id] = v;
-			return prev;
-		}, {});
 
 	const [form, { Form, Field, FieldArray }] = createForm<ReferenceCreateType>({
 		validate: valiForm(ReferenceCreateSchema),
@@ -180,9 +174,9 @@ function ReferenceCreateForm(props: {
 																<div class='flex gap-2'>
 																	<div
 																		class='h-5 w-5 m-auto border'
-																		style={{ background: colorsObject()[props.item.rawValue]?.hex || '' }}
+																		style={{ background: colorRecord()[props.item.rawValue]?.hex || '' }}
 																	/>
-																	{colorsObject()[props.item.rawValue]?.name}
+																	{colorRecord()[props.item.rawValue]?.name}
 																</div>
 															</SelectItem>
 														)}
@@ -192,19 +186,18 @@ function ReferenceCreateForm(props: {
 															<SelectValue<string>>
 																{state => (
 																	<div class='flex gap-2'>
-																		<Show when={!!colorsObject()[state.selectedOption()]}>
+																		<Show when={Boolean(colorRecord()[state.selectedOption()])}>
 																			<div
 																				class='h-5 w-5 m-auto border'
-																				style={{ background: colorsObject()[state.selectedOption()]?.hex || '' }}
+																				style={{ background: colorRecord()[state.selectedOption()]?.hex || '' }}
 																			/>
 																		</Show>
-
-																		{colorsObject()[state.selectedOption()]?.name || 'Selecciona un color'}
+																		{colorRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
 																	</div>
 																)}
 															</SelectValue>
 														</SelectTrigger>
-														<Show when={!!field.error}>
+														<Show when={Boolean(field.error)}>
 															<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 														</Show>
 														<SelectContent />
@@ -272,7 +265,7 @@ function ReferenceCreateForm(props: {
 																								<ComboboxInput />
 																								<ComboboxTrigger title='Ver insumos y telas' />
 																							</ComboboxControl>
-																							<Show when={!!field.error}>
+																							<Show when={Boolean(field.error)}>
 																								<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 																							</Show>
 																							<ComboboxContent />

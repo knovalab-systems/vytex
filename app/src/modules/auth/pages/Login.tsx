@@ -16,7 +16,7 @@ function LoginPage() {
 				<Loading label='Comprobando credenciales' />
 			</Match>
 			<Match when={refresh.isSuccess}>{<Navigate href={'/'} />}</Match>
-			<Match when={refresh.isError || !!searchParams}>
+			<Match when={refresh.isError || Boolean(searchParams)}>
 				{
 					<Suspense fallback={<Loading label='Cargando inicio de sesión' />}>
 						<LoginForm />

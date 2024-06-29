@@ -9,6 +9,7 @@ type Query struct {
 	Offset int    `query:"offset" validate:"gte=0"`
 	Page   int    `query:"page" validate:"gte=0"`
 	Filter string `query:"filter"`
+	Fields string `query:"fields"`
 }
 
 type UserFilter struct {
