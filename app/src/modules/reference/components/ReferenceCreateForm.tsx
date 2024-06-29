@@ -31,7 +31,7 @@ import {
 	ReferenceCreateSchema,
 	type ReferenceCreateType,
 } from '../schemas/referenceCreateSchema';
-import { type colorsArray, useColors } from '~/hooks/useColor';
+import { type colorsArray, useColors } from '~/hooks/useColors';
 
 type Combined = {
 	id: string;

@@ -4,14 +4,14 @@ import { Toaster } from 'solid-toast';
 import './App.css';
 import { queryClient } from './lib/queryClient';
 import Routes from './routes/Routes';
-import { ColorProvider } from './hooks/useColor';
+import { ColorsProvider } from './hooks/useColors';
 
 function App() {
 	return (
 		<Router
 			root={(props: RouteSectionProps) => (
 				<QueryClientProvider client={queryClient}>
-					<ColorProvider>{props.children}</ColorProvider>
+					<ColorsProvider>{props.children}</ColorsProvider>
 					<Toaster />
 				</QueryClientProvider>
 			)}

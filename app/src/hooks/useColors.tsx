@@ -5,15 +5,15 @@ import RoleRoot from '~/hooks/roleRoot';
 import { queryClient } from '~/lib/queryClient';
 import { client } from '~/utils/client';
 
-const key = 'colorContext';
+const queryKey = 'colorContext';
 
-const ColorContext = createContext<colorContext>({
+const ColorsContext = createContext<colorsContext>({
 	colorsArray: {} as CreateQueryResult<colorsArray>,
 	colorRecord: () => ({}),
 	setActive: () => {},
 });
 
-async function coloContextReq() {
+async function colorsContextReq() {
 	return await client.request(
 		readColors({
 			limit: -1,
@@ -22,24 +22,24 @@ async function coloContextReq() {
 	);
 }
 
-export type colorsArray = Awaited<ReturnType<typeof coloContextReq>>;
+export type colorsArray = Awaited<ReturnType<typeof colorsContextReq>>;
 
 type color = colorsArray[number];
 
 type colorRecord = Record<string, color>;
 
-type colorContext = {
+type colorsContext = {
 	colorsArray: CreateQueryResult;
 	colorRecord: Accessor<colorRecord>;
 	setActive: () => void;
 };
 
-export function ColorProvider(props: { children: JSXElement }) {
+export function ColorsProvider(props: { children: JSXElement }) {
 	const { role } = RoleRoot;
 	const [enabled, setEnabled] = createSignal(false);
 	const colors = createQuery(() => ({
-		queryFn: coloContextReq,
-		queryKey: [key],
+		queryFn: colorsContextReq,
+		queryKey: [queryKey],
 		staleTime: Number.POSITIVE_INFINITY,
 		enabled: Boolean(role()) && enabled(),
 	}));
@@ -56,17 +56,17 @@ export function ColorProvider(props: { children: JSXElement }) {
 		setEnabled(true);
 	};
 
-	const values: colorContext = { colorsArray: colors, colorRecord: colorsObj, setActive: setActive };
+	const values: colorsContext = { colorsArray: colors, colorRecord: colorsObj, setActive: setActive };
 
-	return <ColorContext.Provider value={values}>{props.children}</ColorContext.Provider>;
+	return <ColorsContext.Provider value={values}>{props.children}</ColorsContext.Provider>;
 }
 
 export function useColors() {
-	const context = useContext(ColorContext);
+	const context = useContext(ColorsContext);
 	context.setActive();
 	return context;
 }
 
 export async function name() {
-	return await queryClient.refetchQueries({ queryKey: [key], exact: true, type: 'active' });
+	return await queryClient.refetchQueries({ queryKey: [queryKey], exact: true, type: 'active' });
 }

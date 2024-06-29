@@ -12,7 +12,7 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import ResourceTable from '../components/ResourceTable';
-import { useColors } from '~/hooks/useColor';
+import { useColors } from '~/hooks/useColors';
 
 function Resources() {
 	const [page, setPage] = createSignal(1);
