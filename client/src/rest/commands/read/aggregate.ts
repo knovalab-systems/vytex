@@ -31,7 +31,7 @@ export const aggregate =
 			params: {
 				...(options.query ?? {}),
 				...(options.groupBy ? { groupBy: options.groupBy } : {}),
-				...options.aggregate,
+				aggregate: options.aggregate,
 			},
 		};
 	};

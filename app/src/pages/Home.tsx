@@ -1,5 +1,5 @@
 import { Match, Switch, lazy } from 'solid-js';
-import RoleRoot from '~/modules/auth/components/RoleRoot';
+import RoleRoot from '~/hooks/roleRoot';
 import { NO_ROLE } from '~/utils/env';
 
 const NotPermission = lazy(() => import('~/pages/NotPermission'));

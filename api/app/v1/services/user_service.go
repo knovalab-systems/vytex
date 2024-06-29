@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 
@@ -80,8 +79,7 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	aggregateElem := models.AggregateData{Count: nil}
 
 	if q.Count != "" {
-		re := regexp.MustCompile(`[\[\]]`)
-		countArr := strings.Split(re.ReplaceAllString(q.Count, ""), ",")
+		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
 
 		filter, err := userFilters(q.Filter, s)
@@ -106,14 +104,11 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 					}
 					aggregateElem.Count = count
 				}
-
 			}
-
 		}
 		if len(countObj) > 0 {
 			aggregateElem.Count = countObj
 		}
-
 	}
 
 	return []*models.AggregateData{&aggregateElem}, nil
