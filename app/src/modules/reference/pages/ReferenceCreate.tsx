@@ -5,20 +5,20 @@ import ReferenceCreateForm from '../components/ReferenceCreateForm';
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
-	type colorsByRefCreate,
-	getColorsByRefCreateQuery,
 	getFabricsByRefCreateQuery,
 	getResourcesByRefCreateQuery,
 } from '../requests/referenceCreateRequest';
+import { type colorsArray, useColors } from '~/hooks/useColor';
 
 function ReferenceCreate() {
+	const { colorsArray } = useColors();
 	const data = createQueries(() => ({
-		queries: [getColorsByRefCreateQuery(), getFabricsByRefCreateQuery(), getResourcesByRefCreateQuery()],
+		queries: [getFabricsByRefCreateQuery(), getResourcesByRefCreateQuery()],
 	}));
 
-	const isLoading = () => data.some(q => q.isLoading);
+	const isLoading = () => data.some(q => q.isLoading) || colorsArray.isLoading;
 
-	const isSuccess = () => data.some(q => q.isSuccess);
+	const isSuccess = () => data.every(q => q.isSuccess) && colorsArray.isSuccess;
 
 	return (
 		<div class='flex items-center justify-center h-full'>
@@ -28,9 +28,9 @@ function ReferenceCreate() {
 				</Match>
 				<Match when={isSuccess()}>
 					<ReferenceCreateForm
-						colors={data[0].data as colorsByRefCreate}
-						fabrics={data[1].data as FabricsByRefCreate}
-						resources={data[2].data as ResourcesByRefCreate}
+						colors={colorsArray.data as colorsArray}
+						fabrics={data[0].data as FabricsByRefCreate}
+						resources={data[1].data as ResourcesByRefCreate}
 					/>
 				</Match>
 			</Switch>

@@ -1,4 +1,4 @@
-import { createQuery } from '@tanstack/solid-query';
+import { type CreateQueryResult, createQuery } from '@tanstack/solid-query';
 import { readColors } from '@vytex/client';
 import { type JSXElement, createContext, useContext, createMemo, type Accessor, createSignal } from 'solid-js';
 import RoleRoot from '~/hooks/roleRoot';
@@ -7,7 +7,11 @@ import { client } from '~/utils/client';
 
 const key = 'colorContext';
 
-const ColorContext = createContext<colorContext>({ colorsArray: {}, colorRecord: () => ({}), setActive: () => {} });
+const ColorContext = createContext<colorContext>({
+	colorsArray: {} as CreateQueryResult<colorsArray>,
+	colorRecord: () => ({}),
+	setActive: () => {},
+});
 
 async function coloContextReq() {
 	return await client.request(
@@ -18,15 +22,14 @@ async function coloContextReq() {
 	);
 }
 
-type colorsArray = Awaited<ReturnType<typeof coloContextReq>>;
+export type colorsArray = Awaited<ReturnType<typeof coloContextReq>>;
 
 type color = colorsArray[number];
 
 type colorRecord = Record<string, color>;
 
 type colorContext = {
-	// biome-ignore lint/suspicious/noExplicitAny: for default context value
-	colorsArray: any;
+	colorsArray: CreateQueryResult;
 	colorRecord: Accessor<colorRecord>;
 	setActive: () => void;
 };
