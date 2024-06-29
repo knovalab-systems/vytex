@@ -40,7 +40,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 
 		if (!STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && !props.user?.delete_at) {
 			user.delete_at = now(getLocalTimeZone()).toAbsoluteString();
-		} else if (STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && !!props.user?.delete_at) {
+		} else if (STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && Boolean(props.user?.delete_at)) {
 			user.delete_at = null;
 		}
 

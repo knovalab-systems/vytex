@@ -39,7 +39,7 @@ function RoleTable(props: {
 													</div>
 												</TableCell>
 											</Match>
-											<Match when={!!props.rolePermmissions[role.key][permission.key]}>
+											<Match when={Boolean(props.rolePermmissions[role.key][permission.key])}>
 												<TableCell>
 													<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
 														Sí

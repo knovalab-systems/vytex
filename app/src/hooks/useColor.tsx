@@ -41,7 +41,7 @@ export function ColorProvider(props: { children: JSXElement }) {
 		queryFn: coloContextReq,
 		queryKey: [key],
 		staleTime: Number.POSITIVE_INFINITY,
-		enabled: !!role() && enabled(),
+		enabled: Boolean(role()) && enabled(),
 	}));
 
 	const colorsObj = createMemo(() => {

@@ -18,7 +18,7 @@ const Input: Component<ComponentProps<'input'>> = props => {
 				)}
 				{...rest}
 			/>
-			<Show when={!!props['aria-errormessage']}>
+			<Show when={Boolean(props['aria-errormessage'])}>
 				<div class={'text-sm text-red-600'}>{props['aria-errormessage']}</div>
 			</Show>
 		</>

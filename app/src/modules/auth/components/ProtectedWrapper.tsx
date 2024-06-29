@@ -15,7 +15,7 @@ function ProtectedWrapper(props: RouteSectionProps) {
 			<Match when={token.loading || refresh.isFetching}>
 				<Loading label='Comprobando credenciales' />
 			</Match>
-			<Match when={(token.state === 'ready' && !!token()) || refresh.isSuccess}>{props.children}</Match>
+			<Match when={(token.state === 'ready' && Boolean(token())) || refresh.isSuccess}>{props.children}</Match>
 			<Match when={token.state === 'errored' || refresh.isError}>
 				{<Navigate href={`${LOGIN_PATH}?reason=TOKEN_EXPIRED`} />}
 			</Match>

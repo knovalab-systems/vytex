@@ -186,19 +186,18 @@ function ReferenceCreateForm(props: {
 															<SelectValue<string>>
 																{state => (
 																	<div class='flex gap-2'>
-																		<Show when={!!colorRecord()[state.selectedOption()]}>
+																		<Show when={Boolean(colorRecord()[state.selectedOption()])}>
 																			<div
 																				class='h-5 w-5 m-auto border'
 																				style={{ background: colorRecord()[state.selectedOption()]?.hex || '' }}
 																			/>
 																		</Show>
-
 																		{colorRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
 																	</div>
 																)}
 															</SelectValue>
 														</SelectTrigger>
-														<Show when={!!field.error}>
+														<Show when={Boolean(field.error)}>
 															<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 														</Show>
 														<SelectContent />
@@ -266,7 +265,7 @@ function ReferenceCreateForm(props: {
 																								<ComboboxInput />
 																								<ComboboxTrigger title='Ver insumos y telas' />
 																							</ComboboxControl>
-																							<Show when={!!field.error}>
+																							<Show when={Boolean(field.error)}>
 																								<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 																							</Show>
 																							<ComboboxContent />
