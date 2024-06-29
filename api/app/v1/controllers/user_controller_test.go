@@ -220,7 +220,7 @@ func TestAggregateUser(t *testing.T) {
 
 	// dont fail binding on any case
 
-	t.Run("fail on get aggregate succesfully", func(t *testing.T) {
+	t.Run("fail on get aggregate", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("count", "*")
