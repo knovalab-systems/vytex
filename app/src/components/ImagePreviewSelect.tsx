@@ -124,7 +124,7 @@ const ImagePreviewSelect = (props: ImagePreviewSelectProps) => {
                     <div class='mt-2 flex justify-center w-full'>
                         <button
                             type='button'
-                            class='bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-2 rounded'
+                            class='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded'
                             onClick={handleRemoveImage}
                         >
                             Eliminar foto
