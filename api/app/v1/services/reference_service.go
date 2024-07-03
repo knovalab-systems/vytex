@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -19,8 +20,25 @@ func (m *ReferenceService) CreateReference(u *models.ReferenceCreateBody) (*mode
 		return nil, err
 	}
 
+	// create front image
+	frontImage := &models.Image{Location: u.Front}
+	err = query.Image.Create(frontImage)
+
+	if err != nil {
+		fmt.Println("aqui")
+		return nil, problems.ServerError()
+	}
+
+	// create back image
+	backImage := &models.Image{Location: u.Back}
+	err = query.Image.Create(backImage)
+
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
 	// create base reference
-	reference := &models.Reference{Reference: u.Reference, CreatedBy: u.CreatedBy}
+	reference := &models.Reference{Reference: u.Reference, CreatedBy: u.CreatedBy, FrontImage: frontImage, BackImage: backImage}
 
 	err = query.Reference.Create(reference)
 	if err != nil {

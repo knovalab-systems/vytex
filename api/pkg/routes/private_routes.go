@@ -18,4 +18,5 @@ func PrivateRoutes(e *echo.Echo) {
 	privateFabricRoutes(route)
 	privateResourceRoutes(route)
 	privateReferenceRoutes(route)
+	privateFileRoute(route)
 }
