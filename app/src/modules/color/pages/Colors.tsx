@@ -12,6 +12,10 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/utils/constants';
+import { Button } from '~/components/ui/Button';
+import { A } from '@solidjs/router';
+import { COLORS_CREATE_PATH } from '~/utils/paths';
+import { AiOutlinePlus } from 'solid-icons/ai';
 
 function Colors() {
 	const [page, setPage] = createSignal(1);
@@ -25,6 +29,13 @@ function Colors() {
 
 	return (
 		<div class='h-full flex flex-col'>
+			<div class='mb-2'>
+				<A href={COLORS_CREATE_PATH}>
+					<Button class='bg-purple-600 hover:bg-purple-700'>
+						Nuevo Color <AiOutlinePlus class='ml-2' size={22} />
+					</Button>
+				</A>
+			</div>
 			<Switch>
 				<Match when={colors.isLoading || countColors.isLoading}>
 					<Loading label='Cargando colores' />

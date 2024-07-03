@@ -6,7 +6,7 @@ import type { NavPages } from '~/modules/auth/components/NavWrapper';
 
 function MenuNav(props: { pages: NavPages[] }) {
 	return (
-		<nav class='p-2 w-full hadow-md hidden bg-slate-200/60 lg:flex lg:justify-between'>
+		<nav class='p-2 w-full hadow-md hidden bg-slate-200 lg:flex lg:justify-between'>
 			<div class='flex font-sans items-center text-center py-2 text-indigo-500 uppercase lg:text-xs 2xl:text-xl'>
 				<IoLogoIonitron size={32} />
 				<span class='ml-3'>Vytex</span>
