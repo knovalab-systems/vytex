@@ -1,8 +1,10 @@
+import { useLocale } from '@kobalte/core';
 import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
-import { For, Show } from 'solid-js';
+import { For, Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
+import ImagePreviewSelect from '~/components/ImagePreviewSelect';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -18,6 +20,9 @@ import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import useCloudinary from '~/hooks/useCloudinary';
+import { type colorsArray, useColors } from '~/hooks/useColors';
+import useLocal from '~/hooks/useLocal';
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
@@ -31,7 +36,6 @@ import {
 	ReferenceCreateSchema,
 	type ReferenceCreateType,
 } from '../schemas/referenceCreateSchema';
-import { type colorsArray, useColors } from '~/hooks/useColors';
 
 type Combined = {
 	id: string;
@@ -44,6 +48,10 @@ function ReferenceCreateForm(props: {
 }) {
 	const { colorRecord } = useColors();
 	const navigate = useNavigate();
+	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
+	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
+	const { uploadImages } = useCloudinary();
+	const { uploadImage } = useLocal();
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
@@ -71,9 +79,20 @@ function ReferenceCreateForm(props: {
 	});
 
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
+
+		const images = [frontImage(), backImage()].filter(Boolean);
+		const filteredImages = images.filter((image): image is File => image !== undefined);
+		const urls = await uploadImages(filteredImages);
+
+		// Almacenar imagenes local - test
+		const files = await uploadImage(filteredImages);
+		console.log(files);
+
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: ReferenceCreateRequest = {
 			reference: data.reference.toString(),
+			front: urls?.[0] || '',
+			back: urls?.[1] || '',
 			colors: data.colors.map((color, i) => ({
 				color: color.color,
 				...color.resources.reduce(
@@ -364,6 +383,26 @@ function ReferenceCreateForm(props: {
 					</div>
 				)}
 			</FieldArray>
+			<div class='text-center'>
+				<p class='mb-2'>Foto frontal</p>
+				<ImagePreviewSelect
+					id='front'
+					onFileSelected={setFrontImage}
+					width='26rem'
+					height='26rem'
+					aria-label='Foto frontal'
+				/>
+			</div>
+			<div class='text-center'>
+				<p class='mb-2'>Foto posterior</p>
+				<ImagePreviewSelect
+					id='back'
+					onFileSelected={setBackImage}
+					width='26rem'
+					height='26rem'
+					aria-label='Foto posterior'
+				/>
+			</div>
 			<div class='flex xl:hidden my-2 justify-between'>
 				<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
 					Cancelar
