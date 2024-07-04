@@ -80,12 +80,12 @@ func (m *ColorController) CreateColor(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.CreateUserBadRequest()
+		return problems.CreateColorBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.CreateUserBadRequest()
+		return problems.CreateColorBadRequest()
 	}
 
 	// create
