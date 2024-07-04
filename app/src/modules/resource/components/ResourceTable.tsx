@@ -36,8 +36,8 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell>{resource.id}</TableCell>
 								<TableCell class='w-1/6'>{resource.key}</TableCell>
 								<TableCell>{resource.name}</TableCell>
-								<TableCell class='py-0'>
-									<div class='my-auto'>{colorRecord()[resource.color_id]?.name || resource.color_id}</div>
+								<TableCell>
+									<div>{colorRecord()[resource.color_id]?.name || resource.color_id}</div>
 								</TableCell>
 								<TableCell>
 									<div class='h-10 w-10 border-2' style={{ background: colorRecord()[resource.color_id]?.hex || '' }} />
