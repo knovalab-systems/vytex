@@ -1,7 +1,9 @@
+import ColorCreateForm from '../components/ColorCreateForm';
+
 function ColorCreate() {
 	return (
-		<div>
-			<h2>ColorCreate</h2>
+		<div class='flex items-center justify-center h-full'>
+			<ColorCreateForm />
 		</div>
 	);
 }
