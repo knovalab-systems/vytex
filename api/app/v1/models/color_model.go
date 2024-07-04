@@ -15,3 +15,9 @@ type Color struct {
 	UpdatedAt *time.Time     `json:"update_at,omitempty"`
 	DeletedAt gorm.DeletedAt `json:"delete_at,omitempty" gorm:"index"`
 }
+
+type ColorCreateBody struct {
+	Name string `json:"name" validate:"required"`
+	Code string `json:"code" validate:"required"`
+	Hex  string `json:"hex" validate:"required,hexcolor"`
+}

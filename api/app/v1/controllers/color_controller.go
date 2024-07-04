@@ -74,3 +74,25 @@ func (m *ColorController) AggregateColors(c echo.Context) error {
 	// return data
 	return c.JSON(http.StatusOK, aggregate)
 }
+
+func (m *ColorController) CreateColor(c echo.Context) error {
+	u := new(models.ColorCreateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.CreateUserBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CreateUserBadRequest()
+	}
+
+	// create
+	color, err := m.ColorRepository.CreateColor(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, color)
+}
