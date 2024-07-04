@@ -1,13 +1,13 @@
-import { useNavigate } from '@solidjs/router';
-import { ColorCreateSchema, type ColorCreateType } from '../schemas/colorCreateSchema';
 import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
+import { useNavigate } from '@solidjs/router';
+import toast from 'solid-toast';
+import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
-import { Button } from '~/components/ui/Button';
+import { STATUS_CODE } from '~/utils/constants';
 import { COLORS_PATH } from '~/utils/paths';
 import { createColorRequest } from '../requests/colorsCreateRequests';
-import toast from 'solid-toast';
-import { STATUS_CODE } from '~/utils/constants';
+import { ColorCreateSchema, type ColorCreateType } from '../schemas/colorCreateSchema';
 
 function ColorCreateForm() {
 	const navigate = useNavigate();

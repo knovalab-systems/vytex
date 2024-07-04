@@ -1,8 +1,8 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetResourcesType } from '../requests/resourcesGetRequests';
-import { Show, For } from 'solid-js';
+import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
+import type { GetResourcesType } from '../requests/resourcesGetRequests';
 
 function ResourceTable(props: { resources?: GetResourcesType }) {
 	const { colorRecord } = useColors();

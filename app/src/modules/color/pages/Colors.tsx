@@ -1,8 +1,9 @@
+import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
+import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
-import ColorTable from '../components/ColorTable';
-import { countColorsQuery, getColorsQuery } from '../requests/colorsGetRequests';
+import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -12,10 +13,9 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/utils/constants';
-import { Button } from '~/components/ui/Button';
-import { A } from '@solidjs/router';
 import { COLORS_CREATE_PATH } from '~/utils/paths';
-import { AiOutlinePlus } from 'solid-icons/ai';
+import ColorTable from '../components/ColorTable';
+import { countColorsQuery, getColorsQuery } from '../requests/colorsGetRequests';
 
 function Colors() {
 	const [page, setPage] = createSignal(1);
