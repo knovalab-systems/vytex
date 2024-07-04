@@ -3,10 +3,6 @@ import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import UserUpdateForm from '../UserUpdateForm';
 
-vi.mock('~/modules/users/requests/createUserRequests', () => ({
-	createUserRequest: vi.fn(),
-}));
-
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
@@ -25,7 +21,7 @@ describe('UserUpdateForm', () => {
 		};
 
 		render(() => <UserUpdateForm user={user} />);
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
 		const roleIdFilterInput = screen.getByText('Rol');
@@ -47,7 +43,7 @@ describe('UserUpdateForm', () => {
 			delete_at: 'delete',
 		};
 		render(() => <UserUpdateForm user={user} />);
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
 
@@ -68,7 +64,7 @@ describe('UserUpdateForm', () => {
 		};
 		render(() => <UserUpdateForm user={user} />);
 
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 
 		fireEvent.input(nameField, { target: { value: '' } });
@@ -78,7 +74,7 @@ describe('UserUpdateForm', () => {
 		fireEvent.click(submitButton);
 
 		const errorname = await screen.findByText('Ingresa el nombre.');
-		const errorusername = await screen.findByText(/Ingresa el usuario./i);
+		const errorusername = await screen.findByText('Ingresa el usuario.');
 
 		expect(errorname).toBeInTheDocument();
 		expect(errorusername).toBeInTheDocument();
@@ -91,7 +87,7 @@ describe('UserUpdateForm', () => {
 			delete_at: 'delete',
 		};
 		render(() => <UserUpdateForm user={user} />);
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
 		const submitButton = screen.getByText('Actualizar');
@@ -102,9 +98,9 @@ describe('UserUpdateForm', () => {
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
-			expect(screen.queryByText(/Ingresa el nombre./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Ingresa el usuario./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/La contraseña debe ser de mínimo 8 caracteres./i)).not.toBeInTheDocument();
+			expect(screen.queryByText('Ingresa el nombre.')).not.toBeInTheDocument();
+			expect(screen.queryByText('Ingresa el usuario.')).not.toBeInTheDocument();
+			expect(screen.queryByText('La contraseña debe ser de mínimo 8 caracteres.')).not.toBeInTheDocument();
 		});
 	});
 

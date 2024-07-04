@@ -1,5 +1,5 @@
 import { useNavigate } from '@solidjs/router';
-import { ColorCreateSchema, type ColorCreateType } from '../shemchas/colorCreateSchema';
+import { ColorCreateSchema, type ColorCreateType } from '../schemas/colorCreateSchema';
 import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';

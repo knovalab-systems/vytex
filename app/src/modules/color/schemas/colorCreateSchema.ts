@@ -5,8 +5,8 @@ export const ColorCreateSchema = object({
 	code: pipe(string('Ingresa el código.'), minLength(1, 'Ingresa el código.')),
 	hex: pipe(
 		string('Ingresa el HEX.'),
-		hexadecimal('Ingresa un valor válido de hexadecimal'),
-		check(e => e.length === 6 || e.length === 3, 'Ingresa solo 3 o 6 valores'),
+		hexadecimal('Ingresa un valor válido de hexadecimal.'),
+		check(e => e.length === 6 || e.length === 3, 'Ingresa solo 3 o 6 valores.'),
 	),
 });
 
