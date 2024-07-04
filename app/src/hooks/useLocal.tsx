@@ -2,17 +2,14 @@ import { createSignal } from 'solid-js';
 import { uploadFilesRequest } from './request/filesRequest';
 import type { fileResponse } from './request/filesRequest';
 
-type FileResponse = fileResponse;
-type UploadError = string | null;
-
 const useLocal = () => {
     const [uploading, setUploading] = createSignal(false);
-    const [error, setError] = createSignal<UploadError>(null);
-    const [uploadedFiles, setUploadedFiles] = createSignal<FileResponse[]>([]);
+    const [error, setError] = createSignal(false);
+    const [uploadedFiles, setUploadedFiles] = createSignal<fileResponse>();
 
     const uploadImage = async (files: File[]) => {
         setUploading(true);
-        setError(null);
+        setError(false);
         try {
             const formData = new FormData();
 
@@ -20,11 +17,11 @@ const useLocal = () => {
                 formData.append("files", file);
             }
 
-            const responses = await Promise.all(files.map(() => uploadFilesRequest(formData)));
+            const responses = await uploadFilesRequest(formData);
             setUploadedFiles(responses);
         } catch (err) {
             console.error("Error al subir archivo", err);
-            setError(`Error al subir archivo: ${err instanceof Error ? err.message : String(err)}`);
+            setError
         } finally {
             setUploading(false);
         }

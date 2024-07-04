@@ -51,7 +51,7 @@ function ReferenceCreateForm(props: {
 	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
 	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
 	const { uploadImages } = useCloudinary();
-	const { uploadImage } = useLocal();
+	const { uploadImage, error } = useLocal();
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
@@ -82,7 +82,7 @@ function ReferenceCreateForm(props: {
 
 		const images = [frontImage(), backImage()].filter(Boolean);
 		const filteredImages = images.filter((image): image is File => image !== undefined);
-		const urls = await uploadImages(filteredImages);
+		// const urls = await uploadImages(filteredImages);
 
 		// Almacenar imagenes local - test
 		const files = await uploadImage(filteredImages);
@@ -91,8 +91,8 @@ function ReferenceCreateForm(props: {
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: ReferenceCreateRequest = {
 			reference: data.reference.toString(),
-			front: urls?.[0] || '',
-			back: urls?.[1] || '',
+			// front: urls?.[0] || '',
+			// back: urls?.[1] || '',
 			colors: data.colors.map((color, i) => ({
 				color: color.color,
 				...color.resources.reduce(
@@ -122,6 +122,11 @@ function ReferenceCreateForm(props: {
 			return;
 		}
 
+		if (error()) {
+			toast.error('Error al subir imagen');
+			return;
+		}
+
 		return createReferenceRequest(reference)
 			.then(() => {
 				toast.success('Referencia creada correctamente');
@@ -139,7 +144,7 @@ function ReferenceCreateForm(props: {
 	const handleCancel = () => navigate(REFS_PATH);
 
 	return (
-		<Form class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100' onSubmit={handleSubmit}>
+		<Form class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100' onSubmit={handleSubmit} enctype='multipart/form-data'>
 			<div class='flex flex-col gap-4 mb-auto'>
 				<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 					<h1 class='text-2xl font-bold text-center'>Crear referencia</h1>

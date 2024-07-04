@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"io"
 	"mime/multipart"
@@ -30,7 +30,6 @@ func (m *ImageService) CreateImage(file *multipart.FileHeader) (string, error) {
 	}
 	defer dst.Close()
 
-	
 	// create image
 	image := &models.Image{Location: dstPath}
 	err = query.Image.Create(image)
