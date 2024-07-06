@@ -4,8 +4,8 @@ import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { cn } from '~/lib/utils';
 import { LOGIN_PATH } from '~/utils/paths';
-import { logoutRequest } from '../requests/authRequests';
 import RoleRoot from '../../../hooks/roleRoot';
+import { logoutRequest } from '../requests/authRequests';
 
 /**
  *

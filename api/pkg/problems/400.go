@@ -20,20 +20,20 @@ func JwtBadRequest() *echo.HTTPError {
 // user
 func UsersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users resources", ""))
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users", ""))
 }
 
 func AggregateUsersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users aggregation resources", ""))
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users aggregation", ""))
 }
 
-func UpdateUsersBadRequest() *echo.HTTPError {
+func UpdateUserBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to update user", ""))
 }
 
-func CreateUsersBadRequest() *echo.HTTPError {
+func CreateUserBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to create user", ""))
 }
@@ -41,13 +41,18 @@ func CreateUsersBadRequest() *echo.HTTPError {
 // color
 func ColorsBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get colors resources", ""))
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get colors", ""))
+}
+
+func CreateColorBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to create color", ""))
 }
 
 // fabric
-func FabricBadRequest() *echo.HTTPError {
+func FabricsBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get fabrics resources", ""))
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get fabrics", ""))
 }
 
 // resource

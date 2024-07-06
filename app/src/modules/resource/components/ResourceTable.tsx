@@ -1,8 +1,8 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetResourcesType } from '../requests/resourcesGetRequests';
-import { Show, For } from 'solid-js';
+import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
+import type { GetResourcesType } from '../requests/resourcesGetRequests';
 
 function ResourceTable(props: { resources?: GetResourcesType }) {
 	const { colorRecord } = useColors();
@@ -36,8 +36,8 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell>{resource.id}</TableCell>
 								<TableCell class='w-1/6'>{resource.key}</TableCell>
 								<TableCell>{resource.name}</TableCell>
-								<TableCell class='py-0'>
-									<div class='my-auto'>{colorRecord()[resource.color_id]?.name || resource.color_id}</div>
+								<TableCell>
+									<div>{colorRecord()[resource.color_id]?.name || resource.color_id}</div>
 								</TableCell>
 								<TableCell>
 									<div class='h-10 w-10 border-2' style={{ background: colorRecord()[resource.color_id]?.hex || '' }} />

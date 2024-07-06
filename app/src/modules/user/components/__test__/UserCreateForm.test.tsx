@@ -3,10 +3,6 @@ import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import UserCreateForm from '../UserCreateForm';
 
-vi.mock('~/modules/users/requests/createUserRequests', () => ({
-	createUserRequest: vi.fn(),
-}));
-
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
@@ -19,7 +15,7 @@ describe('UserCreateForm', () => {
 
 	it('renders correctly', () => {
 		render(() => <UserCreateForm />);
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
 		const roleIdFilterInput = screen.getByText('Selecciona un rol');
@@ -36,7 +32,7 @@ describe('UserCreateForm', () => {
 
 	it('check change inputs values ', async () => {
 		render(() => <UserCreateForm />);
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
 		const roleIdFilterInput = screen.getByText('Selecciona un rol');
@@ -57,9 +53,9 @@ describe('UserCreateForm', () => {
 		const submitButton = screen.getByText('Guardar');
 		fireEvent.click(submitButton);
 
-		const errorname = await screen.findByText(/Ingresa el nombre./i);
-		const errorusername = await screen.findByText(/Ingresa el usuario./i);
-		const errorpassword = await screen.findByText(/Ingresa la contraseña./i);
+		const errorname = await screen.findByText('Ingresa el nombre.');
+		const errorusername = await screen.findByText('Ingresa el usuario.');
+		const errorpassword = await screen.findByText('Ingresa la contraseña.');
 
 		expect(errorname).toBeInTheDocument();
 		expect(errorusername).toBeInTheDocument();
@@ -68,7 +64,7 @@ describe('UserCreateForm', () => {
 
 	it('dont show empty fields error message when submit form', async () => {
 		render(() => <UserCreateForm />);
-		const nameField = screen.getByPlaceholderText(/jose perez/i);
+		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
 		const roleIdFilterInput = screen.getByText('Selecciona un rol');
@@ -81,9 +77,9 @@ describe('UserCreateForm', () => {
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
-			expect(screen.queryByText(/Ingresa el nombre./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Ingresa el usuario./i)).not.toBeInTheDocument();
-			expect(screen.queryByText(/Ingresa la contraseña./i)).not.toBeInTheDocument();
+			expect(screen.queryByText('Ingresa el nombre.')).not.toBeInTheDocument();
+			expect(screen.queryByText('Ingresa el usuario./')).not.toBeInTheDocument();
+			expect(screen.queryByText('Ingresa la contraseña./')).not.toBeInTheDocument();
 		});
 	});
 

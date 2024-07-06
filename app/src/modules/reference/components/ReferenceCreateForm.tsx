@@ -18,6 +18,7 @@ import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { type colorsArray, useColors } from '~/hooks/useColors';
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
@@ -31,7 +32,6 @@ import {
 	ReferenceCreateSchema,
 	type ReferenceCreateType,
 } from '../schemas/referenceCreateSchema';
-import { type colorsArray, useColors } from '~/hooks/useColors';
 
 type Combined = {
 	id: string;

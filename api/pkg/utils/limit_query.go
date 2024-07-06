@@ -12,7 +12,7 @@ func LimitQuery() int {
 	if exists {
 		limit, err := strconv.Atoi(env)
 		if err != nil {
-			log.Println("Invalid type in enviroment variable, QUERY_LIMIT_DEFAULT", err)
+			log.Fatal("Invalid type in enviroment variable, QUERY_LIMIT_DEFAULT", err)
 		} else {
 			return limit
 		}

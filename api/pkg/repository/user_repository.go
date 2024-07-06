@@ -7,5 +7,5 @@ type UserRepository interface {
 	ReadUser(*models.ReadUser) (*models.User, error)
 	AggregationUsers(*models.AggregateQuery) ([]*models.AggregateData, error)
 	UpdateUser(*models.UpdateUserBody) (*models.User, error)
-	CreateUser(body *models.UserCreateBody) (*models.User, error)
+	CreateUser(*models.UserCreateBody) (*models.User, error)
 }

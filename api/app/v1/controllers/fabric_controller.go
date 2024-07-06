@@ -28,12 +28,12 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.FabricBadRequest()
+		return problems.FabricsBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.FabricBadRequest()
+		return problems.FabricsBadRequest()
 	}
 
 	// get fabrics

@@ -1,6 +1,7 @@
 import { createQueries } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
+import { type colorsArray, useColors } from '~/hooks/useColors';
 import ReferenceCreateForm from '../components/ReferenceCreateForm';
 import {
 	type FabricsByRefCreate,
@@ -8,7 +9,6 @@ import {
 	getFabricsByRefCreateQuery,
 	getResourcesByRefCreateQuery,
 } from '../requests/referenceCreateRequest';
-import { type colorsArray, useColors } from '~/hooks/useColors';
 
 function ReferenceCreate() {
 	const { colorsArray } = useColors();
