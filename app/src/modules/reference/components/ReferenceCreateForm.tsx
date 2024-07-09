@@ -1,4 +1,3 @@
-import { useLocale } from '@kobalte/core';
 import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
@@ -20,9 +19,8 @@ import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import useCloudinary from '~/hooks/useCloudinary';
 import { type colorsArray, useColors } from '~/hooks/useColors';
-import useLocal from '~/hooks/useLocal';
+import useImageUploader from '~/hooks/useImageUploader';
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
@@ -50,8 +48,7 @@ function ReferenceCreateForm(props: {
 	const navigate = useNavigate();
 	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
 	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
-	const { uploadImages } = useCloudinary();
-	const { uploadImage, error } = useLocal();
+	const { uploadLocalImages, uploadedFiles, error } = useImageUploader();
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
@@ -78,21 +75,24 @@ function ReferenceCreateForm(props: {
 		},
 	});
 
-	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
-
+	async function handleImageUpload() {
 		const images = [frontImage(), backImage()].filter(Boolean);
 		const filteredImages = images.filter((image): image is File => image !== undefined);
-		// const urls = await uploadImages(filteredImages);
+		await uploadLocalImages(filteredImages);
 
-		// Almacenar imagenes local - test
-		const files = await uploadImage(filteredImages);
-		console.log(files);
+		if (error()) {
+			toast.error('Error al subir imagenes');
+			return;
+		}
+	}
 
+	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
+		await handleImageUpload();
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: ReferenceCreateRequest = {
 			reference: data.reference.toString(),
-			// front: urls?.[0] || '',
-			// back: urls?.[1] || '',
+			front: uploadedFiles()?.[0] || '',
+			back: uploadedFiles()?.[1] || '',
 			colors: data.colors.map((color, i) => ({
 				color: color.color,
 				...color.resources.reduce(
@@ -119,11 +119,6 @@ function ReferenceCreateForm(props: {
 
 		if (checkFabricResources.some(e => e.fabric === false)) {
 			toast.error('Cada color de la referencia debe tener al menos una tela.');
-			return;
-		}
-
-		if (error()) {
-			toast.error('Error al subir imagen');
 			return;
 		}
 

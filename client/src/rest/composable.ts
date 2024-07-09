@@ -27,7 +27,8 @@ export const rest = (config: Partial<RestConfig> = {}) => {
 					options.headers['Content-Type'] = 'application/json';
 				} else if (options.headers['Content-Type'] === 'multipart/form-data') {
 					// let the fetch function deal with multipart boundaries
-					options.headers['Content-Type'] = '';
+					// biome-ignore lint/performance/noDelete: <explanation>
+					delete options.headers['Content-Type'];
 				}
 
 				// we need to use THIS here instead of client to access overridden functions

@@ -1,7 +1,5 @@
 import { Match, Switch, lazy } from 'solid-js';
-import ImageUploader from '~/components/ImageUploader';
 import RoleRoot from '~/hooks/roleRoot';
-import ImageForm from '~/modules/reference/components/ImagesReference';
 import { NO_ROLE } from '~/utils/env';
 
 const NotPermission = lazy(() => import('~/pages/NotPermission'));
@@ -19,7 +17,6 @@ function Home() {
 							<p class='text-lg text-center'>Welcome to the temporally home page</p>
 						</div>
 					</div>
-					<ImageForm />
 				</div>
 			}
 		>
