@@ -1,43 +1,50 @@
 package services
 
 import (
+	"github.com/google/uuid"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"io"
 	"mime/multipart"
 	"os"
-	"path/filepath"
+	"strings"
 )
 
 type ImageService struct{}
 
 func (m *ImageService) CreateImage(file *multipart.FileHeader) (string, error) {
-	savePath := "api/assents/images"
+	savePath := "assents/images/"
+
+	if err := os.MkdirAll(savePath, os.ModePerm); err != nil {
+		return "", problems.FilesBadRequest()
+	}
 
 	// open file
 	src, err := file.Open()
 	if err != nil {
-		return "", problems.FilesBadRequest()
+
+		return "", problems.ServerError()
 	}
 	defer src.Close()
 
-	// save file
-	dstPath := filepath.Join(savePath, file.Filename)
-	dst, err := os.Create(dstPath)
+	id := uuid.New().String()
+	location := strings.ReplaceAll(savePath+id+"_"+file.Filename, " ", "")
+	dst, err := os.Create(location)
+
 	if err != nil {
-		return "", problems.FilesBadRequest()
+		return "", problems.ServerError()
 	}
 	defer dst.Close()
 
-	// create image
-	image := &models.Image{Location: dstPath}
-	err = query.Image.Create(image)
-
 	// copy content to dst
 	if _, err = io.Copy(dst, src); err != nil {
-		return "", problems.FilesBadRequest()
+		return "", problems.ServerError()
 	}
 
-	return dstPath, nil
+	// create image in db
+	image := &models.Image{ID: id, Location: location}
+	err = query.Image.Create(image)
+
+	return id, nil
 }
