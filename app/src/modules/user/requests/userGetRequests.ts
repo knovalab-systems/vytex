@@ -15,6 +15,7 @@ async function getUsers(name: string, username: string, roleId: string, status: 
 		readUsers({
 			page: page,
 			limit: QUERY_LIMIT,
+			fields: ['id', 'name', 'username', 'deleted_at', 'role'],
 			filter: {
 				name: {
 					_eq: name.toLowerCase(),
