@@ -10,7 +10,7 @@ export type VytexUser<Schema extends object> = MergeCoreCollection<
 		id: string; // uuid
 		name: string | null;
 		username: string | null;
-		password: string | null; // will just be *s
+		password: string | null; // will just be a empty string
 		role: string | null; // uuid
 		deleted_at: string | null;
 		created_at: string | null;

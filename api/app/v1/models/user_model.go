@@ -11,14 +11,14 @@ import (
 )
 
 type User struct {
-	ID        string         `json:"id" gorm:"type:uuid;primary_key;"`
-	Username  string         `json:"username"`
-	Name      string         `json:"name"`
-	Password  string         `json:"password"`
-	Role      string         `json:"role" gorm:"type:uuid"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
+	ID        string         `json:"id,omitempty" gorm:"type:uuid;primary_key;"`
+	Username  string         `json:"username,omitempty"`
+	Name      string         `json:"name,omitempty"`
+	Password  string         `json:"password,omitempty"`
+	Role      string         `json:"role,omitempty" gorm:"type:uuid"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	CreatedAt *time.Time     `json:"created_at,omitempty"`
+	UpdatedAt *time.Time     `json:"updated_at,omitempty"`
 }
 
 // BeforeCreate will set a UUID

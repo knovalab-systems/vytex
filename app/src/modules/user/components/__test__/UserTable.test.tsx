@@ -33,7 +33,22 @@ describe('User Table', () => {
 	});
 
 	it('renders correctly on users', () => {
-		const users: GetUsersType = [{ id: 123 }, { username: 'jose' }];
+		const users: GetUsersType = [
+			{
+				id: '123',
+				name: null,
+				username: null,
+				role: null,
+				deleted_at: null,
+			},
+			{
+				username: 'jose',
+				id: '',
+				name: null,
+				role: null,
+				deleted_at: null,
+			},
+		];
 		render(() => <UserTable users={users} />);
 		const userId = screen.getByText('123');
 		const userUsername = screen.getByText('jose');
