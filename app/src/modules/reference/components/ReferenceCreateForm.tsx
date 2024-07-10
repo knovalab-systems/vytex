@@ -383,26 +383,6 @@ function ReferenceCreateForm(props: {
 					</div>
 				)}
 			</FieldArray>
-			<div class='text-center'>
-				<p class='mb-2'>Foto frontal</p>
-				<ImagePreviewSelect
-					id='front'
-					onFileSelected={setFrontImage}
-					width='26rem'
-					height='26rem'
-					aria-label='Foto frontal'
-				/>
-			</div>
-			<div class='text-center'>
-				<p class='mb-2'>Foto posterior</p>
-				<ImagePreviewSelect
-					id='back'
-					onFileSelected={setBackImage}
-					width='26rem'
-					height='26rem'
-					aria-label='Foto posterior'
-				/>
-			</div>
 			<div class='flex xl:hidden my-2 justify-between'>
 				<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
 					Cancelar
@@ -411,7 +391,29 @@ function ReferenceCreateForm(props: {
 					Crear
 				</Button>
 			</div>
-		</Form>
+			<div class='flex flex-row gap-2'>
+				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md xl:col-span-2'>
+					<p>Foto frontal</p>
+					<ImagePreviewSelect
+						id='front'
+						onFileSelected={setFrontImage}
+						width='26rem'
+						height='26rem'
+						aria-label='Foto frontal'
+					/>
+				</div>
+				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md xl:col-span-2'>
+					<p>Foto posterior</p>
+					<ImagePreviewSelect
+						id='back'
+						onFileSelected={setBackImage}
+						width='26rem'
+						height='26rem'
+						aria-label='Foto posterior'
+					/>
+				</div>
+			</div>
+		</Form >
 	);
 }
 

@@ -1,5 +1,7 @@
+import { FiTrash2 } from 'solid-icons/fi';
 import { Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
+import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { Label } from './ui/Label';
 
@@ -108,30 +110,35 @@ const ImagePreviewSelect = (props: ImagePreviewSelectProps) => {
                 id={props.id}
                 onChange={handleSelect}
             />
-            <Label for={props.id} class='block cursor-pointer'>
+            <Label for={props.id} class='block cursor-pointer w-full h-full'>
                 <Show when={imageUrl()}
                     fallback={<span class='text-gray-500'>Arrastra y suelta aquí o selecciona una imagen</span>}
                 >
                     <figure class='flex flex-col items-center justify-center w-full h-full'>
-                        <img
-                            src={imageUrl()}
-                            alt='Preview'
-                            class='object-contain'
-                            style={{ 'max-width': '100%', 'max-height': '100%' }}
-                        />
-                        <figcaption class='text-sm text-gray-500'>{imageName()}</figcaption>
+                        <div class='w-full h-full flex items-center justify-center overflow-hidden'>
+                            <img
+                                src={imageUrl()}
+                                alt='Preview'
+                                class='object-contain'
+                                style={{ 'max-width': '100%', 'max-height': '100%' }}
+                            />
+                        </div>
+                        <figcaption class='text-sm text-gray-500 mt-2'>{imageName()}</figcaption>
                     </figure>
-                    <div class='mt-2 flex justify-center w-full'>
-                        <button
-                            type='button'
-                            class='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded'
-                            onClick={handleRemoveImage}
-                        >
-                            Eliminar foto
-                        </button>
-                    </div>
                 </Show>
             </Label>
+            <Show when={imageUrl()}>
+                <div class='mt-2 flex justify-center w-full'>
+                    <Button
+                        class='bg-red-500 hover:bg-red-600'
+                        onClick={handleRemoveImage}
+                    >
+                        <FiTrash2 size={22} />
+                        <span class='xl:block'>                        Eliminar foto
+                        </span>
+                    </Button>
+                </div>
+            </Show>
         </div>
     );
 };
