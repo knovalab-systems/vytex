@@ -23,12 +23,12 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 			name: props.user?.name,
 			username: props.user?.username,
 			role: props.user?.role || NO_ROLE,
-			delete_at: !props.user?.delete_at ? 'Activo' : 'Inactivo',
+			deleted_at: !props.user?.deleted_at ? 'Activo' : 'Inactivo',
 		},
 	});
 
 	const handleSubmit: SubmitHandler<UserUpdateType> = async data => {
-		const { delete_at, ...rest } = data;
+		const { deleted_at, ...rest } = data;
 		const user: User = Object.keys(rest).reduce((p: User, v) => {
 			const field = rest[v as keyof typeof rest];
 			const oldField = props.user?.[v];
@@ -38,10 +38,10 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 			return p;
 		}, {});
 
-		if (!STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && !props.user?.delete_at) {
-			user.delete_at = now(getLocalTimeZone()).toAbsoluteString();
-		} else if (STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && Boolean(props.user?.delete_at)) {
-			user.delete_at = null;
+		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !props.user?.deleted_at) {
+			user.deleted_at = now(getLocalTimeZone()).toAbsoluteString();
+		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && Boolean(props.user?.deleted_at)) {
+			user.deleted_at = null;
 		}
 
 		if (Object.keys(user).length === 0) return;
@@ -134,14 +134,14 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 						</div>
 					)}
 				</Field>
-				<Field name='delete_at'>
+				<Field name='deleted_at'>
 					{field => (
 						<div>
 							<LabelSpan>Estado</LabelSpan>
 							<Select<string>
 								value={field.value}
 								onChange={value => {
-									setValue(form, 'delete_at', value);
+									setValue(form, 'deleted_at', value);
 								}}
 								options={Object.keys(STATUS_OPTIONS)}
 								placeholder='Selecciona un rol'

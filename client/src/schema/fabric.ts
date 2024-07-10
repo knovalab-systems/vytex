@@ -15,7 +15,7 @@ export type VytexFabric<Schema extends object> = MergeCoreCollection<
 		code: string | null;
 		color_id: number | null;
 		color: VytexColor<Schema[]> | null;
-		delete_at: string | null;
-		create_at: string | null;
+		deleted_at: string | null;
+		created_at: string | null;
 	}
 >;

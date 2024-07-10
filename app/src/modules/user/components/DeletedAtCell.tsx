@@ -7,17 +7,17 @@ import { TableCell } from '~/components/ui/Table';
 import type { User } from '~/schemas/coreSchema';
 import { updateUserRequest } from '../requests/userUpdateRequests';
 
-function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
-	const [status, setStatus] = createSignal(!props.delete_at);
+function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {
+	const [status, setStatus] = createSignal(!props.deleted_at);
 	const [loading, setLoading] = createSignal(false);
 
 	const handleSubmit = (newStatus: boolean) => {
 		setStatus(newStatus);
 		setLoading(true);
-		const user: User = { delete_at: null };
+		const user: User = { deleted_at: null };
 		if (!newStatus) {
 			const date = now(getLocalTimeZone()).toAbsoluteString();
-			user.delete_at = date;
+			user.deleted_at = date;
 		}
 		updateUserRequest(props.userId, user)
 			.then(() => {
@@ -44,4 +44,4 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 	);
 }
 
-export default DeleteAtCell;
+export default DeletedAtCell;

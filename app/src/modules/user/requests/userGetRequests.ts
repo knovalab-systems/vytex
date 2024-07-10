@@ -25,7 +25,7 @@ async function getUsers(name: string, username: string, roleId: string, status: 
 				role: {
 					_eq: roleId,
 				},
-				delete_at: {
+				deleted_at: {
 					_eq: status,
 				},
 			},
@@ -55,7 +55,7 @@ async function countUsers(name: string, username: string, roleId: string, status
 					role: {
 						_eq: roleId,
 					},
-					delete_at: {
+					deleted_at: {
 						_eq: status,
 					},
 				},

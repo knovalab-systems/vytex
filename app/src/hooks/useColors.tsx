@@ -17,7 +17,7 @@ async function colorsContextReq() {
 	return await client.request(
 		readColors({
 			limit: -1,
-			fields: ['id', 'name', 'hex', 'delete_at'],
+			fields: ['id', 'name', 'hex', 'deleted_at'],
 		}),
 	);
 }

@@ -122,11 +122,11 @@ func colorFields(s query.IColorDo, fields string) query.IColorDo {
 				f = append(f, table.Name)
 			case "hex":
 				f = append(f, table.Hex)
-			case "create_at":
+			case "created_at":
 				f = append(f, table.CreatedAt)
-			case "delete_at":
+			case "deleted_at":
 				f = append(f, table.DeletedAt)
-			case "update_at":
+			case "updated_at":
 				f = append(f, table.UpdatedAt)
 			default:
 				f = append(f, table.ALL)

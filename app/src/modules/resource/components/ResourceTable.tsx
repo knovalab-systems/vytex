@@ -46,7 +46,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell>${resource.cost}</TableCell>
 								<TableCell>Proveedor</TableCell>
 								<TableCell>
-									<StatusLabel status={!resource.delete_at} />
+									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>
 								<TableCell>Acciones</TableCell>
 							</TableRow>

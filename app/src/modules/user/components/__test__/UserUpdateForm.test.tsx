@@ -17,7 +17,7 @@ describe('UserUpdateForm', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: 'delete',
+			deleted_at: 'delete',
 		};
 
 		render(() => <UserUpdateForm user={user} />);
@@ -40,7 +40,7 @@ describe('UserUpdateForm', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: 'delete',
+			deleted_at: 'delete',
 		};
 		render(() => <UserUpdateForm user={user} />);
 		const nameField = screen.getByPlaceholderText('Jose Perez');
@@ -60,7 +60,7 @@ describe('UserUpdateForm', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: 'delete',
+			deleted_at: 'delete',
 		};
 		render(() => <UserUpdateForm user={user} />);
 
@@ -84,7 +84,7 @@ describe('UserUpdateForm', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: 'delete',
+			deleted_at: 'delete',
 		};
 		render(() => <UserUpdateForm user={user} />);
 		const nameField = screen.getByPlaceholderText('Jose Perez');
@@ -108,7 +108,7 @@ describe('UserUpdateForm', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: 'delete',
+			deleted_at: 'delete',
 		};
 		render(() => <UserUpdateForm user={user} />);
 		const passwordField = screen.getByPlaceholderText('********');

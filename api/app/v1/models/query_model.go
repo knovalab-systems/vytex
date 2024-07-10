@@ -12,13 +12,6 @@ type Query struct {
 	Fields string `query:"fields"`
 }
 
-type UserFilter struct {
-	Name     string
-	Username string
-	Role     string
-	DeleteAt string
-}
-
 func (m *Query) SanitizedQuery() error {
 
 	m.Limit = sanitizedLimit(m.Limit)

@@ -16,9 +16,9 @@ type User struct {
 	Name      string         `json:"name"`
 	Password  string         `json:"password"`
 	Role      string         `json:"role" gorm:"type:uuid"`
-	DeleteAt  gorm.DeletedAt `json:"delete_at" gorm:"index"`
-	CreatedAt time.Time      `json:"create_at"`
-	UpdatedAt time.Time      `json:"update_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
 }
 
 // BeforeCreate will set a UUID
@@ -40,12 +40,12 @@ type ReadUser struct {
 }
 
 type UpdateUserBody struct {
-	ID       string              `param:"userId" validate:"required,uuid"`
-	Username *string             `json:"username" validate:"omitnil,gt=0"`
-	Name     *string             `json:"name" validate:"omitnil,gt=0"`
-	Password *string             `json:"password" validate:"omitnil,lte=20,gte=8"`
-	Role     *string             `json:"role" validate:"omitnil,uuid"`
-	DeleteAt Optional[time.Time] `json:"delete_at"`
+	ID        string              `param:"userId" validate:"required,uuid"`
+	Username  *string             `json:"username" validate:"omitnil,gt=0"`
+	Name      *string             `json:"name" validate:"omitnil,gt=0"`
+	Password  *string             `json:"password" validate:"omitnil,lte=20,gte=8"`
+	Role      *string             `json:"role" validate:"omitnil,uuid"`
+	DeletedAt Optional[time.Time] `json:"deleted_at"`
 }
 
 func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
@@ -74,11 +74,11 @@ func (m *UpdateUserBody) ToUpdate() (map[string]interface{}, error) {
 		updateMap["name"] = *m.Name
 	}
 
-	if !m.DeleteAt.IsNil() {
-		if m.DeleteAt.IsNullDefined() {
-			updateMap["delete_at"] = nil
+	if !m.DeletedAt.IsNil() {
+		if m.DeletedAt.IsNullDefined() {
+			updateMap["deleted_at"] = nil
 		} else {
-			updateMap["delete_at"] = m.DeleteAt.Value
+			updateMap["deleted_at"] = m.DeletedAt.Value
 		}
 
 	}
@@ -91,4 +91,11 @@ type UserCreateBody struct {
 	Name     string `json:"name" validate:"required"`
 	Password string `json:"password" validate:"required,lte=20,gte=8"`
 	Role     string `json:"role" validate:"uuid"`
+}
+
+type UserFilter struct {
+	Name      string
+	Username  string
+	Role      string
+	DeletedAt string
 }

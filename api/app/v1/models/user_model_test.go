@@ -38,14 +38,14 @@ func TestToUpdate(t *testing.T) {
 		}
 	})
 
-	t.Run("valid delete_at", func(t *testing.T) {
+	t.Run("valid deleted_at", func(t *testing.T) {
 		detele_at, _ := time.Parse(time.RFC3339, "2020-12-09T16:09:53+00:00")
 		optional := Optional[time.Time]{Value: &detele_at, Defined: true}
-		u := UpdateUserBody{DeleteAt: optional}
+		u := UpdateUserBody{DeletedAt: optional}
 
 		test, err := u.ToUpdate()
 		if assert.NoError(t, err) {
-			v, ok := test["delete_at"]
+			v, ok := test["deleted_at"]
 			assert.Equal(t, true, ok)
 			assert.Equal(t, detele_at.String(), v.(*time.Time).String())
 		}
@@ -59,7 +59,7 @@ func TestToUpdate(t *testing.T) {
 			var ok bool
 			_, ok = test["role"]
 			assert.Equal(t, false, ok)
-			_, ok = test["delete_at"]
+			_, ok = test["deleted_at"]
 			assert.Equal(t, false, ok)
 		}
 	})
