@@ -18,7 +18,7 @@ function NavWrapper(props: RouteSectionProps) {
 	const { setRole } = RoleRoot;
 	const isRouting = useIsRouting();
 	const user = createQuery(() => ({
-		queryFn: async () => client.request(readMe()),
+		queryFn: async () => client.request(readMe({ fields: ['role'] })),
 		queryKey: ['role'],
 	}));
 
@@ -62,8 +62,8 @@ function NavWrapper(props: RouteSectionProps) {
 			<Match when={user.isSuccess && user.data.role === NO_ROLE}>{props.children}</Match>
 			<Match when={user.isSuccess}>
 				<div class='flex flex-col w-full h-fit lg:h-full'>
-					<MenuNav pages={pages[user.data?.role]} />
-					<MobileNav pages={pages[user.data?.role]} />
+					<MenuNav pages={pages[user.data?.role as string]} />
+					<MobileNav pages={pages[user.data?.role as string]} />
 					<main class='flex-1 m-2 overflow-auto'>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}

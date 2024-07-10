@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gen/field"
 	"gorm.io/gorm"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -28,6 +29,9 @@ func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 	table := query.User
 	s := table.Limit(*q.Limit).Offset(q.Offset)
 
+	// fields
+	s = userFields(s, q.Fields)
+
 	// filters
 	filter, err := userFilters(q.Filter, s)
 	if err != nil {
@@ -41,7 +45,7 @@ func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 	}
 
 	for _, item := range users {
-		item.Password = "********"
+		item.Password = ""
 	}
 
 	return users, nil
@@ -53,23 +57,29 @@ func (m *UserService) ReadUser(q *models.ReadUser) (*models.User, error) {
 		return nil, problems.UsersBadRequest()
 	}
 
+	// def query
 	table := query.User
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = userFields(s, q.Fields)
+
+	// filters
 	filter, err := userFilters(q.Filter, s)
 	if err != nil {
 		return nil, problems.UsersBadRequest()
 	}
 
+	// run query
 	user, err := filter.Where(table.ID.Eq(q.ID)).First()
-	if user == nil {
-		return nil, problems.ReadAccess()
-	}
-
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
 		return nil, problems.ServerError()
 	}
 
-	user.Password = "********"
+	user.Password = ""
 
 	return user, nil
 }
@@ -249,4 +259,37 @@ func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
 	}
 
 	return s, nil
+}
+
+func userFields(s query.IUserDo, fields string) query.IUserDo {
+	if fields != "" {
+		table := query.User
+		fieldsArr := strings.Split(fields, ",")
+		f := []field.Expr{}
+
+		for _, v := range fieldsArr {
+			switch v {
+			case "id":
+				f = append(f, table.ID)
+			case "username":
+				f = append(f, table.Username)
+			case "name":
+				f = append(f, table.Name)
+			case "password":
+				f = append(f, table.Password)
+			case "role":
+				f = append(f, table.Role)
+			case "deleted_at":
+				f = append(f, table.DeletedAt)
+			case "created_at":
+				f = append(f, table.CreatedAt)
+			case "updated_at":
+				f = append(f, table.UpdatedAt)
+			default:
+				f = append(f, table.ALL)
+			}
+		}
+		s = s.Select(f...)
+	}
+	return s
 }
