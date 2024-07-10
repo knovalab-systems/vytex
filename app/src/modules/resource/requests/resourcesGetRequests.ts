@@ -15,6 +15,7 @@ async function getResources(page: number) {
 		readResources({
 			page: page,
 			limit: QUERY_LIMIT,
+			fields: ['id', 'key', 'name', 'cost', 'color_id', 'code', 'deleted_at'],
 		}),
 	);
 }
