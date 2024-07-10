@@ -21,41 +21,12 @@ func (m *ColorService) SelectColors(q *models.Query) ([]*models.Color, error) {
 		return nil, problems.ColorsBadRequest()
 	}
 
+	// def query
 	table := query.Color
-	s := table.Unscoped()
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	if q.Fields != "" {
-		fieldsArr := strings.Split(q.Fields, ",")
-		f := []field.Expr{}
-
-		for _, v := range fieldsArr {
-			switch v {
-			case "id":
-				f = append(f, table.ID)
-			case "code":
-				f = append(f, table.Code)
-			case "name":
-				f = append(f, table.Name)
-			case "hex":
-				f = append(f, table.Hex)
-			case "create_at":
-				f = append(f, table.CreatedAt)
-			case "delete_at":
-				f = append(f, table.DeletedAt)
-			case "update_at":
-				f = append(f, table.UpdatedAt)
-			default:
-				f = append(f, table.ALL)
-			}
-		}
-
-		s = s.Select(f...)
-	}
-
-	// def query
-
-	s = s.Limit(*q.Limit).Offset(q.Offset)
+	s = colorFields(s, q.Fields)
 
 	// run query
 	colors, err := s.Find()
@@ -133,4 +104,35 @@ func checkCodeColor(code string) error {
 		return problems.ServerError()
 	}
 	return problems.CodeColorExists()
+}
+
+func colorFields(s query.IColorDo, fields string) query.IColorDo {
+	if fields != "" {
+		table := query.Color
+		fieldsArr := strings.Split(fields, ",")
+		f := []field.Expr{}
+
+		for _, v := range fieldsArr {
+			switch v {
+			case "id":
+				f = append(f, table.ID)
+			case "code":
+				f = append(f, table.Code)
+			case "name":
+				f = append(f, table.Name)
+			case "hex":
+				f = append(f, table.Hex)
+			case "create_at":
+				f = append(f, table.CreatedAt)
+			case "delete_at":
+				f = append(f, table.DeletedAt)
+			case "update_at":
+				f = append(f, table.UpdatedAt)
+			default:
+				f = append(f, table.ALL)
+			}
+		}
+		s = s.Select(f...)
+	}
+	return s
 }
