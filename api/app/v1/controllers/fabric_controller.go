@@ -52,7 +52,7 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 // @Description  Get aggregate from fabrics
 // @Tags         fabrics
 // @Produce      json
-// @Success      200 {array} models.Aggregate
+// @Success      200 {array} models.AggregateData
 // @Failure      400
 // @Failure      500
 // @Router       /fabrics/aggregate [get]

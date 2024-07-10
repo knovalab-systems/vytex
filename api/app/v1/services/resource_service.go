@@ -21,14 +21,17 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 
 	// def query
 	table := query.Resource
-	table2 := table.As("table2")
 	s := table.Unscoped()
 
 	// def subquery
+	table2 := table.As("table2")
 	subQuery := table.Unscoped().
 		Group(table.Key).
 		Select(table.Key, table.CreatedAt.Max().As("created_at_max")).
 		As("table2").Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = resourceFields(s, q.Fields)
 
 	// run query
 	resources, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).
@@ -75,4 +78,45 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 	}
 
 	return []*models.AggregateData{&aggregateElem}, nil
+}
+
+func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
+	if fields != "" {
+		table := query.Resource
+		fieldsArr := strings.Split(fields, ",")
+		f := []field.Expr{}
+
+		for _, v := range fieldsArr {
+
+			if strings.HasPrefix(v, "color.") {
+				s = s.Preload(table.Color)
+				continue
+			}
+
+			switch v {
+			case "id":
+				f = append(f, table.ID)
+			case "key":
+				f = append(f, table.Key)
+			case "name":
+				f = append(f, table.Name)
+			case "cost":
+				f = append(f, table.Cost)
+			case "code":
+				f = append(f, table.Code)
+			case "color_id":
+				f = append(f, table.ColorID)
+			case "color":
+				s = s.Preload(table.Color)
+			case "created_at":
+				f = append(f, table.CreatedAt)
+			case "deleted_at":
+				f = append(f, table.DeletedAt)
+			default:
+				f = append(f, table.ALL)
+			}
+		}
+		s = s.Select(f...)
+	}
+	return s
 }
