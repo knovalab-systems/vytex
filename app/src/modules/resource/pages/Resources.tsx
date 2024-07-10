@@ -1,7 +1,5 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
-import { countResourcesQuery, getResourcesQuery } from '../requests/resourcesGetRequests';
-import { QUERY_LIMIT } from '~/utils/constants';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -11,8 +9,10 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
-import ResourceTable from '../components/ResourceTable';
 import { useColors } from '~/hooks/useColors';
+import { QUERY_LIMIT } from '~/utils/constants';
+import ResourceTable from '../components/ResourceTable';
+import { countResourcesQuery, getResourcesQuery } from '../requests/resourcesGetRequests';
 
 function Resources() {
 	const [page, setPage] = createSignal(1);

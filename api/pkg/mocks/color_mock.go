@@ -9,12 +9,17 @@ type ColorMock struct {
 	mock.Mock
 }
 
-func (m *ColorMock) SelectColors(req *models.Query) ([]*models.Color, error) {
+func (m *ColorMock) SelectColors(q *models.Query) ([]*models.Color, error) {
 	args := m.Called()
 	return []*models.Color{}, args.Error(0)
 }
 
-func (m *ColorMock) AggregationColors(req *models.AggregateQuery) ([]*models.AggregateData, error) {
-	args := m.Called(req)
+func (m *ColorMock) AggregationColors(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+	args := m.Called(q)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
+}
+
+func (m *ColorMock) CreateColor(u *models.ColorCreateBody) (*models.Color, error) {
+	args := m.Called(u)
+	return args.Get(0).(*models.Color), args.Error(1)
 }

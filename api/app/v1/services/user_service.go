@@ -114,22 +114,22 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
-func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, error) {
+func (m *UserService) UpdateUser(u *models.UpdateUserBody) (*models.User, error) {
 	table := query.User
 
-	if update.Username != nil {
-		err := checkUsername(*update.Username)
+	if u.Username != nil {
+		err := checkUsername(*u.Username)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	updateMap, err := update.ToUpdate()
+	updateMap, err := u.ToUpdate()
 	if err != nil || len(updateMap) == 0 {
-		return nil, problems.UpdateUsersBadRequest()
+		return nil, problems.UpdateUserBadRequest()
 	}
 
-	rows, err := table.Unscoped().Where(table.ID.Eq(update.ID)).Updates(updateMap)
+	rows, err := table.Unscoped().Where(table.ID.Eq(u.ID)).Updates(updateMap)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -138,7 +138,7 @@ func (m *UserService) UpdateUser(update *models.UpdateUserBody) (*models.User, e
 		return nil, problems.ReadAccess()
 	}
 
-	user, err := table.Unscoped().Where(table.ID.Eq(update.ID)).First()
+	user, err := table.Unscoped().Where(table.ID.Eq(u.ID)).First()
 	if err != nil {
 		return nil, problems.ServerError()
 	}

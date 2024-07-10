@@ -164,12 +164,12 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.UpdateUsersBadRequest()
+		return problems.UpdateUserBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.UpdateUsersBadRequest()
+		return problems.UpdateUserBadRequest()
 	}
 
 	// update
@@ -196,12 +196,12 @@ func (m *UserController) CreateUser(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.CreateUsersBadRequest()
+		return problems.CreateUserBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.CreateUsersBadRequest()
+		return problems.CreateUserBadRequest()
 	}
 
 	// create

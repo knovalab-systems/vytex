@@ -1,6 +1,6 @@
 import { type CreateQueryResult, createQuery } from '@tanstack/solid-query';
 import { readColors } from '@vytex/client';
-import { type JSXElement, createContext, useContext, createMemo, type Accessor, createSignal } from 'solid-js';
+import { type Accessor, type JSXElement, createContext, createMemo, createSignal, useContext } from 'solid-js';
 import RoleRoot from '~/hooks/roleRoot';
 import { queryClient } from '~/lib/queryClient';
 import { client } from '~/utils/client';

@@ -74,7 +74,7 @@ const UserControls = (props: UserControlsProps) => {
 					title='Nuevo Usuario'
 					onclick={goToUserCreationPage}
 				>
-					Nuevo
+					Nuevo usuario
 					<AiOutlinePlus class='ml-2' size={22} />
 				</Button>
 				<FilterInput

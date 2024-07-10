@@ -1,12 +1,14 @@
 package services
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
+	"gorm.io/gorm"
 )
 
 type ColorService struct {
@@ -97,4 +99,38 @@ func (m *ColorService) AggregationColors(q *models.AggregateQuery) ([]*models.Ag
 	}
 
 	return []*models.AggregateData{&aggregateElem}, nil
+}
+
+func (m *ColorService) CreateColor(u *models.ColorCreateBody) (*models.Color, error) {
+
+	err := checkCodeColor(u.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	color := &models.Color{
+		Name: u.Name,
+		Hex:  u.Hex,
+		Code: u.Code,
+	}
+
+	err = query.Color.Create(color)
+	if err != nil {
+		return nil, err
+	}
+
+	return color, nil
+}
+
+func checkCodeColor(code string) error {
+	table := query.Color
+
+	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		return problems.ServerError()
+	}
+	return problems.CodeColorExists()
 }

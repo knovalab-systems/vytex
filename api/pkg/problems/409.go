@@ -11,6 +11,11 @@ func UserExists() *echo.HTTPError {
 	return echo.NewHTTPError(code, New(code, "", "", "User already exists", ""))
 }
 
+func CodeColorExists() *echo.HTTPError {
+	code := http.StatusConflict
+	return echo.NewHTTPError(code, New(code, "", "", "Color code already exists", ""))
+}
+
 func ReferenceExists() *echo.HTTPError {
 	code := http.StatusConflict
 	return echo.NewHTTPError(code, New(code, "", "", "Reference already exists", ""))

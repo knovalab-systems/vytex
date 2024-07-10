@@ -6,12 +6,13 @@ import type { GetColorsType } from '../requests/colorsGetRequests';
 function ColorTable(props: { colors?: GetColorsType }) {
 	return (
 		<TableContainer>
-			<Table class='table-fixed'>
+			<Table class='md:table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
 						<TableHead>ID</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>Hex</TableHead>
+						<TableHead>Color</TableHead>
 						<TableHead>Code</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
@@ -28,11 +29,9 @@ function ColorTable(props: { colors?: GetColorsType }) {
 							<TableRow class='bg-white group'>
 								<TableCell>{color.id}</TableCell>
 								<TableCell>{color.name}</TableCell>
-								<TableCell class='py-0'>
-									<div class='flex gap-4'>
-										<div class='my-auto'>{color.hex}</div>
-										<div class='h-10 mx-auto w-10 border-2' style={{ background: color.hex || '' }} />
-									</div>
+								<TableCell>{color.hex}</TableCell>
+								<TableCell>
+									<div class='h-10 w-10 border-2' style={{ background: color.hex || '' }} />
 								</TableCell>
 								<TableCell>{color.code || 'Code'}</TableCell>
 								<TableCell>

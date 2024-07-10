@@ -1,12 +1,13 @@
 package services
 
 import (
+	"regexp"
+	"strings"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
-	"regexp"
-	"strings"
 )
 
 type FabricService struct {
@@ -16,7 +17,7 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.FabricBadRequest()
+		return nil, problems.FabricsBadRequest()
 	}
 
 	// def query
