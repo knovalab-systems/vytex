@@ -8,15 +8,15 @@ import (
 )
 
 type Resource struct {
-	ID        uint           `json:"id" gorm:"primary_key"`
-	Key       string         `json:"key" gorm:"type:uuid"`
-	Name      string         `json:"name"`
-	Cost      float64        `json:"cost" gorm:"type:float"`
-	Code      string         `json:"code"`
-	ColorID   uint           `json:"color_id"`
+	ID        uint           `json:"id,omitempty" gorm:"primary_key"`
+	Key       string         `json:"key,omitempty" gorm:"type:uuid"`
+	Name      string         `json:"name,omitempty"`
+	Cost      float64        `json:"cost,omitempty" gorm:"type:float"`
+	Code      string         `json:"code,omitempty"`
+	ColorID   uint           `json:"color_id,omitempty"`
 	Color     *Color         `json:"color,omitempty"`
-	CreatedAt time.Time      `json:"created_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	CreatedAt time.Time      `json:"created_at,omitempty"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 // BeforeCreate will set a UUID to key, if is not set
