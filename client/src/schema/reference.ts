@@ -20,8 +20,8 @@ export type VytexReference<Schema extends object> = MergeCoreCollection<
 		reference: string | null;
 		front: VytexImage<Schema[]> | null;
 		back: VytexImage<Schema[]> | null;
-		delete_at: string | null;
-		create_at: string | null;
+		deleted_at: string | null;
+		created_at: string | null;
 		create_by: string | null;
 		user: VytexUser<Schema[]> | null;
 	}
@@ -35,8 +35,8 @@ export type VytexColorByReference<Schema extends object> = MergeCoreCollection<
 		key: string | null;
 		reference_id: string | null;
 		reference: VytexReference<Schema[]> | null;
-		delete_at: string | null;
-		create_at: string | null;
+		deleted_at: string | null;
+		created_at: string | null;
 		create_by: string | null;
 		color: VytexColor<Schema[]> | null;
 	}

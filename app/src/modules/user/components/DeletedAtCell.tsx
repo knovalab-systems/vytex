@@ -7,8 +7,8 @@ import { TableCell } from '~/components/ui/Table';
 import type { User } from '~/schemas/coreSchema';
 import { updateUserRequest } from '../requests/userUpdateRequests';
 
-function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
-	const [status, setStatus] = createSignal(!props.delete_at);
+function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {
+	const [status, setStatus] = createSignal(!props.deleted_at);
 	const [loading, setLoading] = createSignal(false);
 
 	const handleSubmit = (newStatus: boolean) => {
@@ -44,4 +44,4 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 	);
 }
 
-export default DeleteAtCell;
+export default DeletedAtCell;

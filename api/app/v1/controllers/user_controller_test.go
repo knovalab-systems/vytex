@@ -476,12 +476,12 @@ func TestUpdateUser(t *testing.T) {
 
 	})
 
-	t.Run("Update user successfully with delete_at", func(t *testing.T) {
+	t.Run("Update user successfully with deleted_at", func(t *testing.T) {
 		// context
-		delete_at := "2020-12-09T16:09:53+00:00"
+		deleted_at := "2020-12-09T16:09:53+00:00"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"delete_at": delete_at})
+		json.NewEncoder(body).Encode(map[string]string{"deleted_at": deleted_at})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -591,13 +591,13 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("Update user successfully all values", func(t *testing.T) {
 		// context
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
-		delete_at := "2020-12-09T16:09:53+00:00"
+		deleted_at := "2020-12-09T16:09:53+00:00"
 		password := "12345678"
 		name := "Antonio Banderas"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		username := "username"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": role, "delete_at": delete_at, "username": username,
+		json.NewEncoder(body).Encode(map[string]string{"role": role, "deleted_at": deleted_at, "username": username,
 			"password": password, "name": name})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

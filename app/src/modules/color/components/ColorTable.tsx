@@ -35,7 +35,7 @@ function ColorTable(props: { colors?: GetColorsType }) {
 								</TableCell>
 								<TableCell>{color.code || 'Code'}</TableCell>
 								<TableCell>
-									<StatusLabel status={!color.delete_at} />
+									<StatusLabel status={!color.deleted_at} />
 								</TableCell>
 								<TableCell>Acciones</TableCell>
 							</TableRow>

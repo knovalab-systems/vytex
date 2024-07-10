@@ -15,8 +15,8 @@ type Resource struct {
 	Code      string         `json:"code"`
 	ColorID   uint           `json:"color_id"`
 	Color     *Color         `json:"color,omitempty"`
-	CreatedAt time.Time      `json:"create_at"`
-	DeletedAt gorm.DeletedAt `json:"delete_at" gorm:"index"`
+	CreatedAt time.Time      `json:"created_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }
 
 // BeforeCreate will set a UUID to key, if is not set

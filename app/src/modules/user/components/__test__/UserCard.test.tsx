@@ -27,32 +27,32 @@ describe('UserCard', () => {
 		vi.resetAllMocks();
 	});
 
-	it('renders correctly with delete_at', () => {
+	it('renders correctly with deleted_at', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: '2024-05-10T22:36:52.140901Z',
-			update_at: '2024-05-11T22:36:52.140901Z',
-			create_at: '2024-05-12T22:36:52.140901Z',
+			deleted_at: '2024-05-10T22:36:52.140901Z',
+			updated_at: '2024-05-11T22:36:52.140901Z',
+			created_at: '2024-05-12T22:36:52.140901Z',
 			role: 'admin',
 		};
 
 		render(() => <UserCard user={user} />);
 
 		const name = screen.getByText('Jose');
-		const delete_at = screen.getByText('2024-05-10 5:36 PM');
+		const deleted_at = screen.getByText('2024-05-10 5:36 PM');
 
-		expect(delete_at).toBeInTheDocument();
+		expect(deleted_at).toBeInTheDocument();
 		expect(name).toBeInTheDocument();
 	});
 
-	it('renders correctly without delete_at', () => {
+	it('renders correctly without deleted_at', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: null,
-			update_at: '2024-05-11T22:36:52.140901Z',
-			create_at: '2024-05-12T22:36:52.140901Z',
+			deleted_at: null,
+			updated_at: '2024-05-11T22:36:52.140901Z',
+			created_at: '2024-05-12T22:36:52.140901Z',
 			role: 'admin',
 		};
 
@@ -69,9 +69,9 @@ describe('UserCard', () => {
 		const user = {
 			name: 'Jose',
 			username: 'jose',
-			delete_at: '2024-05-10T22:36:52.140901Z',
-			update_at: '2024-05-11T22:36:52.140901Z',
-			create_at: '2024-05-12T22:36:52.140901Z',
+			deleted_at: '2024-05-10T22:36:52.140901Z',
+			updated_at: '2024-05-11T22:36:52.140901Z',
+			created_at: '2024-05-12T22:36:52.140901Z',
 			role: 'admin',
 		};
 
@@ -88,9 +88,9 @@ describe('UserCard', () => {
 			id: '1',
 			name: 'Jose',
 			username: 'jose',
-			delete_at: '2024-05-10T22:36:52.140901Z',
-			update_at: '2024-05-11T22:36:52.140901Z',
-			create_at: '2024-05-12T22:36:52.140901Z',
+			deleted_at: '2024-05-10T22:36:52.140901Z',
+			updated_at: '2024-05-11T22:36:52.140901Z',
+			created_at: '2024-05-12T22:36:52.140901Z',
 			role: 'admin',
 		};
 

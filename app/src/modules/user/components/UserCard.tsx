@@ -11,26 +11,26 @@ import type { GetUserType } from '../requests/userGetRequests';
 function UserCard(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
 	const user = () => props.user;
-	const delete_at = () =>
-		!user()?.delete_at ? parseAbsoluteToLocal(user()?.update_at) : parseAbsoluteToLocal(user()?.delete_at);
-	const create_at = () => parseAbsoluteToLocal(user()?.create_at);
-	const update_at = () => parseAbsoluteToLocal(user()?.update_at);
+	const deleted_at = () =>
+		!user()?.deleted_at ? parseAbsoluteToLocal(user()?.updated_at) : parseAbsoluteToLocal(user()?.deleted_at);
+	const created_at = () => parseAbsoluteToLocal(user()?.created_at);
+	const updated_at = () => parseAbsoluteToLocal(user()?.updated_at);
 	const timelineArr = () => {
 		const arr = [
 			{
 				title: 'Fecha de creación',
-				description: `${toCalendarDate(create_at())} ${convertTimeTo12(toTime(create_at()))}`,
+				description: `${toCalendarDate(created_at())} ${convertTimeTo12(toTime(created_at()))}`,
 			},
 			{
 				title: 'Fecha de actualización',
-				description: `${toCalendarDate(update_at())} ${convertTimeTo12(toTime(update_at()))}`,
+				description: `${toCalendarDate(updated_at())} ${convertTimeTo12(toTime(updated_at()))}`,
 			},
 		];
 
-		if (user()?.delete_at) {
+		if (user()?.deleted_at) {
 			arr.push({
 				title: 'Fecha de inactivación',
-				description: `${toCalendarDate(delete_at())} ${convertTimeTo12(toTime(delete_at()))}`,
+				description: `${toCalendarDate(deleted_at())} ${convertTimeTo12(toTime(deleted_at()))}`,
 			});
 		}
 
@@ -49,7 +49,7 @@ function UserCard(props: { user?: GetUserType }) {
 						<ValuesWithTitles support='ID' title={user()?.id} />
 						<ValuesWithTitles support='Nombre' title={user()?.name} />
 						<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
-						<ValuesWithTitles support='Estado' title={!user()?.delete_at ? 'Activo' : 'Inactivo'} />
+						<ValuesWithTitles support='Estado' title={!user()?.deleted_at ? 'Activo' : 'Inactivo'} />
 						<ValuesWithTitles support='Rol' title={roles[user()?.role || NO_ROLE].label} />
 					</div>
 					<div class='mx-auto'>
