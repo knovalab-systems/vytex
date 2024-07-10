@@ -2,7 +2,7 @@ import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { GetUsersType } from '../requests/userGetRequests';
 import ActionsCell from './ActionsCell';
-import DeleteAtCell from './DeleteAtCell';
+import DeletedAtCell from './DeletedAtCell';
 import RoleCell from './RoleCell';
 
 function UserTable(props: { users?: GetUsersType }) {
@@ -32,7 +32,7 @@ function UserTable(props: { users?: GetUsersType }) {
 								<TableCell>{user.username}</TableCell>
 								<TableCell>{user.name}</TableCell>
 								<RoleCell userId={user.id} roleValue={user.role} />
-								<DeleteAtCell delete_at={user.delete_at} userId={user.id} />
+								<DeletedAtCell deleted_at={user.deleted_at} userId={user.id} />
 								<ActionsCell userId={user.id} />
 							</TableRow>
 						)}

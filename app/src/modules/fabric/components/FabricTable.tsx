@@ -45,7 +45,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell>${fabric.cost}</TableCell>
 							<TableCell>Proveedor</TableCell>
 							<TableCell>
-								<StatusLabel status={!fabric.delete_at} />
+								<StatusLabel status={!fabric.deleted_at} />
 							</TableCell>
 							<TableCell>Acciones</TableCell>
 						</TableRow>

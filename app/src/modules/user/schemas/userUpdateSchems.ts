@@ -10,7 +10,7 @@ export const UserUpdateSchema = object({
 		'La contraseña debe ser de mínimo 8 caracteres.',
 	),
 	role: picklist<string[]>(roleList.map(role => role.key)),
-	delete_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
+	deleted_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
 });
 
 export type UserUpdateType = InferInput<typeof UserUpdateSchema>;

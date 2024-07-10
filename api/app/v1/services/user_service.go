@@ -19,7 +19,6 @@ type UserService struct {
 }
 
 func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
-
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()
@@ -27,7 +26,9 @@ func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 
 	// def query
 	table := query.User
-	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+	s := table.Limit(*q.Limit).Offset(q.Offset)
+
+	// filters
 	filter, err := userFilters(q.Filter, s)
 	if err != nil {
 		return nil, problems.UsersBadRequest()
@@ -213,8 +214,8 @@ func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
 			userFilter.Name = value["_eq"].(string)
 		case "role":
 			userFilter.Role = fmt.Sprintf("%v", value["_eq"])
-		case "delete_at":
-			userFilter.DeleteAt = fmt.Sprintf("%v", value["_eq"])
+		case "deleted_at":
+			userFilter.DeletedAt = fmt.Sprintf("%v", value["_eq"])
 		}
 	}
 
@@ -233,16 +234,16 @@ func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
 		s = s.Where(condition)
 	}
 
-	if userFilter.DeleteAt != "" {
-		value, err := strconv.ParseBool(userFilter.DeleteAt)
+	if userFilter.DeletedAt != "" {
+		value, err := strconv.ParseBool(userFilter.DeletedAt)
 		if err != nil {
 			return nil, err
 		}
 		if value {
-			condition := table.DeleteAt.IsNull()
+			condition := table.DeletedAt.IsNull()
 			s = s.Where(condition)
 		} else {
-			condition := table.DeleteAt.IsNotNull()
+			condition := table.DeletedAt.IsNotNull()
 			s = s.Where(condition)
 		}
 	}

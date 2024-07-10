@@ -11,8 +11,8 @@ type Reference struct {
 	ID         uint           `json:"id" gorm:"primary_key"`
 	Key        string         `json:"key" gorm:"type:uuid"`
 	Reference  string         `json:"reference"`
-	CreatedAt  time.Time      `json:"create_at"`
-	DeletedAt  gorm.DeletedAt `json:"delete_at" gorm:"index"`
+	CreatedAt  time.Time      `json:"created_at"`
+	DeletedAt  gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	CreatedBy  string         `json:"create_by"`
 	User       *User          `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
 	Front      string         `json:"front"`
@@ -32,7 +32,7 @@ func (b *Reference) BeforeCreate(tx *gorm.DB) (err error) {
 
 type ColorByReference struct {
 	ID          uint           `json:"id" gorm:"primary_key"`
-	DeletedAt   gorm.DeletedAt `json:"delete_at" gorm:"index"`
+	DeletedAt   gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	ColorID     uint           `json:"color_id"`
 	Color       *Color         `json:"color,omitempty"`
 	ReferenceID uint           `json:"reference_id"`
@@ -43,7 +43,7 @@ type ResourceByReference struct {
 	ID                 uint              `json:"id" gorm:"primary_key"`
 	Key                string            `json:"key" gorm:"type:uuid"`
 	ColorByReferenceID uint              `json:"colorByReference_id"`
-	DeletedAt          gorm.DeletedAt    `json:"delete_at" gorm:"index"`
+	DeletedAt          gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
 	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
 	ResourceId         uint              `json:"resource_id"`
 	Resource           *Resource         `json:"resource,omitempty"`
@@ -63,7 +63,7 @@ type FabricByReference struct {
 	ID                 uint              `json:"id" gorm:"primary_key"`
 	Key                string            `json:"key" gorm:"type:uuid"`
 	ColorByReferenceID uint              `json:"colorByReference_id"`
-	DeletedAt          gorm.DeletedAt    `json:"delete_at" gorm:"index"`
+	DeletedAt          gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
 	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
 	FabricId           uint              `json:"fabric_id"`
 	Fabric             *Fabric           `json:"fabric,omitempty"`

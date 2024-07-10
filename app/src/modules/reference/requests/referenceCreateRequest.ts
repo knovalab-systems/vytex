@@ -15,7 +15,7 @@ async function getFabricsByRefCreate() {
 		readFabrics({
 			limit: -1,
 			filter: {
-				delete_at: {
+				deleted_at: {
 					_null: true,
 				},
 			},
@@ -37,7 +37,7 @@ async function getResourcesByRefCreate() {
 		readResources({
 			limit: -1,
 			filter: {
-				delete_at: {
+				deleted_at: {
 					_null: true,
 				},
 			},

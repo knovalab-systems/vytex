@@ -56,7 +56,7 @@ describe('ReferenceCreateForm', () => {
 	it('calls submit with pending fabric', async () => {
 		render(() => (
 			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', delete_at: '' }]}
+				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
 				fabrics={[]}
 				resources={[{ id: 1, name: 'Insumo 1' }]}
 			/>
@@ -134,7 +134,7 @@ describe('ReferenceCreateForm', () => {
 	it('calls submit with pending resource', async () => {
 		render(() => (
 			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', delete_at: '' }]}
+				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
 				fabrics={[{ id: 1, name: 'Tela 1' }]}
 				resources={[]}
 			/>
@@ -212,7 +212,7 @@ describe('ReferenceCreateForm', () => {
 	it('calls submit succesfully', async () => {
 		render(() => (
 			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', delete_at: '' }]}
+				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
 				fabrics={[{ id: 1, name: 'Tela 1' }]}
 				resources={[{ id: 1, name: 'Insumo 1' }]}
 			/>
