@@ -1,12 +1,12 @@
-package utils
+package models
 
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/knovalab-systems/vytex/pkg/envs"
 )
 
 // Types for tokens
@@ -52,7 +52,7 @@ func GenerateTokens(user string, role string) (*Tokens, error) {
 
 func GenerateAccessToken(user string, role string) (string, error) {
 	// env access key
-	secret := os.Getenv("JWT_ACCESS_KEY")
+	secret := envs.JWT_ACCESS_KEY()
 
 	// create claims
 	claims := &JWTClaims{
@@ -82,7 +82,7 @@ func GenerateRefreshToken() (string, error) {
 	hash := sha256.New()
 
 	// env refresh key
-	secret := os.Getenv("JWT_REFRESH_KEY") + time.Now().String()
+	secret := envs.JWT_REFRESH_KEY() + time.Now().String()
 
 	// See: https://pkg.go.dev/io#Writer.Write
 	_, err := hash.Write([]byte(secret))

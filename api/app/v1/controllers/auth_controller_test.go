@@ -12,7 +12,6 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -151,7 +150,7 @@ func TestLogin(t *testing.T) {
 	t.Run("Not generate tokens", func(t *testing.T) {
 		// context
 		user := &models.User{ID: "1", Username: "jose", Password: "12345678"}
-		tokens := &utils.Tokens{}
+		tokens := &models.Tokens{}
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "12345678"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -180,7 +179,7 @@ func TestLogin(t *testing.T) {
 	t.Run("Login successfully", func(t *testing.T) {
 		// context
 		user := &models.User{ID: "1", Username: "jose", Password: "12345678"}
-		tokens := &utils.Tokens{}
+		tokens := &models.Tokens{}
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"username": "jose", "password": "12345678"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
@@ -236,7 +235,7 @@ func TestRefresh(t *testing.T) {
 		// context
 		cookie := "1"
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
-		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, cookie))
+		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, models.RefreshCookieName, cookie))
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)
@@ -260,9 +259,9 @@ func TestRefresh(t *testing.T) {
 		// context
 		cookie := "1"
 		session := &models.Session{UserID: "1", ID: 1}
-		tokens := &utils.Tokens{}
+		tokens := &models.Tokens{}
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
-		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, cookie))
+		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, models.RefreshCookieName, cookie))
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)
@@ -288,11 +287,11 @@ func TestRefresh(t *testing.T) {
 
 		cookie := "1"
 		session := &models.Session{UserID: "1", ID: 1}
-		tokens := &utils.Tokens{}
+		tokens := &models.Tokens{}
 
 		// context
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
-		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, cookie))
+		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, models.RefreshCookieName, cookie))
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)
@@ -318,9 +317,9 @@ func TestRefresh(t *testing.T) {
 		// context
 		cookie := "1"
 		session := &models.Session{UserID: "1", ID: 1}
-		tokens := &utils.Tokens{}
+		tokens := &models.Tokens{}
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
-		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, "1"))
+		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, models.RefreshCookieName, "1"))
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)
@@ -367,7 +366,7 @@ func TestLogout(t *testing.T) {
 			// Create a new HTTP request
 			req := httptest.NewRequest(http.MethodPost, "/", nil)
 			if len(testCase.Cookie) > 0 {
-				req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, testCase.Cookie))
+				req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, models.RefreshCookieName, testCase.Cookie))
 			}
 			rec := httptest.NewRecorder()
 			e := echo.New()
@@ -397,7 +396,7 @@ func TestLogout(t *testing.T) {
 		cookie := "1"
 		session := &models.Session{UserID: "1", ID: 1}
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
-		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, utils.RefreshCookieName, cookie))
+		req.Header.Set(echo.HeaderCookie, fmt.Sprintf(`%v="%v"`, models.RefreshCookieName, cookie))
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)

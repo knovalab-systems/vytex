@@ -7,7 +7,6 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -102,7 +101,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 
 	// get user id from jwt
 	userJWT := c.Get("user").(*jwt.Token)
-	claims := userJWT.Claims.(*utils.JWTClaims)
+	claims := userJWT.Claims.(*models.JWTClaims)
 	u.ID = claims.User
 
 	// validate

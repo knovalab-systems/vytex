@@ -23,7 +23,7 @@ func main() {
 		log.Fatalf("Error loading .env file")
 	}
 
-	gormdb := database.Db("localhost")
+	gormdb := database.DB()
 
 	// use gorm db
 	g.UseDB(gormdb)

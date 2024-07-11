@@ -24,7 +24,7 @@ func main() {
 	middlewares.EchoMiddlewares(e)
 
 	// database
-	db := database.Db("")
+	db := database.DB()
 	query.SetDefault(db)
 
 	// routes

@@ -14,7 +14,6 @@ import (
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/knovalab-systems/vytex/pkg/problems"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -160,7 +159,7 @@ func TestReadMe(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{}})
 
 		// mocks
 		userMock := mocks.UserMock{}
@@ -180,7 +179,7 @@ func TestReadMe(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		userMock := mocks.UserMock{}
@@ -199,7 +198,7 @@ func TestReadMe(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		userMock := mocks.UserMock{}
