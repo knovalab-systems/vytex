@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readResources } from '@vytex/client';
-import { client } from '~/lib/client';
 import { QUERY_LIMIT } from '~/constants/http';
+import { client } from '~/lib/client';
 
 export function getResourcesQuery(page: number) {
 	return queryOptions({

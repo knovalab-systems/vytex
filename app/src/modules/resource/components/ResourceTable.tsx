@@ -37,10 +37,13 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell class='w-1/6'>{resource.key}</TableCell>
 								<TableCell>{resource.name}</TableCell>
 								<TableCell>
-									<div>{colorRecord()[resource.color_id]?.name || resource.color_id}</div>
+									<div>{colorRecord()[resource.color_id as number]?.name || resource.color_id}</div>
 								</TableCell>
 								<TableCell>
-									<div class='h-10 w-10 border-2' style={{ background: colorRecord()[resource.color_id]?.hex || '' }} />
+									<div
+										class='h-10 w-10 border-2'
+										style={{ background: colorRecord()[resource.color_id as number]?.hex || '' }}
+									/>
 								</TableCell>
 								<TableCell>{resource.code || 'Code'}</TableCell>
 								<TableCell>${resource.cost}</TableCell>

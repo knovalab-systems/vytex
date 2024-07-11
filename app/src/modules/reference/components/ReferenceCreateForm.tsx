@@ -19,6 +19,8 @@ import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { STATUS_CODE } from '~/constants/http';
+import { REFS_PATH } from '~/constants/paths';
 import { type colorsArray, useColors } from '~/hooks/useColors';
 import useImageUploader from '~/hooks/useImageUploader';
 import {
@@ -27,8 +29,6 @@ import {
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreateRequest';
 import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
-import { STATUS_CODE } from '~/constants/http';
-import { REFS_PATH } from '~/constants/paths';
 import {
 	type ReferenceCreateRequest,
 	ReferenceCreateSchema,
@@ -51,8 +51,8 @@ function ReferenceCreateForm(props: {
 	const { uploadLocalImages, uploadedFiles, error } = useImageUploader();
 
 	const resources: () => Combined[] = () => [
-		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
-		...props.fabrics.map(i => ({ id: `f${i.id}`, name: i.name })),
+		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name as string })),
+		...props.fabrics.map(i => ({ id: `f${i.id}`, name: i.name as string })),
 	];
 
 	const resourceObject = () =>

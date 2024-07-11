@@ -13,9 +13,9 @@ import {
 } from '~/components/ui/Dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { TableCell } from '~/components/ui/Table';
-import type { User } from '~/schemas/coreSchema';
-import { NO_ROLE } from '~/envs/roles';
 import { type RoleItems, roleList, roles } from '~/constants/roles';
+import { NO_ROLE } from '~/envs/roles';
+import type { User } from '~/schemas/coreSchema';
 import { updateUserRequest } from '../requests/userUpdateRequests';
 
 function RoleCell(props: {

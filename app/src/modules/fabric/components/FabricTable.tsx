@@ -36,10 +36,13 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell class='w-1/6'>{fabric.key}</TableCell>
 							<TableCell>{fabric.name}</TableCell>
 							<TableCell>
-								<div>{colorRecord()[fabric.color_id]?.name || fabric.color_id}</div>
+								<div>{colorRecord()[fabric.color_id as number]?.name || fabric.color_id}</div>
 							</TableCell>
 							<TableCell>
-								<div class='h-10 w-10 border-2' style={{ background: colorRecord()[fabric.color_id]?.hex || '' }} />
+								<div
+									class='h-10 w-10 border-2'
+									style={{ background: colorRecord()[fabric.color_id as number]?.hex || '' }}
+								/>
 							</TableCell>
 							<TableCell>{fabric.code || 'Code'}</TableCell>
 							<TableCell>${fabric.cost}</TableCell>

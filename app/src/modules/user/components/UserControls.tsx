@@ -5,10 +5,10 @@ import { Show, onCleanup } from 'solid-js';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
-import { USER_STATUS_OPTIONS } from '~/constants/status';
-import { cleanupDebounce, debounce } from '~/utils/debounce';
 import { USER_CREATE_PATH } from '~/constants/paths';
 import { roleList } from '~/constants/roles';
+import { USER_STATUS_OPTIONS } from '~/constants/status';
+import { cleanupDebounce, debounce } from '~/utils/debounce';
 
 type UserControlsProps = {
 	setNameFilter: (value: string) => void;
