@@ -1,6 +1,6 @@
 import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
-import { CLOUD_API_KEY, CLOUD_NAME, CLOUD_PRESET } from '~/utils/env';
+import { CLOUD_API_KEY, CLOUD_NAME, CLOUD_PRESET } from '~/envs/cloudinary';
 import { CLOUDINARY_PATH, CLOUDINARY_UPLOAD } from '~/constants/paths';
 import { uploadImagesRequest } from './request/imagesRequest';
 import type { imageResponse } from './request/imagesRequest';

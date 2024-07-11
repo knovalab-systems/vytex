@@ -1,4 +1,4 @@
-import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from './env';
+import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
 import { adminPermissions, designerRolePermissions, noRolePermissions } from './permissions';
 
 export interface RoleItems {
