@@ -14,6 +14,7 @@ async function getFabricsByRefCreate() {
 	return await client.request(
 		readFabrics({
 			limit: -1,
+			fields: ['id', 'name'],
 			filter: {
 				deleted_at: {
 					_null: true,
@@ -36,6 +37,7 @@ async function getResourcesByRefCreate() {
 	return await client.request(
 		readResources({
 			limit: -1,
+			fields: ['id', 'name'],
 			filter: {
 				deleted_at: {
 					_null: true,

@@ -1,6 +1,6 @@
 import { type InferInput, literal, minLength, object, picklist, pipe, string, union } from 'valibot';
-import { STATUS_OPTIONS } from '~/constants/status';
 import { roleList } from '~/constants/roles';
+import { STATUS_OPTIONS } from '~/constants/status';
 
 export const UserUpdateSchema = object({
 	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),

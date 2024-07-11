@@ -2,9 +2,9 @@ import { Navigate, type RouteSectionProps } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createResource } from 'solid-js';
 import Loading from '~/components/Loading';
-import { refreshRequest } from '~/modules/auth/requests/authRequests';
-import { client } from '~/lib/client';
 import { LOGIN_PATH } from '~/constants/paths';
+import { client } from '~/lib/client';
+import { refreshRequest } from '~/modules/auth/requests/authRequests';
 
 function ProtectedWrapper(props: RouteSectionProps) {
 	const [token] = createResource(client.getToken);

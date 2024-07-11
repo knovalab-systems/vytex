@@ -9,8 +9,8 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
-import { useColors } from '~/hooks/useColors';
 import { QUERY_LIMIT } from '~/constants/http';
+import { useColors } from '~/hooks/useColors';
 import ResourceTable from '../components/ResourceTable';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourcesGetRequests';
 
