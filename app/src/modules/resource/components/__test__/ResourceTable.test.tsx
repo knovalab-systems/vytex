@@ -17,7 +17,26 @@ describe('Color Table', () => {
 	});
 
 	it('renders correctly on resources', () => {
-		const resources: GetResourcesType = [{ id: 123 }, { name: 'Insumo 1' }];
+		const resources: GetResourcesType = [
+			{
+				id: 123,
+				key: '',
+				cost: null,
+				name: null,
+				code: null,
+				color_id: null,
+				deleted_at: null,
+			},
+			{
+				name: 'Insumo 1',
+				id: 0,
+				key: '',
+				cost: null,
+				code: null,
+				color_id: null,
+				deleted_at: null,
+			},
+		];
 		render(() => <ResourceTable resources={resources} />);
 		const resourcesId = screen.getByText('123');
 		const resourceName = screen.getByText('Insumo 1');

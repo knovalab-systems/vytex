@@ -51,8 +51,8 @@ function ReferenceCreateForm(props: {
 	const { uploadLocalImages, uploadedFiles, error } = useImageUploader();
 
 	const resources: () => Combined[] = () => [
-		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
-		...props.fabrics.map(i => ({ id: `f${i.id}`, name: i.name })),
+		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name as string })),
+		...props.fabrics.map(i => ({ id: `f${i.id}`, name: i.name as string })),
 	];
 
 	const resourceObject = () =>

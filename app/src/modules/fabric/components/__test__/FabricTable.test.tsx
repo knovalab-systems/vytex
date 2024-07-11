@@ -25,9 +25,7 @@ describe('Fabric Table', () => {
 				name: 'Algodon',
 				code: 'ALG001',
 				color_id: 1,
-				color: {
-					hex: '#FFFFFF',
-				},
+				deleted_at: null,
 			},
 		];
 
