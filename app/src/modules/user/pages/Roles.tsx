@@ -1,5 +1,5 @@
-import { permissions } from '~/utils/permissions';
-import { roleList, rolePermissions } from '~/utils/roles';
+import { permissions } from '~/constants/permissions';
+import { roleList, rolePermissions } from '~/constants/roles';
 import RoleTable from '../components/RoleTable';
 
 function Roles() {

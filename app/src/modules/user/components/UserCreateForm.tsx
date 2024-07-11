@@ -6,7 +6,7 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { STATUS_CODE } from '~/constants/http';
 import { USERS_PATH } from '~/constants/paths';
-import { roleList } from '~/utils/roles';
+import { roleList } from '~/constants/roles';
 import { createUserRequest } from '../requests/userCreateRequests';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreateSchema';
 
