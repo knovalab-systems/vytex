@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readResources } from '@vytex/client';
-import { client } from '~/utils/client';
+import { client } from '~/lib/client';
 import { QUERY_LIMIT } from '~/constants/http';
 
 export function getResourcesQuery(page: number) {
