@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import type { User } from '~/schemas/coreSchema';
 import { STATUS_CODE } from '~/constants/http';
 import { STATUS_OPTIONS } from '~/constants/status';
-import { NO_ROLE } from '~/utils/env';
+import { NO_ROLE } from '~/envs/roles';
 import { USERS_PATH } from '~/constants/paths';
 import { roleList, roles } from '~/utils/roles';
 import type { GetUserType } from '../requests/userGetRequests';
