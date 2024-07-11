@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/knovalab-systems/vytex/pkg/utils"
+	"github.com/knovalab-systems/vytex/pkg/envs"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -28,7 +28,7 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 	}
 	if len(b.Role) == 0 {
-		b.Role = utils.NoRole()
+		b.Role = envs.NO_ROLE()
 
 	}
 	return nil

@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/knovalab-systems/vytex/pkg/utils"
+	"github.com/knovalab-systems/vytex/pkg/envs"
 )
 
 type Query struct {
@@ -31,11 +31,11 @@ func (m *Query) SanitizedQuery() error {
 
 func sanitizedLimit(limit *int) *int {
 	if limit == nil {
-		l := utils.LimitQuery()
+		l := envs.LIMIT_QUERY()
 		return &l
 	}
 	if *limit == -1 { // here could be a max limit query
-		l := utils.LimitQuery()
+		l := envs.LIMIT_QUERY()
 		return &l
 	}
 	return limit

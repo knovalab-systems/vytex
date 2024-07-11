@@ -7,7 +7,6 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 )
 
@@ -59,7 +58,7 @@ func (m *AuthController) Login(c echo.Context) error {
 
 	res := models.DataAuthResponse{
 		AccessToken: tokens.Access,
-		Expires:     utils.AccessExpires.Milliseconds(),
+		Expires:     models.AccessExpires.Milliseconds(),
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -76,7 +75,7 @@ func (m *AuthController) Login(c echo.Context) error {
 // @Router       /auth/refresh [post]
 func (m *AuthController) Refresh(c echo.Context) error {
 	// get the cookie with refresh token
-	cookie, err := c.Cookie(utils.RefreshCookieName)
+	cookie, err := c.Cookie(models.RefreshCookieName)
 	if err != nil {
 		return problems.RefreshUnauthorized()
 	}
@@ -105,7 +104,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 
 	res := models.DataAuthResponse{
 		AccessToken: tokens.Access,
-		Expires:     utils.AccessExpires.Milliseconds(),
+		Expires:     models.AccessExpires.Milliseconds(),
 	}
 
 	return c.JSON(http.StatusOK, res)
@@ -124,7 +123,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 func (m *AuthController) Logout(c echo.Context) error {
 
 	// get the cookie with refresh token
-	cookie, err := c.Cookie(utils.RefreshCookieName)
+	cookie, err := c.Cookie(models.RefreshCookieName)
 	if err != nil {
 		return problems.RefreshUnauthorized()
 	}
@@ -142,7 +141,7 @@ func (m *AuthController) Logout(c echo.Context) error {
 	}
 
 	c.SetCookie(&http.Cookie{
-		Name:     utils.RefreshCookieName,
+		Name:     models.RefreshCookieName,
 		Value:    "",
 		Expires:  time.Now(),
 		HttpOnly: true,
@@ -157,13 +156,13 @@ func (m *AuthController) Logout(c echo.Context) error {
 
 func generateRefreshCookie(token string, expiresAt time.Time) *http.Cookie {
 	c := new(http.Cookie)
-	c.Name = utils.RefreshCookieName
+	c.Name = models.RefreshCookieName
 	c.Value = token
 	c.Expires = expiresAt
 	c.HttpOnly = true
 	c.SameSite = http.SameSiteLaxMode
 	c.Path = "/"
-	c.MaxAge = int(utils.RefreshExpires.Seconds())
+	c.MaxAge = int(models.RefreshExpires.Seconds())
 
 	return c
 }

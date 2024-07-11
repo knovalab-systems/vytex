@@ -2,7 +2,6 @@ package mocks
 
 import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -20,9 +19,9 @@ func (m *AuthMock) ValidUser(username string, password string) (*models.User, er
 	return args.Get(0).(*models.User), args.Error(1)
 }
 
-func (m *AuthMock) Credentials(user string, role string) (*utils.Tokens, error) {
+func (m *AuthMock) Credentials(user string, role string) (*models.Tokens, error) {
 	args := m.Called(user, role)
-	return args.Get(0).(*utils.Tokens), args.Error(1)
+	return args.Get(0).(*models.Tokens), args.Error(1)
 }
 
 func (m *AuthMock) ValidRefresh(token string) (*models.Session, error) {

@@ -9,9 +9,9 @@ import (
 	"testing"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -29,7 +29,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -54,7 +54,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -79,7 +79,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -104,7 +104,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -129,7 +129,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -154,7 +154,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "33232"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "33232"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -179,7 +179,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -204,7 +204,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -229,7 +229,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
@@ -253,7 +253,7 @@ func TestCreateReference(t *testing.T) {
 		e := echo.New()
 		config.EchoValidator(e)
 		c := e.NewContext(req, rec)
-		c.Set("user", &jwt.Token{Claims: &utils.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}

@@ -7,8 +7,8 @@ import (
 	"testing"
 
 	"github.com/knovalab-systems/vytex/config"
+	"github.com/knovalab-systems/vytex/pkg/envs"
 	"github.com/knovalab-systems/vytex/pkg/problems"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -85,7 +85,7 @@ func TestQueryInRequest(t *testing.T) {
 
 func TestSanitizedLimit(t *testing.T) {
 
-	limitQuery := utils.LimitQuery()
+	limitQuery := envs.LIMIT_QUERY()
 
 	t.Run("set limit query, on -1", func(t *testing.T) {
 		// context

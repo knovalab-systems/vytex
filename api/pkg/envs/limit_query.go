@@ -1,4 +1,4 @@
-package utils
+package envs
 
 import (
 	"log"
@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func LimitQuery() int {
+func LIMIT_QUERY() int {
 	limit := 50
 	env, exists := os.LookupEnv("QUERY_LIMIT_DEFAULT")
 	if exists {

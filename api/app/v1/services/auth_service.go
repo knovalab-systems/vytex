@@ -8,7 +8,6 @@ import (
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/query"
-	"github.com/knovalab-systems/vytex/pkg/utils"
 )
 
 type AuthService struct {
@@ -31,13 +30,13 @@ func (m *AuthService) ValidUser(username string, password string) (*models.User,
 	return user, nil
 }
 
-func (m *AuthService) Credentials(user string, role string) (*utils.Tokens, error) {
+func (m *AuthService) Credentials(user string, role string) (*models.Tokens, error) {
 	// get tokens
-	tokens, err := utils.GenerateTokens(user, role)
+	tokens, err := models.GenerateTokens(user, role)
 	if err != nil {
 		return nil, err
 	}
-	tokens.RefreshExpiresAt = time.Now().Add(utils.RefreshExpires)
+	tokens.RefreshExpiresAt = time.Now().Add(models.RefreshExpires)
 
 	// create session
 	table := query.Session
