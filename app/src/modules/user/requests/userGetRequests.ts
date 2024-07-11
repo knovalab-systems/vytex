@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readUser, readUsers } from '@vytex/client';
 import { client } from '~/utils/client';
-import { QUERY_LIMIT } from '~/utils/constants';
+import { QUERY_LIMIT } from '~/constants/http';
 
 export function getUsersQuery(name: string, username: string, roleId: string, status: string, page: number) {
 	return queryOptions({

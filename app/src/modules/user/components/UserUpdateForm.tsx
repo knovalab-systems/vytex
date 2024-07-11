@@ -7,9 +7,10 @@ import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import type { User } from '~/schemas/coreSchema';
-import { STATUS_CODE, STATUS_OPTIONS } from '~/utils/constants';
+import { STATUS_CODE } from '~/constants/http';
+import { STATUS_OPTIONS } from '~/constants/status';
 import { NO_ROLE } from '~/utils/env';
-import { USERS_PATH } from '~/utils/paths';
+import { USERS_PATH } from '~/constants/paths';
 import { roleList, roles } from '~/utils/roles';
 import type { GetUserType } from '../requests/userGetRequests';
 import { updateUserRequest } from '../requests/userUpdateRequests';
@@ -39,9 +40,9 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 		}, {});
 
 		if (!STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && !props.user?.delete_at) {
-			user.delete_at = now(getLocalTimeZone()).toAbsoluteString();
+			user.deleted_at = now(getLocalTimeZone()).toAbsoluteString();
 		} else if (STATUS_OPTIONS[delete_at as keyof typeof STATUS_OPTIONS] && Boolean(props.user?.delete_at)) {
-			user.delete_at = null;
+			user.deleted_at = null;
 		}
 
 		if (Object.keys(user).length === 0) return;

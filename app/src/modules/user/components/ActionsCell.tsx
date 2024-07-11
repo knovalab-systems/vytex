@@ -2,7 +2,7 @@ import { A } from '@solidjs/router';
 import { AiFillEdit, AiOutlinePlus } from 'solid-icons/ai';
 import { Button } from '~/components/ui/Button';
 import { TableCell } from '~/components/ui/Table';
-import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 
 function ActionsCell(props: { userId: string }) {
 	return (

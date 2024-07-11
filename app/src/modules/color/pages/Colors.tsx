@@ -12,8 +12,8 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
-import { QUERY_LIMIT } from '~/utils/constants';
-import { COLORS_CREATE_PATH } from '~/utils/paths';
+import { QUERY_LIMIT } from '~/constants/http';
+import { COLORS_CREATE_PATH } from '~/constants/paths';
 import ColorTable from '../components/ColorTable';
 import { countColorsQuery, getColorsQuery } from '../requests/colorsGetRequests';
 

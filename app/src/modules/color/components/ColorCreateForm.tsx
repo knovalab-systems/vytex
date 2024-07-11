@@ -4,8 +4,8 @@ import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
-import { STATUS_CODE } from '~/utils/constants';
-import { COLORS_PATH } from '~/utils/paths';
+import { STATUS_CODE } from '~/constants/http';
+import { COLORS_PATH } from '~/constants/paths';
 import { createColorRequest } from '../requests/colorsCreateRequests';
 import { ColorCreateSchema, type ColorCreateType } from '../schemas/colorCreateSchema';
 

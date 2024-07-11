@@ -9,7 +9,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
-import { QUERY_LIMIT } from '~/utils/constants';
+import { QUERY_LIMIT } from '~/constants/http';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
 import { countUsersQuery, getUsersQuery } from '../requests/userGetRequests';

@@ -11,7 +11,7 @@ import MobileNav from '~/components/MobileNav';
 import SideBarNav from '~/components/SideBarNav';
 import { client } from '~/utils/client';
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/utils/env';
-import * as PATHS from '~/utils/paths';
+import * as PATHS from '~/constants/paths';
 import RoleRoot from '../../../hooks/roleRoot';
 
 function NavWrapper(props: RouteSectionProps) {

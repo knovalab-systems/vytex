@@ -3,7 +3,7 @@ import { useNavigate } from '@solidjs/router';
 import { Button } from '~/components/ui/Button';
 import { Timeline } from '~/components/ui/Timeline';
 import { NO_ROLE } from '~/utils/env';
-import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 import { roles } from '~/utils/roles';
 import { convertTimeTo12 } from '~/utils/time';
 import type { GetUserType } from '../requests/userGetRequests';

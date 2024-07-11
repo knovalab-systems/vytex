@@ -1,7 +1,7 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
 import ProtectedWrapper from '~/modules/auth/components/ProtectedWrapper';
-import * as PATHS from '~/utils/paths';
+import * as PATHS from '~/constants/paths';
 import AdminRoutes from './AdminRoutes';
 import DesignerRoutes from './DesignerRoutes';
 

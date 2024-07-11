@@ -27,8 +27,8 @@ import {
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreateRequest';
 import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
-import { STATUS_CODE } from '~/utils/constants';
-import { REFS_PATH } from '~/utils/paths';
+import { STATUS_CODE } from '~/constants/http';
+import { REFS_PATH } from '~/constants/paths';
 import {
 	type ReferenceCreateRequest,
 	ReferenceCreateSchema,
@@ -139,7 +139,11 @@ function ReferenceCreateForm(props: {
 	const handleCancel = () => navigate(REFS_PATH);
 
 	return (
-		<Form class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100' onSubmit={handleSubmit} enctype='multipart/form-data'>
+		<Form
+			class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100'
+			onSubmit={handleSubmit}
+			enctype='multipart/form-data'
+		>
 			<div class='flex flex-col gap-4 mb-auto'>
 				<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 					<h1 class='text-2xl font-bold text-center'>Crear referencia</h1>
@@ -413,7 +417,7 @@ function ReferenceCreateForm(props: {
 					/>
 				</div>
 			</div>
-		</Form >
+		</Form>
 	);
 }
 

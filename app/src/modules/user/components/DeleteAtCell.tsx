@@ -14,10 +14,10 @@ function DeleteAtCell(props: { userId: string; delete_at: string | null }) {
 	const handleSubmit = (newStatus: boolean) => {
 		setStatus(newStatus);
 		setLoading(true);
-		const user: User = { delete_at: null };
+		const user: User = { deleted_at: null };
 		if (!newStatus) {
 			const date = now(getLocalTimeZone()).toAbsoluteString();
-			user.delete_at = date;
+			user.deleted_at = date;
 		}
 		updateUserRequest(props.userId, user)
 			.then(() => {
