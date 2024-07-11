@@ -9,7 +9,7 @@ import Loading from '~/components/Loading';
 import MenuNav from '~/components/MenuNav';
 import MobileNav from '~/components/MobileNav';
 import SideBarNav from '~/components/SideBarNav';
-import { client } from '~/utils/client';
+import { client } from '~/lib/client';
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
 import * as PATHS from '~/constants/paths';
 import RoleRoot from '../../../hooks/roleRoot';

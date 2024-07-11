@@ -3,7 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createResource } from 'solid-js';
 import Loading from '~/components/Loading';
 import { refreshRequest } from '~/modules/auth/requests/authRequests';
-import { client } from '~/utils/client';
+import { client } from '~/lib/client';
 import { LOGIN_PATH } from '~/constants/paths';
 
 function ProtectedWrapper(props: RouteSectionProps) {

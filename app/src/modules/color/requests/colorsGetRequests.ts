@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readColors } from '@vytex/client';
-import { client } from '~/utils/client';
+import { client } from '~/lib/client';
 import { QUERY_LIMIT } from '~/constants/http';
 
 export function getColorsQuery(page: number) {

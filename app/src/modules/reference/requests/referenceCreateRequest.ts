@@ -1,6 +1,6 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { createReference, readFabrics, readResources } from '@vytex/client';
-import { client } from '~/utils/client';
+import { client } from '~/lib/client';
 import type { ReferenceCreateRequest } from '../schemas/referenceCreateSchema';
 
 export function getFabricsByRefCreateQuery() {
