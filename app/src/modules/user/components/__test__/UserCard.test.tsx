@@ -9,7 +9,7 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
-vi.mock('~/utils/roles', () => ({
+vi.mock('~/constants/roles', () => ({
 	roles: {
 		admin: {
 			label: 'Administrador',

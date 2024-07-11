@@ -6,7 +6,7 @@ import RoleCell from '../RoleCell';
 
 window.scrollTo = vi.fn(() => {});
 
-vi.mock('~/utils/roles', () => ({
+vi.mock('~/constants/roles', () => ({
 	roles: {
 		admin: {
 			label: 'Administrador',

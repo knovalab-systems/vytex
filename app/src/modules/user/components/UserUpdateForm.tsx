@@ -11,7 +11,7 @@ import { STATUS_CODE } from '~/constants/http';
 import { STATUS_OPTIONS } from '~/constants/status';
 import { NO_ROLE } from '~/envs/roles';
 import { USERS_PATH } from '~/constants/paths';
-import { roleList, roles } from '~/utils/roles';
+import { roleList, roles } from '~/constants/roles';
 import type { GetUserType } from '../requests/userGetRequests';
 import { updateUserRequest } from '../requests/userUpdateRequests';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';

@@ -1,5 +1,5 @@
 import { type InferInput, minLength, object, picklist, pipe, string } from 'valibot';
-import { roleList } from '~/utils/roles';
+import { roleList } from '~/constants/roles';
 
 export const UserCreateSchema = object({
 	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),

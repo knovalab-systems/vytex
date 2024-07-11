@@ -4,7 +4,7 @@ import { Button } from '~/components/ui/Button';
 import { Timeline } from '~/components/ui/Timeline';
 import { NO_ROLE } from '~/envs/roles';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
-import { roles } from '~/utils/roles';
+import { roles } from '~/constants/roles';
 import { convertTimeTo12 } from '~/utils/time';
 import type { GetUserType } from '../requests/userGetRequests';
 

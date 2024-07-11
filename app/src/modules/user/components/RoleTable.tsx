@@ -1,6 +1,6 @@
 import { For, Match, Switch } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { RoleItems } from '~/utils/roles';
+import type { RoleItems } from '~/constants/roles';
 
 function RoleTable(props: {
 	roles: RoleItems[];

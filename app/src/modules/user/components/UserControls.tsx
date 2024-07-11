@@ -8,7 +8,7 @@ import { Button } from '~/components/ui/Button';
 import { USER_STATUS_OPTIONS } from '~/constants/status';
 import { cleanupDebounce, debounce } from '~/utils/debounce';
 import { USER_CREATE_PATH } from '~/constants/paths';
-import { roleList } from '~/utils/roles';
+import { roleList } from '~/constants/roles';
 
 type UserControlsProps = {
 	setNameFilter: (value: string) => void;
