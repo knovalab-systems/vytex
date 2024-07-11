@@ -1,6 +1,6 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
-import * as PATHS from '~/utils/paths';
+import * as PATHS from '~/constants/paths';
 
 const User = lazy(() => import('~/modules/user/pages/User'));
 const Users = lazy(() => import('~/modules/user/pages/Users'));

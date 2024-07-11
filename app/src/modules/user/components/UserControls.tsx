@@ -5,9 +5,9 @@ import { Show, onCleanup } from 'solid-js';
 import FilterInput from '~/components/FilterInput';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
-import { USER_STATUS_OPTIONS } from '~/utils/constants';
+import { USER_STATUS_OPTIONS } from '~/constants/status';
 import { cleanupDebounce, debounce } from '~/utils/debounce';
-import { USER_CREATE_PATH } from '~/utils/paths';
+import { USER_CREATE_PATH } from '~/constants/paths';
 import { roleList } from '~/utils/roles';
 
 type UserControlsProps = {

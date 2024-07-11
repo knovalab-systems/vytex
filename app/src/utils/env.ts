@@ -3,7 +3,7 @@
  * @param {string} name name of the env. var
  * @returns {string} value of the env. var
  */
-function getEnvVar(name: string) {
+function getEnvVar(name: string): string {
 	const env = import.meta.env[name];
 	if (!env) {
 		throw new Error(`env variable "${name}" is not found`);

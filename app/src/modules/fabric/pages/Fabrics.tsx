@@ -9,7 +9,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
-import { QUERY_LIMIT } from '~/utils/constants';
+import { QUERY_LIMIT } from '~/constants/http';
 import FabricTable from '../components/FabricTable';
 import { countFabricsQuery, getFabricsQuery } from '../request/fabricsGetRequests';
 

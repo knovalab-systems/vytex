@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readFabrics } from '@vytex/client';
 import { client } from '~/utils/client';
-import { QUERY_LIMIT } from '~/utils/constants';
+import { QUERY_LIMIT } from '~/constants/http';
 
 export function getFabricsQuery(page: number) {
 	return queryOptions({

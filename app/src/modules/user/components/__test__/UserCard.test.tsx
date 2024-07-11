@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { USERS_PATH, USER_UPDATE_PATH } from '~/utils/paths';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 import UserCard from '../UserCard';
 
 const mockNavigate = vi.fn();
