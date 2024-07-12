@@ -33,10 +33,24 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 	_reference.CreatedAt = field.NewTime(tableName, "created_at")
 	_reference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_reference.CreatedBy = field.NewString(tableName, "created_by")
+	_reference.Front = field.NewString(tableName, "front")
+	_reference.Back = field.NewString(tableName, "back")
 	_reference.User = referenceBelongsToUser{
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("User", "models.User"),
+	}
+
+	_reference.FrontImage = referenceBelongsToFrontImage{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("FrontImage", "models.Image"),
+	}
+
+	_reference.BackImage = referenceBelongsToBackImage{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("BackImage", "models.Image"),
 	}
 
 	_reference.fillFieldMap()
@@ -54,7 +68,13 @@ type reference struct {
 	CreatedAt field.Time
 	DeletedAt field.Field
 	CreatedBy field.String
+	Front     field.String
+	Back      field.String
 	User      referenceBelongsToUser
+
+	FrontImage referenceBelongsToFrontImage
+
+	BackImage referenceBelongsToBackImage
 
 	fieldMap map[string]field.Expr
 }
@@ -77,6 +97,8 @@ func (r *reference) updateTableName(table string) *reference {
 	r.CreatedAt = field.NewTime(table, "created_at")
 	r.DeletedAt = field.NewField(table, "deleted_at")
 	r.CreatedBy = field.NewString(table, "created_by")
+	r.Front = field.NewString(table, "front")
+	r.Back = field.NewString(table, "back")
 
 	r.fillFieldMap()
 
@@ -93,13 +115,15 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 7)
+	r.fieldMap = make(map[string]field.Expr, 11)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["key"] = r.Key
 	r.fieldMap["reference"] = r.Reference
 	r.fieldMap["created_at"] = r.CreatedAt
 	r.fieldMap["deleted_at"] = r.DeletedAt
 	r.fieldMap["created_by"] = r.CreatedBy
+	r.fieldMap["front"] = r.Front
+	r.fieldMap["back"] = r.Back
 
 }
 
@@ -181,6 +205,148 @@ func (a referenceBelongsToUserTx) Clear() error {
 }
 
 func (a referenceBelongsToUserTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceBelongsToFrontImage struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceBelongsToFrontImage) Where(conds ...field.Expr) *referenceBelongsToFrontImage {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceBelongsToFrontImage) WithContext(ctx context.Context) *referenceBelongsToFrontImage {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceBelongsToFrontImage) Session(session *gorm.Session) *referenceBelongsToFrontImage {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceBelongsToFrontImage) Model(m *models.Reference) *referenceBelongsToFrontImageTx {
+	return &referenceBelongsToFrontImageTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceBelongsToFrontImageTx struct{ tx *gorm.Association }
+
+func (a referenceBelongsToFrontImageTx) Find() (result *models.Image, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceBelongsToFrontImageTx) Append(values ...*models.Image) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceBelongsToFrontImageTx) Replace(values ...*models.Image) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceBelongsToFrontImageTx) Delete(values ...*models.Image) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceBelongsToFrontImageTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceBelongsToFrontImageTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceBelongsToBackImage struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceBelongsToBackImage) Where(conds ...field.Expr) *referenceBelongsToBackImage {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceBelongsToBackImage) WithContext(ctx context.Context) *referenceBelongsToBackImage {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceBelongsToBackImage) Session(session *gorm.Session) *referenceBelongsToBackImage {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceBelongsToBackImage) Model(m *models.Reference) *referenceBelongsToBackImageTx {
+	return &referenceBelongsToBackImageTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceBelongsToBackImageTx struct{ tx *gorm.Association }
+
+func (a referenceBelongsToBackImageTx) Find() (result *models.Image, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceBelongsToBackImageTx) Append(values ...*models.Image) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceBelongsToBackImageTx) Replace(values ...*models.Image) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceBelongsToBackImageTx) Delete(values ...*models.Image) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceBelongsToBackImageTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceBelongsToBackImageTx) Count() int64 {
 	return a.tx.Count()
 }
 

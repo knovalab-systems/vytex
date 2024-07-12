@@ -1,8 +1,9 @@
 import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
-import { For, Show } from 'solid-js';
+import { For, Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
+import ImagePreviewSelect from '~/components/ImagePreviewSelect';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -19,6 +20,7 @@ import { LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { type colorsArray, useColors } from '~/hooks/useColors';
+import useImageUploader from '~/hooks/useImageUploader';
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
@@ -44,6 +46,9 @@ function ReferenceCreateForm(props: {
 }) {
 	const { colorRecord } = useColors();
 	const navigate = useNavigate();
+	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
+	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
+	const { uploadLocalImages, uploadedFiles, error } = useImageUploader();
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name })),
@@ -70,10 +75,24 @@ function ReferenceCreateForm(props: {
 		},
 	});
 
+	async function handleImageUpload() {
+		const images = [frontImage(), backImage()].filter(Boolean);
+		const filteredImages = images.filter((image): image is File => image !== undefined);
+		await uploadLocalImages(filteredImages);
+
+		if (error()) {
+			toast.error('Error al subir imagenes');
+			return;
+		}
+	}
+
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
+		await handleImageUpload();
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: ReferenceCreateRequest = {
 			reference: data.reference.toString(),
+			front: uploadedFiles()?.[0] || '',
+			back: uploadedFiles()?.[1] || '',
 			colors: data.colors.map((color, i) => ({
 				color: color.color,
 				...color.resources.reduce(
@@ -120,7 +139,7 @@ function ReferenceCreateForm(props: {
 	const handleCancel = () => navigate(REFS_PATH);
 
 	return (
-		<Form class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100' onSubmit={handleSubmit}>
+		<Form class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100' onSubmit={handleSubmit} enctype='multipart/form-data'>
 			<div class='flex flex-col gap-4 mb-auto'>
 				<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 					<h1 class='text-2xl font-bold text-center'>Crear referencia</h1>
@@ -372,7 +391,29 @@ function ReferenceCreateForm(props: {
 					Crear
 				</Button>
 			</div>
-		</Form>
+			<div class='flex flex-row gap-2'>
+				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md xl:col-span-2'>
+					<p>Foto frontal</p>
+					<ImagePreviewSelect
+						id='front'
+						onFileSelected={setFrontImage}
+						width='26rem'
+						height='26rem'
+						aria-label='Foto frontal'
+					/>
+				</div>
+				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md xl:col-span-2'>
+					<p>Foto posterior</p>
+					<ImagePreviewSelect
+						id='back'
+						onFileSelected={setBackImage}
+						width='26rem'
+						height='26rem'
+						aria-label='Foto posterior'
+					/>
+				</div>
+			</div>
+		</Form >
 	);
 }
 

@@ -58,12 +58,28 @@ func newFabricByReference(db *gorm.DB, opts ...gen.DOOption) fabricByReference {
 			User struct {
 				field.RelationField
 			}
+			FrontImage struct {
+				field.RelationField
+			}
+			BackImage struct {
+				field.RelationField
+			}
 		}{
 			RelationField: field.NewRelation("ColorByReference.Reference", "models.Reference"),
 			User: struct {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("ColorByReference.Reference.User", "models.User"),
+			},
+			FrontImage: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("ColorByReference.Reference.FrontImage", "models.Image"),
+			},
+			BackImage: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("ColorByReference.Reference.BackImage", "models.Image"),
 			},
 		},
 	}
@@ -202,6 +218,12 @@ type fabricByReferenceBelongsToColorByReference struct {
 	Reference struct {
 		field.RelationField
 		User struct {
+			field.RelationField
+		}
+		FrontImage struct {
+			field.RelationField
+		}
+		BackImage struct {
 			field.RelationField
 		}
 	}

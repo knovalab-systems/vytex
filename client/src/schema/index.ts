@@ -26,3 +26,4 @@ export * from './translation.js';
 export * from './user.js';
 export * from './version.js';
 export * from './webhook.js';
+export * from './image.js';

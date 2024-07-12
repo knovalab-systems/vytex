@@ -8,13 +8,17 @@ import (
 )
 
 type Reference struct {
-	ID        uint           `json:"id" gorm:"primary_key"`
-	Key       string         `json:"key" gorm:"type:uuid"`
-	Reference string         `json:"reference"`
-	CreatedAt time.Time      `json:"create_at"`
-	DeletedAt gorm.DeletedAt `json:"delete_at" gorm:"index"`
-	CreatedBy string         `json:"create_by"`
-	User      *User          `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
+	ID         uint           `json:"id" gorm:"primary_key"`
+	Key        string         `json:"key" gorm:"type:uuid"`
+	Reference  string         `json:"reference"`
+	CreatedAt  time.Time      `json:"create_at"`
+	DeletedAt  gorm.DeletedAt `json:"delete_at" gorm:"index"`
+	CreatedBy  string         `json:"create_by"`
+	User       *User          `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
+	Front      string         `json:"front"`
+	FrontImage *Image         `json:"front_image,omitempty" gorm:"foreignKey:Front"`
+	Back       string         `json:"back"`
+	BackImage  *Image         `json:"back_image,omitempty" gorm:"foreignKey:Back"`
 }
 
 // BeforeCreate will set a UUID to key, if is not set
@@ -77,6 +81,8 @@ func (b *FabricByReference) BeforeCreate(tx *gorm.DB) (err error) {
 
 type ReferenceCreateBody struct {
 	Reference string                   `json:"reference" validate:"required,gt=0"`
+	Front     string                   `json:"front" validate:"required,gt=0"`
+	Back      string                   `json:"back" validate:"required,gt=0"`
 	Colors    []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
 	CreatedBy string                   `json:"create_by" validate:"required,uuid"`
 }

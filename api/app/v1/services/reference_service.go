@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -20,7 +19,7 @@ func (m *ReferenceService) CreateReference(u *models.ReferenceCreateBody) (*mode
 	}
 
 	// create base reference
-	reference := &models.Reference{Reference: u.Reference, CreatedBy: u.CreatedBy}
+	reference := &models.Reference{Reference: u.Reference, CreatedBy: u.CreatedBy, Front: u.Front, Back: u.Back}
 
 	err = query.Reference.Create(reference)
 	if err != nil {
