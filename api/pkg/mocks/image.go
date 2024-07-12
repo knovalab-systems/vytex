@@ -1,15 +1,17 @@
 package mocks
 
 import (
-	"github.com/stretchr/testify/mock"
 	"mime/multipart"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/stretchr/testify/mock"
 )
 
 type ImageMock struct {
 	mock.Mock
 }
 
-func (m *ImageMock) CreateImage(files []*multipart.FileHeader) ([]string, error) {
+func (m *ImageMock) CreateImage(files []*multipart.FileHeader) ([]*models.Image, error) {
 	args := m.Called(files)
-	return args.Get(0).([]string), args.Error(1)
+	return args.Get(0).([]*models.Image), args.Error(1)
 }

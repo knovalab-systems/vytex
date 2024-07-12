@@ -15,7 +15,7 @@ type ImageController struct {
 // @Description  Create a new image
 // @Tags         Files
 // @Produce      json
-// @Success      201 {array} string
+// @Success      201 {array} models.Image
 // @Failure      400
 // @Failure      500
 // @Router       /images [post]
@@ -33,10 +33,10 @@ func (m *ImageController) CreateImage(c echo.Context) error {
 		return problems.ImagesBadRequest()
 	}
 
-	dstPaths, err := m.ImageRepository.CreateImage(files)
+	images, err := m.ImageRepository.CreateImage(files)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(201, dstPaths)
+	return c.JSON(201, images)
 }

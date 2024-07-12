@@ -16,7 +16,7 @@ type ColorController struct {
 // Get the colors
 // @Summary      Get colors from db
 // @Description  Get all the colors, limit for query o default limit
-// @Tags         colors
+// @Tags         Colors
 // @Produce      json
 // @Success      200 {array} models.Color
 // @Failure      400
@@ -62,7 +62,7 @@ func (m *ColorController) AggregateColors(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.AggregateUsersBadRequest()
+		return problems.AggregateColorsBadRequest()
 	}
 
 	// aggegation
@@ -75,6 +75,16 @@ func (m *ColorController) AggregateColors(c echo.Context) error {
 	return c.JSON(http.StatusOK, aggregate)
 }
 
+// Create color
+// @Summary      Create color
+// @Description  Create a new color
+// @Tags         Colors
+// @Produce      json
+// @Param		 models.ColorCreateBody body string true "Color create values"
+// @Success      201 {object} models.Color
+// @Failure      400
+// @Failure      500
+// @Router       /colors [post]
 func (m *ColorController) CreateColor(c echo.Context) error {
 	u := new(models.ColorCreateBody)
 

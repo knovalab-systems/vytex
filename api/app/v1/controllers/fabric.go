@@ -16,7 +16,7 @@ type FabricController struct {
 // Get the fabrics
 // @Summary      Get fabrics from db
 // @Description  Get all the fabrics, limit for query o default limit
-// @Tags         fabrics
+// @Tags         Fabrics
 // @Produce      json
 // @Success      200 {array} models.Fabric
 // @Failure      400
@@ -50,7 +50,7 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 // Get aggregate from fabrics
 // @Summary      Get aggregate from fabrics
 // @Description  Get aggregate from fabrics
-// @Tags         fabrics
+// @Tags         Fabrics
 // @Produce      json
 // @Success      200 {array} models.AggregateData
 // @Failure      400
