@@ -23,14 +23,14 @@ func main() {
 		log.Fatalf("Error loading .env file")
 	}
 
-	gormdb := database.DB()
+	gormdb := database.DBGEN()
 
 	// use gorm db
 	g.UseDB(gormdb)
 
-	// Generate basic type-safe DAO API for struct `model.User` following conventions
+	// Generate basic type-safe DAO API for struct `model.name`
 	g.ApplyBasic(models.User{}, models.Session{}, models.Color{}, models.Resource{}, models.Fabric{},
-		models.Reference{}, models.ColorByReference{}, models.ResourceByReference{}, &models.FabricByReference{}, &models.Image{})
+		models.Reference{}, models.ColorByReference{}, models.ResourceByReference{}, models.FabricByReference{}, models.Image{}, models.Supplier{})
 
 	// Generate the code
 	g.Execute()

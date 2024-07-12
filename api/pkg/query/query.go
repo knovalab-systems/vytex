@@ -26,6 +26,7 @@ var (
 	Resource            *resource
 	ResourceByReference *resourceByReference
 	Session             *session
+	Supplier            *supplier
 	User                *user
 )
 
@@ -40,6 +41,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Resource = &Q.Resource
 	ResourceByReference = &Q.ResourceByReference
 	Session = &Q.Session
+	Supplier = &Q.Supplier
 	User = &Q.User
 }
 
@@ -55,6 +57,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		Resource:            newResource(db, opts...),
 		ResourceByReference: newResourceByReference(db, opts...),
 		Session:             newSession(db, opts...),
+		Supplier:            newSupplier(db, opts...),
 		User:                newUser(db, opts...),
 	}
 }
@@ -71,6 +74,7 @@ type Query struct {
 	Resource            resource
 	ResourceByReference resourceByReference
 	Session             session
+	Supplier            supplier
 	User                user
 }
 
@@ -88,6 +92,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		Resource:            q.Resource.clone(db),
 		ResourceByReference: q.ResourceByReference.clone(db),
 		Session:             q.Session.clone(db),
+		Supplier:            q.Supplier.clone(db),
 		User:                q.User.clone(db),
 	}
 }
@@ -112,6 +117,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		Resource:            q.Resource.replaceDB(db),
 		ResourceByReference: q.ResourceByReference.replaceDB(db),
 		Session:             q.Session.replaceDB(db),
+		Supplier:            q.Supplier.replaceDB(db),
 		User:                q.User.replaceDB(db),
 	}
 }
@@ -126,6 +132,7 @@ type queryCtx struct {
 	Resource            IResourceDo
 	ResourceByReference IResourceByReferenceDo
 	Session             ISessionDo
+	Supplier            ISupplierDo
 	User                IUserDo
 }
 
@@ -140,6 +147,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		Resource:            q.Resource.WithContext(ctx),
 		ResourceByReference: q.ResourceByReference.WithContext(ctx),
 		Session:             q.Session.WithContext(ctx),
+		Supplier:            q.Supplier.WithContext(ctx),
 		User:                q.User.WithContext(ctx),
 	}
 }

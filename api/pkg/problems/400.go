@@ -23,11 +23,6 @@ func UsersBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users", ""))
 }
 
-func ImagesBadRequest() *echo.HTTPError {
-	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to create images", ""))
-}
-
 func AggregateUsersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users aggregation", ""))
@@ -70,4 +65,21 @@ func ResourcesBadRequest() *echo.HTTPError {
 func CreateReferenceBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to create reference", ""))
+}
+
+// supplier
+func SuppliersBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get suppliers", ""))
+}
+
+func AggregateSuppliersBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users suppliers", ""))
+}
+
+// image
+func ImagesBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to create images", ""))
 }
