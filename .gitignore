@@ -6,7 +6,7 @@ node_modules
 dist
 http_requests
 dist-ssr
-assents/images/
+assets
 
 # Test
 *.out
