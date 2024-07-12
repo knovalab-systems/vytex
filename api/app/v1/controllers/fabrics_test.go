@@ -2,11 +2,12 @@ package controllers
 
 import (
 	"errors"
-	"github.com/knovalab-systems/vytex/app/v1/models"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
 
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
@@ -14,7 +15,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFabricsColors(t *testing.T) {
+func TestReadFabrics(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get fabrics", func(t *testing.T) {

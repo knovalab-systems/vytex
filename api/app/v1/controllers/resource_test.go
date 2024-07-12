@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestResourcesColors(t *testing.T) {
+func TestReadResources(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get resources", func(t *testing.T) {
@@ -80,10 +80,10 @@ func TestAggregateResource(t *testing.T) {
 		// mocks
 		resourceMock := mocks.ResourceMock{}
 		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
-		colorController := ResourceController{ResourceRepository: &resourceMock}
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
 
 		// test
-		err := colorController.AggregateResources(c)
+		err := resourceController.AggregateResources(c)
 		assert.Error(t, err)
 	})
 
@@ -100,10 +100,10 @@ func TestAggregateResource(t *testing.T) {
 		// mocks
 		resourceMock := mocks.ResourceMock{}
 		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
-		colorController := ResourceController{ResourceRepository: &resourceMock}
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
 
 		// test
-		err := colorController.AggregateResources(c)
+		err := resourceController.AggregateResources(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
