@@ -9,7 +9,7 @@ type ImageMock struct {
 	mock.Mock
 }
 
-func (m *ImageMock) CreateImage(file *multipart.FileHeader) (string, error) {
-	args := m.Called()
-	return args.String(0), args.Error(1)
+func (m *ImageMock) CreateImage(files []*multipart.FileHeader) ([]string, error) {
+	args := m.Called(files)
+	return args.Get(0).([]string), args.Error(1)
 }

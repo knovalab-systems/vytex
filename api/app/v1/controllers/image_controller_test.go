@@ -1,12 +1,12 @@
 package controllers
 
 import (
-	"bytes"
-	"errors"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
+	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -15,6 +15,7 @@ import (
 )
 
 func TestCreateImage(t *testing.T) {
+
 	t.Run("Fail to get multipart form", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodPost, "/", nil)
@@ -52,56 +53,78 @@ func TestCreateImage(t *testing.T) {
 		}
 	})
 
-	t.Run("Fail to create image", func(t *testing.T) {
-		var body = new(bytes.Buffer)
+	t.Run("Fail to validate extension", func(t *testing.T) {
+		// context
+		body := new(strings.Builder)
 		writer := multipart.NewWriter(body)
-		fileWriter, err := writer.CreateFormFile("files", "test.png")
-		assert.NoError(t, err)
-		fileWriter.Write([]byte("file content"))
+		part, _ := writer.CreateFormFile("files", "test.txt")
+		part.Write([]byte("dummy content"))
 		writer.Close()
 
-		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(body.String()))
 		req.Header.Set(echo.HeaderContentType, writer.FormDataContentType())
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)
 
-		// mocks
 		imageMock := new(mocks.ImageMock)
-		imageMock.On("CreateImage", mock.Anything).Return("", errors.New("error"))
+		imageMock.On("CreateImage", mock.Anything).Return([]string{}, problems.ImagesBadRequest())
+
 		imageController := ImageController{ImageRepository: imageMock}
 
-		// test
-		err = imageController.CreateImage(c)
+		err := imageController.CreateImage(c)
+		if assert.Error(t, err) {
+			log.Println(err)
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail to create image", func(t *testing.T) {
+		// context
+		body := new(strings.Builder)
+		writer := multipart.NewWriter(body)
+		part, _ := writer.CreateFormFile("files", "test.jpg")
+		part.Write([]byte("dummy content"))
+		writer.Close()
+
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(body.String()))
+		req.Header.Set(echo.HeaderContentType, writer.FormDataContentType())
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		c := e.NewContext(req, rec)
+
+		imageMock := new(mocks.ImageMock)
+		imageMock.On("CreateImage", mock.Anything).Return([]string{}, problems.ServerError())
+
+		imageController := ImageController{ImageRepository: imageMock}
+
+		err := imageController.CreateImage(c)
 		if assert.Error(t, err) {
 			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
 		}
 	})
 
 	t.Run("Create image successfully", func(t *testing.T) {
-		var body = new(bytes.Buffer)
+		// context
+		body := new(strings.Builder)
 		writer := multipart.NewWriter(body)
-		fileWriter, err := writer.CreateFormFile("files", "test.png")
-		assert.NoError(t, err)
-		fileWriter.Write([]byte("file content"))
+		part, _ := writer.CreateFormFile("files", "test.jpg")
+		part.Write([]byte("dummy content"))
 		writer.Close()
 
-		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req := httptest.NewRequest(http.MethodPost, "/", strings.NewReader(body.String()))
 		req.Header.Set(echo.HeaderContentType, writer.FormDataContentType())
 		rec := httptest.NewRecorder()
 		e := echo.New()
 		c := e.NewContext(req, rec)
 
-		// mocks
 		imageMock := new(mocks.ImageMock)
-		imageMock.On("CreateImage", mock.Anything).Return("id", nil)
+		imageMock.On("CreateImage", mock.Anything).Return([]string{}, nil)
+
 		imageController := ImageController{ImageRepository: imageMock}
 
-		// test
-		err = imageController.CreateImage(c)
-		if assert.NoError(t, err) {
+		if assert.NoError(t, imageController.CreateImage(c)) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
 		}
 	})
-
 }
