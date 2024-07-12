@@ -8,7 +8,7 @@ import {
 	type ResourcesByRefCreate,
 	getFabricsByRefCreateQuery,
 	getResourcesByRefCreateQuery,
-} from '../requests/referenceCreateRequest';
+} from '../requests/referenceCreate';
 
 function ReferenceCreate() {
 	const { colorsArray } = useColors();

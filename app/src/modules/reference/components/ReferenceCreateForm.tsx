@@ -27,8 +27,8 @@ import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
 	createReferenceRequest,
-} from '~/modules/reference/requests/referenceCreateRequest';
-import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
+} from '~/modules/reference/requests/referenceCreate';
+import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizes';
 import {
 	type ReferenceCreateRequest,
 	ReferenceCreateSchema,

@@ -4,8 +4,8 @@ import toast from 'solid-toast';
 import StatusLabel from '~/components/StatusLabel';
 import { Switch } from '~/components/ui/Switch';
 import { TableCell } from '~/components/ui/Table';
-import type { User } from '~/schemas/coreSchema';
-import { updateUserRequest } from '../requests/userUpdateRequests';
+import type { User } from '~/schemas/core';
+import { updateUserRequest } from '../requests/userUpdate';
 
 function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {
 	const [status, setStatus] = createSignal(!props.deleted_at);

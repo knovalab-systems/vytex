@@ -7,8 +7,8 @@ import { Label } from '~/components/ui/Label';
 import { STATUS_CODE } from '~/constants/http';
 import { USERS_PATH } from '~/constants/paths';
 import { roleList } from '~/constants/roles';
-import { createUserRequest } from '../requests/userCreateRequests';
-import { UserCreateSchema, type UserCreateType } from '../schemas/userCreateSchema';
+import { createUserRequest } from '../requests/userCreate';
+import { UserCreateSchema, type UserCreateType } from '../schemas/userCreate';
 
 function UserCreateForm() {
 	const navigate = useNavigate();

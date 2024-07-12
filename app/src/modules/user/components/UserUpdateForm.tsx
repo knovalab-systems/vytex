@@ -11,10 +11,10 @@ import { USERS_PATH } from '~/constants/paths';
 import { roleList, roles } from '~/constants/roles';
 import { STATUS_OPTIONS } from '~/constants/status';
 import { NO_ROLE } from '~/envs/roles';
-import type { User } from '~/schemas/coreSchema';
-import type { GetUserType } from '../requests/userGetRequests';
-import { updateUserRequest } from '../requests/userUpdateRequests';
-import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdateSchems';
+import type { User } from '~/schemas/core';
+import type { GetUserType } from '../requests/userGet';
+import { updateUserRequest } from '../requests/userUpdate';
+import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdate';
 
 function UserUpdateForm(props: { user?: GetUserType }) {
 	const navigate = useNavigate();

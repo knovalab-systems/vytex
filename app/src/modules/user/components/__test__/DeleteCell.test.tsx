@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as request from '../../requests/userUpdateRequests';
+import * as request from '../../requests/userUpdate';
 import DeletedAtCell from '../DeletedAtCell';
 
 describe('DeleteCell', () => {

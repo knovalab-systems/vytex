@@ -2,7 +2,7 @@ import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
-import type { GetFabricsType } from '../request/fabricsGetRequests';
+import type { GetFabricsType } from '../request/fabricsGet';
 
 function FabricTable(props: { fabrics?: GetFabricsType }) {
 	const { colorRecord } = useColors();

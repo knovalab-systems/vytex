@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as authRequests from '~/modules/auth/requests/authRequests';
+import * as authRequests from '~/modules/auth/requests/auth';
 import LoginForm from '../LoginForm';
 
 vi.mock('~/modules/auth/requests/authRequests', () => ({
