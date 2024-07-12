@@ -7,7 +7,7 @@ export type VytexImage<Schema extends object> = MergeCoreCollection<
 	Schema,
 	'vytex_images',
 	{
-		id: number;
-		name: string | null;
+		id: string;
+		location: string | null;
 	}
 >;

@@ -10,39 +10,32 @@ type ImageController struct {
 	repository.ImageRepository
 }
 
-// CreateImage Create file
-// @Summary      Create file
-// @Description  Create a new file
+// CreateImage Create image
+// @Summary      Create image
+// @Description  Create a new image
 // @Tags         Files
 // @Produce      json
-// @Success      201 {object} models.File
+// @Success      201 {array} string
 // @Failure      400
 // @Failure      500
-// @Router       /files [post]
+// @Router       /images [post]
 func (m *ImageController) CreateImage(c echo.Context) error {
-	// get file
+	// get images
 	form, err := c.MultipartForm()
 
 	if err != nil {
-		return problems.FilesBadRequest()
+		return problems.ImagesBadRequest()
 	}
 
 	files := form.File["files"]
 
 	if len(files) == 0 {
-		return problems.FilesBadRequest()
+		return problems.ImagesBadRequest()
 	}
 
-	var dstPaths []string
-	for _, file := range files {
-		var dst string
-		{
-			dst, err = m.ImageRepository.CreateImage(file)
-			if err != nil {
-				return problems.ServerError()
-			}
-			dstPaths = append(dstPaths, dst)
-		}
+	dstPaths, err := m.ImageRepository.CreateImage(files)
+	if err != nil {
+		return err
 	}
 
 	return c.JSON(201, dstPaths)

@@ -7,7 +7,7 @@ import (
 )
 
 func privateImageRoute(g *echo.Group) {
-	route := g.Group("/files")
+	route := g.Group("/images")
 
 	imageController := controllers.ImageController{ImageRepository: &services.ImageService{}}
 

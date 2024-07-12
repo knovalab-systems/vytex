@@ -11,19 +11,20 @@ export type CreateImageOutput<
 /**
  * Create a new image.
  *
- * @param item The image to create
- * @param query Optional return data query
+ * @param data Formdata object
+ * @param query The query parameters
  *
- * @returns Returns the image object for the created image.
+ * @returns Returns the image object for the uploaded image, or an array of image objects if multiple images were uploaded at once.
  */
-export const createImage =
+export const uploadImages =
 	<Schema extends object, const TQuery extends Query<Schema, VytexImage<Schema>>>(
-		item: Partial<VytexImage<Schema>>,
+		data: FormData,
 		query?: TQuery,
 	): RestCommand<CreateImageOutput<Schema, TQuery>, Schema> =>
 	() => ({
 		path: '/images',
-		params: query ?? {},
-		body: JSON.stringify(item),
 		method: 'POST',
+		body: data,
+		params: query ?? {},
+		headers: { 'Content-Type': 'multipart/form-data' },
 	});

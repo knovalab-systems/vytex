@@ -2,15 +2,15 @@ import { createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { CLOUD_API_KEY, CLOUD_NAME, CLOUD_PRESET } from '~/utils/env';
 import { CLOUDINARY_PATH, CLOUDINARY_UPLOAD } from '~/utils/paths';
-import { uploadFilesRequest } from './request/filesRequest';
-import type { fileResponse } from './request/filesRequest';
+import { uploadImagesRequest } from './request/imagesRequest';
+import type { imageResponse } from './request/imagesRequest';
 
 const url = `${CLOUDINARY_PATH}${CLOUD_NAME}${CLOUDINARY_UPLOAD}`;
 
 const useImageUploader = () => {
     const [uploading, setUploading] = createSignal(false);
     const [error, setError] = createSignal(false);
-    const [uploadedFiles, setUploadedFiles] = createSignal<fileResponse | null>(null);
+    const [uploadedFiles, setUploadedFiles] = createSignal<imageResponse | null>(null);
     const [uploadedCloudinaryUrls, setUploadedCloudinaryUrls] = createSignal<string[]>([]);
 
 
@@ -40,7 +40,7 @@ const useImageUploader = () => {
         }
 
         try {
-            const responses = await uploadFilesRequest(formData);
+            const responses = await uploadImagesRequest(formData);
             setUploadedFiles(responses);
         } catch (err) {
             setError(true);

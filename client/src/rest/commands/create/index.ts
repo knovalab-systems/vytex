@@ -20,3 +20,4 @@ export * from './translations.js';
 export * from './users.js';
 export * from './versions.js';
 export * from './webhooks.js';
+export * from './image.js';

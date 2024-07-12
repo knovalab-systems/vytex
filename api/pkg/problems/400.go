@@ -23,10 +23,9 @@ func UsersBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get users", ""))
 }
 
-func FilesBadRequest() *echo.HTTPError {
+func ImagesBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to get files resources", ""))
-
+	return echo.NewHTTPError(code, New(code, "", "", "Invalid values to create images", ""))
 }
 
 func AggregateUsersBadRequest() *echo.HTTPError {

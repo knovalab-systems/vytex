@@ -8,43 +8,64 @@ import (
 	"io"
 	"mime/multipart"
 	"os"
-	"strings"
+	"path/filepath"
 )
 
 type ImageService struct{}
 
-func (m *ImageService) CreateImage(file *multipart.FileHeader) (string, error) {
-	savePath := "assents/images/"
+var allowedExtensions = map[string]bool{
+	".jpg":  true,
+	".jpeg": true,
+	".png":  true,
+}
+
+func (m *ImageService) CreateImage(files []*multipart.FileHeader) ([]string, error) {
+	savePath := "assets/images/"
+	var ids []string
 
 	if err := os.MkdirAll(savePath, os.ModePerm); err != nil {
-		return "", problems.FilesBadRequest()
+		return nil, problems.ServerError()
 	}
 
-	// open file
-	src, err := file.Open()
-	if err != nil {
+	for _, file := range files {
+		// open file
+		src, err := file.Open()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
 
-		return "", problems.ServerError()
+		defer src.Close()
+
+		id := uuid.New().String()
+		ext := filepath.Ext(file.Filename)
+		location := savePath + id + ext
+
+		// check extension
+		if _, ok := allowedExtensions[ext]; !ok {
+			return nil, problems.ImagesBadRequest()
+		}
+
+		dst, err := os.Create(location)
+
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+
+		defer dst.Close()
+
+		// copy
+		if _, err = io.Copy(dst, src); err != nil {
+			return nil, problems.ServerError()
+		}
+
+		image := &models.Image{ID: id, Location: location}
+
+		if err = query.Image.Create(image); err != nil {
+			return nil, problems.ServerError()
+		}
+
+		ids = append(ids, id)
 	}
-	defer src.Close()
 
-	id := uuid.New().String()
-	location := strings.ReplaceAll(savePath+id+"_"+file.Filename, " ", "")
-	dst, err := os.Create(location)
-
-	if err != nil {
-		return "", problems.ServerError()
-	}
-	defer dst.Close()
-
-	// copy content to dst
-	if _, err = io.Copy(dst, src); err != nil {
-		return "", problems.ServerError()
-	}
-
-	// create image in db
-	image := &models.Image{ID: id, Location: location}
-	err = query.Image.Create(image)
-
-	return id, nil
+	return ids, nil
 }

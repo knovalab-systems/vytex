@@ -5,5 +5,5 @@ import (
 )
 
 type ImageRepository interface {
-	CreateImage(file *multipart.FileHeader) (string, error)
+	CreateImage(files []*multipart.FileHeader) ([]string, error)
 }
