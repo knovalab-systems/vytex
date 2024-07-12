@@ -26,8 +26,7 @@ export const rest = (config: Partial<RestConfig> = {}) => {
 				if ('Content-Type' in options.headers === false) {
 					options.headers['Content-Type'] = 'application/json';
 				} else if (options.headers['Content-Type'] === 'multipart/form-data') {
-					// let the fetch function deal with multipart boundaries
-					// biome-ignore lint/performance/noDelete: <explanation>
+					// biome-ignore lint/performance/noDelete: let the fetch function deal with multipart boundaries
 					delete options.headers['Content-Type'];
 				}
 
