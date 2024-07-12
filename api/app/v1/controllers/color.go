@@ -52,7 +52,7 @@ func (m *ColorController) ReadColors(c echo.Context) error {
 // @Description  Get result of aggregate function from colors
 // @Tags         Colors
 // @Produce      json
-// @Success      200 {object} models.AggregateData
+// @Success      200 {array} models.AggregateData
 // @Failure      400
 // @Failure      500
 // @Router       /colors/aggregate [get]

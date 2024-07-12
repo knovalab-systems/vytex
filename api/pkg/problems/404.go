@@ -8,5 +8,5 @@ import (
 
 func RouteNotFound() *echo.HTTPError {
 	code := http.StatusNotFound
-	return echo.NewHTTPError(code, New(code, "", "", "The server cannot find the requested route", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "The server cannot find the requested route", ""))
 }

@@ -124,7 +124,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 // @Description  Get result of aggregate function from users
 // @Tags         Users
 // @Produce      json
-// @Success      200 {object} models.AggregateData
+// @Success      200 {array} models.AggregateData
 // @Failure      400
 // @Failure      500
 // @Router       /users/aggregate [get]

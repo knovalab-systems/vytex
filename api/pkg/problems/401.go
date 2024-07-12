@@ -8,15 +8,15 @@ import (
 
 func JWTUnauthorized() *echo.HTTPError {
 	code := http.StatusUnauthorized
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid access token", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid access token", ""))
 }
 
 func AuthUnauthorized() *echo.HTTPError {
 	code := http.StatusUnauthorized
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid user credentials", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid user credentials", ""))
 }
 
 func RefreshUnauthorized() *echo.HTTPError {
 	code := http.StatusUnauthorized
-	return echo.NewHTTPError(code, New(code, "", "", "Invalid or missing refresh token", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid or missing refresh token", ""))
 }

@@ -52,7 +52,7 @@ func (m *ResourceController) ReadResources(c echo.Context) error {
 // @Description  Get result of aggregate function from resources
 // @Tags         Resources
 // @Produce      json
-// @Success      200 {object} models.AggregateData
+// @Success      200 {array} models.AggregateData
 // @Failure      400
 // @Failure      500
 // @Router       /resources/aggregate [get]
