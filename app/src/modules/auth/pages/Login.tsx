@@ -2,7 +2,7 @@ import { Navigate, useSearchParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Suspense, Switch, lazy } from 'solid-js';
 import Loading from '~/components/Loading';
-import { refreshRequest } from '../requests/authRequests';
+import { refreshRequest } from '../requests/auth';
 
 const LoginForm = lazy(() => import('../components/LoginForm'));
 

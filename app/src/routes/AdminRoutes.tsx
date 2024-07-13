@@ -8,6 +8,7 @@ const UserCreate = lazy(() => import('~/modules/user/pages/UserCreate'));
 const UserUpdate = lazy(() => import('~/modules/user/pages/UserUpdate'));
 const Roles = lazy(() => import('~/modules/user/pages/Roles'));
 const MatchAdmin = lazy(() => import('~/modules/auth/components/MatchAdmin'));
+const Suppliers = lazy(() => import('~/modules/supplier/pages/Suppliers'));
 
 function AdminRoutes() {
 	return (
@@ -17,6 +18,9 @@ function AdminRoutes() {
 				<Route path={'/:id'} component={User} />
 				<Route path={PATHS.CREATE_PATH} component={UserCreate} />
 				<Route path={`${PATHS.UPDATE_PATH}/:id`} component={UserUpdate} />
+			</Route>
+			<Route path={PATHS.SUPPLIERS_PATH}>
+				<Route path={'/'} component={Suppliers} />
 			</Route>
 			<Route path={PATHS.ROLES_PATH} component={Roles} />
 		</Route>

@@ -8,16 +8,17 @@ import (
 	"testing"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
+
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestResourcesColors(t *testing.T) {
+func TestReadFabrics(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
-	t.Run("Fail on get resources", func(t *testing.T) {
+	t.Run("Fail on get fabrics", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -26,19 +27,19 @@ func TestResourcesColors(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		resourceMock := mocks.ResourceMock{}
-		resourceMock.On("SelectResources").Return(defaultError)
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabrics").Return(defaultError)
 
 		// controller
-		resourceController := ResourceController{ResourceRepository: &resourceMock}
+		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := resourceController.ReadResources(c)
+		err := fabricController.ReadFabrics(c)
 		assert.Error(t, err)
 
 	})
 
-	t.Run("Get resources succesfully ", func(t *testing.T) {
+	t.Run("Get fabrics succesfully ", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -47,14 +48,14 @@ func TestResourcesColors(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		resourceMock := mocks.ResourceMock{}
-		resourceMock.On("SelectResources").Return(nil)
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabrics").Return(nil)
 
 		// controller
-		resourceController := ResourceController{ResourceRepository: &resourceMock}
+		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := resourceController.ReadResources(c)
+		err := fabricController.ReadFabrics(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
@@ -62,12 +63,8 @@ func TestResourcesColors(t *testing.T) {
 
 }
 
-func TestAggregateResource(t *testing.T) {
-	defaultError := errors.New("ERROR")
-
-	// dont fail binding on any case
-
-	t.Run("fail on get aggregate", func(t *testing.T) {
+func TestAggregateFabrics(t *testing.T) {
+	t.Run("Fail on get aggregate", func(t *testing.T) {
 		// context
 		q := make(url.Values)
 		q.Set("count", "*")
@@ -78,12 +75,12 @@ func TestAggregateResource(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		resourceMock := mocks.ResourceMock{}
-		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
-		colorController := ResourceController{ResourceRepository: &resourceMock}
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("ERROR"))
+		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := colorController.AggregateResources(c)
+		err := fabricController.AggregateFabrics(c)
 		assert.Error(t, err)
 	})
 
@@ -98,12 +95,12 @@ func TestAggregateResource(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		resourceMock := mocks.ResourceMock{}
-		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
-		colorController := ResourceController{ResourceRepository: &resourceMock}
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
-		err := colorController.AggregateResources(c)
+		err := fabricController.AggregateFabrics(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}

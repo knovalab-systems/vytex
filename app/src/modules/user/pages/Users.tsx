@@ -12,7 +12,7 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
-import { countUsersQuery, getUsersQuery } from '../requests/userGetRequests';
+import { countUsersQuery, getUsersQuery } from '../requests/userGet';
 
 function Users() {
 	const [page, setPage] = createSignal(1);

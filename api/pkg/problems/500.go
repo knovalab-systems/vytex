@@ -8,5 +8,5 @@ import (
 
 func ServerError() *echo.HTTPError {
 	code := http.StatusInternalServerError
-	return echo.NewHTTPError(code, New(code, "", "", "An unexpected condition was encountered", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "An unexpected condition was encountered", ""))
 }

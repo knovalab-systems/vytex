@@ -4,7 +4,7 @@ import { Match, Switch, createResource } from 'solid-js';
 import Loading from '~/components/Loading';
 import { LOGIN_PATH } from '~/constants/paths';
 import { client } from '~/lib/client';
-import { refreshRequest } from '~/modules/auth/requests/authRequests';
+import { refreshRequest } from '~/modules/auth/requests/auth';
 
 function ProtectedWrapper(props: RouteSectionProps) {
 	const [token] = createResource(client.getToken);

@@ -124,7 +124,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 // @Description  Get result of aggregate function from users
 // @Tags         Users
 // @Produce      json
-// @Success      200 {object} models.AggregateData
+// @Success      200 {array} models.AggregateData
 // @Failure      400
 // @Failure      500
 // @Router       /users/aggregate [get]
@@ -147,9 +147,9 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, aggregate)
 }
 
-// Update role
-// @Summary      Update role
-// @Description  Updates the role of a user
+// Update user
+// @Summary      Update use
+// @Description  Updates the fields from user
 // @Tags         Users
 // @Param		 userId path string true "User ID"
 // @Param		 models.UpdateUserBody body string true "User update values"
@@ -180,7 +180,7 @@ func (m *UserController) UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-// CreateUser Create user
+// Create user
 // @Summary      Create user
 // @Description  Create a new user
 // @Tags         Users

@@ -1,17 +1,19 @@
 package controllers
 
 import (
-	"github.com/knovalab-systems/vytex/pkg/mocks"
-	"github.com/knovalab-systems/vytex/pkg/problems"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/pkg/mocks"
+	"github.com/knovalab-systems/vytex/pkg/problems"
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
 
 func TestCreateImage(t *testing.T) {
@@ -68,7 +70,7 @@ func TestCreateImage(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		imageMock := new(mocks.ImageMock)
-		imageMock.On("CreateImage", mock.Anything).Return([]string{}, problems.ImagesBadRequest())
+		imageMock.On("CreateImage", mock.Anything).Return([]*models.Image{}, problems.ImagesBadRequest())
 
 		imageController := ImageController{ImageRepository: imageMock}
 
@@ -94,7 +96,7 @@ func TestCreateImage(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		imageMock := new(mocks.ImageMock)
-		imageMock.On("CreateImage", mock.Anything).Return([]string{}, problems.ServerError())
+		imageMock.On("CreateImage", mock.Anything).Return([]*models.Image{}, problems.ServerError())
 
 		imageController := ImageController{ImageRepository: imageMock}
 
@@ -119,7 +121,7 @@ func TestCreateImage(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		imageMock := new(mocks.ImageMock)
-		imageMock.On("CreateImage", mock.Anything).Return([]string{}, nil)
+		imageMock.On("CreateImage", mock.Anything).Return([]*models.Image{}, nil)
 
 		imageController := ImageController{ImageRepository: imageMock}
 

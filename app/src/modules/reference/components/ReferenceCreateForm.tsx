@@ -27,8 +27,8 @@ import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
 	createReferenceRequest,
-} from '~/modules/reference/requests/referenceCreateRequest';
-import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizesSchema';
+} from '~/modules/reference/requests/referenceCreate';
+import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizes';
 import {
 	type ReferenceCreateRequest,
 	ReferenceCreateSchema,
@@ -91,8 +91,8 @@ function ReferenceCreateForm(props: {
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: ReferenceCreateRequest = {
 			reference: data.reference.toString(),
-			front: uploadedFiles()?.[0] || '',
-			back: uploadedFiles()?.[1] || '',
+			front: uploadedFiles()?.[0].id || '',
+			back: uploadedFiles()?.[1].id || '',
 			colors: data.colors.map((color, i) => ({
 				color: color.color,
 				...color.resources.reduce(

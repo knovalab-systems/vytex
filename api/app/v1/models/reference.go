@@ -80,9 +80,9 @@ func (b *FabricByReference) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type ReferenceCreateBody struct {
-	Reference string                   `json:"reference" validate:"required,gt=0"`
-	Front     string                   `json:"front" validate:"required,gt=0"`
-	Back      string                   `json:"back" validate:"required,gt=0"`
+	Reference string                   `json:"reference" validate:"required"`
+	Front     string                   `json:"front" validate:"required,uuid"`
+	Back      string                   `json:"back" validate:"required,uuid"`
 	Colors    []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
 	CreatedBy string                   `json:"create_by" validate:"required,uuid"`
 }

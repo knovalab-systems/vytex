@@ -2,6 +2,8 @@ import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { readMe } from '@vytex/client';
 import { BsPersonWorkspace } from 'solid-icons/bs';
+import { HiSolidTruck } from 'solid-icons/hi';
+import { IoBandageSharp, IoColorPaletteSharp, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
 import { type JSXElement, Match, Show, Suspense, Switch, createEffect } from 'solid-js';
@@ -27,13 +29,14 @@ function NavWrapper(props: RouteSectionProps) {
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
 			{ name: 'Usuarios', icon: () => <RiUserFacesUserFill size={24} />, path: PATHS.USERS_PATH },
 			{ name: 'Roles', icon: () => <BsPersonWorkspace size={24} />, path: PATHS.ROLES_PATH },
+			{ name: 'Proveedores', icon: () => <HiSolidTruck size={24} />, path: PATHS.SUPPLIERS_PATH },
 		],
 		[DESIGNER_ROLE]: [
-			{ name: 'Home', icon: () => null, path: '/', end: true },
-			{ name: 'Referencias', icon: () => null, path: PATHS.REFS_PATH },
-			{ name: 'Colores', icon: () => null, path: PATHS.COLORS_PATH },
-			{ name: 'Telas', icon: () => null, path: PATHS.FABRICS_PATH },
-			{ name: 'Insumos', icon: () => null, path: PATHS.RESOURCES_PATH },
+			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
+			{ name: 'Referencias', icon: () => <IoShirtSharp size={24} />, path: PATHS.REFS_PATH },
+			{ name: 'Colores', icon: () => <IoColorPaletteSharp size={24} />, path: PATHS.COLORS_PATH },
+			{ name: 'Telas', icon: () => <IoBandageSharp size={24} />, path: PATHS.FABRICS_PATH },
+			{ name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
 		],
 	};
 

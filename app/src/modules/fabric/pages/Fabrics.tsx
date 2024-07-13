@@ -11,7 +11,7 @@ import {
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
 import FabricTable from '../components/FabricTable';
-import { countFabricsQuery, getFabricsQuery } from '../request/fabricsGetRequests';
+import { countFabricsQuery, getFabricsQuery } from '../request/fabricsGet';
 
 function Fabrics() {
 	const [page, setPage] = createSignal(1);

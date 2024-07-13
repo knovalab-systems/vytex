@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as logoutRequest from '../../requests/authRequests';
+import * as logoutRequest from '../../requests/auth';
 import LogoutMenuButton from '../LogoutMenuButton';
 
 vi.mock('../../requests/authRequests', () => ({

@@ -23,6 +23,10 @@ export const FABRICS_PATH = '/fabrics';
 export const FABRICS_CREATE_PATH = FABRICS_PATH + CREATE_PATH;
 export const FABRICS_UPDATE_PATH = FABRICS_PATH + UPDATE_PATH;
 
+export const SUPPLIERS_PATH = '/suppliers';
+export const SUPPLIERS_CREATE_PATH = SUPPLIERS_PATH + CREATE_PATH;
+export const SUPPLIERS_UPDATE_PATH = SUPPLIERS_PATH + UPDATE_PATH;
+
 export const ROLES_PATH = '/roles';
 
 export const CLOUDINARY_PATH = 'https://api.cloudinary.com/v1_1/';

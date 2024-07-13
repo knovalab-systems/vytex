@@ -14,12 +14,57 @@ definitions:
     properties:
       count: {}
     type: object
+  models.Color:
+    properties:
+      code:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      hex:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
   models.DataAuthResponse:
     properties:
       access_token:
         type: string
       expires:
         type: integer
+    type: object
+  models.Fabric:
+    properties:
+      code:
+        type: string
+      color:
+        $ref: '#/definitions/models.Color'
+      color_id:
+        type: integer
+      cost:
+        type: number
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      key:
+        type: string
+      name:
+        type: string
+    type: object
+  models.Image:
+    properties:
+      id:
+        type: string
+      location:
+        type: string
     type: object
   models.LoginUser:
     properties:
@@ -34,11 +79,72 @@ definitions:
     - password
     - username
     type: object
+  models.Reference:
+    properties:
+      back:
+        type: string
+      back_image:
+        $ref: '#/definitions/models.Image'
+      create_by:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      front:
+        type: string
+      front_image:
+        $ref: '#/definitions/models.Image'
+      id:
+        type: integer
+      key:
+        type: string
+      reference:
+        type: string
+      user:
+        $ref: '#/definitions/models.User'
+    type: object
+  models.Resource:
+    properties:
+      code:
+        type: string
+      color:
+        $ref: '#/definitions/models.Color'
+      color_id:
+        type: integer
+      cost:
+        type: number
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      key:
+        type: string
+      name:
+        type: string
+    type: object
+  models.Supplier:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      name:
+        type: string
+      nit:
+        type: string
+      updated_at:
+        type: string
+    type: object
   models.User:
     properties:
-      create_at:
+      created_at:
         type: string
-      delete_at:
+      deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
       id:
         type: string
@@ -48,7 +154,7 @@ definitions:
         type: string
       role:
         type: string
-      update_at:
+      updated_at:
         type: string
       username:
         type: string
@@ -120,16 +226,236 @@ paths:
       summary: Refresh
       tags:
       - Auth
-  /users:
+  /colors:
     get:
-      description: Get all the user, limit for query o default limit
+      description: Get all the colors, limit for query o default limit
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.User'
+            items:
+              $ref: '#/definitions/models.Color'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get colors from db
+      tags:
+      - Colors
+    post:
+      description: Create a new color
+      parameters:
+      - description: Color create values
+        in: body
+        name: models.ColorCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Color'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create color
+      tags:
+      - Colors
+  /colors/aggregate:
+    get:
+      description: Get result of aggregate function from colors
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from colors
+      tags:
+      - Colors
+  /fabrics:
+    get:
+      description: Get all the fabrics, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Fabric'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get fabrics from db
+      tags:
+      - Fabrics
+  /fabrics/aggregate:
+    get:
+      description: Get aggregate from fabrics
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from fabrics
+      tags:
+      - Fabrics
+  /images:
+    post:
+      description: Create a new image
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/models.Image'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create image
+      tags:
+      - Files
+  /reference:
+    post:
+      description: Create a new reference
+      parameters:
+      - description: Reference create values
+        in: body
+        name: models.ReferenceCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Reference'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create reference
+      tags:
+      - References
+  /resources:
+    get:
+      description: Get all the resources, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Resource'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get resources from db
+      tags:
+      - Resources
+  /resources/aggregate:
+    get:
+      description: Get result of aggregate function from resources
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from resources
+      tags:
+      - Resources
+  /suppliers:
+    get:
+      description: Get all the suppliers, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Supplier'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get suppliers from db
+      tags:
+      - Suppliers
+  /suppliers/aggregate:
+    get:
+      description: Get result of aggregate function from suppliers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from suppliers
+      tags:
+      - Suppliers
+  /users:
+    get:
+      description: Get all the users, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
         "400":
           description: Bad Request
         "500":
@@ -137,9 +463,32 @@ paths:
       summary: Get users from db
       tags:
       - Users
+    post:
+      description: Create a new user
+      parameters:
+      - description: User create values
+        in: body
+        name: models.UserCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create user
+      tags:
+      - Users
   /users/{userId}:
     post:
-      description: Updates the role of a user
+      description: Updates the fields from user
       parameters:
       - description: User ID
         in: path
@@ -163,24 +512,66 @@ paths:
           description: Bad Request
         "500":
           description: Internal Server Error
-      summary: Update role
+      summary: Update use
       tags:
       - Users
   /users/aggregate:
     get:
-      description: Get an aggregate function from users resource
+      description: Get result of aggregate function from users
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.AggregateData'
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
         "400":
           description: Bad Request
         "500":
           description: Internal Server Error
       summary: Get aggregate from users
+      tags:
+      - Users
+  /users/me:
+    get:
+      description: Get the user who do the request with access token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get the curren user loggged
+      tags:
+      - Users
+  /users/userId:
+    get:
+      description: Get an user by its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a given user
       tags:
       - Users
 swagger: "2.0"

@@ -15,8 +15,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { TableCell } from '~/components/ui/Table';
 import { type RoleItems, roleList, roles } from '~/constants/roles';
 import { NO_ROLE } from '~/envs/roles';
-import type { User } from '~/schemas/coreSchema';
-import { updateUserRequest } from '../requests/userUpdateRequests';
+import type { User } from '~/schemas/core';
+import { updateUserRequest } from '../requests/userUpdate';
 
 function RoleCell(props: {
 	roleValue: string;

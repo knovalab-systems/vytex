@@ -15,7 +15,7 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { COLORS_CREATE_PATH } from '~/constants/paths';
 import ColorTable from '../components/ColorTable';
-import { countColorsQuery, getColorsQuery } from '../requests/colorsGetRequests';
+import { countColorsQuery, getColorsQuery } from '../requests/colorsGet';
 
 function Colors() {
 	const [page, setPage] = createSignal(1);

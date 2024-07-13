@@ -1,7 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GetResourcesType } from '../../requests/resourcesGetRequests';
+import type { GetResourcesType } from '../../requests/resourcesGet';
 import ResourceTable from '../ResourceTable';
 
 describe('Color Table', () => {

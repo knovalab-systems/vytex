@@ -1,6 +1,6 @@
 import type { CoreSchema, VytexCreateReference } from '@vytex/client';
 import { type InferInput, array, minLength, minValue, number, object, pipe, string } from 'valibot';
-import { SizesSchema } from '~/schemas/sizesSchema';
+import { SizesSchema } from '~/schemas/sizes';
 
 export const ReferenceCreateSchema = object({
 	reference: pipe(number('Ingresa el código de la referencia.'), minValue(1, 'Ingresa un valor mayor a 0.')),

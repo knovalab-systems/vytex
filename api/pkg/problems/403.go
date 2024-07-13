@@ -8,5 +8,5 @@ import (
 
 func ReadAccess() *echo.HTTPError {
 	code := http.StatusForbidden
-	return echo.NewHTTPError(code, New(code, "", "", "You don't have permission to access this.", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "You don't have permission to access this.", ""))
 }

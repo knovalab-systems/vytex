@@ -3,7 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
 import UserCard from '../components/UserCard';
-import { getUserQuery } from '../requests/userGetRequests';
+import { getUserQuery } from '../requests/userGet';
 
 function User() {
 	const params = useParams();

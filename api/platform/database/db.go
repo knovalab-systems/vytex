@@ -25,10 +25,28 @@ func DB() *gorm.DB {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
 
-	err = db.AutoMigrate(&models.User{}, &models.Session{},
-		&models.Color{}, &models.Resource{}, &models.Fabric{},
-		&models.Reference{}, &models.ColorByReference{},
-		&models.ResourceByReference{}, &models.FabricByReference{}, &models.Image{})
+	err = db.AutoMigrate(models.User{}, models.Session{},
+		models.Color{}, models.Resource{}, models.Fabric{},
+		models.Reference{}, models.ColorByReference{},
+		models.ResourceByReference{}, models.FabricByReference{}, &models.Image{}, models.Supplier{})
+	if err != nil {
+		log.Fatalln("error, not migrated, %w", err)
+	}
+
+	return db
+}
+
+func DBGEN() *gorm.DB {
+
+	db, err := gorm.Open(postgres.Open(envs.DSNGEN()), &gorm.Config{})
+	if err != nil {
+		log.Fatalln("error, not connected to database, %w", err)
+	}
+
+	err = db.AutoMigrate(models.User{}, models.Session{},
+		models.Color{}, models.Resource{}, models.Fabric{},
+		models.Reference{}, models.ColorByReference{},
+		models.ResourceByReference{}, models.FabricByReference{}, &models.Image{}, models.Supplier{})
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}

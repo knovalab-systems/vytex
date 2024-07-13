@@ -5,8 +5,8 @@ import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
-import { loginRequest } from '../requests/authRequests';
-import { LoginSchema, type LoginType } from '../schemas/loginSchema';
+import { loginRequest } from '../requests/auth';
+import { LoginSchema, type LoginType } from '../schemas/login';
 
 function LoginForm() {
 	const navigate = useNavigate();
@@ -29,7 +29,7 @@ function LoginForm() {
 
 	return (
 		<div class='grid md:grid-cols-3 w-full h-full '>
-			<div class='hidden md:block col-span-2 bg-bg' />
+			<div class='hidden md:block col-span-2 bg-bg bg-cover' />
 			<Form class='my-auto md:m-auto md:w-3/5 xl:w-5/6' onSubmit={handleSubmit}>
 				<div class='flex flex-col justify-center gap-6 p-8 m-4 bg-white rounded-md border border-gray-100 shadow-md'>
 					<h1 class='text-left text-2xl font-bold'>

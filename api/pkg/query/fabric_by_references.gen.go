@@ -7,7 +7,6 @@ package query
 import (
 	"context"
 
-	"github.com/knovalab-systems/vytex/app/v1/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
@@ -16,6 +15,8 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
 )
 
 func newFabricByReference(db *gorm.DB, opts ...gen.DOOption) fabricByReference {

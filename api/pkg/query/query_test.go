@@ -86,6 +86,7 @@ func Test_WithContext(t *testing.T) {
 		qCtx.Resource.UnderlyingDB().Statement.Context,
 		qCtx.ResourceByReference.UnderlyingDB().Statement.Context,
 		qCtx.Session.UnderlyingDB().Statement.Context,
+		qCtx.Supplier.UnderlyingDB().Statement.Context,
 		qCtx.User.UnderlyingDB().Statement.Context,
 	} {
 		if v := ctx.Value(key); v != value {

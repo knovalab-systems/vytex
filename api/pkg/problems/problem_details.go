@@ -33,8 +33,8 @@ type ProblemDetails struct {
 	Instance string `json:"instance,omitempty"`
 }
 
-// New creates a new ProblemDetails error
-func New(statusCode int, problemType, title, detail, instance string) *ProblemDetails {
+// NewPD creates a new ProblemDetails error
+func NewPD(statusCode int, problemType, title, detail, instance string) *ProblemDetails {
 	// When this member is not present, its value is assumed to be
 	// "about:blank".
 	if problemType == "" {
@@ -60,5 +60,5 @@ func New(statusCode int, problemType, title, detail, instance string) *ProblemDe
 
 // NewHTTPError creates response with a new ProblemDetails error based just the HTTP Status Code
 func ProblemDetailsCode(statusCode int) *ProblemDetails {
-	return New(statusCode, "", "", "", "")
+	return NewPD(statusCode, "", "", "", "")
 }

@@ -1,14 +1,15 @@
 package services
 
 import (
-	"github.com/google/uuid"
-	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/pkg/problems"
-	"github.com/knovalab-systems/vytex/pkg/query"
 	"io"
 	"mime/multipart"
 	"os"
 	"path/filepath"
+
+	"github.com/google/uuid"
+	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/pkg/problems"
+	"github.com/knovalab-systems/vytex/pkg/query"
 )
 
 type ImageService struct{}
@@ -19,9 +20,9 @@ var allowedExtensions = map[string]bool{
 	".png":  true,
 }
 
-func (m *ImageService) CreateImage(files []*multipart.FileHeader) ([]string, error) {
+func (m *ImageService) CreateImage(files []*multipart.FileHeader) ([]*models.Image, error) {
 	savePath := "assets/images/"
-	var ids []string
+	var images []*models.Image
 
 	if err := os.MkdirAll(savePath, os.ModePerm); err != nil {
 		return nil, problems.ServerError()
@@ -60,12 +61,12 @@ func (m *ImageService) CreateImage(files []*multipart.FileHeader) ([]string, err
 
 		image := &models.Image{ID: id, Location: location}
 
-		if err = query.Image.Create(image); err != nil {
-			return nil, problems.ServerError()
-		}
-
-		ids = append(ids, id)
+		images = append(images, image)
 	}
 
-	return ids, nil
+	if err := query.Image.Create(images...); err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return images, nil
 }

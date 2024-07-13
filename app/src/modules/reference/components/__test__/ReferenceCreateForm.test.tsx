@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
-import * as requests from '../../requests/referenceCreateRequest';
+import * as requests from '../../requests/referenceCreate';
 import ReferenceCreateForm from '../ReferenceCreateForm';
 
 const mockRequest = vi.fn();

@@ -2,7 +2,7 @@ import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
-import type { GetResourcesType } from '../requests/resourcesGetRequests';
+import type { GetResourcesType } from '../requests/resourcesGet';
 
 function ResourceTable(props: { resources?: GetResourcesType }) {
 	const { colorRecord } = useColors();
