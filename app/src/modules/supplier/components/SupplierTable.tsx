@@ -19,7 +19,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 				<TableBody>
 					<Show when={(props.suppliers?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>No se han encontraron proveedores.</TableCell>
+							<TableCell colspan={5}>No se han encontraron proveedores.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.suppliers}>
