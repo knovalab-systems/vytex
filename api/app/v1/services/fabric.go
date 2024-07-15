@@ -190,7 +190,7 @@ func getCompositionId(c *models.Composition) (*models.Composition, error) {
 	}
 
 	if totalComp != 10000 { // check 100%
-		return nil, problems.FabricsBadRequest()
+		return nil, problems.CreateFabricBadRequest()
 	}
 
 	composition, err := table.Where(field.Attrs(compMap)).First()

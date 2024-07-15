@@ -1,5 +1,6 @@
 import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
+import type { VytexSize } from '@vytex/client';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
 import { For, Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
@@ -44,7 +45,7 @@ function ReferenceCreateForm(props: {
 	fabrics: FabricsByRefCreate;
 	resources: ResourcesByRefCreate;
 }) {
-	const { colorsRecord: colorRecord } = useColors();
+	const { colorsRecord } = useColors();
 	const navigate = useNavigate();
 	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
 	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
@@ -100,10 +101,10 @@ function ReferenceCreateForm(props: {
 						const r = Number(v.resource.slice(1));
 						if (v.resource.startsWith('r')) {
 							checkFabricResources[i].resource = true;
-							p.resources.push({ ...v.sizes, resource: r });
+							p.resources.push({ ...(v.sizes as VytexSize), resource: r });
 						} else {
 							checkFabricResources[i].fabric = true;
-							p.fabrics.push({ ...v.sizes, fabric: r });
+							p.fabrics.push({ ...(v.sizes as VytexSize), fabric: r });
 						}
 						return p;
 					},
@@ -113,13 +114,11 @@ function ReferenceCreateForm(props: {
 		};
 
 		if (checkFabricResources.some(e => e.resource === false)) {
-			toast.error('Cada color de la referencia debe tener al menos un insumo ');
-			return;
+			return toast.error('Cada color de la referencia debe tener al menos un insumo ');
 		}
 
 		if (checkFabricResources.some(e => e.fabric === false)) {
-			toast.error('Cada color de la referencia debe tener al menos una tela.');
-			return;
+			return toast.error('Cada color de la referencia debe tener al menos una tela.');
 		}
 
 		return createReferenceRequest(reference)
@@ -153,7 +152,7 @@ function ReferenceCreateForm(props: {
 								<LabelSpan>Código de la referencia</LabelSpan>
 								<Input
 									type='number'
-									placeholder='3453 '
+									placeholder='3453'
 									autocomplete='on'
 									aria-errormessage={field.error}
 									required
@@ -197,9 +196,9 @@ function ReferenceCreateForm(props: {
 																<div class='flex gap-2'>
 																	<div
 																		class='h-5 w-5 m-auto border'
-																		style={{ background: colorRecord()[props.item.rawValue]?.hex || '' }}
+																		style={{ background: colorsRecord()[props.item.rawValue]?.hex || '' }}
 																	/>
-																	{colorRecord()[props.item.rawValue]?.name}
+																	{colorsRecord()[props.item.rawValue]?.name}
 																</div>
 															</SelectItem>
 														)}
@@ -209,13 +208,13 @@ function ReferenceCreateForm(props: {
 															<SelectValue<string>>
 																{state => (
 																	<div class='flex gap-2'>
-																		<Show when={Boolean(colorRecord()[state.selectedOption()])}>
+																		<Show when={Boolean(colorsRecord()[state.selectedOption()])}>
 																			<div
 																				class='h-5 w-5 m-auto border'
-																				style={{ background: colorRecord()[state.selectedOption()]?.hex || '' }}
+																				style={{ background: colorsRecord()[state.selectedOption()]?.hex || '' }}
 																			/>
 																		</Show>
-																		{colorRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
+																		{colorsRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
 																	</div>
 																)}
 															</SelectValue>
