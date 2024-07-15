@@ -10,5 +10,6 @@ func PublicRoutes(e *echo.Echo) {
 
 	// add routes
 	publicAuthRoutes(route)
+	privateFabricRoutes(route)
 
 }

@@ -30,7 +30,8 @@ func main() {
 
 	// Generate basic type-safe DAO API for struct `model.name`
 	g.ApplyBasic(models.User{}, models.Session{}, models.Color{}, models.Resource{}, models.Fabric{},
-		models.Reference{}, models.ColorByReference{}, models.ResourceByReference{}, models.FabricByReference{}, models.Image{}, models.Supplier{})
+		models.Reference{}, models.ColorByReference{}, models.ResourceByReference{}, models.FabricByReference{},
+		models.Image{}, models.Supplier{}, models.Composition{})
 
 	// Generate the code
 	g.Execute()

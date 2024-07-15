@@ -33,12 +33,26 @@ func newFabric(db *gorm.DB, opts ...gen.DOOption) fabric {
 	_fabric.Cost = field.NewFloat64(tableName, "cost")
 	_fabric.Code = field.NewString(tableName, "code")
 	_fabric.ColorID = field.NewUint(tableName, "color_id")
+	_fabric.SupplierID = field.NewUint(tableName, "supplier_id")
+	_fabric.CompositionID = field.NewUint(tableName, "composition_id")
 	_fabric.CreatedAt = field.NewTime(tableName, "created_at")
 	_fabric.DeletedAt = field.NewField(tableName, "deleted_at")
 	_fabric.Color = fabricBelongsToColor{
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("Color", "models.Color"),
+	}
+
+	_fabric.Supplier = fabricBelongsToSupplier{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Supplier", "models.Supplier"),
+	}
+
+	_fabric.Composition = fabricBelongsToComposition{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Composition", "models.Composition"),
 	}
 
 	_fabric.fillFieldMap()
@@ -49,16 +63,22 @@ func newFabric(db *gorm.DB, opts ...gen.DOOption) fabric {
 type fabric struct {
 	fabricDo
 
-	ALL       field.Asterisk
-	ID        field.Uint
-	Key       field.String
-	Name      field.String
-	Cost      field.Float64
-	Code      field.String
-	ColorID   field.Uint
-	CreatedAt field.Time
-	DeletedAt field.Field
-	Color     fabricBelongsToColor
+	ALL           field.Asterisk
+	ID            field.Uint
+	Key           field.String
+	Name          field.String
+	Cost          field.Float64
+	Code          field.String
+	ColorID       field.Uint
+	SupplierID    field.Uint
+	CompositionID field.Uint
+	CreatedAt     field.Time
+	DeletedAt     field.Field
+	Color         fabricBelongsToColor
+
+	Supplier fabricBelongsToSupplier
+
+	Composition fabricBelongsToComposition
 
 	fieldMap map[string]field.Expr
 }
@@ -81,6 +101,8 @@ func (f *fabric) updateTableName(table string) *fabric {
 	f.Cost = field.NewFloat64(table, "cost")
 	f.Code = field.NewString(table, "code")
 	f.ColorID = field.NewUint(table, "color_id")
+	f.SupplierID = field.NewUint(table, "supplier_id")
+	f.CompositionID = field.NewUint(table, "composition_id")
 	f.CreatedAt = field.NewTime(table, "created_at")
 	f.DeletedAt = field.NewField(table, "deleted_at")
 
@@ -99,13 +121,15 @@ func (f *fabric) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *fabric) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 9)
+	f.fieldMap = make(map[string]field.Expr, 13)
 	f.fieldMap["id"] = f.ID
 	f.fieldMap["key"] = f.Key
 	f.fieldMap["name"] = f.Name
 	f.fieldMap["cost"] = f.Cost
 	f.fieldMap["code"] = f.Code
 	f.fieldMap["color_id"] = f.ColorID
+	f.fieldMap["supplier_id"] = f.SupplierID
+	f.fieldMap["composition_id"] = f.CompositionID
 	f.fieldMap["created_at"] = f.CreatedAt
 	f.fieldMap["deleted_at"] = f.DeletedAt
 
@@ -189,6 +213,148 @@ func (a fabricBelongsToColorTx) Clear() error {
 }
 
 func (a fabricBelongsToColorTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type fabricBelongsToSupplier struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a fabricBelongsToSupplier) Where(conds ...field.Expr) *fabricBelongsToSupplier {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a fabricBelongsToSupplier) WithContext(ctx context.Context) *fabricBelongsToSupplier {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a fabricBelongsToSupplier) Session(session *gorm.Session) *fabricBelongsToSupplier {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a fabricBelongsToSupplier) Model(m *models.Fabric) *fabricBelongsToSupplierTx {
+	return &fabricBelongsToSupplierTx{a.db.Model(m).Association(a.Name())}
+}
+
+type fabricBelongsToSupplierTx struct{ tx *gorm.Association }
+
+func (a fabricBelongsToSupplierTx) Find() (result *models.Supplier, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a fabricBelongsToSupplierTx) Append(values ...*models.Supplier) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a fabricBelongsToSupplierTx) Replace(values ...*models.Supplier) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a fabricBelongsToSupplierTx) Delete(values ...*models.Supplier) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a fabricBelongsToSupplierTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a fabricBelongsToSupplierTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type fabricBelongsToComposition struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a fabricBelongsToComposition) Where(conds ...field.Expr) *fabricBelongsToComposition {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a fabricBelongsToComposition) WithContext(ctx context.Context) *fabricBelongsToComposition {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a fabricBelongsToComposition) Session(session *gorm.Session) *fabricBelongsToComposition {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a fabricBelongsToComposition) Model(m *models.Fabric) *fabricBelongsToCompositionTx {
+	return &fabricBelongsToCompositionTx{a.db.Model(m).Association(a.Name())}
+}
+
+type fabricBelongsToCompositionTx struct{ tx *gorm.Association }
+
+func (a fabricBelongsToCompositionTx) Find() (result *models.Composition, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a fabricBelongsToCompositionTx) Append(values ...*models.Composition) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a fabricBelongsToCompositionTx) Replace(values ...*models.Composition) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a fabricBelongsToCompositionTx) Delete(values ...*models.Composition) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a fabricBelongsToCompositionTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a fabricBelongsToCompositionTx) Count() int64 {
 	return a.tx.Count()
 }
 

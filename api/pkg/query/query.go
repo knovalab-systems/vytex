@@ -19,6 +19,7 @@ var (
 	Q                   = new(Query)
 	Color               *color
 	ColorByReference    *colorByReference
+	Composition         *composition
 	Fabric              *fabric
 	FabricByReference   *fabricByReference
 	Image               *image
@@ -34,6 +35,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Color = &Q.Color
 	ColorByReference = &Q.ColorByReference
+	Composition = &Q.Composition
 	Fabric = &Q.Fabric
 	FabricByReference = &Q.FabricByReference
 	Image = &Q.Image
@@ -50,6 +52,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		db:                  db,
 		Color:               newColor(db, opts...),
 		ColorByReference:    newColorByReference(db, opts...),
+		Composition:         newComposition(db, opts...),
 		Fabric:              newFabric(db, opts...),
 		FabricByReference:   newFabricByReference(db, opts...),
 		Image:               newImage(db, opts...),
@@ -67,6 +70,7 @@ type Query struct {
 
 	Color               color
 	ColorByReference    colorByReference
+	Composition         composition
 	Fabric              fabric
 	FabricByReference   fabricByReference
 	Image               image
@@ -85,6 +89,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		db:                  db,
 		Color:               q.Color.clone(db),
 		ColorByReference:    q.ColorByReference.clone(db),
+		Composition:         q.Composition.clone(db),
 		Fabric:              q.Fabric.clone(db),
 		FabricByReference:   q.FabricByReference.clone(db),
 		Image:               q.Image.clone(db),
@@ -110,6 +115,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		db:                  db,
 		Color:               q.Color.replaceDB(db),
 		ColorByReference:    q.ColorByReference.replaceDB(db),
+		Composition:         q.Composition.replaceDB(db),
 		Fabric:              q.Fabric.replaceDB(db),
 		FabricByReference:   q.FabricByReference.replaceDB(db),
 		Image:               q.Image.replaceDB(db),
@@ -125,6 +131,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 type queryCtx struct {
 	Color               IColorDo
 	ColorByReference    IColorByReferenceDo
+	Composition         ICompositionDo
 	Fabric              IFabricDo
 	FabricByReference   IFabricByReferenceDo
 	Image               IImageDo
@@ -140,6 +147,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Color:               q.Color.WithContext(ctx),
 		ColorByReference:    q.ColorByReference.WithContext(ctx),
+		Composition:         q.Composition.WithContext(ctx),
 		Fabric:              q.Fabric.WithContext(ctx),
 		FabricByReference:   q.FabricByReference.WithContext(ctx),
 		Image:               q.Image.WithContext(ctx),

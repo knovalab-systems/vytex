@@ -62,7 +62,7 @@ func (m *FabricController) AggregateFabrics(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.AggregateUsersBadRequest()
+		return problems.AggregateFabricsBadRequest()
 	}
 
 	// aggregation
@@ -72,4 +72,37 @@ func (m *FabricController) AggregateFabrics(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, aggregate)
+}
+
+// Create fabric
+// @Summary      Create fabric
+// @Description  Create a new fabric
+// @Tags         Fabrics
+// @Produce      json
+// @Param		 models.FabricCreateBody body string true "Fabric create values"
+// @Success      201 {object} models.Fabric
+// @Failure      400
+// @Failure      409
+// @Failure      500
+// @Router       /fabrics [post]
+func (m *FabricController) CreateFabric(c echo.Context) error {
+	u := new(models.FabricCreateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.CreateFabricBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CreateFabricBadRequest()
+	}
+
+	// create
+	fabric, err := m.FabricRepository.CreateFabric(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, fabric)
 }

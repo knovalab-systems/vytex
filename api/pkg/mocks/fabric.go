@@ -18,3 +18,8 @@ func (m *FabricMock) AggregationFabrics(req *models.AggregateQuery) ([]*models.A
 	args := m.Called(req)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
 }
+
+func (m *FabricMock) CreateFabric(u *models.FabricCreateBody) (*models.Fabric, error) {
+	args := m.Called(u)
+	return args.Get(0).(*models.Fabric), args.Error(1)
+}

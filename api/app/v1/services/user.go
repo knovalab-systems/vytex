@@ -125,22 +125,22 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
-func (m *UserService) UpdateUser(u *models.UpdateUserBody) (*models.User, error) {
+func (m *UserService) UpdateUser(b *models.UpdateUserBody) (*models.User, error) {
 	table := query.User
 
-	if u.Username != nil {
-		err := checkUsername(*u.Username)
+	if b.Username != nil {
+		err := checkUsername(*b.Username)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	updateMap, err := u.ToUpdate()
+	updateMap, err := b.ToUpdate()
 	if err != nil || len(updateMap) == 0 {
 		return nil, problems.UpdateUserBadRequest()
 	}
 
-	rows, err := table.Unscoped().Where(table.ID.Eq(u.ID)).Updates(updateMap)
+	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -149,7 +149,7 @@ func (m *UserService) UpdateUser(u *models.UpdateUserBody) (*models.User, error)
 		return nil, problems.ReadAccess()
 	}
 
-	user, err := table.Unscoped().Where(table.ID.Eq(u.ID)).First()
+	user, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -159,24 +159,24 @@ func (m *UserService) UpdateUser(u *models.UpdateUserBody) (*models.User, error)
 	return user, nil
 }
 
-func (m *UserService) CreateUser(u *models.UserCreateBody) (*models.User, error) {
+func (m *UserService) CreateUser(b *models.UserCreateBody) (*models.User, error) {
 	// check user existence
-	err := checkUsername(u.Username)
+	err := checkUsername(b.Username)
 	if err != nil {
 		return nil, err
 	}
 
 	// encrypt password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(b.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
 	user := &models.User{
-		Username: u.Username,
-		Name:     u.Name,
+		Username: b.Username,
+		Name:     b.Name,
 		Password: string(hashedPassword),
-		Role:     u.Role,
+		Role:     b.Role,
 	}
 
 	err = query.User.Create(user)

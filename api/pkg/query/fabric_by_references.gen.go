@@ -94,6 +94,16 @@ func newFabricByReference(db *gorm.DB, opts ...gen.DOOption) fabricByReference {
 		}{
 			RelationField: field.NewRelation("Fabric.Color", "models.Color"),
 		},
+		Supplier: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Fabric.Supplier", "models.Supplier"),
+		},
+		Composition: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Fabric.Composition", "models.Composition"),
+		},
 	}
 
 	_fabricByReference.fillFieldMap()
@@ -301,6 +311,12 @@ type fabricByReferenceBelongsToFabric struct {
 	field.RelationField
 
 	Color struct {
+		field.RelationField
+	}
+	Supplier struct {
+		field.RelationField
+	}
+	Composition struct {
 		field.RelationField
 	}
 }
