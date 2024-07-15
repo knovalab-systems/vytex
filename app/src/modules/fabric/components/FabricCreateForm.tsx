@@ -13,7 +13,7 @@ import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import { COMPOSITIONS } from '~/schemas/compositions';
 import type { Fabric } from '~/schemas/core';
-import { createFabricRequest } from '../request/fabricCreate';
+import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
 
 function FabricCreateForm(props: {
@@ -44,7 +44,7 @@ function FabricCreateForm(props: {
 		}
 
 		if (totalComp !== 10000) {
-			return toast.error('Las composiciones de la tela suman más de 100, revisa los valores.');
+			return toast.error('Las composiciones deben sumar 100, revisa los valores.');
 		}
 
 		const fabric: Fabric = {
@@ -238,7 +238,7 @@ function FabricCreateForm(props: {
 					Cancelar
 				</Button>
 				<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
-					Guardar
+					Crear
 				</Button>
 			</div>
 		</Form>

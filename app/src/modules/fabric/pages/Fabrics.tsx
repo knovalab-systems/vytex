@@ -15,7 +15,7 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { FABRICS_CREATE_PATH } from '~/constants/paths';
 import FabricTable from '../components/FabricTable';
-import { countFabricsQuery, getFabricsQuery } from '../request/fabricGet';
+import { countFabricsQuery, getFabricsQuery } from '../requests/fabricGet';
 
 function Fabrics() {
 	const [page, setPage] = createSignal(1);
