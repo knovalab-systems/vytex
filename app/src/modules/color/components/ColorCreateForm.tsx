@@ -104,7 +104,7 @@ function ColorCreateForm() {
 					Cancelar
 				</Button>
 				<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
-					Guardar
+					Crear
 				</Button>
 			</div>
 		</Form>

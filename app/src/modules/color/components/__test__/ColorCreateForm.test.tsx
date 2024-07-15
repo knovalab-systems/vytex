@@ -2,6 +2,8 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ColorCreateForm from '../ColorCreateForm';
+import * as requests from '../../requests/colorCreate';
+import toast from 'solid-toast';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -18,7 +20,7 @@ describe('ColorCreateForm', () => {
 		const nameField = screen.getByPlaceholderText('Blanco');
 		const codeField = screen.getByPlaceholderText('2322');
 		const hexField = screen.getByPlaceholderText('FFFFFF');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 		const cancelButton = screen.getByText('Cancelar');
 
 		expect(nameField).toBeInTheDocument();
@@ -45,7 +47,7 @@ describe('ColorCreateForm', () => {
 
 	it('show empty fields error message when submit form', async () => {
 		render(() => <ColorCreateForm />);
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
 
 		const nameError = await screen.findByText('Ingresa el nombre.');
@@ -57,30 +59,10 @@ describe('ColorCreateForm', () => {
 		expect(hexError).toBeInTheDocument();
 	});
 
-	it('show empty fields error message when submit form', async () => {
-		render(() => <ColorCreateForm />);
-
-		const nameField = screen.getByPlaceholderText('Blanco');
-		const codeField = screen.getByPlaceholderText('2322');
-		const hexField = screen.getByPlaceholderText('FFFFFF');
-		const submitButton = screen.getByText('Guardar');
-
-		fireEvent.input(nameField, { target: { value: 'Negro' } });
-		fireEvent.input(codeField, { target: { value: '1111' } });
-		fireEvent.input(hexField, { target: { value: '000000' } });
-		fireEvent.click(submitButton);
-
-		await waitFor(() => {
-			expect(screen.queryByText('Ingresa el nombre.')).not.toBeInTheDocument();
-			expect(screen.queryByText('Ingresa el código.')).not.toBeInTheDocument();
-			expect(screen.queryByText('Ingresa un valor válido de hexadecimal.')).not.toBeInTheDocument();
-		});
-	});
-
 	it('show bad length error for hex color', async () => {
 		render(() => <ColorCreateForm />);
 		const hexField = screen.getByPlaceholderText('FFFFFF');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 
 		fireEvent.input(hexField, { target: { value: '0000000' } });
 		fireEvent.click(submitButton);
@@ -93,7 +75,7 @@ describe('ColorCreateForm', () => {
 	it('show bad format error for hex color', async () => {
 		render(() => <ColorCreateForm />);
 		const hexField = screen.getByPlaceholderText('FFFFFF');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 
 		fireEvent.input(hexField, { target: { value: '000000)' } });
 		fireEvent.click(submitButton);
@@ -101,5 +83,26 @@ describe('ColorCreateForm', () => {
 		const hexError = await screen.findByText('Ingresa un valor válido de hexadecimal.');
 
 		expect(hexError).toBeInTheDocument();
+	});
+
+	it('calls submit succesfully', async () => {
+		render(() => <ColorCreateForm />);
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
+		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({});
+
+		const nameField = screen.getByPlaceholderText('Blanco');
+		const codeField = screen.getByPlaceholderText('2322');
+		const hexField = screen.getByPlaceholderText('FFFFFF');
+		const submitButton = screen.getByText('Crear');
+
+		fireEvent.input(nameField, { target: { value: 'Negro' } });
+		fireEvent.input(codeField, { target: { value: '1111' } });
+		fireEvent.input(hexField, { target: { value: '000000' } });
+		fireEvent.click(submitButton);
+
+		await waitFor(() => {
+			expect(requestMock).toHaveBeenCalled();
+			expect(toastMock).toHaveBeenCalled();
+		});
 	});
 });

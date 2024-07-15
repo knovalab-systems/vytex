@@ -150,7 +150,12 @@ function FabricCreateForm(props: {
 												</div>
 											</SelectItem>
 										)}
-										options={props.colors.map(color => color.id)}
+										options={props.colors.reduce((p: Array<number>, v) => {
+											if (!v.deleted_at) {
+												p.push(v.id);
+											}
+											return p;
+										}, [])}
 									>
 										<SelectTrigger title='Ver colores' aria-errormessage={field.error} aria-label='Colores'>
 											<SelectValue<string>>
@@ -189,7 +194,12 @@ function FabricCreateForm(props: {
 										itemComponent={props => (
 											<SelectItem item={props.item}>{suppliersRecord()[props.item.rawValue]?.name}</SelectItem>
 										)}
-										options={props.suppliers.map(supplier => supplier.id)}
+										options={props.suppliers.reduce((p: Array<number>, v) => {
+											if (!v.deleted_at) {
+												p.push(v.id);
+											}
+											return p;
+										}, [])}
 									>
 										<SelectTrigger title='Ver proveedores' aria-errormessage={field.error} aria-label='Proveedores'>
 											<SelectValue<string>>

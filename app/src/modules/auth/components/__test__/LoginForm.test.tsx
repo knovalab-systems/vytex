@@ -5,10 +5,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as authRequests from '~/modules/auth/requests/auth';
 import LoginForm from '../LoginForm';
 
-vi.mock('~/modules/auth/requests/authRequests', () => ({
-	loginRequest: vi.fn(),
-}));
-
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
@@ -32,7 +28,7 @@ describe('LoginForm', () => {
 	});
 
 	it('calls login request on form submission with correct data', async () => {
-		const loginInSpy = vi.spyOn(authRequests, 'loginRequest');
+		const loginInSpy = vi.spyOn(authRequests, 'loginRequest').mockRejectedValueOnce({});
 		render(() => <LoginForm />);
 		const usernameField = screen.getByPlaceholderText('jose23');
 		const passwordInput = screen.getByPlaceholderText('*********');

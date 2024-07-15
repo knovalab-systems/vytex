@@ -202,7 +202,12 @@ function ReferenceCreateForm(props: {
 																</div>
 															</SelectItem>
 														)}
-														options={props.colors.map(color => color.id)}
+														options={props.colors.reduce((p: Array<number>, v) => {
+															if (!v.deleted_at) {
+																p.push(v.id);
+															}
+															return p;
+														}, [])}
 													>
 														<SelectTrigger title='Ver colores' aria-errormessage={field.error} aria-label='Colores'>
 															<SelectValue<string>>

@@ -19,7 +19,7 @@ describe('UserCreateForm', () => {
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
 		const roleIdFilterInput = screen.getByText('Selecciona un rol');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 		const cancelButton = screen.getByText('Cancelar');
 
 		expect(nameField).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe('UserCreateForm', () => {
 
 	it('show empty fields error message when submit form', async () => {
 		render(() => <UserCreateForm />);
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
 
 		const errorname = await screen.findByText('Ingresa el nombre.');
@@ -68,7 +68,7 @@ describe('UserCreateForm', () => {
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
 		const roleIdFilterInput = screen.getByText('Selecciona un rol');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 
 		fireEvent.input(nameField, { target: { value: 'John Doe' } });
 		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
@@ -86,7 +86,7 @@ describe('UserCreateForm', () => {
 	it('shows bad length password error', async () => {
 		render(() => <UserCreateForm />);
 		const passwordField = screen.getByPlaceholderText('********');
-		const submitButton = screen.getByText('Guardar');
+		const submitButton = screen.getByText('Crear');
 
 		fireEvent.input(passwordField, { target: { value: '1' } });
 		fireEvent.click(submitButton);
