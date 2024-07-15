@@ -12,13 +12,13 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { useColors } from '~/hooks/useColors';
 import ResourceTable from '../components/ResourceTable';
-import { countResourcesQuery, getResourcesQuery } from '../requests/resourcesGet';
+import { countResourcesQuery, getResourcesQuery } from '../requests/resourceGet';
 
 function Resources() {
 	const [page, setPage] = createSignal(1);
 	const resources = createQuery(() => getResourcesQuery(page()));
 	const countResources = createQuery(() => countResourcesQuery());
-	const { colorsArray } = useColors();
+	const { colorsQuery: colorsArray } = useColors();
 	const pages = createMemo<number>(() => {
 		const count = countResources.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;

@@ -1,7 +1,7 @@
 import { createQueries } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
-import { type colorsArray, useColors } from '~/hooks/useColors';
+import { type Colors, useColors } from '~/hooks/useColors';
 import ReferenceCreateForm from '../components/ReferenceCreateForm';
 import {
 	type FabricsByRefCreate,
@@ -11,7 +11,7 @@ import {
 } from '../requests/referenceCreate';
 
 function ReferenceCreate() {
-	const { colorsArray } = useColors();
+	const { colorsQuery: colorsArray } = useColors();
 	const data = createQueries(() => ({
 		queries: [getFabricsByRefCreateQuery(), getResourcesByRefCreateQuery()],
 	}));
@@ -28,7 +28,7 @@ function ReferenceCreate() {
 				</Match>
 				<Match when={isSuccess()}>
 					<ReferenceCreateForm
-						colors={colorsArray.data as colorsArray}
+						colors={colorsArray.data as Colors}
 						fabrics={data[0].data as FabricsByRefCreate}
 						resources={data[1].data as ResourcesByRefCreate}
 					/>

@@ -7,9 +7,9 @@ import { queryClient } from '~/lib/queryClient';
 
 const queryKey = 'colorContext';
 
-const ColorsContext = createContext<colorsContext>({
-	colorsArray: {} as CreateQueryResult<colorsArray>,
-	colorRecord: () => ({}),
+const ColorsContext = createContext<ColorsContext>({
+	colorsQuery: {} as CreateQueryResult<Colors>,
+	colorsRecord: () => ({}),
 	setActive: () => {},
 });
 
@@ -22,15 +22,15 @@ async function colorsContextReq() {
 	);
 }
 
-export type colorsArray = Awaited<ReturnType<typeof colorsContextReq>>;
+export type Colors = Awaited<ReturnType<typeof colorsContextReq>>;
 
-type color = colorsArray[number];
+type Color = Colors[number];
 
-type colorRecord = Record<string, color>;
+type ColorRecord = Record<string, Color>;
 
-type colorsContext = {
-	colorsArray: CreateQueryResult;
-	colorRecord: Accessor<colorRecord>;
+type ColorsContext = {
+	colorsQuery: CreateQueryResult;
+	colorsRecord: Accessor<ColorRecord>;
 	setActive: () => void;
 };
 
@@ -44,8 +44,8 @@ export function ColorsProvider(props: { children: JSXElement }) {
 		enabled: Boolean(role()) && enabled(),
 	}));
 
-	const colorsObj = createMemo(() => {
-		const obj = colors.data?.reduce((p: colorRecord, v) => {
+	const colorsRecord = createMemo(() => {
+		const obj = colors.data?.reduce((p: ColorRecord, v) => {
 			p[v.id] = v;
 			return p;
 		}, {});
@@ -56,7 +56,7 @@ export function ColorsProvider(props: { children: JSXElement }) {
 		setEnabled(true);
 	};
 
-	const values: colorsContext = { colorsArray: colors, colorRecord: colorsObj, setActive: setActive };
+	const values: ColorsContext = { colorsQuery: colors, colorsRecord: colorsRecord, setActive: setActive };
 
 	return <ColorsContext.Provider value={values}>{props.children}</ColorsContext.Provider>;
 }
@@ -67,6 +67,6 @@ export function useColors() {
 	return context;
 }
 
-export async function name() {
+export async function refetchColors() {
 	return await queryClient.refetchQueries({ queryKey: [queryKey], exact: true, type: 'active' });
 }

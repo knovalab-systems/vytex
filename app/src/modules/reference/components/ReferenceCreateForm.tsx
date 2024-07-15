@@ -21,7 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { STATUS_CODE } from '~/constants/http';
 import { REFS_PATH } from '~/constants/paths';
-import { type colorsArray, useColors } from '~/hooks/useColors';
+import { type Colors, useColors } from '~/hooks/useColors';
 import useImageUploader from '~/hooks/useImageUploader';
 import {
 	type FabricsByRefCreate,
@@ -40,11 +40,11 @@ type Combined = {
 	name: string;
 };
 function ReferenceCreateForm(props: {
-	colors: colorsArray;
+	colors: Colors;
 	fabrics: FabricsByRefCreate;
 	resources: ResourcesByRefCreate;
 }) {
-	const { colorRecord } = useColors();
+	const { colorsRecord: colorRecord } = useColors();
 	const navigate = useNavigate();
 	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
 	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);

@@ -2,10 +2,10 @@ import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
-import type { GetFabricsType } from '../request/fabricsGet';
+import type { GetFabricsType } from '../request/fabricGet';
 
 function FabricTable(props: { fabrics?: GetFabricsType }) {
-	const { colorRecord } = useColors();
+	const { colorsRecord: colorRecord } = useColors();
 
 	return (
 		<TableContainer>
@@ -44,8 +44,8 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 									style={{ background: colorRecord()[fabric.color_id as number]?.hex || '' }}
 								/>
 							</TableCell>
-							<TableCell>{fabric.code || 'Code'}</TableCell>
 							<TableCell>${fabric.cost}</TableCell>
+							<TableCell>{fabric.code || 'Code'}</TableCell>
 							<TableCell>Proveedor</TableCell>
 							<TableCell>
 								<StatusLabel status={!fabric.deleted_at} />

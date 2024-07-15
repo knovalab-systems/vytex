@@ -1,7 +1,7 @@
 import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetColorsType } from '../requests/colorsGet';
+import type { GetColorsType } from '../requests/colorGet';
 
 function ColorTable(props: { colors?: GetColorsType }) {
 	return (
