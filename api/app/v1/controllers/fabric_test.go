@@ -115,7 +115,7 @@ func TestCreateFabric(t *testing.T) {
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color": -1, "supplier": -1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": -1, "supplier_id": -1})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -136,31 +136,41 @@ func TestCreateFabric(t *testing.T) {
 	})
 
 	missingFieldsTestCases := []models.FabricCreateBody{{
-		Name:  "tela",
-		Cost:  12000.0,
-		Code:  "1",
-		Color: 1,
+		Name:        "tela",
+		Cost:        12000.0,
+		Code:        "1",
+		Color:       1,
+		Composition: models.Composition{Algod: 10000},
 	}, {
-		Name:     "tela",
+		Name:        "tela",
+		Cost:        12000.0,
+		Code:        "1",
+		Supplier:    1,
+		Composition: models.Composition{Algod: 10000},
+	}, {
+		Name:        "tela",
+		Cost:        12000.0,
+		Color:       1,
+		Supplier:    1,
+		Composition: models.Composition{Algod: 10000},
+	}, {
+		Name:        "tela",
+		Code:        "1",
+		Color:       1,
+		Supplier:    1,
+		Composition: models.Composition{Algod: 10000},
+	}, {
+		Cost:        12000.0,
+		Code:        "1",
+		Color:       1,
+		Supplier:    1,
+		Composition: models.Composition{Algod: 10000},
+	}, {
 		Cost:     12000.0,
 		Code:     "1",
+		Color:    1,
 		Supplier: 1,
-	}, {
 		Name:     "tela",
-		Cost:     12000.0,
-		Color:    1,
-		Supplier: 1,
-	}, {
-		Name:     "tela",
-		Code:     "1",
-		Color:    1,
-		Supplier: 1,
-	}, {
-		Cost: 12000.0,
-
-		Code:     "1",
-		Color:    1,
-		Supplier: 1,
 	}}
 
 	for i := range missingFieldsTestCases {
@@ -170,7 +180,7 @@ func TestCreateFabric(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
 			json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code,
-				"cost": testCase.Cost, "supplier": testCase.Supplier, "color": testCase.Color})
+				"cost": testCase.Cost, "supplier_id": testCase.Supplier, "color_id": testCase.Color, "composition": testCase.Composition})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -193,17 +203,20 @@ func TestCreateFabric(t *testing.T) {
 	}
 
 	gtZeroTestCases := []models.FabricCreateBody{{
-		Cost:     12000.0,
-		Color:    0,
-		Supplier: 1,
+		Cost:        12000.0,
+		Color:       0,
+		Supplier:    1,
+		Composition: models.Composition{Algod: 10000},
 	}, {
-		Cost:     0.0,
-		Color:    1,
-		Supplier: 1,
+		Cost:        0.0,
+		Color:       1,
+		Supplier:    1,
+		Composition: models.Composition{Algod: 10000},
 	}, {
-		Cost:     12000.0,
-		Color:    1,
-		Supplier: 0,
+		Cost:        12000.0,
+		Color:       1,
+		Supplier:    0,
+		Composition: models.Composition{Algod: 10000},
 	}}
 
 	for i := range gtZeroTestCases {
@@ -212,7 +225,8 @@ func TestCreateFabric(t *testing.T) {
 		t.Run("Fail validate, cost less than 0", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			json.NewEncoder(body).Encode(map[string]interface{}{"name": "Blanco", "code": "1", "cost": testCase.Cost, "supplier": testCase.Supplier, "color": testCase.Color})
+			json.NewEncoder(body).Encode(map[string]interface{}{"name": "Blanco", "code": "1", "cost": testCase.Cost,
+				"supplier_id": testCase.Supplier, "color_id": testCase.Color})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -239,7 +253,8 @@ func TestCreateFabric(t *testing.T) {
 		code := "1"
 		cost := 23000.0
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier": 1, "color": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1,
+			"color_id": 1, "composition": map[string]interface{}{"algod": 10000}})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -249,7 +264,8 @@ func TestCreateFabric(t *testing.T) {
 
 		// mocks
 		fabricMock := mocks.FabricMock{}
-		fabricMock.On("CreateFabric", &models.FabricCreateBody{Name: name, Code: code, Cost: cost, Color: 1, Supplier: 1}).Return(&models.Fabric{}, problems.ColorExists())
+		fabricMock.On("CreateFabric", &models.FabricCreateBody{Name: name, Code: code, Cost: cost, Color: 1, Supplier: 1,
+			Composition: models.Composition{Algod: 10000}}).Return(&models.Fabric{}, problems.ColorExists())
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
@@ -264,7 +280,8 @@ func TestCreateFabric(t *testing.T) {
 		code := "1"
 		cost := 23000.0
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier": 1, "color": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1,
+			"composition": map[string]interface{}{"algod": 10000}})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -274,7 +291,8 @@ func TestCreateFabric(t *testing.T) {
 
 		// mocks
 		fabricMock := mocks.FabricMock{}
-		fabricMock.On("CreateFabric", &models.FabricCreateBody{Name: name, Code: code, Cost: cost, Color: 1, Supplier: 1}).Return(&models.Fabric{}, nil)
+		fabricMock.On("CreateFabric", &models.FabricCreateBody{Name: name, Code: code, Cost: cost, Color: 1, Supplier: 1,
+			Composition: models.Composition{Algod: 10000}}).Return(&models.Fabric{}, nil)
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test

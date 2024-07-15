@@ -33,10 +33,10 @@ func (b *Fabric) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type FabricCreateBody struct {
-	Name     string  `json:"name" validate:"required"`
-	Cost     float64 `json:"cost" validate:"required,gt=0"`
-	Code     string  `json:"code" validate:"required"`
-	Color    uint    `json:"color" validate:"required,gt=0"`
-	Supplier uint    `json:"supplier" validate:"required,gt=0"`
-	Composition
+	Name        string      `json:"name" validate:"required"`
+	Cost        float64     `json:"cost" validate:"required,gt=0"`
+	Code        string      `json:"code" validate:"required"`
+	Color       uint        `json:"color_id" validate:"required,gt=0"`
+	Supplier    uint        `json:"supplier_id" validate:"required,gt=0"`
+	Composition Composition `json:"composition" validate:"required"`
 }

@@ -1,4 +1,4 @@
-import type { MergeCoreCollection } from '../index.js';
+import type { MergeCoreCollection, VytexComposition, VytexSupplier } from '../index.js';
 import type { VytexColor } from './color.js';
 
 /**
@@ -15,6 +15,10 @@ export type VytexFabric<Schema extends object> = MergeCoreCollection<
 		code: string | null;
 		color_id: number | null;
 		color: VytexColor<Schema[]> | null;
+		supplier_id: number | null;
+		supplier: VytexSupplier<Schema[]> | null;
+		composition_id: number | null;
+		composition: VytexComposition<Schema[]> | null;
 		deleted_at: string | null;
 		created_at: string | null;
 	}
