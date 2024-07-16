@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"regexp"
 	"strings"
 
@@ -8,6 +9,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
+	"gorm.io/gorm"
 )
 
 type FabricService struct {
@@ -84,6 +86,35 @@ func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
+func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric, error) {
+
+	err := checkFabricExists(b.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	c, err := getCompositionId(&b.Composition)
+	if err != nil {
+		return nil, err
+	}
+
+	fabric := &models.Fabric{
+		Name:          b.Name,
+		SupplierID:    b.Supplier,
+		ColorID:       b.Color,
+		Cost:          b.Cost,
+		Code:          b.Code,
+		CompositionID: c.ID,
+	}
+
+	err = query.Fabric.Create(fabric)
+	if err != nil {
+		return nil, err
+	}
+
+	return fabric, nil
+}
+
 func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 	if fields != "" {
 		table := query.Fabric
@@ -123,4 +154,56 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 		s = s.Select(f...)
 	}
 	return s
+}
+
+func checkFabricExists(code string) error {
+	table := query.Fabric
+
+	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		return problems.ServerError()
+	}
+	return problems.FabricExists()
+}
+
+func getCompositionId(c *models.Composition) (*models.Composition, error) {
+	table := query.Composition
+	compMap := make(map[string]interface{}) // for allow zero values
+	compMap["algod"] = c.Algod
+	compMap["elast"] = c.Elast
+	compMap["lino"] = c.Lino
+	compMap["nylon"] = c.Nylon
+	compMap["polye"] = c.Polye
+	compMap["rayon"] = c.Rayon
+	compMap["rayvis"] = c.Rayvis
+	compMap["tencel"] = c.Tencel
+	compMap["visco"] = c.Visco
+	compMap["hilom"] = c.Hilom
+
+	var totalComp uint = 0
+	for _, v := range compMap {
+		value := v.(uint)
+		totalComp = totalComp + value
+	}
+
+	if totalComp != 10000 { // check 100%
+		return nil, problems.CreateFabricBadRequest()
+	}
+
+	composition, err := table.Where(field.Attrs(compMap)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			err := table.Create(c)
+			if err != nil {
+				return nil, err
+			}
+			return c, nil
+		}
+		return nil, problems.ServerError()
+	}
+
+	return composition, nil
 }

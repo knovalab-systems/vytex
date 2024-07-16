@@ -1,5 +1,6 @@
 import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
+import type { VytexSize } from '@vytex/client';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
 import { For, Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
@@ -17,11 +18,10 @@ import {
 } from '~/components/ui/Combobox';
 import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { STATUS_CODE } from '~/constants/http';
 import { REFS_PATH } from '~/constants/paths';
-import { type colorsArray, useColors } from '~/hooks/useColors';
+import { type Colors, useColors } from '~/hooks/useColors';
 import useImageUploader from '~/hooks/useImageUploader';
 import {
 	type FabricsByRefCreate,
@@ -40,11 +40,11 @@ type Combined = {
 	name: string;
 };
 function ReferenceCreateForm(props: {
-	colors: colorsArray;
+	colors: Colors;
 	fabrics: FabricsByRefCreate;
 	resources: ResourcesByRefCreate;
 }) {
-	const { colorRecord } = useColors();
+	const { colorsRecord } = useColors();
 	const navigate = useNavigate();
 	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
 	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
@@ -100,10 +100,10 @@ function ReferenceCreateForm(props: {
 						const r = Number(v.resource.slice(1));
 						if (v.resource.startsWith('r')) {
 							checkFabricResources[i].resource = true;
-							p.resources.push({ ...v.sizes, resource: r });
+							p.resources.push({ ...(v.sizes as VytexSize), resource: r });
 						} else {
 							checkFabricResources[i].fabric = true;
-							p.fabrics.push({ ...v.sizes, fabric: r });
+							p.fabrics.push({ ...(v.sizes as VytexSize), fabric: r });
 						}
 						return p;
 					},
@@ -113,13 +113,11 @@ function ReferenceCreateForm(props: {
 		};
 
 		if (checkFabricResources.some(e => e.resource === false)) {
-			toast.error('Cada color de la referencia debe tener al menos un insumo ');
-			return;
+			return toast.error('Cada color de la referencia debe tener al menos un insumo ');
 		}
 
 		if (checkFabricResources.some(e => e.fabric === false)) {
-			toast.error('Cada color de la referencia debe tener al menos una tela.');
-			return;
+			return toast.error('Cada color de la referencia debe tener al menos una tela.');
 		}
 
 		return createReferenceRequest(reference)
@@ -153,7 +151,7 @@ function ReferenceCreateForm(props: {
 								<LabelSpan>Código de la referencia</LabelSpan>
 								<Input
 									type='number'
-									placeholder='3453 '
+									placeholder='3453'
 									autocomplete='on'
 									aria-errormessage={field.error}
 									required
@@ -185,47 +183,51 @@ function ReferenceCreateForm(props: {
 											{field => (
 												<div class='flex gap-4 w-full'>
 													<LabelSpan class='my-auto whitespace-nowrap'>Color de la referencia</LabelSpan>
-													<Select
+
+													<Combobox<Colors[0]>
 														class='whitespace-nowrap min-w-48'
-														value={field.value}
+														value={colorsRecord()[field.value || 0]}
 														onChange={value => {
-															setValue(form, `${fieldColors.name}.${iColor()}.color`, value);
+															setValue(form, `${fieldColors.name}.${iColor()}.color`, value ? value.id : 0);
 														}}
-														placeholder='Selecciona un color'
+														onInputChange={value => {
+															if (value === '') {
+																setValue(form, `${fieldColors.name}.${iColor()}.color`, 0);
+															}
+														}}
+														multiple={false}
+														optionLabel='name'
+														optionValue='id'
+														placeholder='Selecciona o escribe un color'
 														itemComponent={props => (
-															<SelectItem item={props.item}>
+															<ComboboxItem item={props.item}>
 																<div class='flex gap-2'>
 																	<div
 																		class='h-5 w-5 m-auto border'
-																		style={{ background: colorRecord()[props.item.rawValue]?.hex || '' }}
+																		style={{ background: props.item.rawValue.hex || '' }}
 																	/>
-																	{colorRecord()[props.item.rawValue]?.name}
+																	<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
 																</div>
-															</SelectItem>
+																<ComboboxItemIndicator />
+															</ComboboxItem>
 														)}
-														options={props.colors.map(color => color.id)}
+														options={props.colors.filter(e => !e.deleted_at)}
 													>
-														<SelectTrigger title='Ver colores' aria-errormessage={field.error} aria-label='Colores'>
-															<SelectValue<string>>
-																{state => (
-																	<div class='flex gap-2'>
-																		<Show when={Boolean(colorRecord()[state.selectedOption()])}>
-																			<div
-																				class='h-5 w-5 m-auto border'
-																				style={{ background: colorRecord()[state.selectedOption()]?.hex || '' }}
-																			/>
-																		</Show>
-																		{colorRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
-																	</div>
-																)}
-															</SelectValue>
-														</SelectTrigger>
+														<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
+															<Show when={Boolean(colorsRecord()[field.value || 0])}>
+																<div
+																	class='h-5 w-5 mr-2 m-auto border'
+																	style={{ background: colorsRecord()[field.value || 0]?.hex || '' }}
+																/>
+															</Show>
+															<ComboboxInput />
+															<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+														</ComboboxControl>
 														<Show when={Boolean(field.error)}>
 															<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 														</Show>
-														<SelectContent />
-													</Select>
-
+														<ComboboxContent />
+													</Combobox>
 													<Button
 														class='ml-auto whitespace-nowrap gap-1 bg-red-500 hover:bg-red-600'
 														disabled={fieldColors.items.length === 1}
@@ -284,7 +286,7 @@ function ReferenceCreateForm(props: {
 																							)}
 																							options={resources()}
 																						>
-																							<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
+																							<ComboboxControl aria-errormessage={field.error} aria-label='Resources'>
 																								<ComboboxInput />
 																								<ComboboxTrigger title='Ver insumos y telas' />
 																							</ComboboxControl>

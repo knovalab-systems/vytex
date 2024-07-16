@@ -13,5 +13,6 @@ func privateFabricRoutes(g *echo.Group) {
 
 	route.GET("", fabricController.ReadFabrics)
 	route.GET("/aggregate", fabricController.AggregateFabrics)
+	route.POST("", fabricController.CreateFabric)
 
 }

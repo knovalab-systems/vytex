@@ -6,11 +6,6 @@ import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/referenceCreate';
 import ReferenceCreateForm from '../ReferenceCreateForm';
 
-const mockRequest = vi.fn();
-vi.mock('~/modules/references/requests/referenceCreateRequest', () => ({
-	createReferenceRequest: () => mockRequest,
-}));
-
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
@@ -38,7 +33,7 @@ describe('ReferenceCreateForm', () => {
 		expect(cancelButton.length).eq(2);
 	});
 
-	it('shows errors correctly', async () => {
+	it('shows required errors correctly', async () => {
 		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
 
 		const submitButton = screen.getAllByText('Crear');
@@ -64,8 +59,8 @@ describe('ReferenceCreateForm', () => {
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
-		const referenceInput = screen.getByPlaceholderText('3453');
-		fireEvent.input(referenceInput, { target: { value: 1232 } });
+		const referenceField = screen.getByPlaceholderText('3453');
+		fireEvent.input(referenceField, { target: { value: 1232 } });
 
 		const colorSelect = screen.getByTitle('Ver colores');
 
@@ -145,6 +140,8 @@ describe('ReferenceCreateForm', () => {
 		const referenceInput = screen.getByPlaceholderText('3453');
 		fireEvent.input(referenceInput, { target: { value: 1232 } });
 
+		// select color
+
 		const colorSelect = screen.getByTitle('Ver colores');
 
 		fireEvent(
@@ -173,6 +170,8 @@ describe('ReferenceCreateForm', () => {
 
 		fireEvent(colors[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
+
+		// select resource
 
 		const resourcesSelect = screen.getByTitle('Ver insumos y telas');
 
@@ -219,7 +218,7 @@ describe('ReferenceCreateForm', () => {
 		));
 
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const resourceMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({});
 
 		const referenceInput = screen.getByPlaceholderText('3453');
 		fireEvent.input(referenceInput, { target: { value: 1232 } });
@@ -327,7 +326,7 @@ describe('ReferenceCreateForm', () => {
 		fireEvent.click(submitButton[0]);
 
 		await waitFor(() => {
-			expect(resourceMock).toHaveBeenCalled();
+			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
 		});
 	});

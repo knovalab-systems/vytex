@@ -1,7 +1,7 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { GetFabricsType } from '../../request/fabricsGet';
+import type { GetFabricsType } from '../../requests/fabricGet';
 import FabricTable from '../FabricTable';
 
 describe('Fabric Table', () => {

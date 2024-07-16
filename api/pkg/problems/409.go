@@ -11,7 +11,7 @@ func UserExists() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "User already exists", ""))
 }
 
-func CodeColorExists() *echo.HTTPError {
+func ColorExists() *echo.HTTPError {
 	code := http.StatusConflict
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Color code already exists", ""))
 }
@@ -19,4 +19,9 @@ func CodeColorExists() *echo.HTTPError {
 func ReferenceExists() *echo.HTTPError {
 	code := http.StatusConflict
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Reference already exists", ""))
+}
+
+func FabricExists() *echo.HTTPError {
+	code := http.StatusConflict
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Fabric already exists", ""))
 }

@@ -22,6 +22,7 @@ type ReferenceController struct {
 // @Param		 models.ReferenceCreateBody body string true "Reference create values"
 // @Success      201 {object} models.Reference
 // @Failure      400
+// @Failure      409
 // @Failure      500
 // @Router       /reference [post]
 func (m *ReferenceController) CreateReference(c echo.Context) error {

@@ -47,7 +47,7 @@ type ResourceByReference struct {
 	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
 	ResourceId         uint              `json:"resource_id"`
 	Resource           *Resource         `json:"resource,omitempty"`
-	Sizes
+	Size
 }
 
 // BeforeCreate will set a UUID to key, if is not set
@@ -67,7 +67,7 @@ type FabricByReference struct {
 	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
 	FabricId           uint              `json:"fabric_id"`
 	Fabric             *Fabric           `json:"fabric,omitempty"`
-	Sizes
+	Size
 }
 
 // BeforeCreate will set a UUID to key, if is not set
@@ -94,11 +94,11 @@ type ColorByReferenceCreate struct {
 }
 
 type FabricByReferenceCreate struct {
-	Fabric uint `json:"fabric" validate:"gt=0"`
-	Sizes
+	Fabric uint `json:"fabric" validate:"required,gt=0"`
+	Size
 }
 
 type ResourceByReferenceCreate struct {
-	Resource uint `json:"resource" validate:"gt=0"`
-	Sizes
+	Resource uint `json:"resource" validate:"required,gt=0"`
+	Size
 }

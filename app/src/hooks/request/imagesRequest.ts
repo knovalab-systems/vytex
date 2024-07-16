@@ -5,4 +5,4 @@ export async function uploadImagesRequest(formData: FormData) {
 	return await client.request(uploadImages(formData));
 }
 
-export type imageResponse = Awaited<ReturnType<typeof uploadImagesRequest>>;
+export type ImageResponse = Awaited<ReturnType<typeof uploadImagesRequest>>;

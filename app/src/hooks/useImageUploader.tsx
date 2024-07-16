@@ -3,14 +3,14 @@ import toast from 'solid-toast';
 import { CLOUDINARY_PATH, CLOUDINARY_UPLOAD } from '~/constants/paths';
 import { CLOUD_API_KEY, CLOUD_NAME, CLOUD_PRESET } from '~/envs/cloudinary';
 import { uploadImagesRequest } from './request/imagesRequest';
-import type { imageResponse } from './request/imagesRequest';
+import type { ImageResponse } from './request/imagesRequest';
 
 const url = `${CLOUDINARY_PATH}${CLOUD_NAME}${CLOUDINARY_UPLOAD}`;
 
 const useImageUploader = () => {
 	const [uploading, setUploading] = createSignal(false);
 	const [error, setError] = createSignal(false);
-	const [uploadedFiles, setUploadedFiles] = createSignal<imageResponse | null>(null);
+	const [uploadedFiles, setUploadedFiles] = createSignal<ImageResponse | null>(null);
 	const [uploadedCloudinaryUrls, setUploadedCloudinaryUrls] = createSignal<string[]>([]);
 
 	const isFileSizeValid = (file: File) => {

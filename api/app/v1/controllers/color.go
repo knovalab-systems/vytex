@@ -83,6 +83,7 @@ func (m *ColorController) AggregateColors(c echo.Context) error {
 // @Param		 models.ColorCreateBody body string true "Color create values"
 // @Success      201 {object} models.Color
 // @Failure      400
+// @Failure      409
 // @Failure      500
 // @Router       /colors [post]
 func (m *ColorController) CreateColor(c echo.Context) error {

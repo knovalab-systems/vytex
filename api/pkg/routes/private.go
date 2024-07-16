@@ -16,7 +16,6 @@ func PrivateRoutes(e *echo.Echo) {
 	privateImageRoute(route)
 	privateUserRoutes(route)
 	privateColorRoutes(route)
-	privateFabricRoutes(route)
 	privateResourceRoutes(route)
 	privateSupplierRoutes(route)
 	privateReferenceRoutes(route)

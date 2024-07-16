@@ -223,7 +223,7 @@ func TestCreateColor(t *testing.T) {
 
 		// mocks
 		colorMock := mocks.ColorMock{}
-		colorMock.On("CreateColor", &models.ColorCreateBody{Name: name, Code: code, Hex: hex}).Return(&models.Color{}, problems.CodeColorExists())
+		colorMock.On("CreateColor", &models.ColorCreateBody{Name: name, Code: code, Hex: hex}).Return(&models.Color{}, problems.ColorExists())
 		colorController := ColorController{ColorRepository: &colorMock}
 
 		// test

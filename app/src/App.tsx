@@ -3,6 +3,7 @@ import { QueryClientProvider } from '@tanstack/solid-query';
 import { Toaster } from 'solid-toast';
 import './App.css';
 import { ColorsProvider } from './hooks/useColors';
+import { SuppliersProvider } from './hooks/useSuppliers';
 import { queryClient } from './lib/queryClient';
 import Routes from './routes/Routes';
 
@@ -11,7 +12,9 @@ function App() {
 		<Router
 			root={(props: RouteSectionProps) => (
 				<QueryClientProvider client={queryClient}>
-					<ColorsProvider>{props.children}</ColorsProvider>
+					<SuppliersProvider>
+						<ColorsProvider>{props.children}</ColorsProvider>
+					</SuppliersProvider>
 					<Toaster />
 				</QueryClientProvider>
 			)}

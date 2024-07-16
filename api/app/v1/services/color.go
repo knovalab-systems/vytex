@@ -72,17 +72,17 @@ func (m *ColorService) AggregationColors(q *models.AggregateQuery) ([]*models.Ag
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
-func (m *ColorService) CreateColor(u *models.ColorCreateBody) (*models.Color, error) {
+func (m *ColorService) CreateColor(b *models.ColorCreateBody) (*models.Color, error) {
 
-	err := checkCodeColor(u.Code)
+	err := checkColorExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
 
 	color := &models.Color{
-		Name: u.Name,
-		Hex:  u.Hex,
-		Code: u.Code,
+		Name: b.Name,
+		Hex:  b.Hex,
+		Code: b.Code,
 	}
 
 	err = query.Color.Create(color)
@@ -93,7 +93,7 @@ func (m *ColorService) CreateColor(u *models.ColorCreateBody) (*models.Color, er
 	return color, nil
 }
 
-func checkCodeColor(code string) error {
+func checkColorExists(code string) error {
 	table := query.Color
 
 	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
@@ -103,7 +103,7 @@ func checkCodeColor(code string) error {
 		}
 		return problems.ServerError()
 	}
-	return problems.CodeColorExists()
+	return problems.ColorExists()
 }
 
 func colorFields(s query.IColorDo, fields string) query.IColorDo {

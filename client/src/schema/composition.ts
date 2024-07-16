@@ -1,0 +1,24 @@
+import type { MergeCoreCollection } from '../index.js';
+import type { VytexColor } from './color.js';
+
+/**
+ * vytex_compositions type
+ * number fields (except id) range from 0 to 10000
+ */
+export type VytexComposition<Schema extends object> = MergeCoreCollection<
+	Schema,
+	'vytex_compositions',
+	{
+		id: number;
+		algod: number;
+		elast: number;
+		lino: number;
+		nylon: number;
+		polye: number;
+		rayon: number;
+		rayvis: number;
+		tencel: number;
+		visco: number;
+		hilom: number;
+	}
+>;
