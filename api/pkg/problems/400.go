@@ -93,6 +93,11 @@ func AggregateSuppliersBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get users suppliers", ""))
 }
 
+func CreateSupplierBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create supplier", ""))
+}
+
 // image
 func ImagesBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest

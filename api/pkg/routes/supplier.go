@@ -13,5 +13,6 @@ func privateSupplierRoutes(g *echo.Group) {
 
 	route.GET("", supplierController.ReadSuppliers)
 	route.GET("/aggregate", supplierController.AggregateSuppliers)
+	route.POST("", supplierController.CreateSupplier)
 
 }

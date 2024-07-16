@@ -74,3 +74,36 @@ func (m *SupplierController) AggregateSuppliers(c echo.Context) error {
 	// return data
 	return c.JSON(http.StatusOK, aggregate)
 }
+
+// Create supplier
+// @Summary      Create supplier
+// @Description  Create a new supplier
+// @Tags         Suppliers
+// @Produce      json
+// @Param		 models.SupplierCreateBody body string true "Supplier create values"
+// @Success      201 {object} models.Supplier
+// @Failure      400
+// @Failure      409
+// @Failure      500
+// @Router       /suppliers [post]
+func (m *SupplierController) CreateSupplier(c echo.Context) error {
+	u := new(models.SupplierCreateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.CreateSupplierBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CreateSupplierBadRequest()
+	}
+
+	// create
+	supplier, err := m.SupplierRepository.CreateSupplier(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, supplier)
+}

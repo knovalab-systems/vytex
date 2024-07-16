@@ -1,12 +1,14 @@
 package services
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
+	"gorm.io/gorm"
 )
 
 type SupplierService struct {
@@ -69,6 +71,46 @@ func (m *SupplierService) AggregationSuppliers(q *models.AggregateQuery) ([]*mod
 
 	return []*models.AggregateData{&aggregateElem}, nil
 
+}
+
+func (m *SupplierService) CreateSupplier(b *models.SupplierCreateBody) (*models.Supplier, error) {
+
+	err := checkSupplierExists(b.Code, b.Nit)
+	if err != nil {
+		return nil, err
+	}
+
+	supplier := &models.Supplier{
+		Name: b.Name,
+		Nit:  b.Nit,
+		Code: b.Code,
+	}
+
+	err = query.Supplier.Create(supplier)
+	if err != nil {
+		return nil, err
+	}
+
+	return supplier, nil
+}
+
+func checkSupplierExists(code string, nit string) error {
+	table := query.Supplier
+
+	supplier, err := table.Unscoped().Where(table.Code.Eq(code)).Or(table.Nit.Eq(nit)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		return problems.ServerError()
+	}
+	if supplier.Code == code && supplier.Nit == nit {
+		return problems.SupplierCodeNitExists()
+	}
+	if supplier.Code == code {
+		return problems.SupplierCodeExists()
+	}
+	return problems.SupplierNitExists()
 }
 
 func supplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
