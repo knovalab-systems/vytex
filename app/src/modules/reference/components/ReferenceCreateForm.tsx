@@ -18,7 +18,6 @@ import {
 } from '~/components/ui/Combobox';
 import { Input } from '~/components/ui/Input';
 import { LabelSpan } from '~/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { STATUS_CODE } from '~/constants/http';
 import { REFS_PATH } from '~/constants/paths';
@@ -184,52 +183,51 @@ function ReferenceCreateForm(props: {
 											{field => (
 												<div class='flex gap-4 w-full'>
 													<LabelSpan class='my-auto whitespace-nowrap'>Color de la referencia</LabelSpan>
-													<Select
+
+													<Combobox<Colors[0]>
 														class='whitespace-nowrap min-w-48'
-														value={field.value}
+														value={colorsRecord()[field.value || 0]}
 														onChange={value => {
-															setValue(form, `${fieldColors.name}.${iColor()}.color`, value);
+															setValue(form, `${fieldColors.name}.${iColor()}.color`, value ? value.id : 0);
 														}}
-														placeholder='Selecciona un color'
+														onInputChange={value => {
+															if (value === '') {
+																setValue(form, `${fieldColors.name}.${iColor()}.color`, 0);
+															}
+														}}
+														multiple={false}
+														optionLabel='name'
+														optionValue='id'
+														placeholder='Selecciona o escribe un color'
 														itemComponent={props => (
-															<SelectItem item={props.item}>
+															<ComboboxItem item={props.item}>
 																<div class='flex gap-2'>
 																	<div
 																		class='h-5 w-5 m-auto border'
-																		style={{ background: colorsRecord()[props.item.rawValue]?.hex || '' }}
+																		style={{ background: props.item.rawValue.hex || '' }}
 																	/>
-																	{colorsRecord()[props.item.rawValue]?.name}
+																	<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
 																</div>
-															</SelectItem>
+																<ComboboxItemIndicator />
+															</ComboboxItem>
 														)}
-														options={props.colors.reduce((p: Array<number>, v) => {
-															if (!v.deleted_at) {
-																p.push(v.id);
-															}
-															return p;
-														}, [])}
+														options={props.colors.filter(e => !e.deleted_at)}
 													>
-														<SelectTrigger title='Ver colores' aria-errormessage={field.error} aria-label='Colores'>
-															<SelectValue<string>>
-																{state => (
-																	<div class='flex gap-2'>
-																		<Show when={Boolean(colorsRecord()[state.selectedOption()])}>
-																			<div
-																				class='h-5 w-5 m-auto border'
-																				style={{ background: colorsRecord()[state.selectedOption()]?.hex || '' }}
-																			/>
-																		</Show>
-																		{colorsRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
-																	</div>
-																)}
-															</SelectValue>
-														</SelectTrigger>
+														<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
+															<Show when={Boolean(colorsRecord()[field.value || 0])}>
+																<div
+																	class='h-5 w-5 mr-2 m-auto border'
+																	style={{ background: colorsRecord()[field.value || 0]?.hex || '' }}
+																/>
+															</Show>
+															<ComboboxInput />
+															<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+														</ComboboxControl>
 														<Show when={Boolean(field.error)}>
 															<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 														</Show>
-														<SelectContent />
-													</Select>
-
+														<ComboboxContent />
+													</Combobox>
 													<Button
 														class='ml-auto whitespace-nowrap gap-1 bg-red-500 hover:bg-red-600'
 														disabled={fieldColors.items.length === 1}
@@ -288,7 +286,7 @@ function ReferenceCreateForm(props: {
 																							)}
 																							options={resources()}
 																						>
-																							<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
+																							<ComboboxControl aria-errormessage={field.error} aria-label='Resources'>
 																								<ComboboxInput />
 																								<ComboboxTrigger title='Ver insumos y telas' />
 																							</ComboboxControl>

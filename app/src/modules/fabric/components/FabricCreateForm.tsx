@@ -4,9 +4,18 @@ import type { CoreSchema, VytexComposition } from '@vytex/client';
 import { For, Show } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
+import {
+	Combobox,
+	ComboboxContent,
+	ComboboxControl,
+	ComboboxInput,
+	ComboboxItem,
+	ComboboxItemIndicator,
+	ComboboxItemLabel,
+	ComboboxTrigger,
+} from '~/components/ui/Combobox';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { FABRICS_PATH } from '~/constants/paths';
 import { type Colors, useColors } from '~/hooks/useColors';
@@ -132,87 +141,88 @@ function FabricCreateForm(props: {
 							{field => (
 								<div class='gap-4 w-full'>
 									<LabelSpan class='my-auto whitespace-nowrap'>Color de la tela</LabelSpan>
-									<Select
+
+									<Combobox<Colors[0]>
 										class='whitespace-nowrap min-w-48'
-										value={field.value}
+										value={colorsRecord()[field.value || 0]}
 										onChange={value => {
-											setValue(form, 'color', value);
+											setValue(form, 'color', value ? value.id : 0);
 										}}
-										placeholder='Selecciona un color'
-										itemComponent={props => (
-											<SelectItem item={props.item}>
-												<div class='flex gap-2'>
-													<div
-														class='h-5 w-5 m-auto border'
-														style={{ background: colorsRecord()[props.item.rawValue]?.hex || '' }}
-													/>
-													{colorsRecord()[props.item.rawValue]?.name}
-												</div>
-											</SelectItem>
-										)}
-										options={props.colors.reduce((p: Array<number>, v) => {
-											if (!v.deleted_at) {
-												p.push(v.id);
+										onInputChange={value => {
+											if (value === '') {
+												setValue(form, 'color', 0);
 											}
-											return p;
-										}, [])}
+										}}
+										multiple={false}
+										optionLabel='name'
+										optionValue='id'
+										placeholder='Selecciona o escribe un color'
+										itemComponent={props => (
+											<ComboboxItem item={props.item}>
+												<div class='flex gap-2'>
+													<div class='h-5 w-5 m-auto border' style={{ background: props.item.rawValue.hex || '' }} />
+													<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
+												</div>
+												<ComboboxItemIndicator />
+											</ComboboxItem>
+										)}
+										options={props.colors.filter(e => !e.deleted_at)}
 									>
-										<SelectTrigger title='Ver colores' aria-errormessage={field.error} aria-label='Colores'>
-											<SelectValue<string>>
-												{state => (
-													<div class='flex gap-2'>
-														<Show when={Boolean(colorsRecord()[state.selectedOption()])}>
-															<div
-																class='h-5 w-5 m-auto border'
-																style={{ background: colorsRecord()[state.selectedOption()]?.hex || '' }}
-															/>
-														</Show>
-														{colorsRecord()[state.selectedOption()]?.name || 'Selecciona un color'}
-													</div>
-												)}
-											</SelectValue>
-										</SelectTrigger>
+										<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
+											<Show when={Boolean(colorsRecord()[field.value || 0])}>
+												<div
+													class='h-5 w-5 mr-2 m-auto border'
+													style={{ background: colorsRecord()[field.value || 0]?.hex || '' }}
+												/>
+											</Show>
+											<ComboboxInput />
+											<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+										</ComboboxControl>
 										<Show when={Boolean(field.error)}>
 											<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 										</Show>
-										<SelectContent />
-									</Select>
+										<ComboboxContent />
+									</Combobox>
 								</div>
 							)}
 						</Field>
+
 						<Field name='supplier' type='number'>
 							{field => (
 								<div class='gap-4 w-full'>
 									<LabelSpan class='my-auto whitespace-nowrap'>Proveedor de la tela</LabelSpan>
-									<Select
+									<Combobox<Suppliers[0]>
 										class='whitespace-nowrap min-w-48'
-										value={field.value}
+										value={suppliersRecord()[field.value || 0]}
 										onChange={value => {
-											setValue(form, 'supplier', value);
+											setValue(form, 'supplier', value ? value.id : 0);
 										}}
-										placeholder='Selecciona un proveedor'
-										itemComponent={props => (
-											<SelectItem item={props.item}>{suppliersRecord()[props.item.rawValue]?.name}</SelectItem>
-										)}
-										options={props.suppliers.reduce((p: Array<number>, v) => {
-											if (!v.deleted_at) {
-												p.push(v.id);
+										onInputChange={value => {
+											if (value === '') {
+												setValue(form, 'supplier', 0);
 											}
-											return p;
-										}, [])}
+										}}
+										multiple={false}
+										optionLabel='name'
+										optionValue='id'
+										placeholder='Selecciona o escribe un proveedor'
+										itemComponent={props => (
+											<ComboboxItem item={props.item}>
+												<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
+												<ComboboxItemIndicator />
+											</ComboboxItem>
+										)}
+										options={props.suppliers}
 									>
-										<SelectTrigger title='Ver proveedores' aria-errormessage={field.error} aria-label='Proveedores'>
-											<SelectValue<string>>
-												{state => (
-													<div>{suppliersRecord()[state.selectedOption()]?.name || 'Selecciona un proveedor'}</div>
-												)}
-											</SelectValue>
-										</SelectTrigger>
+										<ComboboxControl aria-errormessage={field.error} aria-label='Proveedores'>
+											<ComboboxInput />
+											<ComboboxTrigger title='Ver proveedores' />
+										</ComboboxControl>
 										<Show when={Boolean(field.error)}>
 											<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 										</Show>
-										<SelectContent />
-									</Select>
+										<ComboboxContent />
+									</Combobox>
 								</div>
 							)}
 						</Field>

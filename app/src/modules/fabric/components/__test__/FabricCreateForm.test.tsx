@@ -1,10 +1,10 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import FabricCreateForm from '../FabricCreateForm';
 import toast from 'solid-toast';
-import * as requests from '../../requests/fabricCreate';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
+import * as requests from '../../requests/fabricCreate';
+import FabricCreateForm from '../FabricCreateForm';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({

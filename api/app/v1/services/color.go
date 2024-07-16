@@ -74,7 +74,7 @@ func (m *ColorService) AggregationColors(q *models.AggregateQuery) ([]*models.Ag
 
 func (m *ColorService) CreateColor(b *models.ColorCreateBody) (*models.Color, error) {
 
-	err := checkCodeExists(b.Code)
+	err := checkColorExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (m *ColorService) CreateColor(b *models.ColorCreateBody) (*models.Color, er
 	return color, nil
 }
 
-func checkCodeExists(code string) error {
+func checkColorExists(code string) error {
 	table := query.Color
 
 	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()

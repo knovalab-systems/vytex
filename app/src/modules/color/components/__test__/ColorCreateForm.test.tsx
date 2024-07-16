@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import ColorCreateForm from '../ColorCreateForm';
-import * as requests from '../../requests/colorCreate';
 import toast from 'solid-toast';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import * as requests from '../../requests/colorCreate';
+import ColorCreateForm from '../ColorCreateForm';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
