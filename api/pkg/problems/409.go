@@ -21,6 +21,11 @@ func ReferenceExists() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Reference already exists", ""))
 }
 
+func ResourceExists() *echo.HTTPError {
+	code := http.StatusConflict
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Resource already exists", ""))
+}
+
 func FabricExists() *echo.HTTPError {
 	code := http.StatusConflict
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Fabric already exists", ""))

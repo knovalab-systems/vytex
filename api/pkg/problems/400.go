@@ -76,6 +76,11 @@ func ResourcesBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get resources", ""))
 }
 
+func CreateResourceBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create resource", ""))
+}
+
 // reference
 func CreateReferenceBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
