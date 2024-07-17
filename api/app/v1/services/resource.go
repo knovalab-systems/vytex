@@ -1,6 +1,9 @@
 package services
 
 import (
+	"errors"
+	"github.com/knovalab-systems/vytex/pkg/repository"
+	"gorm.io/gorm"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -10,6 +13,7 @@ import (
 )
 
 type ResourceService struct {
+	repository.ResourceRepository
 }
 
 func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, error) {
@@ -78,6 +82,42 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 	}
 
 	return []*models.AggregateData{&aggregateElem}, nil
+}
+
+func (m *ResourceService) CreateResource(b *models.ResourceCreateBody) (*models.Resource, error) {
+	err := checkResourceExist(b.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	resource := &models.Resource{
+		Name:       b.Name,
+		SupplierID: b.Supplier,
+		ColorID:    b.Color,
+		Cost:       b.Cost,
+		Code:       b.Code,
+	}
+
+	err = query.Resource.Create(resource)
+	if err != nil {
+		return nil, err
+	}
+
+	return resource, nil
+}
+
+func checkResourceExist(code string) error {
+	table := query.Resource
+
+	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		return problems.ServerError()
+	}
+	return problems.ResourceExists()
 }
 
 func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {

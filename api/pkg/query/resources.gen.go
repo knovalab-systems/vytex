@@ -33,12 +33,19 @@ func newResource(db *gorm.DB, opts ...gen.DOOption) resource {
 	_resource.Cost = field.NewFloat64(tableName, "cost")
 	_resource.Code = field.NewString(tableName, "code")
 	_resource.ColorID = field.NewUint(tableName, "color_id")
+	_resource.SupplierID = field.NewUint(tableName, "supplier_id")
 	_resource.CreatedAt = field.NewTime(tableName, "created_at")
 	_resource.DeletedAt = field.NewField(tableName, "deleted_at")
 	_resource.Color = resourceBelongsToColor{
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("Color", "models.Color"),
+	}
+
+	_resource.Supplier = resourceBelongsToSupplier{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Supplier", "models.Supplier"),
 	}
 
 	_resource.fillFieldMap()
@@ -49,16 +56,19 @@ func newResource(db *gorm.DB, opts ...gen.DOOption) resource {
 type resource struct {
 	resourceDo
 
-	ALL       field.Asterisk
-	ID        field.Uint
-	Key       field.String
-	Name      field.String
-	Cost      field.Float64
-	Code      field.String
-	ColorID   field.Uint
-	CreatedAt field.Time
-	DeletedAt field.Field
-	Color     resourceBelongsToColor
+	ALL        field.Asterisk
+	ID         field.Uint
+	Key        field.String
+	Name       field.String
+	Cost       field.Float64
+	Code       field.String
+	ColorID    field.Uint
+	SupplierID field.Uint
+	CreatedAt  field.Time
+	DeletedAt  field.Field
+	Color      resourceBelongsToColor
+
+	Supplier resourceBelongsToSupplier
 
 	fieldMap map[string]field.Expr
 }
@@ -81,6 +91,7 @@ func (r *resource) updateTableName(table string) *resource {
 	r.Cost = field.NewFloat64(table, "cost")
 	r.Code = field.NewString(table, "code")
 	r.ColorID = field.NewUint(table, "color_id")
+	r.SupplierID = field.NewUint(table, "supplier_id")
 	r.CreatedAt = field.NewTime(table, "created_at")
 	r.DeletedAt = field.NewField(table, "deleted_at")
 
@@ -99,13 +110,14 @@ func (r *resource) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *resource) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 9)
+	r.fieldMap = make(map[string]field.Expr, 11)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["key"] = r.Key
 	r.fieldMap["name"] = r.Name
 	r.fieldMap["cost"] = r.Cost
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["color_id"] = r.ColorID
+	r.fieldMap["supplier_id"] = r.SupplierID
 	r.fieldMap["created_at"] = r.CreatedAt
 	r.fieldMap["deleted_at"] = r.DeletedAt
 
@@ -189,6 +201,77 @@ func (a resourceBelongsToColorTx) Clear() error {
 }
 
 func (a resourceBelongsToColorTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type resourceBelongsToSupplier struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a resourceBelongsToSupplier) Where(conds ...field.Expr) *resourceBelongsToSupplier {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a resourceBelongsToSupplier) WithContext(ctx context.Context) *resourceBelongsToSupplier {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a resourceBelongsToSupplier) Session(session *gorm.Session) *resourceBelongsToSupplier {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a resourceBelongsToSupplier) Model(m *models.Resource) *resourceBelongsToSupplierTx {
+	return &resourceBelongsToSupplierTx{a.db.Model(m).Association(a.Name())}
+}
+
+type resourceBelongsToSupplierTx struct{ tx *gorm.Association }
+
+func (a resourceBelongsToSupplierTx) Find() (result *models.Supplier, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a resourceBelongsToSupplierTx) Append(values ...*models.Supplier) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a resourceBelongsToSupplierTx) Replace(values ...*models.Supplier) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a resourceBelongsToSupplierTx) Delete(values ...*models.Supplier) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a resourceBelongsToSupplierTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a resourceBelongsToSupplierTx) Count() int64 {
 	return a.tx.Count()
 }
 

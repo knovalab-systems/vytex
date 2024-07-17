@@ -94,6 +94,11 @@ func newResourceByReference(db *gorm.DB, opts ...gen.DOOption) resourceByReferen
 		}{
 			RelationField: field.NewRelation("Resource.Color", "models.Color"),
 		},
+		Supplier: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Resource.Supplier", "models.Supplier"),
+		},
 	}
 
 	_resourceByReference.fillFieldMap()
@@ -301,6 +306,9 @@ type resourceByReferenceBelongsToResource struct {
 	field.RelationField
 
 	Color struct {
+		field.RelationField
+	}
+	Supplier struct {
 		field.RelationField
 	}
 }
