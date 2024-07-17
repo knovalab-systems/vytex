@@ -2,10 +2,12 @@ import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
+import { useSuppliers } from '~/hooks/useSuppliers';
 import type { GetResourcesType } from '../requests/resourceGet';
 
 function ResourceTable(props: { resources?: GetResourcesType }) {
 	const { colorsRecord: colorRecord } = useColors();
+	const { suppliersRecord: supplierRecord } = useSuppliers();
 
 	return (
 		<TableContainer>
@@ -47,7 +49,9 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								</TableCell>
 								<TableCell>{resource.code || 'Code'}</TableCell>
 								<TableCell>${resource.cost}</TableCell>
-								<TableCell>Proveedor</TableCell>
+								<TableCell>
+									{supplierRecord()[resource.supplier_id as number]?.name || 'Proveedor'}
+								</TableCell>
 								<TableCell>
 									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>

@@ -1,6 +1,9 @@
+import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
+import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
+import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -10,6 +13,7 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
+import { RESOURCES_CREATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
 import ResourceTable from '../components/ResourceTable';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourceGet';
@@ -27,6 +31,13 @@ function Resources() {
 
 	return (
 		<div class='h-full w-full flex flex-col'>
+			<div class='mb-2'>
+				<A href={RESOURCES_CREATE_PATH}>
+					<Button class='bg-purple-600 hover:bg-purple-700'>
+						Nuevo Insumo <AiOutlinePlus class='ml-2' size={22} />
+					</Button>
+				</A>
+			</div>
 			<Switch>
 				<Match when={resources.isLoading || countResources.isLoading || colorsArray.isLoading}>
 					<Loading label='Cargando insumos' />
