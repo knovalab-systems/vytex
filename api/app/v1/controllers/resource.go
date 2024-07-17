@@ -74,3 +74,36 @@ func (m *ResourceController) AggregateResources(c echo.Context) error {
 	// return data
 	return c.JSON(http.StatusOK, aggregate)
 }
+
+// CreateResource Create a resource
+// @Summary      Create a resource
+// @Description  Create a new resource
+// @Tags         Resources
+// @Produce      json
+// @Param        resource body models.ResourceCreateBody true "Resource create values"
+// @Success      201 {object} models.Resource
+// @Failure      400
+// @Failure      409
+// @Failure      500
+// @Router       /resources [post]
+func (m *ResourceController) CreateResource(c echo.Context) error {
+	u := new(models.ResourceCreateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.CreateResourceBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CreateResourceBadRequest()
+	}
+
+	// create
+	resource, err := m.ResourceRepository.CreateResource(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, resource)
+}

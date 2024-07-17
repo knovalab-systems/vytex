@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+	"gorm.io/gorm"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -80,6 +82,42 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
+func (m *ResourceService) CreateResource(b *models.ResourceCreateBody) (*models.Resource, error) {
+	err := checkResourceExist(b.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	resource := &models.Resource{
+		Name:       b.Name,
+		SupplierID: b.Supplier,
+		ColorID:    b.Color,
+		Cost:       b.Cost,
+		Code:       b.Code,
+	}
+
+	err = query.Resource.Create(resource)
+	if err != nil {
+		return nil, err
+	}
+
+	return resource, nil
+}
+
+func checkResourceExist(code string) error {
+	table := query.Resource
+
+	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		return problems.ServerError()
+	}
+	return problems.ResourceExists()
+}
+
 func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 	if fields != "" {
 		table := query.Resource
@@ -108,6 +146,10 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 				f = append(f, table.ColorID)
 			case "color":
 				s = s.Preload(table.Color)
+			case "supplier_id":
+				f = append(f, table.SupplierID)
+			case "supplier":
+				s = s.Preload(table.Supplier)
 			case "created_at":
 				f = append(f, table.CreatedAt)
 			case "deleted_at":

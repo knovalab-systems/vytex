@@ -1,7 +1,10 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
+	"github.com/knovalab-systems/vytex/pkg/problems"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -108,4 +111,183 @@ func TestAggregateResource(t *testing.T) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
+}
+
+func TestCreateResource(t *testing.T) {
+	t.Run("Fail binding", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": -1, "supplier_id": -1})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+
+		// controller
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.CreateResource(c)
+
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	missingFieldsTestCases := []models.ResourceCreateBody{{
+		Name:  "insumo",
+		Cost:  12000.0,
+		Code:  "1",
+		Color: 1,
+	}, {
+		Name:     "insumo",
+		Cost:     12000.0,
+		Code:     "1",
+		Supplier: 1,
+	}, {
+		Name:     "insumo",
+		Cost:     12000.0,
+		Color:    1,
+		Supplier: 1,
+	}, {
+		Name:     "insumo",
+		Code:     "1",
+		Color:    1,
+		Supplier: 1,
+	}, {
+		Cost:     12000.0,
+		Code:     "1",
+		Color:    1,
+		Supplier: 1,
+	}}
+
+	for i := range missingFieldsTestCases {
+		testCase := missingFieldsTestCases[i]
+
+		t.Run("Fail validate, missing field or zero value", func(t *testing.T) {
+			// context
+			body := new(bytes.Buffer)
+			json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code, "cost": testCase.Cost, "color_id": testCase.Color,
+				"supplier_id": testCase.Supplier})
+			req := httptest.NewRequest(http.MethodGet, "/", body)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			config.EchoValidator(e)
+			c := e.NewContext(req, rec)
+
+			// mocks
+			resourceMock := mocks.ResourceMock{}
+
+			// controller
+			resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+			// test
+			err := resourceController.CreateResource(c)
+			if assert.Error(t, err) {
+				assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+			}
+		})
+
+	}
+
+	gtZeroTestCases := []models.ResourceCreateBody{{
+		Cost:     12000.0,
+		Color:    0,
+		Supplier: 1,
+	}, {
+		Cost:     0.0,
+		Color:    1,
+		Supplier: 1,
+	}, {
+		Cost:     12000.0,
+		Color:    1,
+		Supplier: 0,
+	}}
+
+	for i := range gtZeroTestCases {
+		testCase := gtZeroTestCases[i]
+
+		t.Run("Fail validate, cost less than 0", func(t *testing.T) {
+			// context
+			body := new(bytes.Buffer)
+			json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": testCase.Cost, "color_id": testCase.Color, "supplier_id": testCase.Supplier})
+			req := httptest.NewRequest(http.MethodGet, "/", body)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			config.EchoValidator(e)
+			c := e.NewContext(req, rec)
+
+			// mocks
+			resourceMock := mocks.ResourceMock{}
+			resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+			// test
+			err := resourceController.CreateResource(c)
+			if assert.Error(t, err) {
+				assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+			}
+		})
+	}
+
+	t.Run("Fail create, resource code exists", func(t *testing.T) {
+		// context
+		name := "Boton"
+		code := "1"
+		cost := 23000.0
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("CreateResource", &models.ResourceCreateBody{Name: name, Code: code, Cost: cost, Color: 1,
+			Supplier: 1}).Return(&models.Resource{}, problems.ResourceExists())
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.CreateResource(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusConflict, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Create resource successfully", func(t *testing.T) {
+		// context
+		name := "Boton"
+		code := "1"
+		cost := 23000.0
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("CreateResource", &models.ResourceCreateBody{Name: name, Code: code, Cost: cost, Color: 1,
+			Supplier: 1}).Return(&models.Resource{}, nil)
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.CreateResource(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusCreated, rec.Code)
+		}
+	})
+
 }

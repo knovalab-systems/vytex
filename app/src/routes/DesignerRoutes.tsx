@@ -9,6 +9,7 @@ const ColorCreate = lazy(() => import('~/modules/color/pages/ColorCreate'));
 const Fabrics = lazy(() => import('~/modules/fabric/pages/Fabrics'));
 const FabricCreate = lazy(() => import('~/modules/fabric/pages/FabricCreate'));
 const Resources = lazy(() => import('~/modules/resource/pages/Resources'));
+const ResourceCreate = lazy(() => import('~/modules/resource/pages/ResourceCreate'));
 
 function DesignerRoutes() {
 	return (
@@ -27,6 +28,7 @@ function DesignerRoutes() {
 			</Route>
 			<Route path={PATHS.RESOURCES_PATH}>
 				<Route path={'/'} component={Resources} />
+				<Route path={PATHS.CREATE_PATH} component={ResourceCreate} />
 			</Route>
 		</Route>
 	);
