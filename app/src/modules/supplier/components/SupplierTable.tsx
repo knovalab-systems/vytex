@@ -12,6 +12,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 						<TableHead>ID</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>NIT</TableHead>
+						<TableHead>Código</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
 					</TableRow>
@@ -28,6 +29,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 								<TableCell>{supplier.id}</TableCell>
 								<TableCell>{supplier.name}</TableCell>
 								<TableCell>{supplier.nit}</TableCell>
+								<TableCell>{supplier.code}</TableCell>
 								<TableCell>
 									<StatusLabel status={!supplier.deleted_at} />
 								</TableCell>

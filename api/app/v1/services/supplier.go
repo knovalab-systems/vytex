@@ -125,6 +125,8 @@ func supplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
 				f = append(f, table.ID)
 			case "name":
 				f = append(f, table.Name)
+			case "code":
+				f = append(f, table.Code)
 			case "nit":
 				f = append(f, table.Nit)
 			case "created_at":

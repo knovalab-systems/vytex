@@ -41,7 +41,7 @@ describe('ColorCreateForm', () => {
 		fireEvent.input(hexField, { target: { value: '000000' } });
 
 		expect(nameField).toHaveValue('Negro');
-		expect(codeField).toHaveValue('1111');
+		expect(codeField).toHaveValue(1111);
 		expect(hexField).toHaveValue('000000');
 	});
 

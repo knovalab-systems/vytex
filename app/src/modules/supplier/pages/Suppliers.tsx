@@ -12,6 +12,10 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import SupplierTable from '../components/SupplierTable';
 import { countSuppliersQuery, getSuppliersQuery } from '../requests/supplierGet';
+import { SUPPLIERS_CREATE_PATH } from '~/constants/paths';
+import { A } from '@solidjs/router';
+import { Button } from '~/components/ui/Button';
+import { AiOutlinePlus } from 'solid-icons/ai';
 
 function Suppliers() {
 	const [page, setPage] = createSignal(1);
@@ -25,6 +29,13 @@ function Suppliers() {
 
 	return (
 		<div class='h-full w-full flex flex-col'>
+			<div class='mb-2'>
+				<A href={SUPPLIERS_CREATE_PATH}>
+					<Button class='bg-practice_date h-12 hover:bg-blue-800'>
+						Nuevo Proveedor <AiOutlinePlus class='ml-2' size={22} />
+					</Button>
+				</A>
+			</div>
 			<Switch>
 				<Match when={suppliers.isLoading || countSuppliers.isLoading}>
 					<Loading label='Cargando proveedores' />
