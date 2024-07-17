@@ -148,6 +148,10 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 				f = append(f, table.ColorID)
 			case "color":
 				s = s.Preload(table.Color)
+			case "supplier_id":
+				f = append(f, table.SupplierID)
+			case "supplier":
+				s = s.Preload(table.Supplier)
 			case "created_at":
 				f = append(f, table.CreatedAt)
 			case "deleted_at":
