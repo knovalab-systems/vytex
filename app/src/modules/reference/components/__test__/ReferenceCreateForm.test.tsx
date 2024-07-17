@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/referenceCreate';
 import ReferenceCreateForm from '../ReferenceCreateForm';
@@ -330,4 +329,156 @@ describe('ReferenceCreateForm', () => {
 			expect(toastMock).toHaveBeenCalled();
 		});
 	});
+
+	it('calls cancel successfully', async () => {
+		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
+		const cancelButton = screen.getAllByText('Cancelar');
+		fireEvent.click(cancelButton[0]);
+		expect(mockNavigate).toHaveBeenCalled();
+	});
+
+	const requestsErrors = [
+		{
+			title: 'calls submit with code exists',
+			textExp: 'El código de la referencia "1232" no está disponible. Intente con otro.',
+			error: {
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with server error',
+			textExp: 'Error al crear referencia.',
+			error: {
+				response: {
+					status: 400,
+				},
+			},
+		},
+	];
+
+	for (const err of requestsErrors) {
+		it(err.title, async () => {
+			render(() => (
+				<ReferenceCreateForm
+					colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
+					fabrics={[{ id: 1, name: 'Tela 1' }]}
+					resources={[{ id: 1, name: 'Insumo 1' }]}
+				/>
+			));
+			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+			const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockRejectedValue(err.error);
+
+			const referenceInput = screen.getByPlaceholderText('3453');
+			fireEvent.input(referenceInput, { target: { value: 1232 } });
+
+			// color
+
+			const colorSelect = screen.getByTitle('Ver colores');
+
+			fireEvent(
+				colorSelect,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const listboxColor = screen.getByRole('listbox');
+			const colors = within(listboxColor).getAllByRole('option');
+
+			fireEvent(
+				colors[0],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(colors[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			// resources
+
+			const addResourceButton = screen.getByText('Nuevo insumo/tela');
+			fireEvent.click(addResourceButton);
+
+			const resourcesSelect = screen.getAllByTitle('Ver insumos y telas');
+
+			// resource
+
+			fireEvent(
+				resourcesSelect[0],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+
+			await Promise.resolve();
+
+			fireEvent(resourcesSelect[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const listboxResources = screen.getByRole('listbox');
+			const resources = within(listboxResources).getAllByRole('option');
+
+			fireEvent(
+				resources[0],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(resources[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			// resources 2
+
+			fireEvent(
+				resourcesSelect[1],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(resourcesSelect[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const listboxResources2 = screen.getByRole('listbox');
+			const resources2 = within(listboxResources2).getAllByRole('option');
+
+			expect(resources2.length).toBe(2);
+
+			fireEvent(
+				resources2[1],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(resources2[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const submitButton = screen.getAllByText('Crear');
+			fireEvent.click(submitButton[0]);
+
+			await waitFor(() => {
+				expect(requestMock).toHaveBeenCalled();
+				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+			});
+		});
+	}
 });

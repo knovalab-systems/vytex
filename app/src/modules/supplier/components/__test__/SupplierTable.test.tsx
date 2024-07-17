@@ -1,10 +1,9 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { GetSuppliersType } from '../../requests/supplierGet';
 import SupplierTable from '../SupplierTable';
 
-describe('Color Table', () => {
+describe('SupplierTable', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
@@ -34,10 +33,10 @@ describe('Color Table', () => {
 			},
 		];
 		render(() => <SupplierTable suppliers={suppliers} />);
-		const colorId = screen.getByText('123');
-		const colorName = screen.getByText('blanco');
+		const supplierId = screen.getByText('123');
+		const supplierName = screen.getByText('blanco');
 
-		expect(colorId).toBeInTheDocument();
-		expect(colorName).toBeInTheDocument();
+		expect(supplierId).toBeInTheDocument();
+		expect(supplierName).toBeInTheDocument();
 	});
 });

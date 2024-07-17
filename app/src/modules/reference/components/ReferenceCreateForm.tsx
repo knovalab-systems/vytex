@@ -129,7 +129,7 @@ function ReferenceCreateForm(props: {
 				if (error.response.status === STATUS_CODE.conflict) {
 					toast.error(`El código de la referencia "${data.reference}" no está disponible. Intente con otro.`);
 				} else {
-					toast.error('Error al crear referencia');
+					toast.error('Error al crear referencia.');
 				}
 			});
 	};

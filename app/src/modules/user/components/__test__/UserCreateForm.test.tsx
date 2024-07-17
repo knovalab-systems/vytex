@@ -93,4 +93,11 @@ describe('UserCreateForm', () => {
 		const errorPasswordField = await screen.findByText('La contraseña debe ser de mínimo 8 caracteres.');
 		expect(errorPasswordField).toBeInTheDocument();
 	});
+
+	it('calls cancel successfully', async () => {
+		render(() => <UserCreateForm />);
+		const cancelButton = screen.getByText('Cancelar');
+		fireEvent.click(cancelButton);
+		expect(mockNavigate).toHaveBeenCalled();
+	});
 });

@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as requests from '../../requests/colorCreate';
 import ColorCreateForm from '../ColorCreateForm';
 
@@ -86,9 +85,9 @@ describe('ColorCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		render(() => <ColorCreateForm />);
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({});
+		render(() => <ColorCreateForm />);
 
 		const nameField = screen.getByPlaceholderText('Blanco');
 		const codeField = screen.getByPlaceholderText('2322');
@@ -104,5 +103,56 @@ describe('ColorCreateForm', () => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
 		});
+	});
+
+	const requestsErrors = [
+		{
+			title: 'calls submit with code exists',
+			textExp: 'El código "1111" no está disponible. Intente con otro.',
+			error: {
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with server error',
+			textExp: 'Error al crear color.',
+			error: {
+				response: {
+					status: 400,
+				},
+			},
+		},
+	];
+
+	for (const err of requestsErrors) {
+		it(err.title, async () => {
+			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+			const requestMock = vi.spyOn(requests, 'createColorRequest').mockRejectedValue(err.error);
+			render(() => <ColorCreateForm />);
+
+			const nameField = screen.getByPlaceholderText('Blanco');
+			const codeField = screen.getByPlaceholderText('2322');
+			const hexField = screen.getByPlaceholderText('FFFFFF');
+			const submitButton = screen.getByText('Crear');
+
+			fireEvent.input(nameField, { target: { value: 'Negro' } });
+			fireEvent.input(codeField, { target: { value: '1111' } });
+			fireEvent.input(hexField, { target: { value: '000000' } });
+			fireEvent.click(submitButton);
+
+			await waitFor(() => {
+				expect(requestMock).toHaveBeenCalled();
+				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+			});
+		});
+	}
+
+	it('calls cancel successfully', async () => {
+		render(() => <ColorCreateForm />);
+		const cancelButton = screen.getByText('Cancelar');
+		fireEvent.click(cancelButton);
+		expect(mockNavigate).toHaveBeenCalled();
 	});
 });

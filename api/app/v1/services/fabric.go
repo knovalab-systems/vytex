@@ -128,6 +128,11 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				continue
 			}
 
+			if strings.HasPrefix(v, "supplier.") {
+				s = s.Preload(table.Color)
+				continue
+			}
+
 			switch v {
 			case "id":
 				f = append(f, table.ID)
@@ -141,6 +146,8 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				f = append(f, table.Code)
 			case "color_id":
 				f = append(f, table.ColorID)
+			case "supplier_id":
+				f = append(f, table.SupplierID)
 			case "color":
 				s = s.Preload(table.Color)
 			case "created_at":

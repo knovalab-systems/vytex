@@ -28,7 +28,7 @@ function ColorCreateForm() {
 				if (error.response.status === STATUS_CODE.conflict) {
 					toast.error(`El código "${data.code}" no está disponible. Intente con otro.`);
 				} else {
-					toast.error('Error al crear color');
+					toast.error('Error al crear color.');
 				}
 			});
 	};

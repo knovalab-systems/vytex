@@ -38,7 +38,7 @@ function SupplierCreateForm() {
 							break;
 					}
 				} else {
-					toast.error('Error al crear color');
+					toast.error('Error al crear proveedor.');
 				}
 			});
 	};

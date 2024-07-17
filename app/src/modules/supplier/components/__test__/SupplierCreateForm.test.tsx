@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as requests from '../../requests/supplierCreate';
 import SupplierCreateForm from '../SupplierCreateForm';
 
@@ -91,5 +90,83 @@ describe('SupplierCreateForm', () => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
 		});
+	});
+
+	const requestsErrors = [
+		{
+			title: 'calls submit with code exists',
+			textExp: 'El código "1111" no está disponible. Intente con otro.',
+			error: {
+				errors: {
+					detail: 'Supplier code already exists',
+				},
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with nit exists',
+			textExp: 'El NIT "222222222" no está disponible. Intente con otro.',
+			error: {
+				errors: {
+					detail: 'Supplier NIT already exists',
+				},
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with code n nit exists',
+			textExp: 'El NIT "222222222" y el código "1111" no están disponibles. Intente con otros.',
+			error: {
+				errors: {
+					detail: 'Any other',
+				},
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with server error',
+			textExp: 'Error al crear proveedor.',
+			error: {
+				response: {
+					status: 400,
+				},
+			},
+		},
+	];
+
+	for (const err of requestsErrors) {
+		it(err.title, async () => {
+			render(() => <SupplierCreateForm />);
+			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+			const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockRejectedValue(err.error);
+
+			const nameField = screen.getByPlaceholderText('Proveedor');
+			const codeField = screen.getByPlaceholderText('2322');
+			const nitField = screen.getByPlaceholderText('111111111');
+			const submitButton = screen.getByText('Crear');
+
+			fireEvent.input(nameField, { target: { value: 'Negro' } });
+			fireEvent.input(codeField, { target: { value: '1111' } });
+			fireEvent.input(nitField, { target: { value: '222222222' } });
+			fireEvent.click(submitButton);
+
+			await waitFor(() => {
+				expect(requestMock).toHaveBeenCalled();
+				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+			});
+		});
+	}
+
+	it('calls cancel successfully', async () => {
+		render(() => <SupplierCreateForm />);
+		const cancelButton = screen.getByText('Cancelar');
+		fireEvent.click(cancelButton);
+		expect(mockNavigate).toHaveBeenCalled();
 	});
 });
