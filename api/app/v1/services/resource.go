@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"github.com/knovalab-systems/vytex/pkg/repository"
 	"gorm.io/gorm"
 	"strings"
 
@@ -13,7 +12,6 @@ import (
 )
 
 type ResourceService struct {
-	repository.ResourceRepository
 }
 
 func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, error) {
