@@ -23,12 +23,14 @@ describe('Color Table', () => {
 				nit: null,
 				name: null,
 				deleted_at: null,
+				code: null,
 			},
 			{
 				name: 'blanco',
 				id: 0,
 				nit: null,
 				deleted_at: null,
+				code: null,
 			},
 		];
 		render(() => <SupplierTable suppliers={suppliers} />);

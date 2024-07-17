@@ -1,13 +1,13 @@
+import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
-import { SupplierCreateSchema, type SupplierCreateType } from '../schemas/supplierCreate';
-import { createForm, type SubmitHandler, valiForm } from '@modular-forms/solid';
-import { SUPPLIERS_PATH } from '~/constants/paths';
-import { Button } from '~/components/ui/Button';
-import { Label } from '~/components/ui/Label';
-import { Input } from '~/components/ui/Input';
-import { createSupplierRequest } from '../requests/supplierCreate';
-import { STATUS_CODE } from '~/constants/http';
 import toast from 'solid-toast';
+import { Button } from '~/components/ui/Button';
+import { Input } from '~/components/ui/Input';
+import { Label } from '~/components/ui/Label';
+import { STATUS_CODE } from '~/constants/http';
+import { SUPPLIERS_PATH } from '~/constants/paths';
+import { createSupplierRequest } from '../requests/supplierCreate';
+import { SupplierCreateSchema, type SupplierCreateType } from '../schemas/supplierCreate';
 
 function SupplierCreateForm() {
 	const navigate = useNavigate();

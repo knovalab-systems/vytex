@@ -1,6 +1,9 @@
+import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
+import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
+import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -10,12 +13,9 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
+import { SUPPLIERS_CREATE_PATH } from '~/constants/paths';
 import SupplierTable from '../components/SupplierTable';
 import { countSuppliersQuery, getSuppliersQuery } from '../requests/supplierGet';
-import { SUPPLIERS_CREATE_PATH } from '~/constants/paths';
-import { A } from '@solidjs/router';
-import { Button } from '~/components/ui/Button';
-import { AiOutlinePlus } from 'solid-icons/ai';
 
 function Suppliers() {
 	const [page, setPage] = createSignal(1);

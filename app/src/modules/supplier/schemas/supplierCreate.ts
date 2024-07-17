@@ -1,4 +1,4 @@
-import { check, type InferInput, minLength, minValue, number, object, pipe, string } from 'valibot';
+import { type InferInput, check, minLength, minValue, number, object, pipe, string } from 'valibot';
 
 export const SupplierCreateSchema = object({
 	name: pipe(string('Ingresa el nombre.'), minLength(1, 'Ingresa el nombre.')),
