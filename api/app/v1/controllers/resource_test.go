@@ -139,42 +139,31 @@ func TestCreateResource(t *testing.T) {
 		}
 	})
 
-	missingFieldsTestCases := []models.FabricCreateBody{{
-		Name:        "tela",
-		Cost:        12000.0,
-		Code:        "1",
-		Color:       1,
-		Composition: models.Composition{Algod: 10000},
+	missingFieldsTestCases := []models.ResourceCreateBody{{
+		Name:  "insumo",
+		Cost:  12000.0,
+		Code:  "1",
+		Color: 1,
 	}, {
-		Name:        "tela",
-		Cost:        12000.0,
-		Code:        "1",
-		Supplier:    1,
-		Composition: models.Composition{Algod: 10000},
+		Name:     "insumo",
+		Cost:     12000.0,
+		Code:     "1",
+		Supplier: 1,
 	}, {
-		Name:        "tela",
-		Cost:        12000.0,
-		Color:       1,
-		Supplier:    1,
-		Composition: models.Composition{Algod: 10000},
+		Name:     "insumo",
+		Cost:     12000.0,
+		Color:    1,
+		Supplier: 1,
 	}, {
-		Name:        "tela",
-		Code:        "1",
-		Color:       1,
-		Supplier:    1,
-		Composition: models.Composition{Algod: 10000},
-	}, {
-		Cost:        12000.0,
-		Code:        "1",
-		Color:       1,
-		Supplier:    1,
-		Composition: models.Composition{Algod: 10000},
+		Name:     "insumo",
+		Code:     "1",
+		Color:    1,
+		Supplier: 1,
 	}, {
 		Cost:     12000.0,
 		Code:     "1",
 		Color:    1,
 		Supplier: 1,
-		Name:     "tela",
 	}}
 
 	for i := range missingFieldsTestCases {
@@ -262,10 +251,10 @@ func TestCreateResource(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		fabricMock := mocks.ResourceMock{}
-		fabricMock.On("CreateResource", &models.ResourceCreateBody{Name: name, Code: code, Cost: cost, Color: 1,
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("CreateResource", &models.ResourceCreateBody{Name: name, Code: code, Cost: cost, Color: 1,
 			Supplier: 1}).Return(&models.Resource{}, problems.ResourceExists())
-		resourceController := ResourceController{ResourceRepository: &fabricMock}
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
 
 		// test
 		err := resourceController.CreateResource(c)
@@ -274,7 +263,7 @@ func TestCreateResource(t *testing.T) {
 		}
 	})
 
-	t.Run("Create fabric successfully", func(t *testing.T) {
+	t.Run("Create resource successfully", func(t *testing.T) {
 		// context
 		name := "Boton"
 		code := "1"
