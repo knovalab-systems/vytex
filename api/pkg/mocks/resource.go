@@ -18,3 +18,8 @@ func (m *ResourceMock) AggregationResources(req *models.AggregateQuery) ([]*mode
 	args := m.Called(req)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
 }
+
+func (m *ResourceMock) CreateResource(u *models.ResourceCreateBody) (*models.Resource, error) {
+	args := m.Called(u)
+	return args.Get(0).(*models.Resource), args.Error(1)
+}
