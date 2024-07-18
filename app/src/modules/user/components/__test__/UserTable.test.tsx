@@ -1,6 +1,5 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { GetUsersType } from '../../requests/userGet';
 import UserTable from '../UserTable';
 

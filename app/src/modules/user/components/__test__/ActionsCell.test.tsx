@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import type { JSXElement } from 'solid-js';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ActionsCell from '../ActionsCell';
 
 const mockA = vi.fn();

@@ -73,7 +73,7 @@ function FabricCreateForm(props: {
 				if (error.response.status === STATUS_CODE.conflict) {
 					toast.error(`El código de la tela "${data.code}" no está disponible. Intente con otro.`);
 				} else {
-					toast.error('Error al crear tela');
+					toast.error('Error al crear tela.');
 				}
 			});
 	};
@@ -169,12 +169,10 @@ function FabricCreateForm(props: {
 										options={props.colors.filter(e => !e.deleted_at)}
 									>
 										<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
-											<Show when={Boolean(colorsRecord()[field.value || 0])}>
-												<div
-													class='h-5 w-5 mr-2 m-auto border'
-													style={{ background: colorsRecord()[field.value || 0]?.hex || '' }}
-												/>
-											</Show>
+											<div
+												class='h-5 w-5 mr-2 m-auto border'
+												style={{ background: colorsRecord()[field.value || 0]?.hex || 'transparent' }}
+											/>
 											<ComboboxInput />
 											<ComboboxTrigger title='Ver colores' aria-label='Colores' />
 										</ComboboxControl>

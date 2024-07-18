@@ -1,102 +1,89 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import * as requests from '../../requests/colorCreate';
-import ColorCreateForm from '../ColorCreateForm';
+import * as requests from '../../requests/supplierCreate';
+import SupplierCreateForm from '../SupplierCreateForm';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
-describe('ColorCreateForm', () => {
+describe('SupplierCreateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly', () => {
-		render(() => <ColorCreateForm />);
-		const nameField = screen.getByPlaceholderText('Blanco');
+		render(() => <SupplierCreateForm />);
+		const nameField = screen.getByPlaceholderText('Proveedor');
 		const codeField = screen.getByPlaceholderText('2322');
-		const hexField = screen.getByPlaceholderText('FFFFFF');
+		const nitField = screen.getByPlaceholderText('111111111');
 		const submitButton = screen.getByText('Crear');
 		const cancelButton = screen.getByText('Cancelar');
 
 		expect(nameField).toBeInTheDocument();
 		expect(codeField).toBeInTheDocument();
-		expect(hexField).toBeInTheDocument();
+		expect(nitField).toBeInTheDocument();
 		expect(submitButton).toBeInTheDocument();
 		expect(cancelButton).toBeInTheDocument();
 	});
 
 	it('check change inputs values ', async () => {
-		render(() => <ColorCreateForm />);
-		const nameField = screen.getByPlaceholderText('Blanco');
+		render(() => <SupplierCreateForm />);
+		const nameField = screen.getByPlaceholderText('Proveedor');
 		const codeField = screen.getByPlaceholderText('2322');
-		const hexField = screen.getByPlaceholderText('FFFFFF');
+		const nitField = screen.getByPlaceholderText('111111111');
 
 		fireEvent.input(nameField, { target: { value: 'Negro' } });
 		fireEvent.input(codeField, { target: { value: '1111' } });
-		fireEvent.input(hexField, { target: { value: '000000' } });
+		fireEvent.input(nitField, { target: { value: '222222222' } });
 
 		expect(nameField).toHaveValue('Negro');
 		expect(codeField).toHaveValue(1111);
-		expect(hexField).toHaveValue('000000');
+		expect(nitField).toHaveValue(222222222);
 	});
 
 	it('show empty fields error message when submit form', async () => {
-		render(() => <ColorCreateForm />);
+		render(() => <SupplierCreateForm />);
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
 
 		const nameError = await screen.findByText('Ingresa el nombre.');
 		const codeError = await screen.findByText('Ingresa el código.');
-		const hexError = await screen.findByText('Ingresa un valor válido de hexadecimal.');
+		const nitField = await screen.findByText('Ingresa el NIT.');
 
 		expect(nameError).toBeInTheDocument();
 		expect(codeError).toBeInTheDocument();
-		expect(hexError).toBeInTheDocument();
+		expect(nitField).toBeInTheDocument();
 	});
 
-	it('show bad length error for hex color', async () => {
-		render(() => <ColorCreateForm />);
-		const hexField = screen.getByPlaceholderText('FFFFFF');
+	it('show bad length error for nit', async () => {
+		render(() => <SupplierCreateForm />);
+		const nitField = screen.getByPlaceholderText('111111111');
 		const submitButton = screen.getByText('Crear');
 
-		fireEvent.input(hexField, { target: { value: '0000000' } });
+		fireEvent.input(nitField, { target: { value: '22222222' } });
 		fireEvent.click(submitButton);
 
-		const hexError = await screen.findByText('Ingresa solo 3 o 6 valores.');
-
-		expect(hexError).toBeInTheDocument();
-	});
-
-	it('show bad format error for hex color', async () => {
-		render(() => <ColorCreateForm />);
-		const hexField = screen.getByPlaceholderText('FFFFFF');
-		const submitButton = screen.getByText('Crear');
-
-		fireEvent.input(hexField, { target: { value: '000000)' } });
-		fireEvent.click(submitButton);
-
-		const hexError = await screen.findByText('Ingresa un valor válido de hexadecimal.');
+		const hexError = await screen.findByText('El NIT debe ser de 9 dígitos');
 
 		expect(hexError).toBeInTheDocument();
 	});
 
 	it('calls submit succesfully', async () => {
+		render(() => <SupplierCreateForm />);
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({});
-		render(() => <ColorCreateForm />);
+		const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockResolvedValue({});
 
-		const nameField = screen.getByPlaceholderText('Blanco');
+		const nameField = screen.getByPlaceholderText('Proveedor');
 		const codeField = screen.getByPlaceholderText('2322');
-		const hexField = screen.getByPlaceholderText('FFFFFF');
+		const nitField = screen.getByPlaceholderText('111111111');
 		const submitButton = screen.getByText('Crear');
 
 		fireEvent.input(nameField, { target: { value: 'Negro' } });
 		fireEvent.input(codeField, { target: { value: '1111' } });
-		fireEvent.input(hexField, { target: { value: '000000' } });
+		fireEvent.input(nitField, { target: { value: '222222222' } });
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
@@ -110,6 +97,33 @@ describe('ColorCreateForm', () => {
 			title: 'calls submit with code exists',
 			textExp: 'El código "1111" no está disponible. Intente con otro.',
 			error: {
+				errors: {
+					detail: 'Supplier code already exists',
+				},
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with nit exists',
+			textExp: 'El NIT "222222222" no está disponible. Intente con otro.',
+			error: {
+				errors: {
+					detail: 'Supplier NIT already exists',
+				},
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with code n nit exists',
+			textExp: 'El NIT "222222222" y el código "1111" no están disponibles. Intente con otros.',
+			error: {
+				errors: {
+					detail: 'Any other',
+				},
 				response: {
 					status: 409,
 				},
@@ -117,7 +131,7 @@ describe('ColorCreateForm', () => {
 		},
 		{
 			title: 'calls submit with server error',
-			textExp: 'Error al crear color.',
+			textExp: 'Error al crear proveedor.',
 			error: {
 				response: {
 					status: 400,
@@ -128,18 +142,18 @@ describe('ColorCreateForm', () => {
 
 	for (const err of requestsErrors) {
 		it(err.title, async () => {
+			render(() => <SupplierCreateForm />);
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
-			const requestMock = vi.spyOn(requests, 'createColorRequest').mockRejectedValue(err.error);
-			render(() => <ColorCreateForm />);
+			const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockRejectedValue(err.error);
 
-			const nameField = screen.getByPlaceholderText('Blanco');
+			const nameField = screen.getByPlaceholderText('Proveedor');
 			const codeField = screen.getByPlaceholderText('2322');
-			const hexField = screen.getByPlaceholderText('FFFFFF');
+			const nitField = screen.getByPlaceholderText('111111111');
 			const submitButton = screen.getByText('Crear');
 
 			fireEvent.input(nameField, { target: { value: 'Negro' } });
 			fireEvent.input(codeField, { target: { value: '1111' } });
-			fireEvent.input(hexField, { target: { value: '000000' } });
+			fireEvent.input(nitField, { target: { value: '222222222' } });
 			fireEvent.click(submitButton);
 
 			await waitFor(() => {
@@ -150,7 +164,7 @@ describe('ColorCreateForm', () => {
 	}
 
 	it('calls cancel successfully', async () => {
-		render(() => <ColorCreateForm />);
+		render(() => <SupplierCreateForm />);
 		const cancelButton = screen.getByText('Cancelar');
 		fireEvent.click(cancelButton);
 		expect(mockNavigate).toHaveBeenCalled();

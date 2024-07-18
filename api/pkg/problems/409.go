@@ -18,7 +18,7 @@ func ColorExists() *echo.HTTPError {
 
 func ReferenceExists() *echo.HTTPError {
 	code := http.StatusConflict
-	return echo.NewHTTPError(code, NewPD(code, "", "", "Reference already exists", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Reference code already exists", ""))
 }
 
 func ResourceExists() *echo.HTTPError {
@@ -28,5 +28,20 @@ func ResourceExists() *echo.HTTPError {
 
 func FabricExists() *echo.HTTPError {
 	code := http.StatusConflict
-	return echo.NewHTTPError(code, NewPD(code, "", "", "Fabric already exists", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Fabric code already exists", ""))
+}
+
+func SupplierCodeNitExists() *echo.HTTPError {
+	code := http.StatusConflict
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Supplier code and nit already exists", ""))
+}
+
+func SupplierCodeExists() *echo.HTTPError {
+	code := http.StatusConflict
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Supplier code already exists", ""))
+}
+
+func SupplierNitExists() *echo.HTTPError {
+	code := http.StatusConflict
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Supplier NIT already exists", ""))
 }

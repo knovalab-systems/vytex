@@ -9,6 +9,7 @@ const UserUpdate = lazy(() => import('~/modules/user/pages/UserUpdate'));
 const Roles = lazy(() => import('~/modules/user/pages/Roles'));
 const MatchAdmin = lazy(() => import('~/modules/auth/components/MatchAdmin'));
 const Suppliers = lazy(() => import('~/modules/supplier/pages/Suppliers'));
+const SupplierCreate = lazy(() => import('~/modules/supplier/pages/SupplierCreate'));
 
 function AdminRoutes() {
 	return (
@@ -21,6 +22,7 @@ function AdminRoutes() {
 			</Route>
 			<Route path={PATHS.SUPPLIERS_PATH}>
 				<Route path={'/'} component={Suppliers} />
+				<Route path={PATHS.CREATE_PATH} component={SupplierCreate} />
 			</Route>
 			<Route path={PATHS.ROLES_PATH} component={Roles} />
 		</Route>

@@ -4,10 +4,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as logoutRequest from '../../requests/auth';
 import LogoutNavButton from '../LogoutNavButton';
 
-vi.mock('../../requests/authRequests', () => ({
-	logoutRequest: vi.fn(),
-}));
-
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,

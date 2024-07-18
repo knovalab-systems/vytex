@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import toast from 'solid-toast';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import ImagePreviewSelect from '../ImagePreviewSelect';
 
 // mocks

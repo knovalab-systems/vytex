@@ -19,7 +19,7 @@ type Fabric struct {
 	Supplier      *Supplier      `json:"supplier,omitempty"`
 	CompositionID uint           `json:"composition_id,omitempty"`
 	Composition   *Composition   `json:"composition,omitempty"`
-	CreatedAt     time.Time      `json:"created_at,omitempty"`
+	CreatedAt     *time.Time     `json:"created_at,omitempty"`
 	DeletedAt     gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 

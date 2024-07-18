@@ -1,6 +1,5 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { describe, expect, it } from 'vitest';
 import RoleTable from '../RoleTable';
 
 describe('Role Table', () => {

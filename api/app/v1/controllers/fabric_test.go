@@ -265,7 +265,7 @@ func TestCreateFabric(t *testing.T) {
 		// mocks
 		fabricMock := mocks.FabricMock{}
 		fabricMock.On("CreateFabric", &models.FabricCreateBody{Name: name, Code: code, Cost: cost, Color: 1, Supplier: 1,
-			Composition: models.Composition{Algod: 10000}}).Return(&models.Fabric{}, problems.ColorExists())
+			Composition: models.Composition{Algod: 10000}}).Return(&models.Fabric{}, problems.FabricExists())
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test

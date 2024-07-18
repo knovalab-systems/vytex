@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as authRequests from '~/modules/auth/requests/auth';
 import LoginForm from '../LoginForm';
 
@@ -27,30 +26,9 @@ describe('LoginForm', () => {
 		expect(submitButton).not.toBeDisabled();
 	});
 
-	it('calls login request on form submission with correct data', async () => {
-		const loginInSpy = vi.spyOn(authRequests, 'loginRequest').mockRejectedValueOnce({});
-		render(() => <LoginForm />);
-		const usernameField = screen.getByPlaceholderText('jose23');
-		const passwordInput = screen.getByPlaceholderText('*********');
-		const submitButton = screen.getByText('Iniciar sesión');
-
-		fireEvent.input(usernameField, { target: { value: 'pperez' } });
-		fireEvent.input(passwordInput, { target: { value: '12345678' } });
-		fireEvent.click(submitButton);
-		expect(usernameField).toHaveValue('pperez');
-		expect(passwordInput).toHaveValue('12345678');
-
-		await waitFor(() => expect(loginInSpy).toHaveBeenCalledWith('pperez', '12345678'));
-	});
-
-	it('validates form fields data', async () => {
-		vi.spyOn(authRequests, 'loginRequest').mockRejectedValueOnce({
-			access_token: '',
-			refresh_token: '',
-			expires: 0,
-			expires_at: 0,
-		});
+	it('shows error on request', async () => {
 		const toastSpy = vi.spyOn(toast, 'error');
+		vi.spyOn(authRequests, 'loginRequest').mockRejectedValueOnce({});
 		render(() => <LoginForm />);
 		const usernameField = screen.getByPlaceholderText('jose23');
 		const passwordInput = screen.getByPlaceholderText('*********');
@@ -64,8 +42,8 @@ describe('LoginForm', () => {
 		});
 	});
 
-	it('redirects to home on successful login', async () => {
-		vi.spyOn(authRequests, 'loginRequest').mockResolvedValueOnce({
+	it('logins succesfully', async () => {
+		const loginInSpy = vi.spyOn(authRequests, 'loginRequest').mockResolvedValueOnce({
 			access_token: '',
 			refresh_token: '',
 			expires: 0,
@@ -79,6 +57,7 @@ describe('LoginForm', () => {
 		fireEvent.input(usernameField, { target: { value: 'pperez' } });
 		fireEvent.input(passwordField, { target: { value: '12345678' } });
 		fireEvent.click(submitButton);
+		await waitFor(() => expect(loginInSpy).toHaveBeenCalledWith('pperez', '12345678'));
 		await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true }));
 	});
 

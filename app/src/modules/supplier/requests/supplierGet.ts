@@ -15,7 +15,7 @@ async function getSuppliers(page: number) {
 		readSuppliers({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['id', 'nit', 'name', 'deleted_at'],
+			fields: ['id', 'nit', 'name', 'deleted_at', 'code'],
 		}),
 	);
 }

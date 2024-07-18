@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import SelectOptions from '../SelectOptions';
 
 // mocks
