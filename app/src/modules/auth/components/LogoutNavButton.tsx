@@ -5,7 +5,7 @@ import { Button } from '~/components/ui/Button';
 import { LOGIN_PATH } from '~/constants/paths';
 import { cn } from '~/lib/utils';
 import RoleRoot from '../../../hooks/roleRoot';
-import { logoutRequest } from '../requests/auth';
+import { useAuth } from '~/hooks/useAuth';
 
 /**
  *
@@ -13,14 +13,15 @@ import { logoutRequest } from '../requests/auth';
  * @returns
  */
 function LogoutNavButton(props: { class?: string }) {
+	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const { setRole } = RoleRoot;
 
 	const handleLogOut = () => {
-		logoutRequest()
+		logout()
 			.then(() => {
 				setRole(null);
-				navigate(`${LOGIN_PATH}?reason=LOG_OUT`);
+				navigate(LOGIN_PATH);
 				toast.success('Sessión cerrada correctamente');
 			})
 			.catch(() => toast.error('Error al cerrar sesión'));

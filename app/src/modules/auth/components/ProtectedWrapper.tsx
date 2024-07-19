@@ -1,24 +1,19 @@
 import { Navigate, type RouteSectionProps } from '@solidjs/router';
-import { createQuery } from '@tanstack/solid-query';
-import { Match, Switch, createResource } from 'solid-js';
+import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
 import { LOGIN_PATH } from '~/constants/paths';
-import { client } from '~/lib/client';
-import { refreshRequest } from '~/modules/auth/requests/auth';
+import { useAuth } from '~/hooks/useAuth';
 
 function ProtectedWrapper(props: RouteSectionProps) {
-	const [token] = createResource(client.getToken);
-	const refresh = createQuery(() => refreshRequest(token.state === 'ready' && !token()));
+	const { authStatus } = useAuth();
 
 	return (
 		<Switch>
-			<Match when={token.loading || refresh.isFetching}>
+			<Match when={authStatus() === 'unresolved'}>
 				<Loading label='Comprobando credenciales' />
 			</Match>
-			<Match when={(token.state === 'ready' && Boolean(token())) || refresh.isSuccess}>{props.children}</Match>
-			<Match when={token.state === 'errored' || refresh.isError}>
-				{<Navigate href={`${LOGIN_PATH}?reason=TOKEN_EXPIRED`} />}
-			</Match>
+			<Match when={authStatus() === 'authenticated'}>{props.children}</Match>
+			<Match when={authStatus() === 'unauthenticated'}>{<Navigate href={LOGIN_PATH} />}</Match>
 		</Switch>
 	);
 }

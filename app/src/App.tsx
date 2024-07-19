@@ -6,16 +6,19 @@ import { ColorsProvider } from './hooks/useColors';
 import { SuppliersProvider } from './hooks/useSuppliers';
 import { queryClient } from './lib/queryClient';
 import Routes from './routes/Routes';
+import { AuthProvider } from './hooks/useAuth';
 
 function App() {
 	return (
 		<Router
 			root={(props: RouteSectionProps) => (
 				<QueryClientProvider client={queryClient}>
-					<SuppliersProvider>
-						<ColorsProvider>{props.children}</ColorsProvider>
-					</SuppliersProvider>
-					<Toaster />
+					<AuthProvider>
+						<SuppliersProvider>
+							<ColorsProvider>{props.children}</ColorsProvider>
+						</SuppliersProvider>
+						<Toaster />
+					</AuthProvider>
 				</QueryClientProvider>
 			)}
 		>
