@@ -10,6 +10,9 @@ assets
 
 # Test
 *.out
+test_results
+cypress/screenshots/
+cypress/videos/
 
 # Environment variables
 .env
