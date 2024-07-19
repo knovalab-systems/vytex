@@ -13,8 +13,8 @@ import MobileNav from '~/components/MobileNav';
 import SideBarNav from '~/components/SideBarNav';
 import * as PATHS from '~/constants/paths';
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
+import RoleRoot from '~/hooks/roleRoot';
 import { client } from '~/lib/client';
-import RoleRoot from '../../../hooks/roleRoot';
 
 function NavWrapper(props: RouteSectionProps) {
 	const { setRole } = RoleRoot;

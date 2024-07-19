@@ -5,8 +5,8 @@ import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
-import { LoginSchema, type LoginType } from '../schemas/login';
 import { useAuth } from '~/hooks/useAuth';
+import { LoginSchema, type LoginType } from '../schemas/login';
 
 function LoginForm() {
 	const navigate = useNavigate();

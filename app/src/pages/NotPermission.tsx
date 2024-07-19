@@ -1,4 +1,4 @@
-import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
+import LogoutNavButton from '~/components/LogoutNavButton';
 
 function NotPermission() {
 	return (

@@ -1,5 +1,6 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
+import { MatchAdmin } from '~/components/MatchRole';
 import * as PATHS from '~/constants/paths';
 
 const User = lazy(() => import('~/modules/user/pages/User'));
@@ -7,7 +8,6 @@ const Users = lazy(() => import('~/modules/user/pages/Users'));
 const UserCreate = lazy(() => import('~/modules/user/pages/UserCreate'));
 const UserUpdate = lazy(() => import('~/modules/user/pages/UserUpdate'));
 const Roles = lazy(() => import('~/modules/user/pages/Roles'));
-const MatchAdmin = lazy(() => import('~/modules/auth/components/MatchAdmin'));
 const Suppliers = lazy(() => import('~/modules/supplier/pages/Suppliers'));
 const SupplierCreate = lazy(() => import('~/modules/supplier/pages/SupplierCreate'));
 

@@ -1,5 +1,5 @@
 import { createQuery } from '@tanstack/solid-query';
-import { type Accessor, createContext, createEffect, createSignal, useContext, type JSXElement } from 'solid-js';
+import { type Accessor, type JSXElement, createContext, createEffect, createSignal, useContext } from 'solid-js';
 import { client } from '~/lib/client';
 
 const AuthContext = createContext<AuthContext>({

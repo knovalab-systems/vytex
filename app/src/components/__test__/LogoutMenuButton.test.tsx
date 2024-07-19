@@ -1,6 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
 import * as auth from '~/hooks/useAuth';
 import LogoutMenuButton from '../LogoutMenuButton';
 

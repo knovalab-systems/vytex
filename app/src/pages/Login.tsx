@@ -1,9 +1,8 @@
 import { Navigate } from '@solidjs/router';
-import { Match, Suspense, Switch, lazy } from 'solid-js';
+import { Match, Suspense, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
+import LoginForm from '~/components/LoginForm';
 import { useAuth } from '~/hooks/useAuth';
-
-const LoginForm = lazy(() => import('../components/LoginForm'));
 
 function LoginPage() {
 	const { authStatus } = useAuth();

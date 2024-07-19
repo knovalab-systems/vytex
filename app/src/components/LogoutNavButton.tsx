@@ -3,9 +3,9 @@ import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { LOGIN_PATH } from '~/constants/paths';
-import { cn } from '~/lib/utils';
-import RoleRoot from '../../../hooks/roleRoot';
+import RoleRoot from '~/hooks/roleRoot';
 import { useAuth } from '~/hooks/useAuth';
+import { cn } from '~/lib/utils';
 
 /**
  *
