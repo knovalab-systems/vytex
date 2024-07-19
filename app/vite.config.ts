@@ -1,8 +1,8 @@
 /// <reference types="vitest" />
 import path from 'node:path';
 import { defineConfig } from 'vite';
-import solid from 'vite-plugin-solid';
 import { compression } from 'vite-plugin-compression2';
+import solid from 'vite-plugin-solid';
 
 export default defineConfig({
 	test: {
@@ -19,6 +19,7 @@ export default defineConfig({
 		// or both out to improve performance:
 		// threads: false,
 		// isolate: false,
+		outputFile: 'test_results/components-report.html',
 	},
 	plugins: [solid(), compression({ algorithm: 'brotliCompress' })],
 	server: {
