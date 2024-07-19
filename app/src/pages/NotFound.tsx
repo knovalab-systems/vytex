@@ -13,7 +13,7 @@ function NotFound() {
 				</p>
 				<A
 					href={'/'}
-					class='flex items-center text-white space-x-2 px-4 py-2 rounded transition duration-150 bg-blue-500 shadow-blue-500/20 hover:bg-blue-700 hover:shadow-blue-700/40 ripple-bg-blue-200'
+					class='flex items-center text-white space-x-2 px-4 py-2 rounded transition duration-150 bg-blue-500 shadow-blue-500/20 hover:bg-blue-700 hover:shadow-blue-700/40'
 					title='Página Principal'
 				>
 					<svg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='currentColor'>

@@ -1,7 +1,7 @@
 import { A } from '@solidjs/router';
 import { AiOutlineClose } from 'solid-icons/ai';
 import { FiMenu } from 'solid-icons/fi';
-import { createEffect, createSignal } from 'solid-js';
+import { createEffect, createSignal, For } from 'solid-js';
 import { Portal } from 'solid-js/web';
 import LogoutNavButton from '~/modules/auth/components/LogoutNavButton';
 import type { NavPages } from '~/modules/auth/components/NavWrapper';
@@ -26,7 +26,7 @@ function MobileNav(props: { pages: NavPages[] }) {
 	return (
 		<>
 			<header class='sticky w-full top-0 bg-white z-30 shadow lg:hidden '>
-				<Button variant={'ghost'} type='button' onClick={handleOpen} class='p-3 h-auto ripple-bg-white'>
+				<Button variant={'ghost'} type='button' onClick={handleOpen} class='p-3 h-auto'>
 					<FiMenu size={32} />
 				</Button>
 			</header>
@@ -48,23 +48,25 @@ function MobileNav(props: { pages: NavPages[] }) {
 							</Button>
 							<div class='my-2 bg-gray-500 h-[1px]' />
 						</li>
-						{props.pages.map(page => (
-							<li>
-								<A
-									href={page.path}
-									end={page.end}
-									onClick={handleClose}
-									activeClass='bg-practice_date text-white'
-									class='w-full flex items-center group p-2 font-semibold text-lg rounded-lg gap-1 transition-colors duration-200 hover:text-white hover:bg-practice_date hover:shadow'
-								>
-									{page.icon()}
-									<span class='ml-3'>{page.name}</span>
-									<div class='ml-auto w-1 rounded-xl h-8 bg-transparent transition-colors duration-200 relative overflow-hidden'>
-										<span class='absolute top-0 left-0 w-full h-[102%] translate-y-full bg-white transition-all duration-300 group-hover:translate-y-0' />
-									</div>
-								</A>
-							</li>
-						))}
+						<For each={props.pages}>
+							{page => (
+								<li>
+									<A
+										href={page.path}
+										end={page.end}
+										onClick={handleClose}
+										activeClass='bg-practice_date text-white'
+										class='w-full flex items-center group p-2 font-semibold text-lg rounded-lg gap-1 transition-colors duration-200 hover:text-white hover:bg-practice_date hover:shadow'
+									>
+										{page.icon()}
+										<span class='ml-3'>{page.name}</span>
+										<div class='ml-auto w-1 rounded-xl h-8 bg-transparent transition-colors duration-200 relative overflow-hidden'>
+											<span class='absolute top-0 left-0 w-full h-[102%] translate-y-full bg-white transition-all duration-300 group-hover:translate-y-0' />
+										</div>
+									</A>
+								</li>
+							)}
+						</For>
 						<li class='text-black'>
 							<div class='my-2 bg-gray-500 h-[1px]' />
 							<LogoutNavButton class=' text-black text-lg hover:text-white' />
