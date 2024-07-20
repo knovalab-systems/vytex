@@ -2,9 +2,9 @@ import { useNavigate } from '@solidjs/router';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { LOGIN_PATH } from '~/constants/paths';
+import RoleRoot from '~/hooks/roleRoot';
+import { useAuth } from '~/hooks/useAuth';
 import { cn } from '~/lib/utils';
-import RoleRoot from '../../../hooks/roleRoot';
-import { logoutRequest } from '../requests/auth';
 
 /**
  *
@@ -14,12 +14,13 @@ import { logoutRequest } from '../requests/auth';
 function LogoutMenuButton(props: { class?: string }) {
 	const navigate = useNavigate();
 	const { setRole } = RoleRoot;
+	const { logout } = useAuth();
 
 	const handleLogOut = () => {
-		logoutRequest()
+		logout()
 			.then(() => {
 				setRole(null);
-				navigate(`${LOGIN_PATH}?reason=LOG_OUT`);
+				navigate(LOGIN_PATH);
 				toast.success('Sessión cerrada correctamente');
 			})
 			.catch(() => toast.error('Error al cerrar sesión'));

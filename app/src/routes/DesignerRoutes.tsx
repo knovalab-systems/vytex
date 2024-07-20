@@ -1,8 +1,8 @@
 import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
+import { MatchDesigner } from '~/components/MatchRole';
 import * as PATHS from '~/constants/paths';
 
-const MatchDesigner = lazy(() => import('~/modules/auth/components/MatchDesigner'));
 const ReferenceCreate = lazy(() => import('~/modules/reference/pages/ReferenceCreate'));
 const Colors = lazy(() => import('~/modules/color/pages/Colors'));
 const ColorCreate = lazy(() => import('~/modules/color/pages/ColorCreate'));

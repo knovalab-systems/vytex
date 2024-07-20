@@ -5,11 +5,12 @@ import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
-import { loginRequest } from '../requests/auth';
+import { useAuth } from '~/hooks/useAuth';
 import { LoginSchema, type LoginType } from '../schemas/login';
 
 function LoginForm() {
 	const navigate = useNavigate();
+	const { login } = useAuth();
 	const [disabled, setDisable] = createSignal(false);
 	const [_, { Form, Field }] = createForm<LoginType>({
 		validate: valiForm(LoginSchema),
@@ -19,7 +20,7 @@ function LoginForm() {
 	const handleSubmit: SubmitHandler<LoginType> = (data, event) => {
 		event.preventDefault();
 		setDisable(true);
-		loginRequest(data.username, data.password)
+		login(data.username, data.password)
 			.then(() => navigate('/', { replace: true }))
 			.catch(() => {
 				setDisable(false);

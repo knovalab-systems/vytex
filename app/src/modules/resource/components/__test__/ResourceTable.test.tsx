@@ -26,6 +26,7 @@ describe('Color Table', () => {
 				code: null,
 				color_id: null,
 				deleted_at: null,
+				supplier_id: null,
 			},
 			{
 				name: 'Insumo 1',
@@ -35,6 +36,7 @@ describe('Color Table', () => {
 				code: null,
 				color_id: null,
 				deleted_at: null,
+				supplier_id: null,
 			},
 		];
 		render(() => <ResourceTable resources={resources} />);

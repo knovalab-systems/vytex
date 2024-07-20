@@ -1,8 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import * as logoutRequest from '../../requests/auth';
-import LogoutNavButton from '../LogoutNavButton';
+import * as auth from '~/hooks/useAuth';
+import LogoutMenuButton from '../LogoutMenuButton';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -15,7 +14,7 @@ describe('Logout nav button', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <LogoutNavButton />);
+		render(() => <LogoutMenuButton />);
 
 		const logoutButton = screen.getByText('Cerrar sesión');
 
@@ -23,24 +22,33 @@ describe('Logout nav button', () => {
 	});
 
 	it('logs out on button click', async () => {
-		vi.spyOn(logoutRequest, 'logoutRequest').mockResolvedValueOnce();
+		const logoutMock = vi.fn().mockResolvedValueOnce({});
+		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({
+			logout: logoutMock,
+			authStatus: () => 'authenticated',
+			login: () => Promise.resolve(),
+		}));
 
-		render(() => <LogoutNavButton />);
+		render(() => <LogoutMenuButton />);
 
 		const logoutButton = screen.getByText('Cerrar sesión');
 		fireEvent.click(logoutButton);
 
-		await waitFor(() => expect(logoutRequest.logoutRequest).toHaveBeenCalled());
+		await waitFor(() => expect(logoutMock).toHaveBeenCalled());
 	});
 
 	it('redirects to provided path on successful logout', async () => {
-		vi.spyOn(logoutRequest, 'logoutRequest').mockResolvedValueOnce();
+		vi.spyOn(auth, 'useAuth').mockReturnValue({
+			logout: () => Promise.resolve(),
+			authStatus: () => 'authenticated',
+			login: () => Promise.resolve(),
+		});
 
-		render(() => <LogoutNavButton />);
+		render(() => <LogoutMenuButton />);
 
 		const logoutButton = screen.getByText('Cerrar sesión');
 		fireEvent.click(logoutButton);
 
-		await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/login?reason=LOG_OUT'));
+		await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/login'));
 	});
 });

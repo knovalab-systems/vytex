@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import * as authRequests from '~/modules/auth/requests/auth';
+import * as auth from '~/hooks/useAuth';
 import LoginForm from '../LoginForm';
 
 const mockNavigate = vi.fn();
@@ -28,7 +28,13 @@ describe('LoginForm', () => {
 
 	it('shows error on request', async () => {
 		const toastSpy = vi.spyOn(toast, 'error');
-		vi.spyOn(authRequests, 'loginRequest').mockRejectedValueOnce({});
+		const loginMock = vi.fn().mockRejectedValueOnce({});
+		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({
+			login: loginMock,
+			authStatus: () => 'unauthenticated',
+			logout: () => Promise.resolve(),
+		}));
+
 		render(() => <LoginForm />);
 		const usernameField = screen.getByPlaceholderText('jose23');
 		const passwordInput = screen.getByPlaceholderText('*********');
@@ -43,12 +49,12 @@ describe('LoginForm', () => {
 	});
 
 	it('logins succesfully', async () => {
-		const loginInSpy = vi.spyOn(authRequests, 'loginRequest').mockResolvedValueOnce({
-			access_token: '',
-			refresh_token: '',
-			expires: 0,
-			expires_at: 0,
-		});
+		const loginMock = vi.fn().mockResolvedValueOnce({});
+		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({
+			login: loginMock,
+			authStatus: () => 'unauthenticated',
+			logout: () => Promise.resolve(),
+		}));
 		render(() => <LoginForm />);
 		const usernameField = screen.getByPlaceholderText('jose23');
 		const passwordField = screen.getByPlaceholderText('*********');
@@ -57,11 +63,16 @@ describe('LoginForm', () => {
 		fireEvent.input(usernameField, { target: { value: 'pperez' } });
 		fireEvent.input(passwordField, { target: { value: '12345678' } });
 		fireEvent.click(submitButton);
-		await waitFor(() => expect(loginInSpy).toHaveBeenCalledWith('pperez', '12345678'));
+		await waitFor(() => expect(loginMock).toHaveBeenCalledWith('pperez', '12345678'));
 		await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true }));
 	});
 
 	it('shows empty fields error', async () => {
+		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({
+			login: () => Promise.resolve(),
+			authStatus: () => 'unauthenticated',
+			logout: () => Promise.resolve(),
+		}));
 		render(() => <LoginForm />);
 		const usernameField = screen.getByPlaceholderText('jose23');
 		const passwordField = screen.getByPlaceholderText('*********');
@@ -77,6 +88,11 @@ describe('LoginForm', () => {
 	});
 
 	it('shows bad length password error', async () => {
+		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({
+			login: () => Promise.resolve(),
+			authStatus: () => 'unauthenticated',
+			logout: () => Promise.resolve(),
+		}));
 		render(() => <LoginForm />);
 		const passwordField = screen.getByPlaceholderText('*********');
 		const submitButton = screen.getByText('Iniciar sesión');

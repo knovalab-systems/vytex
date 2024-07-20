@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import type { NavPages } from '~/modules/auth/components/NavWrapper';
 import MobileNav from '../MobileNav';
+import type { NavPages } from '../NavWrapper';
 
 const MockA = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -12,7 +12,7 @@ vi.mock('@solidjs/router', () => ({
 }));
 
 const MockLogOut = vi.fn();
-vi.mock('~/modules/auth/components/LogoutNavButton', () => ({
+vi.mock('~/components/LogoutNavButton', () => ({
 	default: () => {
 		MockLogOut();
 		return <div>LogOut</div>;

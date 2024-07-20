@@ -25,6 +25,7 @@ describe('Fabric Table', () => {
 				code: 'ALG001',
 				color_id: 1,
 				deleted_at: null,
+				supplier_id: null,
 			},
 		];
 

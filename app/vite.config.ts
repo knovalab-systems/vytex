@@ -26,9 +26,6 @@ export default defineConfig({
 		host: true,
 		port: 4040,
 	},
-	build: {
-		target: 'esnext',
-	},
 	resolve: {
 		conditions: ['development', 'browser'],
 		alias: {

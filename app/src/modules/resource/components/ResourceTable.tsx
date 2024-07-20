@@ -49,9 +49,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								</TableCell>
 								<TableCell>{resource.code || 'Code'}</TableCell>
 								<TableCell>${resource.cost}</TableCell>
-								<TableCell>
-									{supplierRecord()[resource.supplier_id as number]?.name || 'Proveedor'}
-								</TableCell>
+								<TableCell>{supplierRecord()[resource.supplier_id as number]?.name || 'Proveedor'}</TableCell>
 								<TableCell>
 									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>
