@@ -53,9 +53,25 @@ function SupplierCreateForm() {
 						<div>
 							<Label for='name-field'>Nombre</Label>
 							<Input
-								placeholder='Proveedor'
+								placeholder='Nombre del Proveedor'
 								autocomplete='off'
 								id='name-field'
+								aria-errormessage={field.error}
+								required
+								value={field.value}
+								{...props}
+							/>
+						</div>
+					)}
+				</Field>
+				<Field name='brand'>
+					{(field, props) => (
+						<div>
+							<Label for='brand-field'>Marca</Label>
+							<Input
+								placeholder='Marca del proveedor'
+								autocomplete='off'
+								id='brand-field'
 								aria-errormessage={field.error}
 								required
 								value={field.value}

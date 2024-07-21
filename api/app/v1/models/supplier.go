@@ -9,6 +9,7 @@ import (
 type Supplier struct {
 	ID        uint           `json:"id,omitempty" gorm:"primary_key"`
 	Name      string         `json:"name,omitempty"`
+	Brand     string         `json:"brand,omitempty"`
 	Nit       string         `json:"nit,omitempty"`
 	Code      string         `json:"code,omitempty"`
 	CreatedAt *time.Time     `json:"created_at,omitempty"`
@@ -17,7 +18,8 @@ type Supplier struct {
 }
 
 type SupplierCreateBody struct {
-	Name string `json:"name,omitempty" validate:"required"`
-	Nit  string `json:"nit,omitempty" validate:"required,len=9"`
-	Code string `json:"code,omitempty" validate:"required"`
+	Name  string `json:"name,omitempty" validate:"required"`
+	Brand string `json:"brand,omitempty" validate:"required"`
+	Nit   string `json:"nit,omitempty" validate:"required,len=9"`
+	Code  string `json:"code,omitempty" validate:"required"`
 }

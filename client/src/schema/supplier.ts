@@ -10,6 +10,7 @@ export type VytexSupplier<Schema extends object> = MergeCoreCollection<
 		id: number;
 		nit: string | null;
 		name: string | null;
+		brand: string | null;
 		code: string | null;
 		deleted_at: string | null;
 		updated_at: string | null;
