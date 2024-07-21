@@ -4,7 +4,6 @@ import type {
 	VytexFabricsBySize,
 	VytexImage,
 	VytexResourcesBySize,
-	VytexSize,
 	VytexUser,
 } from '../index.js';
 
@@ -16,8 +15,7 @@ export type VytexReference<Schema extends object> = MergeCoreCollection<
 	'vytex_references',
 	{
 		id: number;
-		key: string | null;
-		reference: string | null;
+		code: string | null; // use for version purpose n erp interface
 		front: VytexImage<Schema[]> | null;
 		back: VytexImage<Schema[]> | null;
 		deleted_at: string | null;
@@ -46,7 +44,7 @@ export type VytexCreateReference<Schema extends object> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
-		reference: string | null;
+		code: string | null;
 		create_by: string | null;
 		front: string | null;
 		back: string | null;

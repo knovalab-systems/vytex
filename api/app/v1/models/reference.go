@@ -9,8 +9,7 @@ import (
 
 type Reference struct {
 	ID         uint           `json:"id" gorm:"primary_key"`
-	Key        string         `json:"key" gorm:"type:uuid"`
-	Reference  string         `json:"reference"`
+	Code       string         `json:"code"`
 	CreatedAt  time.Time      `json:"created_at"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 	CreatedBy  string         `json:"create_by"`
@@ -19,15 +18,6 @@ type Reference struct {
 	FrontImage *Image         `json:"front_image,omitempty" gorm:"foreignKey:Front"`
 	Back       string         `json:"back"`
 	BackImage  *Image         `json:"back_image,omitempty" gorm:"foreignKey:Back"`
-}
-
-// BeforeCreate will set a UUID to key, if is not set
-func (b *Reference) BeforeCreate(tx *gorm.DB) (err error) {
-	if len(b.Key) == 0 {
-		b.Key = uuid.New().String()
-
-	}
-	return nil
 }
 
 type ColorByReference struct {
@@ -41,7 +31,7 @@ type ColorByReference struct {
 
 type ResourceByReference struct {
 	ID                 uint              `json:"id" gorm:"primary_key"`
-	Key                string            `json:"key" gorm:"type:uuid"`
+	Code               string            `json:"code" gorm:"type:uuid"`
 	ColorByReferenceID uint              `json:"colorByReference_id"`
 	DeletedAt          gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
 	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
@@ -52,16 +42,15 @@ type ResourceByReference struct {
 
 // BeforeCreate will set a UUID to key, if is not set
 func (b *ResourceByReference) BeforeCreate(tx *gorm.DB) (err error) {
-	if len(b.Key) == 0 {
-		b.Key = uuid.New().String()
-
+	if len(b.Code) == 0 {
+		b.Code = uuid.New().String()
 	}
 	return nil
 }
 
 type FabricByReference struct {
 	ID                 uint              `json:"id" gorm:"primary_key"`
-	Key                string            `json:"key" gorm:"type:uuid"`
+	Code               string            `json:"code" gorm:"type:uuid"`
 	ColorByReferenceID uint              `json:"colorByReference_id"`
 	DeletedAt          gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
 	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
@@ -72,15 +61,15 @@ type FabricByReference struct {
 
 // BeforeCreate will set a UUID to key, if is not set
 func (b *FabricByReference) BeforeCreate(tx *gorm.DB) (err error) {
-	if len(b.Key) == 0 {
-		b.Key = uuid.New().String()
+	if len(b.Code) == 0 {
+		b.Code = uuid.New().String()
 
 	}
 	return nil
 }
 
 type ReferenceCreateBody struct {
-	Reference string                   `json:"reference" validate:"required"`
+	Code      string                   `json:"code" validate:"required"`
 	Front     string                   `json:"front" validate:"required,uuid"`
 	Back      string                   `json:"back" validate:"required,uuid"`
 	Colors    []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`

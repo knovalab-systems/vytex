@@ -122,7 +122,7 @@ func TestCreateReference(t *testing.T) {
 	t.Run("Fail validation, reference", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"reference": nil})
+		json.NewEncoder(body).Encode(map[string]any{"code": nil})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -172,7 +172,7 @@ func TestCreateReference(t *testing.T) {
 	t.Run("Fail validation, colors", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"reference": "23"})
+		json.NewEncoder(body).Encode(map[string]any{"code": "23"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -197,7 +197,7 @@ func TestCreateReference(t *testing.T) {
 	t.Run("Fail validation, fabrics n resources", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"reference": "23", "colors": []map[string]any{{"fabrics": []map[string]any{}, "resources": []map[string]any{}}}})
+		json.NewEncoder(body).Encode(map[string]any{"code": "23", "colors": []map[string]any{{"fabrics": []map[string]any{}, "resources": []map[string]any{}}}})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -222,7 +222,7 @@ func TestCreateReference(t *testing.T) {
 	t.Run("Fail create reference", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"reference": "23", "colors": []map[string]any{{"color": 1, "fabrics": []map[string]any{{"fabric": 1}}, "resources": []map[string]any{{"resource": 1}}}}})
+		json.NewEncoder(body).Encode(map[string]any{"code": "23", "colors": []map[string]any{{"color": 1, "fabrics": []map[string]any{{"fabric": 1}}, "resources": []map[string]any{{"resource": 1}}}}})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -246,7 +246,7 @@ func TestCreateReference(t *testing.T) {
 	t.Run("Create reference succesfully", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"reference": "23",
+		json.NewEncoder(body).Encode(map[string]any{"code": "23",
 			"front": "31b63ffb-15f5-48d7-9a24-587f437f07ec", "back": "31b63ffb-15f5-48d7-9a24-587f437f07ec",
 			"colors": []map[string]any{{"color": 1,
 				"fabrics":   []map[string]any{{"fabric": 1}},

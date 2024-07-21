@@ -14,13 +14,13 @@ type ReferenceService struct {
 
 func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*models.Reference, error) {
 	// check reference exists
-	err := checkReferenceCode(b.Reference)
+	err := checkReferenceExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
 
 	// create base reference
-	reference := &models.Reference{Reference: b.Reference, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back}
+	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back}
 
 	err = query.Reference.Create(reference)
 	if err != nil {
@@ -65,10 +65,10 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 	return reference, nil
 }
 
-func checkReferenceCode(code string) error {
+func checkReferenceExists(code string) error {
 	t := query.Reference
 
-	_, err := t.Unscoped().Where(t.Reference.Eq(code)).First()
+	_, err := t.Unscoped().Where(t.Code.Eq(code)).First()
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil

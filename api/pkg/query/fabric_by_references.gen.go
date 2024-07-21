@@ -28,7 +28,7 @@ func newFabricByReference(db *gorm.DB, opts ...gen.DOOption) fabricByReference {
 	tableName := _fabricByReference.fabricByReferenceDo.TableName()
 	_fabricByReference.ALL = field.NewAsterisk(tableName)
 	_fabricByReference.ID = field.NewUint(tableName, "id")
-	_fabricByReference.Key = field.NewString(tableName, "key")
+	_fabricByReference.Code = field.NewString(tableName, "code")
 	_fabricByReference.ColorByReferenceID = field.NewUint(tableName, "color_by_reference_id")
 	_fabricByReference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_fabricByReference.FabricId = field.NewUint(tableName, "fabric_id")
@@ -116,7 +116,7 @@ type fabricByReference struct {
 
 	ALL                field.Asterisk
 	ID                 field.Uint
-	Key                field.String
+	Code               field.String
 	ColorByReferenceID field.Uint
 	DeletedAt          field.Field
 	FabricId           field.Uint
@@ -153,7 +153,7 @@ func (f fabricByReference) As(alias string) *fabricByReference {
 func (f *fabricByReference) updateTableName(table string) *fabricByReference {
 	f.ALL = field.NewAsterisk(table)
 	f.ID = field.NewUint(table, "id")
-	f.Key = field.NewString(table, "key")
+	f.Code = field.NewString(table, "code")
 	f.ColorByReferenceID = field.NewUint(table, "color_by_reference_id")
 	f.DeletedAt = field.NewField(table, "deleted_at")
 	f.FabricId = field.NewUint(table, "fabric_id")
@@ -188,7 +188,7 @@ func (f *fabricByReference) GetFieldByName(fieldName string) (field.OrderExpr, b
 func (f *fabricByReference) fillFieldMap() {
 	f.fieldMap = make(map[string]field.Expr, 20)
 	f.fieldMap["id"] = f.ID
-	f.fieldMap["key"] = f.Key
+	f.fieldMap["code"] = f.Code
 	f.fieldMap["color_by_reference_id"] = f.ColorByReferenceID
 	f.fieldMap["deleted_at"] = f.DeletedAt
 	f.fieldMap["fabric_id"] = f.FabricId

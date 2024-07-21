@@ -3,7 +3,7 @@ import { type InferInput, array, minLength, minValue, number, object, pipe, stri
 import { SizesSchema } from '~/schemas/sizes';
 
 export const ReferenceCreateSchema = object({
-	reference: pipe(number('Ingresa el código de la referencia.'), minValue(1, 'Ingresa un valor mayor a 0.')),
+	code: pipe(number('Ingresa el código de la referencia.'), minValue(1, 'Ingresa un valor mayor a 0.')),
 	colors: array(
 		object({
 			color: pipe(number('Selecciona un color.'), minValue(1, 'Selecciona un color.')),

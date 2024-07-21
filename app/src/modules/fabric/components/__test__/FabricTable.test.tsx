@@ -19,7 +19,6 @@ describe('Fabric Table', () => {
 		const fabrics: GetFabricsType = [
 			{
 				id: 123,
-				key: 'uniqueKey123',
 				cost: 1000,
 				name: 'Algodon',
 				code: 'ALG001',
@@ -31,13 +30,11 @@ describe('Fabric Table', () => {
 
 		render(() => <FabricTable fabrics={fabrics} />);
 		const fabricId = screen.getByText('123');
-		const fabricKey = screen.getByText('uniqueKey123');
 		const fabricName = screen.getByText('Algodon');
 		const fabricCost = screen.getByText('$1000');
 		const fabricStatus = screen.getByText('Activo');
 
 		expect(fabricId).toBeInTheDocument();
-		expect(fabricKey).toBeInTheDocument();
 		expect(fabricName).toBeInTheDocument();
 		expect(fabricCost).toBeInTheDocument();
 		expect(fabricStatus).toBeInTheDocument();
