@@ -12,5 +12,6 @@ func privateCustomRoutes(g *echo.Group) {
 	colorController := controllers.CustomController{CustomRepository: &services.CustomService{}}
 
 	route.GET("", colorController.ReadCustoms)
+	route.GET("/aggregate", colorController.AggregateCustoms)
 
 }

@@ -46,3 +46,31 @@ func (m *CustomController) ReadCustoms(c echo.Context) error {
 	return c.JSON(http.StatusOK, customs)
 
 }
+
+// Get aggregate from customs
+// @Summary      Get aggregate from customs
+// @Description  Get result of aggregate function from customs
+// @Tags         Customs
+// @Produce      json
+// @Success      200 {array} models.AggregateData
+// @Failure      400
+// @Failure      500
+// @Router       /customs/aggregate [get]
+func (m *CustomController) AggregateCustoms(c echo.Context) error {
+	// for query params
+	u := new(models.AggregateQuery)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.AggregateCustomsBadRequest()
+	}
+
+	// aggegation
+	aggregate, err := m.CustomRepository.AggregationCustoms(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, aggregate)
+}

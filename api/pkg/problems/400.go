@@ -114,3 +114,8 @@ func CustomsBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get customs", ""))
 }
+
+func AggregateCustomsBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get customs aggregation", ""))
+}
