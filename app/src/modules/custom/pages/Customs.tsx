@@ -1,5 +1,5 @@
 import { createQuery } from '@tanstack/solid-query';
-import { createSignal, createMemo, Match, Switch } from 'solid-js';
+import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
 import {
 	Pagination,

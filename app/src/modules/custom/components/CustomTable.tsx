@@ -1,7 +1,7 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetCustomsType } from '../requests/CustomGet';
 import { For, Show } from 'solid-js';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { parseDateTimeHuman } from '~/lib/parseTime';
+import type { GetCustomsType } from '../requests/CustomGet';
 
 function CustomTable(props: { customs?: GetCustomsType }) {
 	return (

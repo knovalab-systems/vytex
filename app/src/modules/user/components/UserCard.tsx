@@ -4,8 +4,8 @@ import { Timeline } from '~/components/ui/Timeline';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 import { roles } from '~/constants/roles';
 import { NO_ROLE } from '~/envs/roles';
-import type { GetUserType } from '../requests/userGet';
 import { parseDateTimeHuman } from '~/lib/parseTime';
+import type { GetUserType } from '../requests/userGet';
 
 function UserCard(props: { user?: GetUserType }) {
 	const navigate = useNavigate();

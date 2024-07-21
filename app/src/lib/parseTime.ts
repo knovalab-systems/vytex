@@ -1,4 +1,4 @@
-import { parseAbsoluteToLocal, toCalendarDate, toTime, type Time } from '@internationalized/date';
+import { type Time, parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
 
 export function convert24To12(time: string) {
 	// Split hours, minutes m seconds

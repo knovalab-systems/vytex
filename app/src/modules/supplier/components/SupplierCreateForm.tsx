@@ -53,7 +53,7 @@ function SupplierCreateForm() {
 						<div>
 							<Label for='name-field'>Nombre</Label>
 							<Input
-								placeholder='Nombre del Proveedor'
+								placeholder='Nombre del proveedor'
 								autocomplete='off'
 								id='name-field'
 								aria-errormessage={field.error}
