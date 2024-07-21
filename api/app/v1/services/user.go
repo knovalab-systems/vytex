@@ -27,7 +27,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 
 	// def query
 	table := query.User
-	s := table.Limit(*q.Limit).Offset(q.Offset)
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	s = userFields(s, q.Fields)
@@ -74,8 +74,6 @@ func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
 		}
 		return nil, problems.ServerError()
 	}
-
-	user.Password = ""
 
 	return user, nil
 }
