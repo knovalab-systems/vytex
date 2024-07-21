@@ -19,7 +19,7 @@ import (
 type UserService struct {
 }
 
-func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
+func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()
@@ -44,14 +44,10 @@ func (m *UserService) ReadUsers(q *models.Query) ([]*models.User, error) {
 		return nil, problems.ServerError()
 	}
 
-	for _, item := range users {
-		item.Password = ""
-	}
-
 	return users, nil
 }
 
-func (m *UserService) ReadUser(q *models.ReadUser) (*models.User, error) {
+func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()
@@ -154,8 +150,6 @@ func (m *UserService) UpdateUser(b *models.UpdateUserBody) (*models.User, error)
 		return nil, problems.ServerError()
 	}
 
-	user.Password = "********"
-
 	return user, nil
 }
 
@@ -183,8 +177,6 @@ func (m *UserService) CreateUser(b *models.UserCreateBody) (*models.User, error)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
-
-	user.Password = "********"
 
 	return user, nil
 }

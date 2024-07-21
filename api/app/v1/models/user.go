@@ -34,6 +34,14 @@ func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
+// set password to *'s
+func (b *User) AfterFind(tx *gorm.DB) (err error) {
+	if len(b.Password) != 0 {
+		b.Password = "*******"
+	}
+	return
+}
+
 type ReadUser struct {
 	ID string `param:"userId" validate:"required,uuid"`
 	Query
