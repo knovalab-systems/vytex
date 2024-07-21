@@ -108,3 +108,9 @@ func ImagesBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create images", ""))
 }
+
+// custom
+func CustomsBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get customs", ""))
+}

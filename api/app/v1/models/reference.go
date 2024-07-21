@@ -12,7 +12,7 @@ type Reference struct {
 	Code       string         `json:"code"`
 	CreatedAt  time.Time      `json:"created_at"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-	CreatedBy  string         `json:"create_by"`
+	CreatedBy  string         `json:"created_by"`
 	User       *User          `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
 	Front      string         `json:"front"`
 	FrontImage *Image         `json:"front_image,omitempty" gorm:"foreignKey:Front"`

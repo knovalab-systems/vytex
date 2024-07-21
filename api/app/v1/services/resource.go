@@ -128,7 +128,14 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 		for _, v := range fieldsArr {
 
 			if strings.HasPrefix(v, "color.") {
+				f = append(f, table.ColorID)
 				s = s.Preload(table.Color)
+				continue
+			}
+
+			if strings.HasPrefix(v, "supplier.") {
+				f = append(f, table.SupplierID)
+				s = s.Preload(table.Supplier)
 				continue
 			}
 
@@ -144,10 +151,12 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 			case "color_id":
 				f = append(f, table.ColorID)
 			case "color":
+				f = append(f, table.ColorID)
 				s = s.Preload(table.Color)
 			case "supplier_id":
 				f = append(f, table.SupplierID)
 			case "supplier":
+				f = append(f, table.SupplierID)
 				s = s.Preload(table.Supplier)
 			case "created_at":
 				f = append(f, table.CreatedAt)

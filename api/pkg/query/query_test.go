@@ -80,6 +80,7 @@ func Test_WithContext(t *testing.T) {
 		qCtx.Color.UnderlyingDB().Statement.Context,
 		qCtx.ColorByReference.UnderlyingDB().Statement.Context,
 		qCtx.Composition.UnderlyingDB().Statement.Context,
+		qCtx.Custom.UnderlyingDB().Statement.Context,
 		qCtx.Fabric.UnderlyingDB().Statement.Context,
 		qCtx.FabricByReference.UnderlyingDB().Statement.Context,
 		qCtx.Image.UnderlyingDB().Statement.Context,
