@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gorm"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -16,7 +17,7 @@ type AuthService struct {
 func (m *AuthService) ValidUser(username string, password string) (*models.User, error) {
 
 	table := query.User
-	user, err := table.Where(table.Username.Eq(username)).First()
+	user, err := table.Session(&gorm.Session{SkipHooks: true}).Where(table.Username.Eq(username)).First()
 	if err != nil {
 		return nil, err
 	}
