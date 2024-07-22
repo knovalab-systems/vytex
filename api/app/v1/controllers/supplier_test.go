@@ -162,13 +162,20 @@ func TestCreateSupplier(t *testing.T) {
 	})
 
 	missingFieldsTestCases := []models.SupplierCreateBody{{
-		Name: "tela",
+		Name:  "proveedor",
+		Code:  "1",
+		Brand: "brand",
+	}, {
+		Name:  "proveedor",
+		Nit:   "1111111111",
+		Brand: "brand",
+	}, {
+		Code:  "1",
+		Brand: "brand",
+		Nit:   "1111111111",
+	}, {
+		Name: "proveedor",
 		Code: "1",
-	}, {
-		Name: "tela",
-		Nit:  "1111111111",
-	}, {
-		Name: "tela",
 		Nit:  "1111111111",
 	}}
 
@@ -206,8 +213,9 @@ func TestCreateSupplier(t *testing.T) {
 		name := "Blanco"
 		code := "1"
 		nit := "111111111"
+		brand := "brand"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -217,7 +225,7 @@ func TestCreateSupplier(t *testing.T) {
 
 		// mocks
 		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("CreateSupplier", &models.SupplierCreateBody{Name: name, Code: code, Nit: nit}).Return(&models.Supplier{}, problems.SupplierCodeExists())
+		supplierMock.On("CreateSupplier", &models.SupplierCreateBody{Name: name, Code: code, Nit: nit, Brand: brand}).Return(&models.Supplier{}, problems.SupplierCodeExists())
 		supplierController := SupplierController{SupplierRepository: &supplierMock}
 
 		// test
@@ -231,8 +239,9 @@ func TestCreateSupplier(t *testing.T) {
 		name := "Blanco"
 		code := "1"
 		nit := "111111111"
+		brand := "brand"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -242,7 +251,7 @@ func TestCreateSupplier(t *testing.T) {
 
 		// mocks
 		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("CreateSupplier", &models.SupplierCreateBody{Name: name, Code: code, Nit: nit}).Return(&models.Supplier{}, nil)
+		supplierMock.On("CreateSupplier", &models.SupplierCreateBody{Name: name, Code: code, Nit: nit, Brand: brand}).Return(&models.Supplier{}, nil)
 		supplierController := SupplierController{SupplierRepository: &supplierMock}
 
 		// test

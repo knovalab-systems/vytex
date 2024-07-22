@@ -11,6 +11,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
 						<TableHead>ID</TableHead>
 						<TableHead>Nombre</TableHead>
+						<TableHead>Marca</TableHead>
 						<TableHead>NIT</TableHead>
 						<TableHead>Código</TableHead>
 						<TableHead>Estado</TableHead>
@@ -28,6 +29,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 							<TableRow class='bg-white group'>
 								<TableCell>{supplier.id}</TableCell>
 								<TableCell>{supplier.name}</TableCell>
+								<TableCell>{supplier.brand}</TableCell>
 								<TableCell>{supplier.nit}</TableCell>
 								<TableCell>{supplier.code}</TableCell>
 								<TableCell>

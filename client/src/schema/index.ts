@@ -3,6 +3,7 @@ export * from './collection.js';
 export * from './color.js';
 export * from './composition.js';
 export * from './core.js';
+export * from './custom.js';
 export * from './dashboard.js';
 export * from './extension.js';
 export * from './fabric.js';

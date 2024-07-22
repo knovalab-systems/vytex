@@ -37,7 +37,7 @@ func (m *ResourceController) ReadResources(c echo.Context) error {
 	}
 
 	// get resources
-	resources, err := m.SelectResources(u)
+	resources, err := m.ResourceRepository.SelectResources(u)
 	if err != nil {
 		return err
 	}

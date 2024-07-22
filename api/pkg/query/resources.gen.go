@@ -28,7 +28,6 @@ func newResource(db *gorm.DB, opts ...gen.DOOption) resource {
 	tableName := _resource.resourceDo.TableName()
 	_resource.ALL = field.NewAsterisk(tableName)
 	_resource.ID = field.NewUint(tableName, "id")
-	_resource.Key = field.NewString(tableName, "key")
 	_resource.Name = field.NewString(tableName, "name")
 	_resource.Cost = field.NewFloat64(tableName, "cost")
 	_resource.Code = field.NewString(tableName, "code")
@@ -58,7 +57,6 @@ type resource struct {
 
 	ALL        field.Asterisk
 	ID         field.Uint
-	Key        field.String
 	Name       field.String
 	Cost       field.Float64
 	Code       field.String
@@ -86,7 +84,6 @@ func (r resource) As(alias string) *resource {
 func (r *resource) updateTableName(table string) *resource {
 	r.ALL = field.NewAsterisk(table)
 	r.ID = field.NewUint(table, "id")
-	r.Key = field.NewString(table, "key")
 	r.Name = field.NewString(table, "name")
 	r.Cost = field.NewFloat64(table, "cost")
 	r.Code = field.NewString(table, "code")
@@ -110,9 +107,8 @@ func (r *resource) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *resource) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 11)
+	r.fieldMap = make(map[string]field.Expr, 10)
 	r.fieldMap["id"] = r.ID
-	r.fieldMap["key"] = r.Key
 	r.fieldMap["name"] = r.Name
 	r.fieldMap["cost"] = r.Cost
 	r.fieldMap["code"] = r.Code

@@ -81,9 +81,10 @@ func (m *SupplierService) CreateSupplier(b *models.SupplierCreateBody) (*models.
 	}
 
 	supplier := &models.Supplier{
-		Name: b.Name,
-		Nit:  b.Nit,
-		Code: b.Code,
+		Name:  b.Name,
+		Nit:   b.Nit,
+		Brand: b.Brand,
+		Code:  b.Code,
 	}
 
 	err = query.Supplier.Create(supplier)
@@ -125,6 +126,8 @@ func supplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
 				f = append(f, table.ID)
 			case "name":
 				f = append(f, table.Name)
+			case "brand":
+				f = append(f, table.Brand)
 			case "code":
 				f = append(f, table.Code)
 			case "nit":

@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadUsers(t *testing.T) {
+func TestSelectUser(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get users", func(t *testing.T) {
@@ -31,7 +31,7 @@ func TestReadUsers(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUsers").Return(defaultError)
+		userMock.On("SelectUsers").Return(defaultError)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -51,7 +51,7 @@ func TestReadUsers(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUsers").Return(nil)
+		userMock.On("SelectUsers").Return(nil)
 
 		userController := UserController{UserRepository: &userMock}
 
@@ -64,7 +64,7 @@ func TestReadUsers(t *testing.T) {
 
 }
 
-func TestReadUser(t *testing.T) {
+func TestSelectUse(t *testing.T) {
 
 	t.Run("Fail binding, id is not find", func(t *testing.T) {
 		// context
@@ -119,7 +119,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(errors.New("Error"))
+		userMock.On("SelectUser").Return(errors.New("Error"))
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -139,7 +139,7 @@ func TestReadUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(nil, nil)
+		userMock.On("SelectUser").Return(nil, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -183,7 +183,7 @@ func TestReadMe(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(errors.New("Error"))
+		userMock.On("SelectUser").Return(errors.New("Error"))
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -202,7 +202,7 @@ func TestReadMe(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("ReadUser").Return(nil, nil)
+		userMock.On("SelectUser").Return(nil, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test

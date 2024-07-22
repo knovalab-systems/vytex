@@ -3,6 +3,7 @@ export * from './aggregate.js';
 export * from './assets.js';
 export * from './collections.js';
 export * from './colors.js';
+export * from './customs.js';
 export * from './dashboards.js';
 export * from './extensions.js';
 export * from './fabrics.js';

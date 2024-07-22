@@ -28,7 +28,6 @@ func newFabric(db *gorm.DB, opts ...gen.DOOption) fabric {
 	tableName := _fabric.fabricDo.TableName()
 	_fabric.ALL = field.NewAsterisk(tableName)
 	_fabric.ID = field.NewUint(tableName, "id")
-	_fabric.Key = field.NewString(tableName, "key")
 	_fabric.Name = field.NewString(tableName, "name")
 	_fabric.Cost = field.NewFloat64(tableName, "cost")
 	_fabric.Code = field.NewString(tableName, "code")
@@ -65,7 +64,6 @@ type fabric struct {
 
 	ALL           field.Asterisk
 	ID            field.Uint
-	Key           field.String
 	Name          field.String
 	Cost          field.Float64
 	Code          field.String
@@ -96,7 +94,6 @@ func (f fabric) As(alias string) *fabric {
 func (f *fabric) updateTableName(table string) *fabric {
 	f.ALL = field.NewAsterisk(table)
 	f.ID = field.NewUint(table, "id")
-	f.Key = field.NewString(table, "key")
 	f.Name = field.NewString(table, "name")
 	f.Cost = field.NewFloat64(table, "cost")
 	f.Code = field.NewString(table, "code")
@@ -121,9 +118,8 @@ func (f *fabric) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *fabric) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 13)
+	f.fieldMap = make(map[string]field.Expr, 12)
 	f.fieldMap["id"] = f.ID
-	f.fieldMap["key"] = f.Key
 	f.fieldMap["name"] = f.Name
 	f.fieldMap["cost"] = f.Cost
 	f.fieldMap["code"] = f.Code

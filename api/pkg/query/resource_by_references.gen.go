@@ -28,7 +28,7 @@ func newResourceByReference(db *gorm.DB, opts ...gen.DOOption) resourceByReferen
 	tableName := _resourceByReference.resourceByReferenceDo.TableName()
 	_resourceByReference.ALL = field.NewAsterisk(tableName)
 	_resourceByReference.ID = field.NewUint(tableName, "id")
-	_resourceByReference.Key = field.NewString(tableName, "key")
+	_resourceByReference.Code = field.NewString(tableName, "code")
 	_resourceByReference.ColorByReferenceID = field.NewUint(tableName, "color_by_reference_id")
 	_resourceByReference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_resourceByReference.ResourceId = field.NewUint(tableName, "resource_id")
@@ -111,7 +111,7 @@ type resourceByReference struct {
 
 	ALL                field.Asterisk
 	ID                 field.Uint
-	Key                field.String
+	Code               field.String
 	ColorByReferenceID field.Uint
 	DeletedAt          field.Field
 	ResourceId         field.Uint
@@ -148,7 +148,7 @@ func (r resourceByReference) As(alias string) *resourceByReference {
 func (r *resourceByReference) updateTableName(table string) *resourceByReference {
 	r.ALL = field.NewAsterisk(table)
 	r.ID = field.NewUint(table, "id")
-	r.Key = field.NewString(table, "key")
+	r.Code = field.NewString(table, "code")
 	r.ColorByReferenceID = field.NewUint(table, "color_by_reference_id")
 	r.DeletedAt = field.NewField(table, "deleted_at")
 	r.ResourceId = field.NewUint(table, "resource_id")
@@ -183,7 +183,7 @@ func (r *resourceByReference) GetFieldByName(fieldName string) (field.OrderExpr,
 func (r *resourceByReference) fillFieldMap() {
 	r.fieldMap = make(map[string]field.Expr, 20)
 	r.fieldMap["id"] = r.ID
-	r.fieldMap["key"] = r.Key
+	r.fieldMap["code"] = r.Code
 	r.fieldMap["color_by_reference_id"] = r.ColorByReferenceID
 	r.fieldMap["deleted_at"] = r.DeletedAt
 	r.fieldMap["resource_id"] = r.ResourceId

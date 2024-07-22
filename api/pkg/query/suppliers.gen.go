@@ -29,6 +29,7 @@ func newSupplier(db *gorm.DB, opts ...gen.DOOption) supplier {
 	_supplier.ALL = field.NewAsterisk(tableName)
 	_supplier.ID = field.NewUint(tableName, "id")
 	_supplier.Name = field.NewString(tableName, "name")
+	_supplier.Brand = field.NewString(tableName, "brand")
 	_supplier.Nit = field.NewString(tableName, "nit")
 	_supplier.Code = field.NewString(tableName, "code")
 	_supplier.CreatedAt = field.NewTime(tableName, "created_at")
@@ -46,6 +47,7 @@ type supplier struct {
 	ALL       field.Asterisk
 	ID        field.Uint
 	Name      field.String
+	Brand     field.String
 	Nit       field.String
 	Code      field.String
 	CreatedAt field.Time
@@ -69,6 +71,7 @@ func (s *supplier) updateTableName(table string) *supplier {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewUint(table, "id")
 	s.Name = field.NewString(table, "name")
+	s.Brand = field.NewString(table, "brand")
 	s.Nit = field.NewString(table, "nit")
 	s.Code = field.NewString(table, "code")
 	s.CreatedAt = field.NewTime(table, "created_at")
@@ -90,9 +93,10 @@ func (s *supplier) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *supplier) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 7)
+	s.fieldMap = make(map[string]field.Expr, 8)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["name"] = s.Name
+	s.fieldMap["brand"] = s.Brand
 	s.fieldMap["nit"] = s.Nit
 	s.fieldMap["code"] = s.Code
 	s.fieldMap["created_at"] = s.CreatedAt

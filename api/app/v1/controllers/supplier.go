@@ -37,7 +37,7 @@ func (m *SupplierController) ReadSuppliers(c echo.Context) error {
 	}
 
 	// get suppliers
-	suppliers, err := m.SelectSuppliers(u)
+	suppliers, err := m.SupplierRepository.SelectSuppliers(u)
 	if err != nil {
 		return err
 	}

@@ -37,7 +37,7 @@ func (m *ColorController) ReadColors(c echo.Context) error {
 	}
 
 	// get colors
-	colors, err := m.SelectColors(u)
+	colors, err := m.ColorRepository.SelectColors(u)
 	if err != nil {
 		return err
 	}

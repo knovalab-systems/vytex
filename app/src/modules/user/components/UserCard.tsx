@@ -1,39 +1,32 @@
-import { parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
 import { useNavigate } from '@solidjs/router';
 import { Button } from '~/components/ui/Button';
 import { Timeline } from '~/components/ui/Timeline';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 import { roles } from '~/constants/roles';
 import { NO_ROLE } from '~/envs/roles';
-import { convertTimeTo12 } from '~/utils/time';
+import { parseDateTimeHuman } from '~/lib/parseTime';
 import type { GetUserType } from '../requests/userGet';
 
 function UserCard(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
 	const user = () => props.user;
-	const deleted_at = () =>
-		!user()?.deleted_at ? parseAbsoluteToLocal(user()?.updated_at) : parseAbsoluteToLocal(user()?.deleted_at);
-	const created_at = () => parseAbsoluteToLocal(user()?.created_at);
-	const updated_at = () => parseAbsoluteToLocal(user()?.updated_at);
 	const timelineArr = () => {
 		const arr = [
 			{
 				title: 'Fecha de creación',
-				description: `${toCalendarDate(created_at())} ${convertTimeTo12(toTime(created_at()))}`,
+				description: parseDateTimeHuman(user()?.created_at),
 			},
 			{
 				title: 'Fecha de actualización',
-				description: `${toCalendarDate(updated_at())} ${convertTimeTo12(toTime(updated_at()))}`,
+				description: parseDateTimeHuman(user()?.updated_at),
 			},
 		];
-
 		if (user()?.deleted_at) {
 			arr.push({
 				title: 'Fecha de inactivación',
-				description: `${toCalendarDate(deleted_at())} ${convertTimeTo12(toTime(deleted_at()))}`,
+				description: parseDateTimeHuman(user()?.deleted_at),
 			});
 		}
-
 		return arr;
 	};
 

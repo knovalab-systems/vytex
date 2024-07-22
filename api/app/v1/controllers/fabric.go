@@ -37,7 +37,7 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 	}
 
 	// get fabrics
-	fabrics, err := m.SelectFabrics(u)
+	fabrics, err := m.FabricRepository.SelectFabrics(u)
 	if err != nil {
 		return err
 	}

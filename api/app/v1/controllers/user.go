@@ -38,7 +38,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 	}
 
 	// get users
-	users, err := m.UserRepository.ReadUsers(u)
+	users, err := m.UserRepository.SelectUsers(u)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (m *UserController) ReadUser(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.UserRepository.ReadUser(u)
+	user, err := m.UserRepository.SelectUser(u)
 	if err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func (m *UserController) ReadMe(c echo.Context) error {
 	}
 
 	// get user
-	user, err := m.UserRepository.ReadUser(u)
+	user, err := m.UserRepository.SelectUser(u)
 	if err != nil {
 		return err
 	}

@@ -15,11 +15,10 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 				<TableHeader class='sticky top-0'>
 					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
 						<TableHead>ID</TableHead>
-						<TableHead>Key</TableHead>
+						<TableHead>Code</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>Color</TableHead>
 						<TableHead class='p-0 w-auto' />
-						<TableHead>Code</TableHead>
 						<TableHead>Costo</TableHead>
 						<TableHead>Proveedor</TableHead>
 						<TableHead>Estado</TableHead>
@@ -29,14 +28,14 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 				<TableBody>
 					<Show when={(props.resources?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>No se han encontraron insumos.</TableCell>
+							<TableCell colspan={9}>No se han encontraron insumos.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.resources}>
 						{resource => (
 							<TableRow class='bg-white'>
 								<TableCell>{resource.id}</TableCell>
-								<TableCell class='w-1/6'>{resource.key}</TableCell>
+								<TableCell>{resource.code}</TableCell>
 								<TableCell>{resource.name}</TableCell>
 								<TableCell>
 									<div>{colorRecord()[resource.color_id as number]?.name || resource.color_id}</div>
@@ -47,7 +46,6 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 										style={{ background: colorRecord()[resource.color_id as number]?.hex || '' }}
 									/>
 								</TableCell>
-								<TableCell>{resource.code || 'Code'}</TableCell>
 								<TableCell>${resource.cost}</TableCell>
 								<TableCell>{supplierRecord()[resource.supplier_id as number]?.name || 'Proveedor'}</TableCell>
 								<TableCell>

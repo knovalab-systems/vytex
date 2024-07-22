@@ -13,12 +13,11 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 				<TableHeader class='sticky top-0'>
 					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
 						<TableHead>ID</TableHead>
-						<TableHead>Key</TableHead>
+						<TableHead>Code</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>Color</TableHead>
 						<TableHead class='p-0 w-auto' />
 						<TableHead>Costo</TableHead>
-						<TableHead>Code</TableHead>
 						<TableHead>Proveedor</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
@@ -33,7 +32,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 					{fabric => (
 						<TableRow class='bg-white'>
 							<TableCell>{fabric.id}</TableCell>
-							<TableCell class='w-1/6'>{fabric.key}</TableCell>
+							<TableCell>{fabric.code}</TableCell>
 							<TableCell>{fabric.name}</TableCell>
 							<TableCell>
 								<div>{colorRecord()[fabric.color_id as number]?.name || fabric.color_id}</div>
@@ -45,7 +44,6 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 								/>
 							</TableCell>
 							<TableCell>${fabric.cost}</TableCell>
-							<TableCell>{fabric.code || 'Code'}</TableCell>
 							<TableCell>Proveedor</TableCell>
 							<TableCell>
 								<StatusLabel status={!fabric.deleted_at} />

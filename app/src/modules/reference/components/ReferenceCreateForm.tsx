@@ -90,7 +90,7 @@ function ReferenceCreateForm(props: {
 		await handleImageUpload();
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: ReferenceCreateRequest = {
-			reference: data.reference.toString(),
+			code: data.code.toString(),
 			front: uploadedFiles()?.[0].id || '',
 			back: uploadedFiles()?.[1].id || '',
 			colors: data.colors.map((color, i) => ({
@@ -127,7 +127,7 @@ function ReferenceCreateForm(props: {
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(`El código de la referencia "${data.reference}" no está disponible. Intente con otro.`);
+					toast.error(`El código de la referencia "${data.code}" no está disponible. Intente con otro.`);
 				} else {
 					toast.error('Error al crear referencia.');
 				}
@@ -145,7 +145,7 @@ function ReferenceCreateForm(props: {
 			<div class='flex flex-col gap-4 mb-auto'>
 				<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 					<h1 class='text-2xl font-bold text-center'>Crear referencia</h1>
-					<Field name='reference' type='number'>
+					<Field name='code' type='number'>
 						{(field, props) => (
 							<div>
 								<LabelSpan>Código de la referencia</LabelSpan>

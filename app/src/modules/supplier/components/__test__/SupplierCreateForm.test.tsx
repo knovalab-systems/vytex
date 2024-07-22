@@ -16,13 +16,15 @@ describe('SupplierCreateForm', () => {
 
 	it('renders correctly', () => {
 		render(() => <SupplierCreateForm />);
-		const nameField = screen.getByPlaceholderText('Proveedor');
+		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
+		const brandField = screen.getByPlaceholderText('Marca del proveedor');
 		const codeField = screen.getByPlaceholderText('2322');
 		const nitField = screen.getByPlaceholderText('111111111');
 		const submitButton = screen.getByText('Crear');
 		const cancelButton = screen.getByText('Cancelar');
 
 		expect(nameField).toBeInTheDocument();
+		expect(brandField).toBeInTheDocument();
 		expect(codeField).toBeInTheDocument();
 		expect(nitField).toBeInTheDocument();
 		expect(submitButton).toBeInTheDocument();
@@ -31,15 +33,18 @@ describe('SupplierCreateForm', () => {
 
 	it('check change inputs values ', async () => {
 		render(() => <SupplierCreateForm />);
-		const nameField = screen.getByPlaceholderText('Proveedor');
+		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
+		const brandField = screen.getByPlaceholderText('Marca del proveedor');
 		const codeField = screen.getByPlaceholderText('2322');
 		const nitField = screen.getByPlaceholderText('111111111');
 
 		fireEvent.input(nameField, { target: { value: 'Negro' } });
+		fireEvent.input(brandField, { target: { value: 'Marca' } });
 		fireEvent.input(codeField, { target: { value: '1111' } });
 		fireEvent.input(nitField, { target: { value: '222222222' } });
 
 		expect(nameField).toHaveValue('Negro');
+		expect(brandField).toHaveValue('Marca');
 		expect(codeField).toHaveValue(1111);
 		expect(nitField).toHaveValue(222222222);
 	});
@@ -50,10 +55,12 @@ describe('SupplierCreateForm', () => {
 		fireEvent.click(submitButton);
 
 		const nameError = await screen.findByText('Ingresa el nombre.');
+		const brandError = await screen.findByText('Ingresa la marca.');
 		const codeError = await screen.findByText('Ingresa el código.');
 		const nitField = await screen.findByText('Ingresa el NIT.');
 
 		expect(nameError).toBeInTheDocument();
+		expect(brandError).toBeInTheDocument();
 		expect(codeError).toBeInTheDocument();
 		expect(nitField).toBeInTheDocument();
 	});
@@ -76,12 +83,14 @@ describe('SupplierCreateForm', () => {
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockResolvedValue({});
 
-		const nameField = screen.getByPlaceholderText('Proveedor');
+		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
+		const brandField = screen.getByPlaceholderText('Marca del proveedor');
 		const codeField = screen.getByPlaceholderText('2322');
 		const nitField = screen.getByPlaceholderText('111111111');
 		const submitButton = screen.getByText('Crear');
 
 		fireEvent.input(nameField, { target: { value: 'Negro' } });
+		fireEvent.input(brandField, { target: { value: 'Marca' } });
 		fireEvent.input(codeField, { target: { value: '1111' } });
 		fireEvent.input(nitField, { target: { value: '222222222' } });
 		fireEvent.click(submitButton);
@@ -146,12 +155,14 @@ describe('SupplierCreateForm', () => {
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 			const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockRejectedValue(err.error);
 
-			const nameField = screen.getByPlaceholderText('Proveedor');
+			const nameField = screen.getByPlaceholderText('Nombre del proveedor');
+			const brandField = screen.getByPlaceholderText('Marca del proveedor');
 			const codeField = screen.getByPlaceholderText('2322');
 			const nitField = screen.getByPlaceholderText('111111111');
 			const submitButton = screen.getByText('Crear');
 
 			fireEvent.input(nameField, { target: { value: 'Negro' } });
+			fireEvent.input(brandField, { target: { value: 'Marca' } });
 			fireEvent.input(codeField, { target: { value: '1111' } });
 			fireEvent.input(nitField, { target: { value: '222222222' } });
 			fireEvent.click(submitButton);

@@ -29,15 +29,15 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	// def subquery
 	table2 := table.As("u2")
 	subQuery := table.Unscoped().
-		Group(table.Key).
-		Select(table.Key, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.Code).
+		Select(table.Code, table.CreatedAt.Max().As("created_at_max")).
 		As("u2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	s = fabricFields(s, q.Fields)
 
 	// run query
-	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Key.EqCol(table.Key)).
+	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Code.EqCol(table.Code)).
 		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
 		Find()
 	if err != nil {
@@ -49,7 +49,7 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 
 func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.Fabric
-	s := table.Unscoped().Group(table.Key)
+	s := table.Unscoped().Group(table.Code)
 	aggregateElem := models.AggregateData{Count: nil}
 
 	if q.Count != "" {
@@ -124,20 +124,20 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 		for _, v := range fieldsArr {
 
 			if strings.HasPrefix(v, "color.") {
+				f = append(f, table.ColorID)
 				s = s.Preload(table.Color)
 				continue
 			}
 
 			if strings.HasPrefix(v, "supplier.") {
-				s = s.Preload(table.Color)
+				f = append(f, table.SupplierID)
+				s = s.Preload(table.Supplier)
 				continue
 			}
 
 			switch v {
 			case "id":
 				f = append(f, table.ID)
-			case "key":
-				f = append(f, table.Key)
 			case "name":
 				f = append(f, table.Name)
 			case "cost":
@@ -146,10 +146,14 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				f = append(f, table.Code)
 			case "color_id":
 				f = append(f, table.ColorID)
+			case "color":
+				f = append(f, table.ColorID)
+				s = s.Preload(table.Color)
 			case "supplier_id":
 				f = append(f, table.SupplierID)
-			case "color":
-				s = s.Preload(table.Color)
+			case "supplier":
+				f = append(f, table.SupplierID)
+				s = s.Preload(table.Supplier)
 			case "created_at":
 				f = append(f, table.CreatedAt)
 			case "deleted_at":

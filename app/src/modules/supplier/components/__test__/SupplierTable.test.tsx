@@ -23,6 +23,7 @@ describe('SupplierTable', () => {
 				name: null,
 				deleted_at: null,
 				code: null,
+				brand: null,
 			},
 			{
 				name: 'blanco',
@@ -30,6 +31,7 @@ describe('SupplierTable', () => {
 				nit: null,
 				deleted_at: null,
 				code: null,
+				brand: null,
 			},
 		];
 		render(() => <SupplierTable suppliers={suppliers} />);

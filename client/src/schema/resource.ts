@@ -9,10 +9,9 @@ export type VytexResource<Schema extends object> = MergeCoreCollection<
 	'vytex_resources',
 	{
 		id: number;
-		key: string; // uuid for version purpose
 		cost: number | null;
 		name: string | null;
-		code: string | null;
+		code: string | null; // use for version purpose n erp interface
 		color_id: number | null;
 		color: VytexColor<Schema[]>;
 		supplier_id: number | null;
