@@ -17,6 +17,11 @@ type Supplier struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
+type ReadSupplier struct {
+	ID uint `param:"supplierId" validate:"required"`
+	Query
+}
+
 type SupplierCreateBody struct {
 	Name  string `json:"name,omitempty" validate:"required"`
 	Brand string `json:"brand,omitempty" validate:"required"`

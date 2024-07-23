@@ -37,6 +37,31 @@ func (m *SupplierService) SelectSuppliers(q *models.Query) ([]*models.Supplier, 
 	return suppliers, nil
 }
 
+func (m *SupplierService) SelectSupplier(q *models.ReadSupplier) (*models.Supplier, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.SuppliersBadRequest()
+	}
+
+	// def query
+	table := query.Supplier
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = supplierFields(s, q.Fields)
+
+	// run query
+	supplier, err := table.Unscoped().Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return supplier, nil
+}
+
 func (m *SupplierService) AggregationSuppliers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.Supplier
 	s := table.Unscoped()
