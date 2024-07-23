@@ -3,5 +3,7 @@ package repository
 import "github.com/knovalab-systems/vytex/app/v1/models"
 
 type ReferenceRepository interface {
+	SelectReferences(*models.Query) ([]*models.Reference, error)
+	AggregationReferences(*models.AggregateQuery) ([]*models.AggregateData, error)
 	CreateReference(*models.ReferenceCreateBody) (*models.Reference, error)
 }
