@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -15,6 +16,99 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
+
+func TestReadReferences(t *testing.T) {
+	defaultError := errors.New("ERROR")
+
+	t.Run("Fail on get references", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReferences").Return(defaultError)
+
+		// controller
+		controller := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := controller.ReadReferences(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get references succesfully ", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReferences").Return(nil)
+
+		// controller
+		controller := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := controller.ReadReferences(c)
+		assert.NoError(t, err)
+	})
+}
+
+func TestAggregateReferences(t *testing.T) {
+
+	t.Run("Fail on get aggregate references", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("AggregationReferences", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("ERROR"))
+
+		// controller
+		controller := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := controller.AggregateReferences(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get aggregate references succesfully ", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("AggregationReferences", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+
+		// controller
+		controller := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := controller.AggregateReferences(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
 
 func TestCreateReference(t *testing.T) {
 	defaultError := errors.New("ERROR")
