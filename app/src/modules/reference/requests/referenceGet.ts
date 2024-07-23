@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readReference } from '@vytex/client';
+import { aggregate, readReferences } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -12,10 +12,10 @@ export function getReferencesQuery(page: number) {
 
 async function getReferences(page: number) {
 	return await client.request(
-		readReference({
+		readReferences({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['id', 'code', 'created_at', 'deleted_at'],
+			fields: ['id', 'code', 'created_at', 'deleted_at', 'created_by', 'front', 'back'],
 		}),
 	);
 }

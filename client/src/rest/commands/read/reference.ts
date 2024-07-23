@@ -13,7 +13,7 @@ export type ReadReferenceOutput<
  * @param query The query parameters
  * @returns  An array of up to limit references objects. If no items are available, data will be an empty array.
  */
-export const readReference =
+export const readReferences =
 	<Schema extends object, const TQuery extends Query<Schema, VytexReference<Schema>>>(
 		query?: TQuery,
 	): RestCommand<ReadReferenceOutput<Schema, TQuery>[], Schema> =>

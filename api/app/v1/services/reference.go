@@ -56,20 +56,11 @@ func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*m
 		for _, v := range countArr {
 			switch v {
 			case "id":
-				s = s.Select(table.ID.Count().As("id"))
-				countObj["id"] = 1
-			case "code":
-				s = s.Select(table.Code.Count().As("code"))
-				countObj["code"] = 1
-			//case "colors.color_id":
-			//	s = s.Select(table.Colors.ColorID.Count().As("colors.color_id"))
-			//	countObj["colors.color_id"] = 1
-			//case "colors.fabrics_id":
-			//	s = s.Select(table.Colors.FabricsID.Count().As("colors.fabrics_id"))
-			//	countObj["colors.fabrics_id"] = 1
-			//case "colors.resources_id":
-			//	s = s.Select(table.Colors.ResourcesID.Count().As("colors.resources_id"))
-			//	countObj["colors.resources_id"] = 1
+				count, err := s.Select(table.ID).Count()
+				if err != nil {
+					return nil, problems.ServerError()
+				}
+				countObj["id"] = count
 			default:
 				if aggregateElem.Count == nil {
 					count, err := s.Count()
@@ -104,6 +95,21 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 				f = append(f, table.CreatedAt)
 			case "deleted_at":
 				f = append(f, table.DeletedAt)
+			case "created_by":
+				f = append(f, table.CreatedBy)
+			case "User":
+				f = append(f, table.CreatedBy)
+				s = s.Preload(table.User)
+			case "front":
+				f = append(f, table.Front)
+			case "front_image":
+				f = append(f, table.Front)
+				s = s.Preload(table.FrontImage)
+			case "back":
+				f = append(f, table.Back)
+			case "back_image":
+				f = append(f, table.Back)
+				s = s.Preload(table.BackImage)
 			default:
 				f = append(f, table.ALL)
 			}
