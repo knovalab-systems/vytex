@@ -1,8 +1,10 @@
 import type {
 	MergeCoreCollection,
 	VytexColor,
+	VytexFabric,
 	VytexFabricsBySize,
 	VytexImage,
+	VytexResource,
 	VytexResourcesBySize,
 	VytexUser,
 } from '../index.js';
@@ -22,6 +24,14 @@ export type VytexReference<Schema extends object> = MergeCoreCollection<
 		created_at: string | null;
 		created_by: string | null;
 		user: VytexUser<Schema[]> | null;
+		colors: {
+			color_id: number | null;
+			color: VytexColor<Schema[]> | null;
+			fabrics_id: number | null;
+			fabrics: VytexFabric<Schema[]>[];
+			resources_id: number | null;
+			resources: VytexResource<Schema[]>[];
+		}[];
 	}
 >;
 
