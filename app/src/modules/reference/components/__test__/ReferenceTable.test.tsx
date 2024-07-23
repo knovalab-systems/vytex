@@ -22,6 +22,9 @@ describe('Reference Table', () => {
                 code: 'REF001',
                 deleted_at: null,
                 created_at: null,
+                created_by: null,
+                front: null,
+                back: null,
             },
         ];
 
