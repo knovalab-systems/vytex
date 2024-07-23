@@ -171,3 +171,33 @@ func supplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
 	}
 	return s
 }
+
+func (m *SupplierService) UpdateSupplier(b *models.SupplierUpdateBody) (*models.Supplier, error) {
+	err := checkSupplierExists(b.Code, b.Nit)
+	if err != nil {
+		return nil, err
+	}
+
+	table := query.Supplier
+
+	updateMap, err := b.ToUpdate()
+	if err != nil || len(updateMap) == 0 {
+		return nil, problems.SuppliersBadRequest()
+	}
+
+	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, problems.ReadAccess()
+	}
+
+	supplier, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return supplier, nil
+}

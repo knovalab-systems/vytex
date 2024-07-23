@@ -141,3 +141,36 @@ func (m *SupplierController) CreateSupplier(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, supplier)
 }
+
+// Update supplier
+// @Summary      Update supplier
+// @Description  Updates the fields from supplier
+// @Tags         Suppliers
+// @Param		 supplierId path string true "Supplier ID"
+// @Param		 models.SupplierUpdateBody body string true "Supplier update values"
+// @Produce      json
+// @Success      200 {object} models.Supplier
+// @Failure      400
+// @Failure      500
+// @Router       /suppliers/{supplierId} [PATCH]
+func (m *SupplierController) UpdateSupplier(c echo.Context) error {
+	u := new(models.SupplierUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateSupplierBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateSupplierBadRequest()
+	}
+
+	// update
+	supplier, err := m.SupplierRepository.UpdateSupplier(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, supplier)
+}
