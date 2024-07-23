@@ -11,6 +11,8 @@ func privateReferenceRoutes(g *echo.Group) {
 
 	resourceController := controllers.ReferenceController{ReferenceRepository: &services.ReferenceService{}}
 
+	route.GET("", resourceController.ReadReferences)
+	route.GET("/aggregate", resourceController.AggregateReferences)
 	route.POST("", resourceController.CreateReference)
 
 }
