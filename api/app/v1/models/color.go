@@ -21,3 +21,42 @@ type ColorCreateBody struct {
 	Code string `json:"code" validate:"required"`
 	Hex  string `json:"hex" validate:"required,hexcolor"`
 }
+
+type ReadColor struct {
+	ID uint `param:"colorId" validate:"required"`
+	Query
+}
+
+type ColorUpdateBody struct {
+	ID        uint                `param:"colorId" validate:"required,gt=0"`
+	Name      string              `json:"name" validate:"omitempty,gt=0"`
+	Code      string              `json:"code" validate:"omitempty,gt=0"`
+	Hex       string              `json:"hex" validate:"omitempty,hexcolor"`
+	DeletedAt Optional[time.Time] `json:"deleted_at"`
+}
+
+func (m *ColorUpdateBody) ToUpdate() map[string]interface{} {
+	updateMap := map[string]interface{}{}
+	if m.Name != "" {
+		updateMap["name"] = m.Name
+	}
+
+	if m.Hex != "" {
+		updateMap["hex"] = m.Hex
+	}
+
+	if m.Code != "" {
+		updateMap["code"] = m.Code
+	}
+
+	if !m.DeletedAt.IsNil() {
+		if m.DeletedAt.IsNullDefined() {
+			updateMap["deleted_at"] = nil
+		} else {
+			updateMap["deleted_at"] = m.DeletedAt.Value
+		}
+
+	}
+
+	return updateMap
+}

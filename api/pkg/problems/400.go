@@ -54,6 +54,11 @@ func CreateColorBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create color", ""))
 }
 
+func UpdateColorBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to update color", ""))
+}
+
 // fabric
 func FabricsBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest

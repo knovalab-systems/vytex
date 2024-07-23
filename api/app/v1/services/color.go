@@ -15,7 +15,6 @@ type ColorService struct {
 }
 
 func (m *ColorService) SelectColors(q *models.Query) ([]*models.Color, error) {
-
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.ColorsBadRequest()
@@ -73,21 +72,84 @@ func (m *ColorService) AggregationColors(q *models.AggregateQuery) ([]*models.Ag
 }
 
 func (m *ColorService) CreateColor(b *models.ColorCreateBody) (*models.Color, error) {
-
+	// check code
 	err := checkColorExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
 
+	// def color
 	color := &models.Color{
 		Name: b.Name,
 		Hex:  b.Hex,
 		Code: b.Code,
 	}
 
+	// run create
 	err = query.Color.Create(color)
 	if err != nil {
 		return nil, err
+	}
+
+	return color, nil
+}
+
+func (m *ColorService) SelectColor(q *models.ReadColor) (*models.Color, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.ColorsBadRequest()
+	}
+
+	// def query
+	table := query.Color
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = colorFields(s, q.Fields)
+
+	// run query
+	color, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return color, nil
+}
+
+func (m *ColorService) UpdateColor(b *models.ColorUpdateBody) (*models.Color, error) {
+	// check code
+	if b.Code != "" {
+		err := checkColorExists(b.Code)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// get update map
+	updateMap := b.ToUpdate()
+	if len(updateMap) == 0 {
+		return nil, problems.UpdateColorBadRequest()
+	}
+
+	// run update
+	table := query.Color
+	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	// check update
+	if rows.RowsAffected == 0 {
+		return nil, problems.ReadAccess()
+	}
+
+	// get update color
+	color, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
 	}
 
 	return color, nil
