@@ -27,9 +27,7 @@ export type VytexReference<Schema extends object> = MergeCoreCollection<
 		colors: {
 			color_id: number | null;
 			color: VytexColor<Schema[]> | null;
-			fabrics_id: number | null;
 			fabrics: VytexFabric<Schema[]>[];
-			resources_id: number | null;
 			resources: VytexResource<Schema[]>[];
 		}[];
 	}
