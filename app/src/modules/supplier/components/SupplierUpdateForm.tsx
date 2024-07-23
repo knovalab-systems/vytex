@@ -56,7 +56,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 
         return updateSupplierRequest(props.supplier?.id, supplier)
             .then(() => {
-                toast.success('Proveedor actualizado correctamente');
+                toast.success('Proveedor actualizado correctamente.');
                 navigate(SUPPLIERS_PATH);
             })
             .catch(error => {

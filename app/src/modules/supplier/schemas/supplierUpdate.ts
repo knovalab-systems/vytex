@@ -4,9 +4,9 @@ import { STATUS_OPTIONS } from '~/constants/status';
 export const SupplierUpdateSchema = object({
 	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),
 	brand: pipe(string(), minLength(1, 'Ingresa la marca.')),
-	code: pipe(number(), minValue(1, 'Ingresa el código.')),
+	code: pipe(number('Ingresa el código.'), minValue(1, 'Ingresa el código.')),
 	nit: pipe(
-		number(),
+		number('Ingresa el NIT.'),
 		minValue(1, 'Ingresa el NIT.'),
 		check(n => String(n).length === 9, 'El NIT debe ser de 9 dígitos'),
 	),
