@@ -15,7 +15,7 @@ async function getReferences(page: number) {
 		readReferences({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['id', 'code', 'created_at', 'deleted_at', 'created_by', 'front', 'back'],
+			fields: ['id', 'code', 'deleted_at'],
 		}),
 	);
 }
