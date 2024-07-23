@@ -26,6 +26,14 @@ export const readSuppliers =
 		method: 'GET',
 	});
 
+/**
+ * List an existing supplier by primary key.
+ *
+ * @param key The primary key of the supplier
+ * @param query  The query parameters
+ * @returns Returns the requested supplier object.
+ * @throws Will throw if key is empty
+ */
 export const readSupplier =
 	<Schema extends object, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
 		key: VytexSupplier<Schema>['id'],

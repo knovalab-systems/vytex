@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readSuppliers } from '@vytex/client';
+import { aggregate, readSupplier, readSuppliers } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -38,3 +38,16 @@ async function countSuppliers() {
 		}),
 	);
 }
+
+export function getSupplierQuery(id: number) {
+	return queryOptions({
+		queryFn: () => getSupplier(id),
+		queryKey: ['getSupplier', id],
+	});
+}
+
+async function getSupplier(id: number) {
+	return await client.request(readSupplier(id));
+}
+
+export type GetSupplierType = Awaited<ReturnType<typeof getSupplier>>;
