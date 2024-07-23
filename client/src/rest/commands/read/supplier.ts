@@ -1,6 +1,7 @@
 import type { VytexSupplier } from '../../../schema/supplier.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadSupplierOutput<
 	Schema extends object,
@@ -24,3 +25,18 @@ export const readSuppliers =
 		params: query ?? {},
 		method: 'GET',
 	});
+
+export const readSupplier =
+	<Schema extends object, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
+		key: VytexSupplier<Schema>['id'],
+		query?: TQuery,
+	): RestCommand<ReadSupplierOutput<Schema, TQuery>, Schema> =>
+	() => {
+		throwIfEmpty(String(key), 'Key cannot be empty');
+
+		return {
+			path: `/suppliers/${key}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};
