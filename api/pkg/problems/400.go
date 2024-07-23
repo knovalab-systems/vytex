@@ -82,6 +82,17 @@ func CreateResourceBadRequest() *echo.HTTPError {
 }
 
 // reference
+func ReferencesBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get references", ""))
+}
+
+func AggregateReferencesBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get references aggregation", ""))
+
+}
+
 func CreateReferenceBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create reference", ""))

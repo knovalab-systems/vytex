@@ -8,6 +8,7 @@ const Colors = lazy(() => import('~/modules/color/pages/Colors'));
 const ColorCreate = lazy(() => import('~/modules/color/pages/ColorCreate'));
 const Fabrics = lazy(() => import('~/modules/fabric/pages/Fabrics'));
 const FabricCreate = lazy(() => import('~/modules/fabric/pages/FabricCreate'));
+const References = lazy(() => import('~/modules/reference/pages/References'));
 const Resources = lazy(() => import('~/modules/resource/pages/Resources'));
 const ResourceCreate = lazy(() => import('~/modules/resource/pages/ResourceCreate'));
 
@@ -15,7 +16,7 @@ function DesignerRoutes() {
 	return (
 		<Route path='/' component={MatchDesigner}>
 			<Route path={PATHS.REFS_PATH}>
-				<Route path={'/'} component={() => <div>1</div>} />
+				<Route path={'/'} component={References} />
 				<Route path={PATHS.CREATE_PATH} component={ReferenceCreate} />
 			</Route>
 			<Route path={PATHS.COLORS_PATH}>
