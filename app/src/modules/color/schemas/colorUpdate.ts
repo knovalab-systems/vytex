@@ -20,7 +20,7 @@ export const ColorUpdateSchema = object({
 		hexadecimal('Ingresa un valor válido de hexadecimal.'),
 		check(e => e.length === 6 || e.length === 3, 'Ingresa solo 3 o 6 valores.'),
 	),
-	deleted_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
+	deleted_at: picklist<string[], string>(Object.keys(STATUS_OPTIONS), 'Selecciona un estado.'),
 });
 
 export type ColorUpdateType = InferInput<typeof ColorUpdateSchema>;

@@ -31,5 +31,5 @@ func (m *ColorMock) CreateColor(u *models.ColorCreateBody) (*models.Color, error
 
 func (m *ColorMock) UpdateColor(b *models.ColorUpdateBody) (*models.Color, error) {
 	args := m.Called()
-	return args.Get(0).(*models.Color), args.Error(0)
+	return args.Get(0).(*models.Color), args.Error(1)
 }

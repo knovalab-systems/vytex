@@ -122,8 +122,8 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 func (m *UserService) UpdateUser(b *models.UpdateUserBody) (*models.User, error) {
 	table := query.User
 
-	if b.Username != nil {
-		err := checkUsername(*b.Username)
+	if b.Username != "" {
+		err := checkUsername(b.Username)
 		if err != nil {
 			return nil, err
 		}
