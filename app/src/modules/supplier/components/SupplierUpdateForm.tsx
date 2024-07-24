@@ -1,6 +1,7 @@
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from "@modular-forms/solid";
 import { useNavigate } from "@solidjs/router";
+import { Show } from 'solid-js';
 import toast from "solid-toast";
 import { Button } from "~/components/ui/Button";
 import { Input } from "~/components/ui/Input";
@@ -30,14 +31,14 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 
 
     const handleSubmit: SubmitHandler<SupplierUpdateType> = async data => {
-        const newData = {
+        const formData = {
             ...data,
             code: String(data.code),
             nit: String(data.nit)
         };
 
-        const { deleted_at, ...rest } = newData;
-        const supplier: Supplier = Object.keys(rest).reduce((p: Supplier, v) => {
+        const { deleted_at, ...rest } = formData;
+        const supplier: Supplier = Object.keys(rest).reduce((p: Omit<Supplier, 'id'>, v) => {
             const field = rest[v as keyof typeof rest];
             const oldField = props.supplier?.[v];
             if (field && field !== oldField) {
