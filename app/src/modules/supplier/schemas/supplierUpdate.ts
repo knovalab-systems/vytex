@@ -10,7 +10,7 @@ export const SupplierUpdateSchema = object({
 		minValue(1, 'Ingresa el NIT.'),
 		check(n => String(n).length === 9, 'El NIT debe ser de 9 dígitos'),
 	),
-	deleted_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
+	deleted_at: picklist<string[], string>(Object.keys(STATUS_OPTIONS), 'Selecciona un estado.'),
 });
 
 export type SupplierUpdateType = InferInput<typeof SupplierUpdateSchema>;

@@ -160,13 +160,16 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
                                     setValue(form, 'deleted_at', value);
                                 }}
                                 options={Object.keys(STATUS_OPTIONS)}
-                                placeholder='Selecciona un rol'
+                                placeholder='Selecciona un estado'
                                 itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
                             >
-                                <SelectTrigger aria-label='Roles'>
+                                <SelectTrigger aria-label='Estado' title='Ver estados'>
                                     <SelectValue<string>>{state => state.selectedOption()}</SelectValue>
                                 </SelectTrigger>
                                 <SelectContent />
+                                <Show when={Boolean(field.error)}>
+                                    <div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+                                </Show>
                             </Select>
                         </div>
                     )}
