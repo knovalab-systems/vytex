@@ -1,5 +1,6 @@
 export * from './activity.js';
 export * from './collections.js';
+export * from './color.js';
 export * from './dashboards.js';
 export * from './extensions.js';
 export * from './fields.js';

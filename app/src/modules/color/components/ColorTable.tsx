@@ -1,6 +1,8 @@
 import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { COLORS_UPDATE_PATH } from '~/constants/paths';
 import type { GetColorsType } from '../requests/colorGet';
 
 function ColorTable(props: { colors?: GetColorsType }) {
@@ -37,7 +39,12 @@ function ColorTable(props: { colors?: GetColorsType }) {
 								<TableCell>
 									<StatusLabel status={!color.deleted_at} />
 								</TableCell>
-								<TableCell>Acciones</TableCell>
+								<ActionsCell
+									update={{
+										path: `${COLORS_UPDATE_PATH}/${color.id}`,
+										title: 'Actualizar Color',
+									}}
+								/>
 							</TableRow>
 						)}
 					</For>

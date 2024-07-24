@@ -107,3 +107,70 @@ func (m *ColorController) CreateColor(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, color)
 }
+
+// Get an color
+// @Summary      Get a given color
+// @Description  Get an color by its ID
+// @Tags         Colors
+// @Param		 colorId path string true "Color ID"
+// @Produce      json
+// @Success      200 {object} models.Color
+// @Failure      400
+// @Failure      500
+// @Router       /colors/colorId [get]
+func (m *ColorController) ReadColor(c echo.Context) error {
+	// for query params
+	u := new(models.ReadColor)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.ColorsBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.ColorsBadRequest()
+	}
+
+	// get color
+	color, err := m.ColorRepository.SelectColor(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, color)
+}
+
+// Update color
+// @Summary      Update use
+// @Description  Updates the fields from color
+// @Tags         Colors
+// @Param		 colorId path string true "Color ID"po
+// @Param		 models.UpdateColorBody body string true "Color update values"
+// @Produce      json
+// @Success      200 {object} models.Color
+// @Failure      400
+// @Failure      500
+// @Router       /colors/{colorId} [post]
+func (m *ColorController) UpdateColor(c echo.Context) error {
+	u := new(models.ColorUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateColorBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateColorBadRequest()
+	}
+
+	// update
+	color, err := m.ColorRepository.UpdateColor(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, color)
+}

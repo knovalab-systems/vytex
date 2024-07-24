@@ -257,5 +257,279 @@ func TestCreateColor(t *testing.T) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
 		}
 	})
+}
 
+func TestSelectColor(t *testing.T) {
+
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		// mocks
+		mockColor := mocks.ColorMock{}
+
+		// controller
+		controller := ColorController{ColorRepository: &mockColor}
+
+		// test
+		err := controller.ReadColor(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail binding, id is uint", func(t *testing.T) {
+		// context
+		id := "unId"
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues(id)
+		// mocks
+		mockColor := mocks.ColorMock{}
+
+		// controller
+		controller := ColorController{ColorRepository: &mockColor}
+
+		// test
+		err := controller.ReadColor(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not find color", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues("1")
+
+		// mocks
+		colorMock := mocks.ColorMock{}
+		colorMock.On("SelectColor").Return(errors.New("Error"))
+		colorController := ColorController{ColorRepository: &colorMock}
+
+		// test
+		err := colorController.ReadColor(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Gets color succesfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues("1")
+
+		// mocks
+		colorMock := mocks.ColorMock{}
+		colorMock.On("SelectColor").Return(nil, nil)
+		colorController := ColorController{ColorRepository: &colorMock}
+
+		// test
+		err := colorController.ReadColor(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
+func TestUpdateColor(t *testing.T) {
+
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		// mocks
+		mockColor := mocks.ColorMock{}
+
+		// controller
+		controller := ColorController{ColorRepository: &mockColor}
+
+		// test
+		err := controller.UpdateColor(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail binding, id is not uint", func(t *testing.T) {
+		// context
+		id := "unId"
+		req := httptest.NewRequest(http.MethodPost, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues(id)
+		// mocks
+		mockColor := mocks.ColorMock{}
+
+		// controller
+		controller := ColorController{ColorRepository: &mockColor}
+
+		// test
+		err := controller.UpdateColor(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail validate, wrong hexcolor format", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"name": "Blanco", "code": "1", "hex": "FFFFFF"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		colorMock := mocks.ColorMock{}
+
+		// controller
+		colorController := ColorController{ColorRepository: &colorMock}
+		// test
+		err := colorController.UpdateColor(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail update, color code exists", func(t *testing.T) {
+		// context
+		name := "Blanco"
+		code := "1"
+		hex := "#FFFFFF"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"name": name, "code": code, "hex": hex})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues(id)
+
+		// mocks
+		colorMock := mocks.ColorMock{}
+		colorMock.On("UpdateColor").Return(&models.Color{}, problems.ColorExists())
+		colorController := ColorController{ColorRepository: &colorMock}
+
+		// test
+		err := colorController.UpdateColor(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusConflict, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	testCasesOneValue := []models.ColorUpdateBody{{
+		Name: "Blanco",
+	},
+		{Code: "1"},
+		{Hex: "#FFFFFF"},
+	}
+
+	for i := range testCasesOneValue {
+		testCase := testCasesOneValue[i]
+		t.Run("Update color successfully on some values", func(t *testing.T) {
+			// context
+			id := "1"
+			body := new(bytes.Buffer)
+			json.NewEncoder(body).Encode(map[string]string{"name": testCase.Name, "code": testCase.Code, "hex": testCase.Hex})
+			req := httptest.NewRequest(http.MethodGet, "/", body)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			config.EchoValidator(e)
+			c := e.NewContext(req, rec)
+			c.SetParamNames("colorId")
+			c.SetParamValues(id)
+
+			// mocks
+			colorMock := mocks.ColorMock{}
+			colorMock.On("UpdateColor").Return(&models.Color{}, nil)
+			colorController := ColorController{ColorRepository: &colorMock}
+
+			// test
+			err := colorController.UpdateColor(c)
+			if assert.NoError(t, err) {
+				assert.Equal(t, http.StatusOK, rec.Code)
+			}
+		})
+	}
+
+	t.Run("Update color successfully with delete_ay", func(t *testing.T) {
+		// context
+		deleted_at := "2020-12-09T16:09:53+00:00"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"delete_at": deleted_at})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues(id)
+
+		// mocks
+		colorMock := mocks.ColorMock{}
+		colorMock.On("UpdateColor").Return(&models.Color{}, nil)
+		colorController := ColorController{ColorRepository: &colorMock}
+
+		// test
+		err := colorController.UpdateColor(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update color successfully on all values", func(t *testing.T) {
+		// context
+		name := "Blanco"
+		code := "1"
+		hex := "#FFFFFF"
+		deleted_at := "2020-12-09T16:09:53+00:00"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]string{"name": name, "code": code, "hex": hex, "delete_at": deleted_at})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("colorId")
+		c.SetParamValues(id)
+
+		// mocks
+		colorMock := mocks.ColorMock{}
+		colorMock.On("UpdateColor").Return(&models.Color{}, nil)
+		colorController := ColorController{ColorRepository: &colorMock}
+
+		// test
+		err := colorController.UpdateColor(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }

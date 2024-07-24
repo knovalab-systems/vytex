@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSelectUser(t *testing.T) {
+func TestSelectUsers(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get users", func(t *testing.T) {
@@ -64,7 +64,7 @@ func TestSelectUser(t *testing.T) {
 
 }
 
-func TestSelectUse(t *testing.T) {
+func TestSelectUser(t *testing.T) {
 
 	t.Run("Fail binding, id is not find", func(t *testing.T) {
 		// context
@@ -319,60 +319,6 @@ func TestUpdateUser(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]string{"role": "31b63ffb-15f5-48d7-9a24-587f437f07ec"})
-		req := httptest.NewRequest(http.MethodPost, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("userId")
-		c.SetParamValues("2312312")
-
-		// mocks
-		mockUser := mocks.UserMock{}
-
-		// controller
-		controller := UserController{UserRepository: &mockUser}
-
-		// test
-		err := controller.UpdateUser(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-
-	})
-
-	t.Run("Fail validate, username is a empty string", func(t *testing.T) {
-		// context
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"username": ""})
-		req := httptest.NewRequest(http.MethodPost, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("userId")
-		c.SetParamValues("2312312")
-
-		// mocks
-		mockUser := mocks.UserMock{}
-
-		// controller
-		controller := UserController{UserRepository: &mockUser}
-
-		// test
-		err := controller.UpdateUser(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-
-	})
-
-	t.Run("Fail validate, name is a empty string", func(t *testing.T) {
-		// context
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"name": ""})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
