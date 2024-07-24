@@ -54,7 +54,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 
 		return updateColorRequest(props.color?.id, color)
 			.then(() => {
-				toast.success('Usuario actualizado correctamente');
+				toast.success('Color actualizado correctamente');
 				navigate(COLORS_PATH);
 			})
 			.catch(error => {

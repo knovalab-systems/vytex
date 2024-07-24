@@ -21,7 +21,7 @@ function SupplierCreateForm() {
 		const supplier = { ...data, code: String(data.code), nit: String(data.nit) };
 		return createSupplierRequest(supplier)
 			.then(() => {
-				toast.success('Color creado correctamente');
+				toast.success('Proveedor creado correctamente');
 				navigate(SUPPLIERS_PATH);
 			})
 			.catch(error => {
