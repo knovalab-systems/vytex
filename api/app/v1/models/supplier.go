@@ -38,7 +38,7 @@ type SupplierUpdateBody struct {
 	DeletedAt Optional[time.Time] `json:"deleted_at"`
 }
 
-func (m *SupplierUpdateBody) ToUpdate() (map[string]interface{}, error) {
+func (m *SupplierUpdateBody) ToUpdate() map[string]interface{} {
 	updateMap := map[string]interface{}{}
 
 	if m.Name != "" {
@@ -66,5 +66,5 @@ func (m *SupplierUpdateBody) ToUpdate() (map[string]interface{}, error) {
 
 	}
 
-	return updateMap, nil
+	return updateMap
 }
