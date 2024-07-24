@@ -1,7 +1,8 @@
 import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 import type { GetUsersType } from '../requests/userGet';
-import ActionsCell from './ActionsCell';
 import DeletedAtCell from './DeletedAtCell';
 import RoleCell from './RoleCell';
 
@@ -33,7 +34,16 @@ function UserTable(props: { users?: GetUsersType }) {
 								<TableCell>{user.name}</TableCell>
 								<RoleCell userId={user.id} roleValue={user.role as string} />
 								<DeletedAtCell deleted_at={user.deleted_at} userId={user.id} />
-								<ActionsCell userId={user.id} />
+								<ActionsCell
+									update={{
+										path: `${USER_UPDATE_PATH}/${user.id}`,
+										title: 'Actualizar usuario',
+									}}
+									details={{
+										path: `${USERS_PATH}/${user.id}`,
+										title: 'Detalles del usuario',
+									}}
+								/>
 							</TableRow>
 						)}
 					</For>

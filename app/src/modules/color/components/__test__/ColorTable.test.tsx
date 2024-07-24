@@ -3,6 +3,12 @@ import '@testing-library/jest-dom';
 import type { GetColorsType } from '../../requests/colorGet';
 import ColorTable from '../ColorTable';
 
+vi.mock('~/components/ActionsCell', () => ({
+	default: () => {
+		return <td>Actions</td>;
+	},
+}));
+
 describe('Color Table', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();

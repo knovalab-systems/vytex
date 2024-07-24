@@ -9,7 +9,6 @@ export type UpdateColorOutput<
 	Item extends object = VytexColor<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
 
-
 /**
  * Update an existing color.
  *

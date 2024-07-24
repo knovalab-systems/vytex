@@ -16,8 +16,16 @@ describe('ActionsCell', () => {
 		vi.resetAllMocks();
 	});
 
-	it('renders correctly', () => {
-		render(() => <ActionsCell userId='1' />);
+	it('renders correctly on empty', () => {
+		render(() => <ActionsCell />);
+
+		const emptyTitle = screen.getByText('Acciones');
+
+		expect(emptyTitle).toBeInTheDocument();
+	});
+
+	it('renders correctly on update n details', () => {
+		render(() => <ActionsCell update={{ path: '', title: '' }} details={{ path: '', title: '' }} />);
 
 		const updateButton = screen.getByText('Actualizar');
 		const detailsButton = screen.getByText('Detalles');
@@ -27,7 +35,7 @@ describe('ActionsCell', () => {
 	});
 
 	it('calls the Updates correclty', () => {
-		render(() => <ActionsCell userId='1' />);
+		render(() => <ActionsCell update={{ path: '', title: '' }} details={{ path: '', title: '' }} />);
 
 		const updateButton = screen.getByText('Actualizar');
 		fireEvent.click(updateButton);
@@ -36,7 +44,7 @@ describe('ActionsCell', () => {
 	});
 
 	it('calls the Details correclty', () => {
-		render(() => <ActionsCell userId='1' />);
+		render(() => <ActionsCell update={{ path: '', title: '' }} details={{ path: '', title: '' }} />);
 
 		const detailsButton = screen.getByText('Detalles');
 		fireEvent.click(detailsButton);

@@ -36,16 +36,16 @@ export const readColors =
  * @throws Will throw if key is empty
  */
 export const readColor =
-<Schema extends object, const TQuery extends Query<Schema, VytexColor<Schema>>>(
-	key: VytexColor<Schema>['id'],
-	query?: TQuery,
-): RestCommand<ReadColorOutput<Schema, TQuery>, Schema> =>
-() => {
-	throwIfEmpty(String(key), 'Key cannot be empty');
+	<Schema extends object, const TQuery extends Query<Schema, VytexColor<Schema>>>(
+		key: VytexColor<Schema>['id'],
+		query?: TQuery,
+	): RestCommand<ReadColorOutput<Schema, TQuery>, Schema> =>
+	() => {
+		throwIfEmpty(String(key), 'Key cannot be empty');
 
-	return {
-		path: `/colors/${key}`,
-		params: query ?? {},
-		method: 'GET',
+		return {
+			path: `/colors/${key}`,
+			params: query ?? {},
+			method: 'GET',
+		};
 	};
-};
