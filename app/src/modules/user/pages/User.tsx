@@ -12,7 +12,7 @@ function User() {
 	return (
 		<div class='flex items-center justify-center h-full'>
 			<Switch>
-				<Match when={user.isPending || user.isRefetching}>
+				<Match when={user.isLoading}>
 					<Loading label='Cargando usuario' />
 				</Match>
 				<Match when={user.isSuccess}>{<UserCard user={user.data} />}</Match>

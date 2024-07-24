@@ -11,10 +11,8 @@ vi.mock('../RoleCell', () => ({
 	},
 }));
 
-const mockActions = vi.fn();
-vi.mock('../ActionsCell', () => ({
+vi.mock('~/components/ActionsCell', () => ({
 	default: () => {
-		mockActions();
 		return <td>Actions</td>;
 	},
 }));

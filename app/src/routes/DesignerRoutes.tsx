@@ -6,6 +6,7 @@ import * as PATHS from '~/constants/paths';
 const ReferenceCreate = lazy(() => import('~/modules/reference/pages/ReferenceCreate'));
 const Colors = lazy(() => import('~/modules/color/pages/Colors'));
 const ColorCreate = lazy(() => import('~/modules/color/pages/ColorCreate'));
+const ColorUpdate = lazy(() => import('~/modules/color/pages/ColorUpdate'));
 const Fabrics = lazy(() => import('~/modules/fabric/pages/Fabrics'));
 const FabricCreate = lazy(() => import('~/modules/fabric/pages/FabricCreate'));
 const References = lazy(() => import('~/modules/reference/pages/References'));
@@ -22,6 +23,7 @@ function DesignerRoutes() {
 			<Route path={PATHS.COLORS_PATH}>
 				<Route path={'/'} component={Colors} />
 				<Route path={PATHS.CREATE_PATH} component={ColorCreate} />
+				<Route path={`${PATHS.UPDATE_PATH}/:id`} component={ColorUpdate} />
 			</Route>
 			<Route path={PATHS.FABRICS_PATH}>
 				<Route path={'/'} component={Fabrics} />

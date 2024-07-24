@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readColors } from '@vytex/client';
+import { aggregate, readColor, readColors } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -37,3 +37,16 @@ async function countColors() {
 		}),
 	);
 }
+
+export function getColorQuery(id: number) {
+	return queryOptions({
+		queryKey: ['getColor'],
+		queryFn: () => getColor(id),
+	});
+}
+
+async function getColor(id: number) {
+	return await client.request(readColor(id));
+}
+
+export type GetColorType = Awaited<ReturnType<typeof getColor>>;

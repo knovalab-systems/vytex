@@ -56,7 +56,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 				if (error.response.status === STATUS_CODE.conflict) {
 					toast.error(`El nombre de usuario "${data.username}" no está disponible. Intente con otro.`);
 				} else {
-					toast.error('Error al actualizar usuario');
+					toast.error('Error al actualizar usuario.');
 				}
 			});
 	};
@@ -145,10 +145,10 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 									setValue(form, 'deleted_at', value);
 								}}
 								options={Object.keys(STATUS_OPTIONS)}
-								placeholder='Selecciona un rol'
+								placeholder='Selecciona un estado'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Roles'>
+								<SelectTrigger aria-label='Estado'>
 									<SelectValue<string>>{state => state.selectedOption()}</SelectValue>
 								</SelectTrigger>
 								<SelectContent />
