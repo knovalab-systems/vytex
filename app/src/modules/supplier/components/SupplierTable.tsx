@@ -2,6 +2,7 @@ import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { GetSuppliersType } from '../requests/supplierGet';
+import ActionsCell from './ActionsCell';
 
 function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 	return (
@@ -35,7 +36,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 								<TableCell>
 									<StatusLabel status={!supplier.deleted_at} />
 								</TableCell>
-								<TableCell>Acciones</TableCell>
+								<ActionsCell supplierId={supplier.id} />
 							</TableRow>
 						)}
 					</For>

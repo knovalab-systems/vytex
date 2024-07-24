@@ -47,6 +47,40 @@ func (m *SupplierController) ReadSuppliers(c echo.Context) error {
 
 }
 
+// Get supplier
+// @Summary      Get supplier from db
+// @Description  Get supplier by id
+// @Tags         Suppliers
+// @Produce      json
+// @Param        id path string true "Supplier ID"
+// @Success      200 {object} models.Supplier
+// @Failure      400
+// @Failure      403
+// @Failure      500
+// @Router       /suppliers/{id} [get]
+func (m *SupplierController) ReadSupplier(c echo.Context) error {
+	u := new(models.ReadSupplier)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.SuppliersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.SuppliersBadRequest()
+	}
+
+	// get supplier
+	supplier, err := m.SupplierRepository.SelectSupplier(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, supplier)
+}
+
 // Get aggregate from suppliers
 // @Summary      Get aggregate from suppliers
 // @Description  Get result of aggregate function from suppliers
@@ -106,4 +140,37 @@ func (m *SupplierController) CreateSupplier(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, supplier)
+}
+
+// Update supplier
+// @Summary      Update supplier
+// @Description  Updates the fields from supplier
+// @Tags         Suppliers
+// @Param		 supplierId path string true "Supplier ID"
+// @Param		 models.SupplierUpdateBody body string true "Supplier update values"
+// @Produce      json
+// @Success      200 {object} models.Supplier
+// @Failure      400
+// @Failure      500
+// @Router       /suppliers/{supplierId} [PATCH]
+func (m *SupplierController) UpdateSupplier(c echo.Context) error {
+	u := new(models.SupplierUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateSupplierBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateSupplierBadRequest()
+	}
+
+	// update
+	supplier, err := m.SupplierRepository.UpdateSupplier(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, supplier)
 }

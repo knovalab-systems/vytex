@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadSuppliers(t *testing.T) {
+func TestSelectSuppliers(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get suppliers", func(t *testing.T) {
@@ -63,6 +63,66 @@ func TestReadSuppliers(t *testing.T) {
 		}
 	})
 
+}
+
+func TestSelectSupplier(t *testing.T) {
+
+	t.Run("Fail binding, id is no find", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+
+		// controller
+		controller := SupplierController{SupplierRepository: &supplierMock}
+
+		err := controller.ReadSupplier(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not found supplier", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues("1")
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("SelectSupplier").Return(errors.New("Error"))
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		err := supplierController.ReadSupplier(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get supplier successfully", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues("1")
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("SelectSupplier").Return(nil, nil)
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.ReadSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }
 
 func TestAggregateSupplier(t *testing.T) {
@@ -141,7 +201,7 @@ func TestCreateSupplier(t *testing.T) {
 	t.Run("Fail validate nit no len=10", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "proveedor", "code": "3232", "nit": "1123232323"})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -162,11 +222,11 @@ func TestCreateSupplier(t *testing.T) {
 	})
 
 	missingFieldsTestCases := []models.SupplierCreateBody{{
-		Name:  "proveedor",
+		Name:  "supplier",
 		Code:  "1",
 		Brand: "brand",
 	}, {
-		Name:  "proveedor",
+		Name:  "supplier",
 		Nit:   "1111111111",
 		Brand: "brand",
 	}, {
@@ -174,7 +234,7 @@ func TestCreateSupplier(t *testing.T) {
 		Brand: "brand",
 		Nit:   "1111111111",
 	}, {
-		Name: "proveedor",
+		Name: "supplier",
 		Code: "1",
 		Nit:  "1111111111",
 	}}
@@ -261,4 +321,287 @@ func TestCreateSupplier(t *testing.T) {
 		}
 	})
 
+}
+
+func TestUpdateSupplier(t *testing.T) {
+
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+		// test
+		err := supplierController.UpdateSupplier(c)
+		// test
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail validate nit no len=10", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail create, supplier code exits", func(t *testing.T) {
+		// context
+		code := "1"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, errors.New("error"))
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.CreateSupplier(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail create, supplier nit exits", func(t *testing.T) {
+		// context
+		nit := "111111111"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, errors.New("error"))
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.CreateSupplier(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Update supplier successfully with name", func(t *testing.T) {
+		// context
+		name := "Supplier"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update supplier successfully with code", func(t *testing.T) {
+		// context
+		code := "1"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update supplier successfully with nit", func(t *testing.T) {
+		// context
+		nit := "111111111"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update supplier successfully with brand", func(t *testing.T) {
+		// context
+		brand := "brand"
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"brand": brand})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update supplier successfully with deleted_at", func(t *testing.T) {
+		// context
+		id := "1"
+		delete_at := "2021-09-01T00:00:00Z"
+
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"deleted_at": delete_at})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+
+	t.Run("Update supplier successfully with all fields", func(t *testing.T) {
+		// context
+		id := "1"
+		name := "Supplier"
+		code := "1"
+		nit := "111111111"
+		brand := "brand"
+		delete_at := "2021-09-01T00:00:00Z"
+
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
+			"nit": nit, "brand": brand, "deleted_at": delete_at})
+		req := httptest.NewRequest(http.MethodGet, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("supplierId")
+		c.SetParamValues(id)
+
+		// mocks
+		supplierMock := mocks.SupplierMock{}
+		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+
+		// controller
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
+
+		// test
+		err := supplierController.UpdateSupplier(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }

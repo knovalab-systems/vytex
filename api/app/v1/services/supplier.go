@@ -37,6 +37,31 @@ func (m *SupplierService) SelectSuppliers(q *models.Query) ([]*models.Supplier, 
 	return suppliers, nil
 }
 
+func (m *SupplierService) SelectSupplier(q *models.ReadSupplier) (*models.Supplier, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.SuppliersBadRequest()
+	}
+
+	// def query
+	table := query.Supplier
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = supplierFields(s, q.Fields)
+
+	// run query
+	supplier, err := table.Unscoped().Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return supplier, nil
+}
+
 func (m *SupplierService) AggregationSuppliers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.Supplier
 	s := table.Unscoped()
@@ -145,4 +170,34 @@ func supplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
 		s = s.Select(f...)
 	}
 	return s
+}
+
+func (m *SupplierService) UpdateSupplier(b *models.SupplierUpdateBody) (*models.Supplier, error) {
+	err := checkSupplierExists(b.Code, b.Nit)
+	if err != nil {
+		return nil, err
+	}
+
+	table := query.Supplier
+
+	updateMap, err := b.ToUpdate()
+	if err != nil || len(updateMap) == 0 {
+		return nil, problems.SuppliersBadRequest()
+	}
+
+	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, problems.ReadAccess()
+	}
+
+	supplier, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return supplier, nil
 }

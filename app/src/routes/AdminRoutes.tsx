@@ -10,6 +10,7 @@ const UserUpdate = lazy(() => import('~/modules/user/pages/UserUpdate'));
 const Roles = lazy(() => import('~/modules/user/pages/Roles'));
 const Suppliers = lazy(() => import('~/modules/supplier/pages/Suppliers'));
 const SupplierCreate = lazy(() => import('~/modules/supplier/pages/SupplierCreate'));
+const SupplierUpdate = lazy(() => import('~/modules/supplier/pages/SupplierUpdate'));
 const Customs = lazy(() => import('~/modules/custom/pages/Customs'));
 
 function AdminRoutes() {
@@ -24,6 +25,7 @@ function AdminRoutes() {
 			<Route path={PATHS.SUPPLIERS_PATH}>
 				<Route path={'/'} component={Suppliers} />
 				<Route path={PATHS.CREATE_PATH} component={SupplierCreate} />
+				<Route path={`${PATHS.UPDATE_PATH}/:id`} component={SupplierUpdate} />
 			</Route>
 			<Route path={PATHS.CUSTOMS_PATH}>
 				<Route path={'/'} component={Customs} />
