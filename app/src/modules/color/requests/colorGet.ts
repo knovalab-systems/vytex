@@ -40,7 +40,7 @@ async function countColors() {
 
 export function getColorQuery(id: number) {
 	return queryOptions({
-		queryKey: ['getColor'],
+		queryKey: ['getColor', id],
 		queryFn: () => getColor(id),
 	});
 }
