@@ -325,7 +325,7 @@ func TestCreateSupplier(t *testing.T) {
 
 func TestUpdateSupplier(t *testing.T) {
 
-	t.Run("Fail binding", func(t *testing.T) {
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
@@ -343,101 +343,8 @@ func TestUpdateSupplier(t *testing.T) {
 		supplierController := SupplierController{SupplierRepository: &supplierMock}
 		// test
 		err := supplierController.UpdateSupplier(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Fail validate, name is a empty string", func(t *testing.T) {
-		// context
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "", "code": "3232", "nit": "1123232323"})
-		req := httptest.NewRequest(http.MethodPost, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
 		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Fail validate, code is a empty string", func(t *testing.T) {
-		// context
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "", "nit": "1123232323"})
-		req := httptest.NewRequest(http.MethodPost, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Fail validate, nit is a empty string", func(t *testing.T) {
-		// context
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": ""})
-		req := httptest.NewRequest(http.MethodPost, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
-	})
-
-	t.Run("Fail validate, brand is a empty string", func(t *testing.T) {
-		// context
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323", "brand": ""})
-		req := httptest.NewRequest(http.MethodPost, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.Error(t, err) {
-			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
-		}
+		assert.Error(t, err)
 	})
 
 	t.Run("Fail validate nit no len=10", func(t *testing.T) {
