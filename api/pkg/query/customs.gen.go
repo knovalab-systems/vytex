@@ -34,6 +34,224 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 	_custom.CanceledAt = field.NewTime(tableName, "canceled_at")
 	_custom.CreatedBy = field.NewString(tableName, "created_by")
 	_custom.CanceledBy = field.NewString(tableName, "canceled_by")
+	_custom.Orders = customHasManyOrders{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Orders", "models.Order"),
+		CancelUser: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Orders.CancelUser", "models.User"),
+		},
+		CreateUser: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Orders.CreateUser", "models.User"),
+		},
+		ColorByReference: struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Reference struct {
+				field.RelationField
+				User struct {
+					field.RelationField
+				}
+				FrontImage struct {
+					field.RelationField
+				}
+				BackImage struct {
+					field.RelationField
+				}
+				Colors struct {
+					field.RelationField
+				}
+			}
+			Resources struct {
+				field.RelationField
+				Resource struct {
+					field.RelationField
+					Color struct {
+						field.RelationField
+					}
+					Supplier struct {
+						field.RelationField
+					}
+				}
+			}
+			Fabrics struct {
+				field.RelationField
+				Fabric struct {
+					field.RelationField
+					Color struct {
+						field.RelationField
+					}
+					Supplier struct {
+						field.RelationField
+					}
+					Composition struct {
+						field.RelationField
+					}
+				}
+			}
+		}{
+			RelationField: field.NewRelation("Orders.ColorByReference", "models.ColorByReference"),
+			Color: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Orders.ColorByReference.Color", "models.Color"),
+			},
+			Reference: struct {
+				field.RelationField
+				User struct {
+					field.RelationField
+				}
+				FrontImage struct {
+					field.RelationField
+				}
+				BackImage struct {
+					field.RelationField
+				}
+				Colors struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Orders.ColorByReference.Reference", "models.Reference"),
+				User: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.User", "models.User"),
+				},
+				FrontImage: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.FrontImage", "models.Image"),
+				},
+				BackImage: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.BackImage", "models.Image"),
+				},
+				Colors: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Colors", "models.ColorByReference"),
+				},
+			},
+			Resources: struct {
+				field.RelationField
+				Resource struct {
+					field.RelationField
+					Color struct {
+						field.RelationField
+					}
+					Supplier struct {
+						field.RelationField
+					}
+				}
+			}{
+				RelationField: field.NewRelation("Orders.ColorByReference.Resources", "models.ResourceByReference"),
+				Resource: struct {
+					field.RelationField
+					Color struct {
+						field.RelationField
+					}
+					Supplier struct {
+						field.RelationField
+					}
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Resources.Resource", "models.Resource"),
+					Color: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Resources.Resource.Color", "models.Color"),
+					},
+					Supplier: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Resources.Resource.Supplier", "models.Supplier"),
+					},
+				},
+			},
+			Fabrics: struct {
+				field.RelationField
+				Fabric struct {
+					field.RelationField
+					Color struct {
+						field.RelationField
+					}
+					Supplier struct {
+						field.RelationField
+					}
+					Composition struct {
+						field.RelationField
+					}
+				}
+			}{
+				RelationField: field.NewRelation("Orders.ColorByReference.Fabrics", "models.FabricByReference"),
+				Fabric: struct {
+					field.RelationField
+					Color struct {
+						field.RelationField
+					}
+					Supplier struct {
+						field.RelationField
+					}
+					Composition struct {
+						field.RelationField
+					}
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Fabrics.Fabric", "models.Fabric"),
+					Color: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Fabrics.Fabric.Color", "models.Color"),
+					},
+					Supplier: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Fabrics.Fabric.Supplier", "models.Supplier"),
+					},
+					Composition: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Fabrics.Fabric.Composition", "models.Composition"),
+					},
+				},
+			},
+		},
+		Custom: struct {
+			field.RelationField
+			CreateUser struct {
+				field.RelationField
+			}
+			CancelUser struct {
+				field.RelationField
+			}
+			Orders struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Orders.Custom", "models.Custom"),
+			CreateUser: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Orders.Custom.CreateUser", "models.User"),
+			},
+			CancelUser: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Orders.Custom.CancelUser", "models.User"),
+			},
+			Orders: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Orders.Custom.Orders", "models.Order"),
+			},
+		},
+	}
+
 	_custom.CreateUser = customBelongsToCreateUser{
 		db: db.Session(&gorm.Session{}),
 
@@ -62,6 +280,8 @@ type custom struct {
 	CanceledAt field.Time
 	CreatedBy  field.String
 	CanceledBy field.String
+	Orders     customHasManyOrders
+
 	CreateUser customBelongsToCreateUser
 
 	CancelUser customBelongsToCancelUser
@@ -104,7 +324,7 @@ func (c *custom) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (c *custom) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 9)
+	c.fieldMap = make(map[string]field.Expr, 10)
 	c.fieldMap["id"] = c.ID
 	c.fieldMap["client"] = c.Client
 	c.fieldMap["created_at"] = c.CreatedAt
@@ -123,6 +343,144 @@ func (c custom) clone(db *gorm.DB) custom {
 func (c custom) replaceDB(db *gorm.DB) custom {
 	c.customDo.ReplaceDB(db)
 	return c
+}
+
+type customHasManyOrders struct {
+	db *gorm.DB
+
+	field.RelationField
+
+	CancelUser struct {
+		field.RelationField
+	}
+	CreateUser struct {
+		field.RelationField
+	}
+	ColorByReference struct {
+		field.RelationField
+		Color struct {
+			field.RelationField
+		}
+		Reference struct {
+			field.RelationField
+			User struct {
+				field.RelationField
+			}
+			FrontImage struct {
+				field.RelationField
+			}
+			BackImage struct {
+				field.RelationField
+			}
+			Colors struct {
+				field.RelationField
+			}
+		}
+		Resources struct {
+			field.RelationField
+			Resource struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+			}
+		}
+		Fabrics struct {
+			field.RelationField
+			Fabric struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+				Composition struct {
+					field.RelationField
+				}
+			}
+		}
+	}
+	Custom struct {
+		field.RelationField
+		CreateUser struct {
+			field.RelationField
+		}
+		CancelUser struct {
+			field.RelationField
+		}
+		Orders struct {
+			field.RelationField
+		}
+	}
+}
+
+func (a customHasManyOrders) Where(conds ...field.Expr) *customHasManyOrders {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a customHasManyOrders) WithContext(ctx context.Context) *customHasManyOrders {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a customHasManyOrders) Session(session *gorm.Session) *customHasManyOrders {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a customHasManyOrders) Model(m *models.Custom) *customHasManyOrdersTx {
+	return &customHasManyOrdersTx{a.db.Model(m).Association(a.Name())}
+}
+
+type customHasManyOrdersTx struct{ tx *gorm.Association }
+
+func (a customHasManyOrdersTx) Find() (result []*models.Order, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a customHasManyOrdersTx) Append(values ...*models.Order) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a customHasManyOrdersTx) Replace(values ...*models.Order) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a customHasManyOrdersTx) Delete(values ...*models.Order) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a customHasManyOrdersTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a customHasManyOrdersTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type customBelongsToCreateUser struct {

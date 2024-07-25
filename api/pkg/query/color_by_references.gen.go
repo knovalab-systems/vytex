@@ -28,6 +28,7 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 	tableName := _colorByReference.colorByReferenceDo.TableName()
 	_colorByReference.ALL = field.NewAsterisk(tableName)
 	_colorByReference.ID = field.NewUint(tableName, "id")
+	_colorByReference.CreatedAt = field.NewTime(tableName, "created_at")
 	_colorByReference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_colorByReference.ColorID = field.NewUint(tableName, "color_id")
 	_colorByReference.ReferenceID = field.NewUint(tableName, "reference_id")
@@ -99,6 +100,64 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 		RelationField: field.NewRelation("Color", "models.Color"),
 	}
 
+	_colorByReference.Reference = colorByReferenceBelongsToReference{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Reference", "models.Reference"),
+		User: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Reference.User", "models.User"),
+		},
+		FrontImage: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Reference.FrontImage", "models.Image"),
+		},
+		BackImage: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Reference.BackImage", "models.Image"),
+		},
+		Colors: struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Reference struct {
+				field.RelationField
+			}
+			Resources struct {
+				field.RelationField
+			}
+			Fabrics struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Reference.Colors", "models.ColorByReference"),
+			Color: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Reference.Colors.Color", "models.Color"),
+			},
+			Reference: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Reference.Colors.Reference", "models.Reference"),
+			},
+			Resources: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Reference.Colors.Resources", "models.ResourceByReference"),
+			},
+			Fabrics: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Reference.Colors.Fabrics", "models.FabricByReference"),
+			},
+		},
+	}
+
 	_colorByReference.fillFieldMap()
 
 	return _colorByReference
@@ -109,6 +168,7 @@ type colorByReference struct {
 
 	ALL         field.Asterisk
 	ID          field.Uint
+	CreatedAt   field.Time
 	DeletedAt   field.Field
 	ColorID     field.Uint
 	ReferenceID field.Uint
@@ -117,6 +177,8 @@ type colorByReference struct {
 	Fabrics colorByReferenceHasManyFabrics
 
 	Color colorByReferenceBelongsToColor
+
+	Reference colorByReferenceBelongsToReference
 
 	fieldMap map[string]field.Expr
 }
@@ -134,6 +196,7 @@ func (c colorByReference) As(alias string) *colorByReference {
 func (c *colorByReference) updateTableName(table string) *colorByReference {
 	c.ALL = field.NewAsterisk(table)
 	c.ID = field.NewUint(table, "id")
+	c.CreatedAt = field.NewTime(table, "created_at")
 	c.DeletedAt = field.NewField(table, "deleted_at")
 	c.ColorID = field.NewUint(table, "color_id")
 	c.ReferenceID = field.NewUint(table, "reference_id")
@@ -153,8 +216,9 @@ func (c *colorByReference) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (c *colorByReference) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 7)
+	c.fieldMap = make(map[string]field.Expr, 9)
 	c.fieldMap["id"] = c.ID
+	c.fieldMap["created_at"] = c.CreatedAt
 	c.fieldMap["deleted_at"] = c.DeletedAt
 	c.fieldMap["color_id"] = c.ColorID
 	c.fieldMap["reference_id"] = c.ReferenceID
@@ -404,6 +468,102 @@ func (a colorByReferenceBelongsToColorTx) Clear() error {
 }
 
 func (a colorByReferenceBelongsToColorTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type colorByReferenceBelongsToReference struct {
+	db *gorm.DB
+
+	field.RelationField
+
+	User struct {
+		field.RelationField
+	}
+	FrontImage struct {
+		field.RelationField
+	}
+	BackImage struct {
+		field.RelationField
+	}
+	Colors struct {
+		field.RelationField
+		Color struct {
+			field.RelationField
+		}
+		Reference struct {
+			field.RelationField
+		}
+		Resources struct {
+			field.RelationField
+		}
+		Fabrics struct {
+			field.RelationField
+		}
+	}
+}
+
+func (a colorByReferenceBelongsToReference) Where(conds ...field.Expr) *colorByReferenceBelongsToReference {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a colorByReferenceBelongsToReference) WithContext(ctx context.Context) *colorByReferenceBelongsToReference {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a colorByReferenceBelongsToReference) Session(session *gorm.Session) *colorByReferenceBelongsToReference {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a colorByReferenceBelongsToReference) Model(m *models.ColorByReference) *colorByReferenceBelongsToReferenceTx {
+	return &colorByReferenceBelongsToReferenceTx{a.db.Model(m).Association(a.Name())}
+}
+
+type colorByReferenceBelongsToReferenceTx struct{ tx *gorm.Association }
+
+func (a colorByReferenceBelongsToReferenceTx) Find() (result *models.Reference, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a colorByReferenceBelongsToReferenceTx) Append(values ...*models.Reference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a colorByReferenceBelongsToReferenceTx) Replace(values ...*models.Reference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a colorByReferenceBelongsToReferenceTx) Delete(values ...*models.Reference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a colorByReferenceBelongsToReferenceTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a colorByReferenceBelongsToReferenceTx) Count() int64 {
 	return a.tx.Count()
 }
 

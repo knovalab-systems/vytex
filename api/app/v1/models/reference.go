@@ -28,6 +28,7 @@ type ColorByReference struct {
 	ColorID     uint                  `json:"color_id,omitempty"`
 	Color       *Color                `json:"color,omitempty"`
 	ReferenceID uint                  `json:"reference_id,omitempty"`
+	Reference   *Reference            `json:"reference_,omitempty"`
 	Resources   []ResourceByReference `json:"resources,omitempty"`
 	Fabrics     []FabricByReference   `json:"fabrics,omitempty"`
 }

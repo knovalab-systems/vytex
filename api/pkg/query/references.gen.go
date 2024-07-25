@@ -43,6 +43,43 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 		}{
 			RelationField: field.NewRelation("Colors.Color", "models.Color"),
 		},
+		Reference: struct {
+			field.RelationField
+			User struct {
+				field.RelationField
+			}
+			FrontImage struct {
+				field.RelationField
+			}
+			BackImage struct {
+				field.RelationField
+			}
+			Colors struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Colors.Reference", "models.Reference"),
+			User: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.User", "models.User"),
+			},
+			FrontImage: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.FrontImage", "models.Image"),
+			},
+			BackImage: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.BackImage", "models.Image"),
+			},
+			Colors: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.Colors", "models.ColorByReference"),
+			},
+		},
 		Resources: struct {
 			field.RelationField
 			Resource struct {
@@ -234,6 +271,21 @@ type referenceHasManyColors struct {
 
 	Color struct {
 		field.RelationField
+	}
+	Reference struct {
+		field.RelationField
+		User struct {
+			field.RelationField
+		}
+		FrontImage struct {
+			field.RelationField
+		}
+		BackImage struct {
+			field.RelationField
+		}
+		Colors struct {
+			field.RelationField
+		}
 	}
 	Resources struct {
 		field.RelationField

@@ -70,6 +70,23 @@ func (m *CustomService) AggregationCustoms(q *models.AggregateQuery) ([]*models.
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
+func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom, error) {
+
+	orders := []models.Order{}
+	for _, v := range b.Orders {
+		orders = append(orders, models.Order{Status: models.Created, SizeInt: v.SizeInt, CreatedBy: b.CreatedBy, ColorByReferenceID: v.ColorByReferenceID})
+	}
+
+	custom := &models.Custom{CreatedBy: b.CreatedBy, Client: b.Client, Orders: orders}
+
+	err := query.Custom.Create(custom)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return custom, nil
+}
+
 func customFields(s query.ICustomDo, fields string) query.ICustomDo {
 	if fields != "" {
 		table := query.Custom

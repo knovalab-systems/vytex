@@ -10,6 +10,18 @@ type Custom struct {
 	CanceledAt *time.Time `json:"canceled_at,omitempty"`
 	CreatedBy  string     `json:"created_by,omitempty"`
 	CreateUser *User      `json:"create_user,omitempty" gorm:"foreignKey:CreatedBy"`
-	CanceledBy string     `json:"canceled_by,omitempty"`
+	CanceledBy *string    `json:"canceled_by,omitempty"`
 	CancelUser *User      `json:"cancel_user,omitempty" gorm:"foreignKey:CanceledBy"`
+	Orders     []Order    `json:"orders,omitempty"`
+}
+
+type CustomCreateBody struct {
+	Client    string                  `json:"client,omitempty" validate:"required"`
+	CreatedBy string                  `json:"created_by" validate:"required,uuid"`
+	Orders    []CustomOrderCreateBody `json:"orders" validate:"required,min=1,dive"`
+}
+
+type CustomOrderCreateBody struct {
+	ColorByReferenceID uint `json:"color_by_reference_id" validate:"required,gt=0"`
+	SizeInt
 }
