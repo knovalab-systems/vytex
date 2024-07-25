@@ -362,7 +362,9 @@ func TestCreateReference(t *testing.T) {
 
 		// test
 		err := controller.CreateReference(c)
-		assert.NoError(t, err)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusCreated, rec.Code)
+		}
 	})
 
 }

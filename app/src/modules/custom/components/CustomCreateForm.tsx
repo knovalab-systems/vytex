@@ -19,7 +19,7 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { CUSTOMS_PATH } from '~/constants/paths';
-import { type Colors, useColors } from '~/hooks/useColors';
+import { useColors } from '~/hooks/useColors';
 import type { Custom } from '~/schemas/core';
 import { SIZES, defaultSizeValues } from '~/schemas/sizes';
 import { type RefByCustomCreate, createCustomRequest } from '../requests/CustomCreate';
@@ -33,7 +33,6 @@ type ColorReference = {
 };
 
 function CustomCreateForm(props: {
-	colors: Colors;
 	refereces: RefByCustomCreate;
 }) {
 	const { colorsRecord } = useColors();
@@ -41,11 +40,11 @@ function CustomCreateForm(props: {
 		const arr: ColorReference[] = props.refereces.reduce((p: ColorReference[], v) => {
 			const colors: ColorReference[] =
 				v.colors?.map(c => {
-					const color = () => colorsRecord()[c.color_id as number];
+					const color = () => colorsRecord()[c.color_id as number] || {};
 					return {
-						colorName: color().name as string,
-						hex: color().hex as string,
-						code: v.code as string,
+						colorName: color().name || '',
+						hex: color().hex || '',
+						code: v.code || '',
 						id: c.id,
 					};
 				}) || [];
@@ -90,7 +89,7 @@ function CustomCreateForm(props: {
 
 		return createCustomRequest(custom)
 			.then(() => {
-				toast.success('Pedido creado correctamente');
+				toast.success('Pedido creado correctamente.');
 				navigate(CUSTOMS_PATH);
 			})
 			.catch(() => {
@@ -108,7 +107,7 @@ function CustomCreateForm(props: {
 					<Field name='client'>
 						{(field, props) => (
 							<div>
-								<Label for='client-field'>Nombre</Label>
+								<Label for='client-field'>Cliente</Label>
 								<Input
 									placeholder='Nombre del cliente'
 									autocomplete='off'
@@ -171,13 +170,13 @@ function CustomCreateForm(props: {
 																		)}
 																		options={colorRerences().arr}
 																	>
-																		<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
+																		<ComboboxControl aria-errormessage={field.error} aria-label='Referencias'>
 																			<div
 																				class='h-5 w-5 mr-2 m-auto border'
 																				style={{ background: colorsRecord()[field.value || 0]?.hex || 'transparent' }}
 																			/>
 																			<ComboboxInput />
-																			<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+																			<ComboboxTrigger title='Ver referencias' aria-label='Referencias' />
 																		</ComboboxControl>
 																		<Show when={Boolean(field.error)}>
 																			<div class={'text-sm my-auto text-red-600'}>{field.error}</div>

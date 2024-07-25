@@ -1,7 +1,7 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
-import { type Colors, useColors } from '~/hooks/useColors';
+import { useColors } from '~/hooks/useColors';
 import CustomCreateForm from '../components/CustomCreateForm';
 import { type RefByCustomCreate, getRefByCustomCreateQuery } from '../requests/CustomCreate';
 
@@ -20,7 +20,7 @@ function CustomCreate() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<CustomCreateForm colors={colorsQuery.data as Colors} refereces={references.data as RefByCustomCreate} />
+					<CustomCreateForm refereces={references.data as RefByCustomCreate} />
 				</Match>
 			</Switch>
 		</div>
