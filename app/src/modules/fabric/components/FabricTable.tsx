@@ -25,7 +25,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 				</TableHeader>
 				<Show when={(props.fabrics?.length ?? 0) === 0}>
 					<TableRow class='bg-white'>
-						<TableCell colspan={6}>No se han encontraron telas.</TableCell>
+						<TableCell colspan={9}>No se han encontraron telas.</TableCell>
 					</TableRow>
 				</Show>
 				<For each={props.fabrics}>

@@ -31,31 +31,72 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 	_colorByReference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_colorByReference.ColorID = field.NewUint(tableName, "color_id")
 	_colorByReference.ReferenceID = field.NewUint(tableName, "reference_id")
+	_colorByReference.Resources = colorByReferenceHasManyResources{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Resources", "models.ResourceByReference"),
+		Resource: struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Supplier struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Resources.Resource", "models.Resource"),
+			Color: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Resources.Resource.Color", "models.Color"),
+			},
+			Supplier: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Resources.Resource.Supplier", "models.Supplier"),
+			},
+		},
+	}
+
+	_colorByReference.Fabrics = colorByReferenceHasManyFabrics{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Fabrics", "models.FabricByReference"),
+		Fabric: struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Supplier struct {
+				field.RelationField
+			}
+			Composition struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Fabrics.Fabric", "models.Fabric"),
+			Color: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Fabrics.Fabric.Color", "models.Color"),
+			},
+			Supplier: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Fabrics.Fabric.Supplier", "models.Supplier"),
+			},
+			Composition: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Fabrics.Fabric.Composition", "models.Composition"),
+			},
+		},
+	}
+
 	_colorByReference.Color = colorByReferenceBelongsToColor{
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("Color", "models.Color"),
-	}
-
-	_colorByReference.Reference = colorByReferenceBelongsToReference{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("Reference", "models.Reference"),
-		User: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("Reference.User", "models.User"),
-		},
-		FrontImage: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("Reference.FrontImage", "models.Image"),
-		},
-		BackImage: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("Reference.BackImage", "models.Image"),
-		},
 	}
 
 	_colorByReference.fillFieldMap()
@@ -71,9 +112,11 @@ type colorByReference struct {
 	DeletedAt   field.Field
 	ColorID     field.Uint
 	ReferenceID field.Uint
-	Color       colorByReferenceBelongsToColor
+	Resources   colorByReferenceHasManyResources
 
-	Reference colorByReferenceBelongsToReference
+	Fabrics colorByReferenceHasManyFabrics
+
+	Color colorByReferenceBelongsToColor
 
 	fieldMap map[string]field.Expr
 }
@@ -110,7 +153,7 @@ func (c *colorByReference) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (c *colorByReference) fillFieldMap() {
-	c.fieldMap = make(map[string]field.Expr, 6)
+	c.fieldMap = make(map[string]field.Expr, 7)
 	c.fieldMap["id"] = c.ID
 	c.fieldMap["deleted_at"] = c.DeletedAt
 	c.fieldMap["color_id"] = c.ColorID
@@ -126,6 +169,171 @@ func (c colorByReference) clone(db *gorm.DB) colorByReference {
 func (c colorByReference) replaceDB(db *gorm.DB) colorByReference {
 	c.colorByReferenceDo.ReplaceDB(db)
 	return c
+}
+
+type colorByReferenceHasManyResources struct {
+	db *gorm.DB
+
+	field.RelationField
+
+	Resource struct {
+		field.RelationField
+		Color struct {
+			field.RelationField
+		}
+		Supplier struct {
+			field.RelationField
+		}
+	}
+}
+
+func (a colorByReferenceHasManyResources) Where(conds ...field.Expr) *colorByReferenceHasManyResources {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a colorByReferenceHasManyResources) WithContext(ctx context.Context) *colorByReferenceHasManyResources {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a colorByReferenceHasManyResources) Session(session *gorm.Session) *colorByReferenceHasManyResources {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a colorByReferenceHasManyResources) Model(m *models.ColorByReference) *colorByReferenceHasManyResourcesTx {
+	return &colorByReferenceHasManyResourcesTx{a.db.Model(m).Association(a.Name())}
+}
+
+type colorByReferenceHasManyResourcesTx struct{ tx *gorm.Association }
+
+func (a colorByReferenceHasManyResourcesTx) Find() (result []*models.ResourceByReference, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a colorByReferenceHasManyResourcesTx) Append(values ...*models.ResourceByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a colorByReferenceHasManyResourcesTx) Replace(values ...*models.ResourceByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a colorByReferenceHasManyResourcesTx) Delete(values ...*models.ResourceByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a colorByReferenceHasManyResourcesTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a colorByReferenceHasManyResourcesTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type colorByReferenceHasManyFabrics struct {
+	db *gorm.DB
+
+	field.RelationField
+
+	Fabric struct {
+		field.RelationField
+		Color struct {
+			field.RelationField
+		}
+		Supplier struct {
+			field.RelationField
+		}
+		Composition struct {
+			field.RelationField
+		}
+	}
+}
+
+func (a colorByReferenceHasManyFabrics) Where(conds ...field.Expr) *colorByReferenceHasManyFabrics {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a colorByReferenceHasManyFabrics) WithContext(ctx context.Context) *colorByReferenceHasManyFabrics {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a colorByReferenceHasManyFabrics) Session(session *gorm.Session) *colorByReferenceHasManyFabrics {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a colorByReferenceHasManyFabrics) Model(m *models.ColorByReference) *colorByReferenceHasManyFabricsTx {
+	return &colorByReferenceHasManyFabricsTx{a.db.Model(m).Association(a.Name())}
+}
+
+type colorByReferenceHasManyFabricsTx struct{ tx *gorm.Association }
+
+func (a colorByReferenceHasManyFabricsTx) Find() (result []*models.FabricByReference, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a colorByReferenceHasManyFabricsTx) Append(values ...*models.FabricByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a colorByReferenceHasManyFabricsTx) Replace(values ...*models.FabricByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a colorByReferenceHasManyFabricsTx) Delete(values ...*models.FabricByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a colorByReferenceHasManyFabricsTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a colorByReferenceHasManyFabricsTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type colorByReferenceBelongsToColor struct {
@@ -196,87 +404,6 @@ func (a colorByReferenceBelongsToColorTx) Clear() error {
 }
 
 func (a colorByReferenceBelongsToColorTx) Count() int64 {
-	return a.tx.Count()
-}
-
-type colorByReferenceBelongsToReference struct {
-	db *gorm.DB
-
-	field.RelationField
-
-	User struct {
-		field.RelationField
-	}
-	FrontImage struct {
-		field.RelationField
-	}
-	BackImage struct {
-		field.RelationField
-	}
-}
-
-func (a colorByReferenceBelongsToReference) Where(conds ...field.Expr) *colorByReferenceBelongsToReference {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a colorByReferenceBelongsToReference) WithContext(ctx context.Context) *colorByReferenceBelongsToReference {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a colorByReferenceBelongsToReference) Session(session *gorm.Session) *colorByReferenceBelongsToReference {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a colorByReferenceBelongsToReference) Model(m *models.ColorByReference) *colorByReferenceBelongsToReferenceTx {
-	return &colorByReferenceBelongsToReferenceTx{a.db.Model(m).Association(a.Name())}
-}
-
-type colorByReferenceBelongsToReferenceTx struct{ tx *gorm.Association }
-
-func (a colorByReferenceBelongsToReferenceTx) Find() (result *models.Reference, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a colorByReferenceBelongsToReferenceTx) Append(values ...*models.Reference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a colorByReferenceBelongsToReferenceTx) Replace(values ...*models.Reference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a colorByReferenceBelongsToReferenceTx) Delete(values ...*models.Reference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a colorByReferenceBelongsToReferenceTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a colorByReferenceBelongsToReferenceTx) Count() int64 {
 	return a.tx.Count()
 }
 

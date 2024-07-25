@@ -1,4 +1,3 @@
-import type { CoreSchema, VytexCreateReference } from '@vytex/client';
 import { type InferInput, array, minLength, minValue, number, object, pipe, string } from 'valibot';
 import { SizesSchema } from '~/schemas/sizes';
 
@@ -18,4 +17,3 @@ export const ReferenceCreateSchema = object({
 });
 
 export type ReferenceCreateType = InferInput<typeof ReferenceCreateSchema>;
-export type ReferenceCreateRequest = Partial<VytexCreateReference<CoreSchema>>;

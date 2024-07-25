@@ -29,11 +29,8 @@ import {
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreate';
 import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizes';
-import {
-	type ReferenceCreateRequest,
-	ReferenceCreateSchema,
-	type ReferenceCreateType,
-} from '../schemas/referenceCreateSchema';
+import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreateSchema';
+import type { Reference } from '~/schemas/core';
 
 type Combined = {
 	id: string;
@@ -89,21 +86,21 @@ function ReferenceCreateForm(props: {
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
 		await handleImageUpload();
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
-		const reference: ReferenceCreateRequest = {
+		const reference: Reference = {
 			code: data.code.toString(),
 			front: uploadedFiles()?.[0].id || '',
 			back: uploadedFiles()?.[1].id || '',
 			colors: data.colors.map((color, i) => ({
-				color: color.color,
+				color_id: color.color,
 				...color.resources.reduce(
 					(p: ResourceFabric, v) => {
 						const r = Number(v.resource.slice(1));
 						if (v.resource.startsWith('r')) {
 							checkFabricResources[i].resource = true;
-							p.resources.push({ ...(v.sizes as VytexSize), resource: r });
+							p.resources.push({ ...(v.sizes as VytexSize), resource_id: r });
 						} else {
 							checkFabricResources[i].fabric = true;
-							p.fabrics.push({ ...(v.sizes as VytexSize), fabric: r });
+							p.fabrics.push({ ...(v.sizes as VytexSize), fabric_id: r });
 						}
 						return p;
 					},

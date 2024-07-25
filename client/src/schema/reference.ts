@@ -2,10 +2,9 @@ import type {
 	MergeCoreCollection,
 	VytexColor,
 	VytexFabric,
-	VytexFabricsBySize,
 	VytexImage,
 	VytexResource,
-	VytexResourcesBySize,
+	VytexSize,
 	VytexUser,
 } from '../index.js';
 
@@ -24,12 +23,7 @@ export type VytexReference<Schema extends object> = MergeCoreCollection<
 		created_at: string | null;
 		created_by: string | null;
 		user: VytexUser<Schema[]> | null;
-		colors: {
-			color_id: number | null;
-			color: VytexColor<Schema[]> | null;
-			fabrics: VytexFabric<Schema[]>[];
-			resources: VytexResource<Schema[]>[];
-		}[];
+		colors: VytexColorByReference<Schema[]>[] | null;
 	}
 >;
 
@@ -38,26 +32,38 @@ export type VytexColorByReference<Schema extends object> = MergeCoreCollection<
 	'vytex_references',
 	{
 		id: number;
-		key: string | null;
-		reference_id: string | null;
-		reference: VytexReference<Schema[]> | null;
+		reference_id: number | null;
 		deleted_at: string | null;
 		created_at: string | null;
+		color_id: number | null;
 		color: VytexColor<Schema[]> | null;
+		fabrics: VytexFabricByReference<Schema>[] | null;
+		resources: VytexResourceByReference<Schema>[] | null;
 	}
 >;
 
-export type VytexCreateReference<Schema extends object> = MergeCoreCollection<
+export type VytexResourceByReference<Schema extends object> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
+		id: number;
 		code: string | null;
-		front: string | null;
-		back: string | null;
-		colors: {
-			color: number | null;
-			fabrics: VytexFabricsBySize[];
-			resources: VytexResourcesBySize[];
-		}[];
-	}
+		deleted_at: string | null;
+		color_by_reference_id: number | null;
+		resource_id: number | null;
+		resource: VytexResource<Schema> | null;
+	} & VytexSize
+>;
+
+export type VytexFabricByReference<Schema extends object> = MergeCoreCollection<
+	Schema,
+	'vytex_references',
+	{
+		id: number;
+		code: string | null;
+		deleted_at: string | null;
+		color_by_reference_id: number | null;
+		fabric_id: number | null;
+		fabric: VytexFabric<Schema> | null;
+	} & VytexSize
 >;

@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { createReference, readFabrics, readResources } from '@vytex/client';
 import { client } from '~/lib/client';
-import type { ReferenceCreateRequest } from '../schemas/referenceCreateSchema';
+import type { Reference } from '~/schemas/core';
 
 export function getFabricsByRefCreateQuery() {
 	return queryOptions({
@@ -49,6 +49,6 @@ async function getResourcesByRefCreate() {
 
 export type ResourcesByRefCreate = Awaited<ReturnType<typeof getResourcesByRefCreate>>;
 
-export async function createReferenceRequest(reference: ReferenceCreateRequest) {
+export async function createReferenceRequest(reference: Reference) {
 	return await client.request(createReference(reference));
 }

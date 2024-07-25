@@ -29,8 +29,8 @@ func newResourceByReference(db *gorm.DB, opts ...gen.DOOption) resourceByReferen
 	_resourceByReference.ALL = field.NewAsterisk(tableName)
 	_resourceByReference.ID = field.NewUint(tableName, "id")
 	_resourceByReference.Code = field.NewString(tableName, "code")
-	_resourceByReference.ColorByReferenceID = field.NewUint(tableName, "color_by_reference_id")
 	_resourceByReference.DeletedAt = field.NewField(tableName, "deleted_at")
+	_resourceByReference.ColorByReferenceID = field.NewUint(tableName, "color_by_reference_id")
 	_resourceByReference.ResourceId = field.NewUint(tableName, "resource_id")
 	_resourceByReference.XS2 = field.NewFloat64(tableName, "xs2")
 	_resourceByReference.XS = field.NewFloat64(tableName, "xs")
@@ -45,46 +45,6 @@ func newResourceByReference(db *gorm.DB, opts ...gen.DOOption) resourceByReferen
 	_resourceByReference.XL6 = field.NewFloat64(tableName, "xl6")
 	_resourceByReference.XL7 = field.NewFloat64(tableName, "xl7")
 	_resourceByReference.XL8 = field.NewFloat64(tableName, "xl8")
-	_resourceByReference.ColorByReference = resourceByReferenceBelongsToColorByReference{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("ColorByReference", "models.ColorByReference"),
-		Color: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("ColorByReference.Color", "models.Color"),
-		},
-		Reference: struct {
-			field.RelationField
-			User struct {
-				field.RelationField
-			}
-			FrontImage struct {
-				field.RelationField
-			}
-			BackImage struct {
-				field.RelationField
-			}
-		}{
-			RelationField: field.NewRelation("ColorByReference.Reference", "models.Reference"),
-			User: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("ColorByReference.Reference.User", "models.User"),
-			},
-			FrontImage: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("ColorByReference.Reference.FrontImage", "models.Image"),
-			},
-			BackImage: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("ColorByReference.Reference.BackImage", "models.Image"),
-			},
-		},
-	}
-
 	_resourceByReference.Resource = resourceByReferenceBelongsToResource{
 		db: db.Session(&gorm.Session{}),
 
@@ -112,8 +72,8 @@ type resourceByReference struct {
 	ALL                field.Asterisk
 	ID                 field.Uint
 	Code               field.String
-	ColorByReferenceID field.Uint
 	DeletedAt          field.Field
+	ColorByReferenceID field.Uint
 	ResourceId         field.Uint
 	XS2                field.Float64
 	XS                 field.Float64
@@ -128,9 +88,7 @@ type resourceByReference struct {
 	XL6                field.Float64
 	XL7                field.Float64
 	XL8                field.Float64
-	ColorByReference   resourceByReferenceBelongsToColorByReference
-
-	Resource resourceByReferenceBelongsToResource
+	Resource           resourceByReferenceBelongsToResource
 
 	fieldMap map[string]field.Expr
 }
@@ -149,8 +107,8 @@ func (r *resourceByReference) updateTableName(table string) *resourceByReference
 	r.ALL = field.NewAsterisk(table)
 	r.ID = field.NewUint(table, "id")
 	r.Code = field.NewString(table, "code")
-	r.ColorByReferenceID = field.NewUint(table, "color_by_reference_id")
 	r.DeletedAt = field.NewField(table, "deleted_at")
+	r.ColorByReferenceID = field.NewUint(table, "color_by_reference_id")
 	r.ResourceId = field.NewUint(table, "resource_id")
 	r.XS2 = field.NewFloat64(table, "xs2")
 	r.XS = field.NewFloat64(table, "xs")
@@ -181,11 +139,11 @@ func (r *resourceByReference) GetFieldByName(fieldName string) (field.OrderExpr,
 }
 
 func (r *resourceByReference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 20)
+	r.fieldMap = make(map[string]field.Expr, 19)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
-	r.fieldMap["color_by_reference_id"] = r.ColorByReferenceID
 	r.fieldMap["deleted_at"] = r.DeletedAt
+	r.fieldMap["color_by_reference_id"] = r.ColorByReferenceID
 	r.fieldMap["resource_id"] = r.ResourceId
 	r.fieldMap["xs2"] = r.XS2
 	r.fieldMap["xs"] = r.XS
@@ -211,93 +169,6 @@ func (r resourceByReference) clone(db *gorm.DB) resourceByReference {
 func (r resourceByReference) replaceDB(db *gorm.DB) resourceByReference {
 	r.resourceByReferenceDo.ReplaceDB(db)
 	return r
-}
-
-type resourceByReferenceBelongsToColorByReference struct {
-	db *gorm.DB
-
-	field.RelationField
-
-	Color struct {
-		field.RelationField
-	}
-	Reference struct {
-		field.RelationField
-		User struct {
-			field.RelationField
-		}
-		FrontImage struct {
-			field.RelationField
-		}
-		BackImage struct {
-			field.RelationField
-		}
-	}
-}
-
-func (a resourceByReferenceBelongsToColorByReference) Where(conds ...field.Expr) *resourceByReferenceBelongsToColorByReference {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a resourceByReferenceBelongsToColorByReference) WithContext(ctx context.Context) *resourceByReferenceBelongsToColorByReference {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a resourceByReferenceBelongsToColorByReference) Session(session *gorm.Session) *resourceByReferenceBelongsToColorByReference {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a resourceByReferenceBelongsToColorByReference) Model(m *models.ResourceByReference) *resourceByReferenceBelongsToColorByReferenceTx {
-	return &resourceByReferenceBelongsToColorByReferenceTx{a.db.Model(m).Association(a.Name())}
-}
-
-type resourceByReferenceBelongsToColorByReferenceTx struct{ tx *gorm.Association }
-
-func (a resourceByReferenceBelongsToColorByReferenceTx) Find() (result *models.ColorByReference, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a resourceByReferenceBelongsToColorByReferenceTx) Append(values ...*models.ColorByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a resourceByReferenceBelongsToColorByReferenceTx) Replace(values ...*models.ColorByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a resourceByReferenceBelongsToColorByReferenceTx) Delete(values ...*models.ColorByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a resourceByReferenceBelongsToColorByReferenceTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a resourceByReferenceBelongsToColorByReferenceTx) Count() int64 {
-	return a.tx.Count()
 }
 
 type resourceByReferenceBelongsToResource struct {

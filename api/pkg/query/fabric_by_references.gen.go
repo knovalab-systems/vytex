@@ -29,8 +29,8 @@ func newFabricByReference(db *gorm.DB, opts ...gen.DOOption) fabricByReference {
 	_fabricByReference.ALL = field.NewAsterisk(tableName)
 	_fabricByReference.ID = field.NewUint(tableName, "id")
 	_fabricByReference.Code = field.NewString(tableName, "code")
-	_fabricByReference.ColorByReferenceID = field.NewUint(tableName, "color_by_reference_id")
 	_fabricByReference.DeletedAt = field.NewField(tableName, "deleted_at")
+	_fabricByReference.ColorByReferenceID = field.NewUint(tableName, "color_by_reference_id")
 	_fabricByReference.FabricId = field.NewUint(tableName, "fabric_id")
 	_fabricByReference.XS2 = field.NewFloat64(tableName, "xs2")
 	_fabricByReference.XS = field.NewFloat64(tableName, "xs")
@@ -45,46 +45,6 @@ func newFabricByReference(db *gorm.DB, opts ...gen.DOOption) fabricByReference {
 	_fabricByReference.XL6 = field.NewFloat64(tableName, "xl6")
 	_fabricByReference.XL7 = field.NewFloat64(tableName, "xl7")
 	_fabricByReference.XL8 = field.NewFloat64(tableName, "xl8")
-	_fabricByReference.ColorByReference = fabricByReferenceBelongsToColorByReference{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("ColorByReference", "models.ColorByReference"),
-		Color: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("ColorByReference.Color", "models.Color"),
-		},
-		Reference: struct {
-			field.RelationField
-			User struct {
-				field.RelationField
-			}
-			FrontImage struct {
-				field.RelationField
-			}
-			BackImage struct {
-				field.RelationField
-			}
-		}{
-			RelationField: field.NewRelation("ColorByReference.Reference", "models.Reference"),
-			User: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("ColorByReference.Reference.User", "models.User"),
-			},
-			FrontImage: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("ColorByReference.Reference.FrontImage", "models.Image"),
-			},
-			BackImage: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("ColorByReference.Reference.BackImage", "models.Image"),
-			},
-		},
-	}
-
 	_fabricByReference.Fabric = fabricByReferenceBelongsToFabric{
 		db: db.Session(&gorm.Session{}),
 
@@ -117,8 +77,8 @@ type fabricByReference struct {
 	ALL                field.Asterisk
 	ID                 field.Uint
 	Code               field.String
-	ColorByReferenceID field.Uint
 	DeletedAt          field.Field
+	ColorByReferenceID field.Uint
 	FabricId           field.Uint
 	XS2                field.Float64
 	XS                 field.Float64
@@ -133,9 +93,7 @@ type fabricByReference struct {
 	XL6                field.Float64
 	XL7                field.Float64
 	XL8                field.Float64
-	ColorByReference   fabricByReferenceBelongsToColorByReference
-
-	Fabric fabricByReferenceBelongsToFabric
+	Fabric             fabricByReferenceBelongsToFabric
 
 	fieldMap map[string]field.Expr
 }
@@ -154,8 +112,8 @@ func (f *fabricByReference) updateTableName(table string) *fabricByReference {
 	f.ALL = field.NewAsterisk(table)
 	f.ID = field.NewUint(table, "id")
 	f.Code = field.NewString(table, "code")
-	f.ColorByReferenceID = field.NewUint(table, "color_by_reference_id")
 	f.DeletedAt = field.NewField(table, "deleted_at")
+	f.ColorByReferenceID = field.NewUint(table, "color_by_reference_id")
 	f.FabricId = field.NewUint(table, "fabric_id")
 	f.XS2 = field.NewFloat64(table, "xs2")
 	f.XS = field.NewFloat64(table, "xs")
@@ -186,11 +144,11 @@ func (f *fabricByReference) GetFieldByName(fieldName string) (field.OrderExpr, b
 }
 
 func (f *fabricByReference) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 20)
+	f.fieldMap = make(map[string]field.Expr, 19)
 	f.fieldMap["id"] = f.ID
 	f.fieldMap["code"] = f.Code
-	f.fieldMap["color_by_reference_id"] = f.ColorByReferenceID
 	f.fieldMap["deleted_at"] = f.DeletedAt
+	f.fieldMap["color_by_reference_id"] = f.ColorByReferenceID
 	f.fieldMap["fabric_id"] = f.FabricId
 	f.fieldMap["xs2"] = f.XS2
 	f.fieldMap["xs"] = f.XS
@@ -216,93 +174,6 @@ func (f fabricByReference) clone(db *gorm.DB) fabricByReference {
 func (f fabricByReference) replaceDB(db *gorm.DB) fabricByReference {
 	f.fabricByReferenceDo.ReplaceDB(db)
 	return f
-}
-
-type fabricByReferenceBelongsToColorByReference struct {
-	db *gorm.DB
-
-	field.RelationField
-
-	Color struct {
-		field.RelationField
-	}
-	Reference struct {
-		field.RelationField
-		User struct {
-			field.RelationField
-		}
-		FrontImage struct {
-			field.RelationField
-		}
-		BackImage struct {
-			field.RelationField
-		}
-	}
-}
-
-func (a fabricByReferenceBelongsToColorByReference) Where(conds ...field.Expr) *fabricByReferenceBelongsToColorByReference {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a fabricByReferenceBelongsToColorByReference) WithContext(ctx context.Context) *fabricByReferenceBelongsToColorByReference {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a fabricByReferenceBelongsToColorByReference) Session(session *gorm.Session) *fabricByReferenceBelongsToColorByReference {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a fabricByReferenceBelongsToColorByReference) Model(m *models.FabricByReference) *fabricByReferenceBelongsToColorByReferenceTx {
-	return &fabricByReferenceBelongsToColorByReferenceTx{a.db.Model(m).Association(a.Name())}
-}
-
-type fabricByReferenceBelongsToColorByReferenceTx struct{ tx *gorm.Association }
-
-func (a fabricByReferenceBelongsToColorByReferenceTx) Find() (result *models.ColorByReference, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a fabricByReferenceBelongsToColorByReferenceTx) Append(values ...*models.ColorByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a fabricByReferenceBelongsToColorByReferenceTx) Replace(values ...*models.ColorByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a fabricByReferenceBelongsToColorByReferenceTx) Delete(values ...*models.ColorByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a fabricByReferenceBelongsToColorByReferenceTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a fabricByReferenceBelongsToColorByReferenceTx) Count() int64 {
-	return a.tx.Count()
 }
 
 type fabricByReferenceBelongsToFabric struct {
