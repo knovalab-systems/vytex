@@ -1,6 +1,7 @@
 package services
 
 import (
+	"reflect"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -74,6 +75,19 @@ func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom
 
 	orders := []models.Order{}
 	for _, v := range b.Orders {
+
+		reflectSize := reflect.ValueOf(v.SizeInt)
+		total := 0
+
+		for i := 0; i < reflectSize.NumField(); i++ {
+			total = total + int(reflectSize.Field(i).Int())
+		}
+
+		// must be gt 0
+		if total == 0 {
+			return nil, problems.CreateCustomBadRequest()
+		}
+
 		orders = append(orders, models.Order{Status: models.Created, SizeInt: v.SizeInt, CreatedBy: b.CreatedBy, ColorByReferenceID: v.ColorByReferenceID})
 	}
 

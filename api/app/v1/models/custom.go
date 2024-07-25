@@ -9,9 +9,9 @@ type Custom struct {
 	FinishedAt *time.Time `json:"finished_at,omitempty"`
 	CanceledAt *time.Time `json:"canceled_at,omitempty"`
 	CreatedBy  string     `json:"created_by,omitempty"`
-	CreateUser *User      `json:"create_user,omitempty" gorm:"foreignKey:CreatedBy"`
 	CanceledBy *string    `json:"canceled_by,omitempty"`
 	CancelUser *User      `json:"cancel_user,omitempty" gorm:"foreignKey:CanceledBy"`
+	CreateUser *User      `json:"create_user,omitempty" gorm:"foreignKey:CreatedBy"`
 	Orders     []Order    `json:"orders,omitempty"`
 }
 

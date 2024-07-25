@@ -86,6 +86,13 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 		f := []field.Expr{}
 
 		for _, v := range fieldsArr {
+
+			if strings.HasPrefix(v, "colors.") {
+				f = append(f, table.ID)
+				s = s.Preload(table.Colors)
+				continue
+			}
+
 			switch v {
 			case "id":
 				f = append(f, table.ID)
@@ -97,7 +104,7 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 				f = append(f, table.DeletedAt)
 			case "created_by":
 				f = append(f, table.CreatedBy)
-			case "User":
+			case "user":
 				f = append(f, table.CreatedBy)
 				s = s.Preload(table.User)
 			case "front":
@@ -110,6 +117,9 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 			case "back_image":
 				f = append(f, table.Back)
 				s = s.Preload(table.BackImage)
+			case "colors":
+				f = append(f, table.ID)
+				s = s.Preload(table.Colors)
 			default:
 				f = append(f, table.ALL)
 			}
