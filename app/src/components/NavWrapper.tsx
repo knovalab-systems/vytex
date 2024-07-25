@@ -55,7 +55,7 @@ function NavWrapper(props: RouteSectionProps) {
 				<div class='flex flex-col w-full h-fit lg:h-full lg:flex-row'>
 					<SideBarNav pages={pages[ADMIN_ROLE]} />
 					<MobileNav pages={pages[ADMIN_ROLE]} />
-					<main class='flex-1 m-2'>
+					<main class='flex-1 m-2 overflow-auto'>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}
 						</Suspense>

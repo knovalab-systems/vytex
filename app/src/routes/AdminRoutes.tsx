@@ -12,6 +12,7 @@ const Suppliers = lazy(() => import('~/modules/supplier/pages/Suppliers'));
 const SupplierCreate = lazy(() => import('~/modules/supplier/pages/SupplierCreate'));
 const SupplierUpdate = lazy(() => import('~/modules/supplier/pages/SupplierUpdate'));
 const Customs = lazy(() => import('~/modules/custom/pages/Customs'));
+const CustomCreate = lazy(() => import('~/modules/custom/pages/CustomCreate'));
 
 function AdminRoutes() {
 	return (
@@ -29,6 +30,7 @@ function AdminRoutes() {
 			</Route>
 			<Route path={PATHS.CUSTOMS_PATH}>
 				<Route path={'/'} component={Customs} />
+				<Route path={PATHS.CREATE_PATH} component={CustomCreate} />
 			</Route>
 			<Route path={PATHS.ROLES_PATH} component={Roles} />
 		</Route>

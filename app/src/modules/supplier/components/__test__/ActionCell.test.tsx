@@ -5,32 +5,31 @@ import ActionsCell from '../ActionsCell';
 
 const mockA = vi.fn();
 vi.mock('@solidjs/router', () => ({
-    A: (props: { children: JSXElement }) => {
-        mockA();
-        return <button type='button'>{props.children}</button>;
-    },
+	A: (props: { children: JSXElement }) => {
+		mockA();
+		return <button type='button'>{props.children}</button>;
+	},
 }));
 
 describe('ActionsCell', () => {
-    beforeEach(() => {
-        vi.resetAllMocks();
-    });
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
 
-    it('renders correctly', () => {
-        render(() => <ActionsCell supplierId={1} />);
+	it('renders correctly', () => {
+		render(() => <ActionsCell supplierId={1} />);
 
-        const updateButton = screen.getByText('Actualizar');
+		const updateButton = screen.getByText('Actualizar');
 
-        expect(updateButton).toBeInTheDocument();
-    });
+		expect(updateButton).toBeInTheDocument();
+	});
 
-    it('calls the Updates correclty', () => {
-        render(() => <ActionsCell supplierId={2} />);
+	it('calls the Updates correclty', () => {
+		render(() => <ActionsCell supplierId={2} />);
 
-        const updateButton = screen.getByText('Actualizar');
-        fireEvent.click(updateButton);
+		const updateButton = screen.getByText('Actualizar');
+		fireEvent.click(updateButton);
 
-        expect(mockA).toBeCalled();
-    });
-
+		expect(mockA).toBeCalled();
+	});
 });

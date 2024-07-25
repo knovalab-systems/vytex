@@ -7,7 +7,7 @@ export const SizesSchema = object(entriesFromList(SIZES, pipe(number(ERROR_TEXT)
 
 export type SizesType = InferInput<typeof SizesSchema>;
 
-export const defaultSizeSchema = SIZES.reduce<SizesType>((p: SizesType, v) => {
+export const defaultSizeValues = SIZES.reduce<SizesType>((p: SizesType, v) => {
 	p[v] = 0;
 	return p;
 }, {} as SizesType);

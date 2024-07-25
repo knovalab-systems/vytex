@@ -2,6 +2,7 @@ import type {
 	CoreSchema,
 	DeepPartial,
 	VytexColor,
+	VytexCustom,
 	VytexFabric,
 	VytexReference,
 	VytexResource,
@@ -16,3 +17,4 @@ export type Fabric = Partial<VytexFabric<CoreSchema>>;
 export type Resource = Partial<VytexResource<CoreSchema>>;
 export type Supplier = Partial<VytexSupplier<CoreSchema>>;
 export type Reference = DeepPartial<VytexReference<CoreSchema>>;
+export type Custom = DeepPartial<VytexCustom<CoreSchema>>;

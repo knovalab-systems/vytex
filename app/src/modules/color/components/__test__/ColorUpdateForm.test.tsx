@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
+import { createPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/colorUpdate';
 import ColorUpdateForm from '../ColorUpdateForm';
-import { createPointerEvent } from '~/utils/event';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({

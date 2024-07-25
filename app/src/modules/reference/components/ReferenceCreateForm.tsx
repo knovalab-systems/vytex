@@ -28,9 +28,9 @@ import {
 	type ResourcesByRefCreate,
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreate';
-import { type ResourceFabric, SIZES, defaultSizeSchema } from '~/schemas/sizes';
-import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreateSchema';
 import type { Reference } from '~/schemas/core';
+import { type ResourceFabric, SIZES, defaultSizeValues } from '~/schemas/sizes';
+import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreate';
 
 type Combined = {
 	id: string;
@@ -66,7 +66,7 @@ function ReferenceCreateForm(props: {
 		initialValues: {
 			colors: [
 				{
-					resources: [{ resource: '', sizes: defaultSizeSchema }],
+					resources: [{ resource: '', sizes: defaultSizeValues }],
 				},
 			],
 		},
@@ -335,7 +335,7 @@ function ReferenceCreateForm(props: {
 																insert(form, fieldResources.name, {
 																	value: {
 																		resource: '',
-																		sizes: defaultSizeSchema,
+																		sizes: defaultSizeValues,
 																	},
 																});
 															}}
@@ -372,7 +372,7 @@ function ReferenceCreateForm(props: {
 									insert(form, fieldColors.name, {
 										value: {
 											color: 0,
-											resources: [{ resource: '', sizes: defaultSizeSchema }],
+											resources: [{ resource: '', sizes: defaultSizeValues }],
 										},
 									});
 								}}

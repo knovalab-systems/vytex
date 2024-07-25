@@ -1,6 +1,9 @@
+import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
+import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import Loading from '~/components/Loading';
+import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -10,6 +13,7 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
+import { CUSTOMS_CREATE_PATH } from '~/constants/paths';
 import CustomTable from '../components/CustomTable';
 import { countCustomsQuery, getCustomsQuery } from '../requests/CustomGet';
 
@@ -25,6 +29,13 @@ function Customs() {
 
 	return (
 		<div class='h-full flex flex-col'>
+			<div class='mb-2'>
+				<A href={CUSTOMS_CREATE_PATH}>
+					<Button class='bg-purple-600 hover:bg-purple-700'>
+						Nuevo Pedido <AiOutlinePlus class='ml-2' size={22} />
+					</Button>
+				</A>
+			</div>
 			<Switch>
 				<Match when={customs.isLoading || countCustoms.isLoading}>
 					<Loading label='Cargando pedidos' />
