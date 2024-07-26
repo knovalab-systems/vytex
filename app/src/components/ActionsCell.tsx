@@ -9,7 +9,7 @@ type Action = {
 	path: string;
 };
 
-function ActionsCell(props: { update?: Action; details?: Action }) {
+function ActionsCell(props: { update?: Action; details?: Action, create?: Action }) {
 	return (
 		<TableCell>
 			<Show when={props.update}>
@@ -25,6 +25,14 @@ function ActionsCell(props: { update?: Action; details?: Action }) {
 					<Button variant='ghost' class=' inline-flex gap-2 hover:bg-baby_blue p-2'>
 						<AiOutlinePlus size={20} />
 						Detalles
+					</Button>
+				</A>
+			</Show>
+			<Show when={props.create}>
+				<A href={props.create?.path as string} title={props.create?.title}>
+					<Button variant='ghost' class=' inline-flex gap-2 hover:bg-baby_blue p-2'>
+						<AiOutlinePlus size={20} />
+						Agregar
 					</Button>
 				</A>
 			</Show>
