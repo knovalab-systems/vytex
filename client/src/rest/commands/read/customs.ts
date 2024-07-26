@@ -1,6 +1,7 @@
 import type { VytexCustom } from '../../../schema/custom.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadCustomOutput<
 	Schema extends object,
@@ -24,3 +25,26 @@ export const readCustoms =
 		params: query ?? {},
 		method: 'GET',
 	});
+
+/**
+ * List an existing custom by primary key.
+ *
+ * @param key The primary key of the custom
+ * @param query  The query parameters
+ * @returns Returns the requested custom object.
+ * @throws Will throw if key is empty
+ */
+export const readCustom =
+	<Schema extends object, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
+		key: VytexCustom<Schema>['id'],
+		query?: TQuery,
+	): RestCommand<ReadCustomOutput<Schema, TQuery>, Schema> =>
+	() => {
+		throwIfEmpty(String(key), 'Key cannot be empty');
+
+		return {
+			path: `/customs/${key}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};
