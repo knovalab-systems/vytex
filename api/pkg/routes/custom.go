@@ -9,10 +9,11 @@ import (
 func privateCustomRoutes(g *echo.Group) {
 	route := g.Group("/customs")
 
-	colorController := controllers.CustomController{CustomRepository: &services.CustomService{}}
+	customController := controllers.CustomController{CustomRepository: &services.CustomService{}}
 
-	route.GET("", colorController.ReadCustoms)
-	route.GET("/aggregate", colorController.AggregateCustoms)
-	route.POST("", colorController.CreateCustom)
+	route.GET("", customController.ReadCustoms)
+	route.GET("/aggregate", customController.AggregateCustoms)
+	route.POST("", customController.CreateCustom)
+	route.GET("/:customId", customController.ReadCustom)
 
 }

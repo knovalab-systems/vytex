@@ -113,3 +113,37 @@ func (m *CustomController) CreateCustom(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, custom)
 }
+
+// Get an custom
+// @Summary      Get a given custom
+// @Description  Get an custom by its ID
+// @Tags         customs
+// @Param		 customId path string true "Custom ID"
+// @Produce      json
+// @Success      200 {object} models.Custom
+// @Failure      400
+// @Failure      500
+// @Router       /custom/customId [get]
+func (m *CustomController) ReadCustom(c echo.Context) error {
+	// for query params
+	u := new(models.ReadCustom)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.CustomsBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CustomsBadRequest()
+	}
+
+	// get custom
+	custom, err := m.CustomRepository.SelectCustom(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, custom)
+}

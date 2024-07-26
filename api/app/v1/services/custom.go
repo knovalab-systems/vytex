@@ -1,6 +1,8 @@
 package services
 
 import (
+	"errors"
+	"gorm.io/gorm"
 	"reflect"
 	"strings"
 
@@ -149,4 +151,29 @@ func customFields(s query.ICustomDo, fields string) query.ICustomDo {
 		s = s.Select(f...)
 	}
 	return s
+}
+
+func (m *CustomService) SelectCustom(q *models.ReadCustom) (*models.Custom, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.CustomsBadRequest()
+	}
+
+	// def query
+	table := query.Custom
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = customFields(s, q.Fields)
+
+	// run query
+	custom, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return custom, nil
 }
