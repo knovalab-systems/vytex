@@ -26,3 +26,10 @@ type StatusOrder string
 const (
 	Created StatusOrder = "Created"
 )
+
+type OrderCreateBody struct {
+	CustomID           uint   `json:"custom_id,omitempty" validate:"required"`
+	CreatedBy          string `json:"created_by,omitempty" validate:"required,uuid"`
+	ColorByReferenceID uint   `json:"color_by_reference_id" validate:"required,gt=0"`
+	SizeInt
+}

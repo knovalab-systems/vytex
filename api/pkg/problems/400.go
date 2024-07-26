@@ -145,3 +145,9 @@ func CreateCustomBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create custom", ""))
 }
+
+// Order
+func CreateOrderBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create order", ""))
+}
