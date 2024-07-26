@@ -13,5 +13,6 @@ func privateCustomRoutes(g *echo.Group) {
 
 	route.GET("", colorController.ReadCustoms)
 	route.GET("/aggregate", colorController.AggregateCustoms)
+	route.POST("", colorController.CreateCustom)
 
 }

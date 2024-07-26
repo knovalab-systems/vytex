@@ -34,6 +34,135 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 	_reference.CreatedBy = field.NewString(tableName, "created_by")
 	_reference.Front = field.NewString(tableName, "front")
 	_reference.Back = field.NewString(tableName, "back")
+	_reference.Colors = referenceHasManyColors{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Colors", "models.ColorByReference"),
+		Color: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Colors.Color", "models.Color"),
+		},
+		Reference: struct {
+			field.RelationField
+			User struct {
+				field.RelationField
+			}
+			FrontImage struct {
+				field.RelationField
+			}
+			BackImage struct {
+				field.RelationField
+			}
+			Colors struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Colors.Reference", "models.Reference"),
+			User: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.User", "models.User"),
+			},
+			FrontImage: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.FrontImage", "models.Image"),
+			},
+			BackImage: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.BackImage", "models.Image"),
+			},
+			Colors: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.Colors", "models.ColorByReference"),
+			},
+		},
+		Resources: struct {
+			field.RelationField
+			Resource struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+			}
+		}{
+			RelationField: field.NewRelation("Colors.Resources", "models.ResourceByReference"),
+			Resource: struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Colors.Resources.Resource", "models.Resource"),
+				Color: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Resources.Resource.Color", "models.Color"),
+				},
+				Supplier: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Resources.Resource.Supplier", "models.Supplier"),
+				},
+			},
+		},
+		Fabrics: struct {
+			field.RelationField
+			Fabric struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+				Composition struct {
+					field.RelationField
+				}
+			}
+		}{
+			RelationField: field.NewRelation("Colors.Fabrics", "models.FabricByReference"),
+			Fabric: struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+				Composition struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Colors.Fabrics.Fabric", "models.Fabric"),
+				Color: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Fabrics.Fabric.Color", "models.Color"),
+				},
+				Supplier: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Fabrics.Fabric.Supplier", "models.Supplier"),
+				},
+				Composition: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Fabrics.Fabric.Composition", "models.Composition"),
+				},
+			},
+		},
+	}
+
 	_reference.User = referenceBelongsToUser{
 		db: db.Session(&gorm.Session{}),
 
@@ -68,7 +197,9 @@ type reference struct {
 	CreatedBy field.String
 	Front     field.String
 	Back      field.String
-	User      referenceBelongsToUser
+	Colors    referenceHasManyColors
+
+	User referenceBelongsToUser
 
 	FrontImage referenceBelongsToFrontImage
 
@@ -112,7 +243,7 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 10)
+	r.fieldMap = make(map[string]field.Expr, 11)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["created_at"] = r.CreatedAt
@@ -131,6 +262,123 @@ func (r reference) clone(db *gorm.DB) reference {
 func (r reference) replaceDB(db *gorm.DB) reference {
 	r.referenceDo.ReplaceDB(db)
 	return r
+}
+
+type referenceHasManyColors struct {
+	db *gorm.DB
+
+	field.RelationField
+
+	Color struct {
+		field.RelationField
+	}
+	Reference struct {
+		field.RelationField
+		User struct {
+			field.RelationField
+		}
+		FrontImage struct {
+			field.RelationField
+		}
+		BackImage struct {
+			field.RelationField
+		}
+		Colors struct {
+			field.RelationField
+		}
+	}
+	Resources struct {
+		field.RelationField
+		Resource struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Supplier struct {
+				field.RelationField
+			}
+		}
+	}
+	Fabrics struct {
+		field.RelationField
+		Fabric struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Supplier struct {
+				field.RelationField
+			}
+			Composition struct {
+				field.RelationField
+			}
+		}
+	}
+}
+
+func (a referenceHasManyColors) Where(conds ...field.Expr) *referenceHasManyColors {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceHasManyColors) WithContext(ctx context.Context) *referenceHasManyColors {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceHasManyColors) Session(session *gorm.Session) *referenceHasManyColors {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceHasManyColors) Model(m *models.Reference) *referenceHasManyColorsTx {
+	return &referenceHasManyColorsTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceHasManyColorsTx struct{ tx *gorm.Association }
+
+func (a referenceHasManyColorsTx) Find() (result []*models.ColorByReference, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceHasManyColorsTx) Append(values ...*models.ColorByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceHasManyColorsTx) Replace(values ...*models.ColorByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceHasManyColorsTx) Delete(values ...*models.ColorByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceHasManyColorsTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceHasManyColorsTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type referenceBelongsToUser struct {

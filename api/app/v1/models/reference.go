@@ -8,35 +8,38 @@ import (
 )
 
 type Reference struct {
-	ID         uint           `json:"id" gorm:"primary_key"`
-	Code       string         `json:"code"`
-	CreatedAt  time.Time      `json:"created_at"`
-	DeletedAt  gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-	CreatedBy  string         `json:"created_by"`
-	User       *User          `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
-	Front      string         `json:"front"`
-	FrontImage *Image         `json:"front_image,omitempty" gorm:"foreignKey:Front"`
-	Back       string         `json:"back"`
-	BackImage  *Image         `json:"back_image,omitempty" gorm:"foreignKey:Back"`
+	ID         uint               `json:"id,omitempty" gorm:"primary_key"`
+	Code       string             `json:"code,omitempty"`
+	CreatedAt  *time.Time         `json:"created_at,omitempty"`
+	DeletedAt  gorm.DeletedAt     `json:"deleted_at,omitempty" gorm:"index"`
+	CreatedBy  string             `json:"created_by,omitempty"`
+	User       *User              `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
+	Front      string             `json:"front,omitempty"`
+	FrontImage *Image             `json:"front_image,omitempty" gorm:"foreignKey:Front"`
+	Back       string             `json:"back,omitempty"`
+	BackImage  *Image             `json:"back_image,omitempty" gorm:"foreignKey:Back"`
+	Colors     []ColorByReference `json:"colors,omitempty"`
 }
 
 type ColorByReference struct {
-	ID          uint           `json:"id" gorm:"primary_key"`
-	DeletedAt   gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-	ColorID     uint           `json:"color_id"`
-	Color       *Color         `json:"color,omitempty"`
-	ReferenceID uint           `json:"reference_id"`
-	Reference   *Reference     `json:"reference,omitempty"`
+	ID          uint                  `json:"id,omitempty" gorm:"primary_key"`
+	CreatedAt   *time.Time            `json:"created_at,omitempty"`
+	DeletedAt   gorm.DeletedAt        `json:"deleted_at,omitempty" gorm:"index"`
+	ColorID     uint                  `json:"color_id,omitempty"`
+	Color       *Color                `json:"color,omitempty"`
+	ReferenceID uint                  `json:"reference_id,omitempty"`
+	Reference   *Reference            `json:"reference_,omitempty"`
+	Resources   []ResourceByReference `json:"resources,omitempty"`
+	Fabrics     []FabricByReference   `json:"fabrics,omitempty"`
 }
 
 type ResourceByReference struct {
-	ID                 uint              `json:"id" gorm:"primary_key"`
-	Code               string            `json:"code" gorm:"type:uuid"`
-	ColorByReferenceID uint              `json:"colorByReference_id"`
-	DeletedAt          gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
-	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
-	ResourceId         uint              `json:"resource_id"`
-	Resource           *Resource         `json:"resource,omitempty"`
+	ID                 uint           `json:"id,omitempty" gorm:"primary_key"`
+	Code               string         `json:"code,omitempty" gorm:"type:uuid"`
+	DeletedAt          gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	ColorByReferenceID uint           `json:"color_by_reference_id,omitempty"`
+	ResourceId         uint           `json:"resource_id,omitempty"`
+	Resource           *Resource      `json:"resource,omitempty"`
 	Size
 }
 
@@ -49,13 +52,12 @@ func (b *ResourceByReference) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type FabricByReference struct {
-	ID                 uint              `json:"id" gorm:"primary_key"`
-	Code               string            `json:"code" gorm:"type:uuid"`
-	ColorByReferenceID uint              `json:"colorByReference_id"`
-	DeletedAt          gorm.DeletedAt    `json:"deleted_at" gorm:"index"`
-	ColorByReference   *ColorByReference `json:"colorByReference,omitempty" `
-	FabricId           uint              `json:"fabric_id"`
-	Fabric             *Fabric           `json:"fabric,omitempty"`
+	ID                 uint           `json:"id,omitempty" gorm:"primary_key"`
+	Code               string         `json:"code,omitempty" gorm:"type:uuid"`
+	DeletedAt          gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	ColorByReferenceID uint           `json:"color_by_reference_id,omitempty"`
+	FabricId           uint           `json:"fabric_id,omitempty"`
+	Fabric             *Fabric        `json:"fabric,omitempty"`
 	Size
 }
 
@@ -77,17 +79,17 @@ type ReferenceCreateBody struct {
 }
 
 type ColorByReferenceCreate struct {
-	Color     uint                        `json:"color" validate:"required,gt=0"`
+	Color     uint                        `json:"color_id" validate:"required,gt=0"`
 	Fabrics   []FabricByReferenceCreate   `json:"fabrics" validate:"required,min=1,dive"`
 	Resources []ResourceByReferenceCreate `json:"resources" validate:"required,min=1,dive"`
 }
 
 type FabricByReferenceCreate struct {
-	Fabric uint `json:"fabric" validate:"required,gt=0"`
+	Fabric uint `json:"fabric_id" validate:"required,gt=0"`
 	Size
 }
 
 type ResourceByReferenceCreate struct {
-	Resource uint `json:"resource" validate:"required,gt=0"`
+	Resource uint `json:"resource_id" validate:"required,gt=0"`
 	Size
 }

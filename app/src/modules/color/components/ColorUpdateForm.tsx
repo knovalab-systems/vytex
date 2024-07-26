@@ -1,6 +1,7 @@
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
+import { Show } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
@@ -13,7 +14,6 @@ import type { Color } from '~/schemas/core';
 import type { GetColorType } from '../requests/colorGet';
 import { updateColorRequest } from '../requests/colorUpdate';
 import { ColorUpdateSchema, type ColorUpdateType } from '../schemas/colorUpdate';
-import { Show } from 'solid-js';
 
 function ColorUpdateForm(props: { color?: GetColorType }) {
 	const navigate = useNavigate();

@@ -1,6 +1,7 @@
 export * from './aggregate.js';
 export * from './assets.js';
 export * from './client.js';
+export * from './deep_partial.js';
 export * from './deep.js';
 export * from './fields.js';
 export * from './filters.js';

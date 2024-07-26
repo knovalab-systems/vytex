@@ -84,6 +84,7 @@ func Test_WithContext(t *testing.T) {
 		qCtx.Fabric.UnderlyingDB().Statement.Context,
 		qCtx.FabricByReference.UnderlyingDB().Statement.Context,
 		qCtx.Image.UnderlyingDB().Statement.Context,
+		qCtx.Order.UnderlyingDB().Statement.Context,
 		qCtx.Reference.UnderlyingDB().Statement.Context,
 		qCtx.Resource.UnderlyingDB().Statement.Context,
 		qCtx.ResourceByReference.UnderlyingDB().Statement.Context,

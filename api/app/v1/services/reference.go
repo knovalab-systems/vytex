@@ -2,12 +2,13 @@ package services
 
 import (
 	"errors"
+	"strings"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type ReferenceService struct {
@@ -48,7 +49,6 @@ func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*m
 	table := query.Reference
 	s := table.Unscoped().Group(table.Code)
 	aggregateElem := models.AggregateData{Count: nil}
-
 	if q.Count != "" {
 		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
@@ -86,6 +86,13 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 		f := []field.Expr{}
 
 		for _, v := range fieldsArr {
+
+			if strings.HasPrefix(v, "colors.") {
+				f = append(f, table.ID)
+				s = s.Preload(table.Colors)
+				continue
+			}
+
 			switch v {
 			case "id":
 				f = append(f, table.ID)
@@ -97,7 +104,7 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 				f = append(f, table.DeletedAt)
 			case "created_by":
 				f = append(f, table.CreatedBy)
-			case "User":
+			case "user":
 				f = append(f, table.CreatedBy)
 				s = s.Preload(table.User)
 			case "front":
@@ -110,6 +117,9 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 			case "back_image":
 				f = append(f, table.Back)
 				s = s.Preload(table.BackImage)
+			case "colors":
+				f = append(f, table.ID)
+				s = s.Preload(table.Colors)
 			default:
 				f = append(f, table.ALL)
 			}
@@ -126,45 +136,30 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		return nil, err
 	}
 
-	// create base reference
-	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back}
-
-	err = query.Reference.Create(reference)
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	// create colors
-	colorsByReference := []*models.ColorByReference{}
+	// format fabrics n resources
+	fabricsByReference := []models.FabricByReference{}
+	resourcesByReference := []models.ResourceByReference{}
 	for _, color := range b.Colors {
-		colorsByReference = append(colorsByReference, &models.ColorByReference{ReferenceID: reference.ID, ColorID: color.Color})
-	}
-
-	err = query.ColorByReference.Create(colorsByReference...)
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	// create fabrics n resources
-	fabricsByReference := []*models.FabricByReference{}
-	resourcesByReference := []*models.ResourceByReference{}
-	for i, color := range b.Colors {
 		for _, fabric := range color.Fabrics {
 			fabricsByReference = append(fabricsByReference,
-				&models.FabricByReference{FabricId: fabric.Fabric, ColorByReferenceID: colorsByReference[i].ID, Size: fabric.Size})
+				models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
 		}
 		for _, resource := range color.Resources {
 			resourcesByReference = append(resourcesByReference,
-				&models.ResourceByReference{ResourceId: resource.Resource, ColorByReferenceID: colorsByReference[i].ID, Size: resource.Size})
+				models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
 		}
 	}
 
-	err = query.FabricByReference.Create(fabricsByReference...)
-	if err != nil {
-		return nil, problems.ServerError()
+	// format colors
+	colorsByReference := []models.ColorByReference{}
+	for _, color := range b.Colors {
+		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
 	}
 
-	err = query.ResourceByReference.Create(resourcesByReference...)
+	// create reference
+	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back, Colors: colorsByReference}
+
+	err = query.Reference.Create(reference)
 	if err != nil {
 		return nil, problems.ServerError()
 	}

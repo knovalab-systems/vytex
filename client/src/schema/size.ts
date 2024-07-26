@@ -13,6 +13,3 @@ export type VytexSize = {
 	'7XL': number | null;
 	'8XL': number | null;
 };
-
-export type VytexFabricsBySize = VytexSize & { fabric: number | null };
-export type VytexResourcesBySize = VytexSize & { resource: number | null };

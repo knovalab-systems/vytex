@@ -1,12 +1,12 @@
 import type { CoreSchema } from '../../../schema/core.js';
-import type { VytexCreateReference, VytexReference } from '../../../schema/reference.js';
-import type { ApplyQueryFields, Query } from '../../../types/index.js';
+import type { VytexReference } from '../../../schema/reference.js';
+import type { ApplyQueryFields, DeepPartial, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 
 export type CreateReferenceOutput<
 	Schema extends object,
 	TQuery extends Query<Schema, Item>,
-	Item extends object = VytexCreateReference<Schema>,
+	Item extends object = VytexReference<Schema>,
 > = ApplyQueryFields<VytexReference<CoreSchema>, Item, TQuery['fields']>;
 
 /**
@@ -18,8 +18,8 @@ export type CreateReferenceOutput<
  * @returns Returns the reference object for the created reference.
  */
 export const createReference =
-	<Schema extends object, const TQuery extends Query<Schema, VytexCreateReference<Schema>>>(
-		item: Partial<VytexCreateReference<Schema>>,
+	<Schema extends object, const TQuery extends Query<Schema, VytexReference<Schema>>>(
+		item: DeepPartial<VytexReference<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateReferenceOutput<Schema, TQuery>, Schema> =>
 	() => ({

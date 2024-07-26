@@ -51,7 +51,7 @@ func (m *SupplierService) SelectSupplier(q *models.ReadSupplier) (*models.Suppli
 	s = supplierFields(s, q.Fields)
 
 	// run query
-	supplier, err := table.Unscoped().Where(table.ID.Eq(q.ID)).First()
+	supplier, err := s.Where(table.ID.Eq(q.ID)).First()
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, problems.ReadAccess()
@@ -180,8 +180,8 @@ func (m *SupplierService) UpdateSupplier(b *models.SupplierUpdateBody) (*models.
 
 	table := query.Supplier
 
-	updateMap, err := b.ToUpdate()
-	if err != nil || len(updateMap) == 0 {
+	updateMap := b.ToUpdate()
+	if len(updateMap) == 0 {
 		return nil, problems.SuppliersBadRequest()
 	}
 

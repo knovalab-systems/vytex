@@ -1,12 +1,13 @@
 package models
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
-func TestToUpdateColor(t *testing.T) {
+func TestToUpdateSupplier(t *testing.T) {
 	t.Run("valid deleted_at", func(t *testing.T) {
 		deleted_at, _ := time.Parse(time.RFC3339, "2022-1-09T14:09:53+00:00")
 		optional := Optional[time.Time]{Value: &deleted_at, Defined: true}
