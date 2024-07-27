@@ -13,6 +13,7 @@ const SupplierCreate = lazy(() => import('~/modules/supplier/pages/SupplierCreat
 const SupplierUpdate = lazy(() => import('~/modules/supplier/pages/SupplierUpdate'));
 const Customs = lazy(() => import('~/modules/custom/pages/Customs'));
 const CustomCreate = lazy(() => import('~/modules/custom/pages/CustomCreate'));
+const Orders = lazy(() => import('~/modules/order/pages/Orders'));
 const OrderCreate = lazy(() => import('~/modules/order/pages/OrderCreate'));
 
 function AdminRoutes() {
@@ -33,6 +34,9 @@ function AdminRoutes() {
 				<Route path={'/'} component={Customs} />
 				<Route path={PATHS.CREATE_PATH} component={CustomCreate} />
 				<Route path={`${PATHS.ORDERS_CREATE_PATH}/:id`} component={OrderCreate} />
+			</Route>
+			<Route path={PATHS.ORDERS_PATH} >
+				<Route path={'/'} component={Orders} />
 			</Route>
 			<Route path={PATHS.ROLES_PATH} component={Roles} />
 		</Route>
