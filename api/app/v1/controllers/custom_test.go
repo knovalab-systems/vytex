@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadCustoms(t *testing.T) {
+func TestSelectCustoms(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get customs", func(t *testing.T) {
@@ -64,6 +64,75 @@ func TestReadCustoms(t *testing.T) {
 		}
 	})
 
+}
+
+func TestSelectCustom(t *testing.T) {
+
+	t.Run("Fail binding, customId is no find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		customMock := mocks.CustomMock{}
+
+		// controller
+		customController := CustomController{CustomRepository: &customMock}
+
+		// test
+		err := customController.ReadCustom(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not find custom", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("customId")
+		c.SetParamValues("1")
+
+		// mocks
+		customMock := mocks.CustomMock{}
+		customMock.On("SelectCustom").Return(errors.New("Error"))
+
+		// controller
+		customController := CustomController{CustomRepository: &customMock}
+
+		// test
+		err := customController.ReadCustom(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get custom successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("customId")
+		c.SetParamValues("1")
+
+		// mocks
+		customMock := mocks.CustomMock{}
+		customMock.On("SelectCustom").Return(nil, nil)
+
+		// controller
+		customController := CustomController{CustomRepository: &customMock}
+
+		// test
+		err := customController.ReadCustom(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }
 
 func TestAggregateCustom(t *testing.T) {
