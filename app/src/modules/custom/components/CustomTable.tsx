@@ -33,7 +33,7 @@ function CustomTable(props: { customs?: GetCustomsType }) {
 								<TableCell>{parseDateTimeHuman(custom.created_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(custom.canceled_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(custom.finished_at)}</TableCell>
-								<Show when={!custom.finished_at || !custom.canceled_at}
+								<Show when={!custom.finished_at && !custom.canceled_at}
 									fallback={<TableCell />}>
 									<ActionsCell
 										create={{
