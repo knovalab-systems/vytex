@@ -24,14 +24,21 @@ describe('ActionsCell', () => {
 		expect(emptyTitle).toBeInTheDocument();
 	});
 
-	it('renders correctly on update n details', () => {
-		render(() => <ActionsCell update={{ path: '', title: '' }} details={{ path: '', title: '' }} />);
+	it('renders correctly on update n details n create', () => {
+		render(() => <ActionsCell
+			update={{ path: '', title: '' }}
+			details={{ path: '', title: '' }}
+			create={{ path: '', title: '' }}
+		/>);
+
 
 		const updateButton = screen.getByText('Actualizar');
 		const detailsButton = screen.getByText('Detalles');
+		const createButton = screen.getByText('Agregar');
 
 		expect(updateButton).toBeInTheDocument();
 		expect(detailsButton).toBeInTheDocument();
+		expect(createButton).toBeInTheDocument();
 	});
 
 	it('calls the Updates correclty', () => {
@@ -48,6 +55,15 @@ describe('ActionsCell', () => {
 
 		const detailsButton = screen.getByText('Detalles');
 		fireEvent.click(detailsButton);
+
+		expect(mockA).toBeCalled();
+	});
+
+	it('calls the Create correclty', () => {
+		render(() => <ActionsCell create={{ path: '', title: '' }} />);
+
+		const createButton = screen.getByText('Agregar');
+		fireEvent.click(createButton);
 
 		expect(mockA).toBeCalled();
 	});

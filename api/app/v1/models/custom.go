@@ -25,3 +25,8 @@ type CustomOrderCreateBody struct {
 	ColorByReferenceID uint `json:"color_by_reference_id" validate:"required,gt=0"`
 	SizeInt
 }
+
+type ReadCustom struct {
+	ID uint `param:"customId" validate:"required"`
+	Query
+}

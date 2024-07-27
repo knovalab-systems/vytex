@@ -1,5 +1,7 @@
 import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { CUSTOMS_PATH, ORDERS_CREATE_PATH } from '~/constants/paths';
 import { parseDateTimeHuman } from '~/lib/parseTime';
 import type { GetCustomsType } from '../requests/CustomGet';
 
@@ -31,7 +33,15 @@ function CustomTable(props: { customs?: GetCustomsType }) {
 								<TableCell>{parseDateTimeHuman(custom.created_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(custom.canceled_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(custom.finished_at)}</TableCell>
-								<TableCell>Acciones</TableCell>
+								<Show when={!custom.finished_at && !custom.canceled_at}
+									fallback={<TableCell />}>
+									<ActionsCell
+										create={{
+											path: `${CUSTOMS_PATH}${ORDERS_CREATE_PATH}/${custom.id}`,
+											title: 'Agregar Orden',
+										}}
+									/>
+								</Show>
 							</TableRow>
 						)}
 					</For>

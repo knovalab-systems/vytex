@@ -4,6 +4,7 @@ import type {
 	VytexColor,
 	VytexCustom,
 	VytexFabric,
+	VytexOrder,
 	VytexReference,
 	VytexResource,
 	VytexSupplier,
@@ -18,3 +19,4 @@ export type Resource = Partial<VytexResource<CoreSchema>>;
 export type Supplier = Partial<VytexSupplier<CoreSchema>>;
 export type Reference = DeepPartial<VytexReference<CoreSchema>>;
 export type Custom = DeepPartial<VytexCustom<CoreSchema>>;
+export type Order = DeepPartial<VytexOrder<CoreSchema>>;
