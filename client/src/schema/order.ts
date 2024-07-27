@@ -5,7 +5,7 @@ import type { MergeCoreCollection, VytexColorByReference, VytexCustom, VytexSize
  */
 export type VytexOrder<Schema extends object> = MergeCoreCollection<
 	Schema,
-	'vytex_order',
+	'vytex_orders',
 	{
 		id: number;
 		status: StatusOrder | null;

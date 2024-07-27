@@ -2,6 +2,7 @@ import type { VytexColor } from './color.js';
 import type { VytexCustom } from './custom.js';
 import type { VytexFabric } from './fabric.js';
 import type { VytexImage } from './image.js';
+import type { VytexOrder } from './order.js';
 import type { VytexReference } from './reference.js';
 import type { VytexResource } from './resource.js';
 import type { VytexSupplier } from './supplier.js';
@@ -16,4 +17,5 @@ export interface CoreSchema<Schema extends object = object> {
 	vytex_suppliers: VytexSupplier<Schema>[];
 	vytex_images: VytexImage<Schema>[];
 	vytex_customs: VytexCustom<Schema>[];
+	vytex_orders: VytexOrder<Schema>[];
 }
