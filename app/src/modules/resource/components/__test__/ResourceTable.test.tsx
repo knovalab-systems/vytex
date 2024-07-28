@@ -11,7 +11,7 @@ describe('Color Table', () => {
 
 	it('renders correctly on empty resources', () => {
 		render(() => <ResourceTable resources={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron insumos.');
+		const tableHeader = screen.getByText('No se han encontrado insumos.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

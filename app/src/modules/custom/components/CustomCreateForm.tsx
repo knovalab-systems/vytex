@@ -33,11 +33,11 @@ type ColorReference = {
 };
 
 function CustomCreateForm(props: {
-	refereces: RefByCustomCreate;
+	references: RefByCustomCreate;
 }) {
 	const { colorsRecord } = useColors();
 	const colorRerences = createMemo(() => {
-		const arr: ColorReference[] = props.refereces.reduce((p: ColorReference[], v) => {
+		const arr: ColorReference[] = props.references.reduce((p: ColorReference[], v) => {
 			const colors: ColorReference[] =
 				v.colors?.map(c => {
 					const color = () => colorsRecord()[c.color_id as number] || {};

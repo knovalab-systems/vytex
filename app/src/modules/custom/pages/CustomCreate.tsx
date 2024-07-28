@@ -20,7 +20,7 @@ function CustomCreate() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<CustomCreateForm refereces={references.data as RefByCustomCreate} />
+					<CustomCreateForm references={references.data as RefByCustomCreate} />
 				</Match>
 			</Switch>
 		</div>

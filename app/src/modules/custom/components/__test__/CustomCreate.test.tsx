@@ -17,7 +17,7 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <CustomCreateForm refereces={[]} />);
+		render(() => <CustomCreateForm references={[]} />);
 
 		const clientField = screen.getByText('Cliente');
 		const refField = screen.getByText('Referencia');
@@ -31,7 +31,7 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <CustomCreateForm refereces={[]} />);
+		render(() => <CustomCreateForm references={[]} />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -44,14 +44,14 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls cancel successfully', async () => {
-		render(() => <CustomCreateForm refereces={[]} />);
+		render(() => <CustomCreateForm references={[]} />);
 		const cancelButton = screen.getByText('Cancelar');
 		fireEvent.click(cancelButton);
 		expect(mockNavigate).toHaveBeenCalled();
 	});
 
 	it('calls submit with pending values for sizes', async () => {
-		render(() => <CustomCreateForm refereces={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
+		render(() => <CustomCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
@@ -95,7 +95,7 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls submit with error server', async () => {
-		render(() => <CustomCreateForm refereces={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
+		render(() => <CustomCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
@@ -140,7 +140,7 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		render(() => <CustomCreateForm refereces={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
+		render(() => <CustomCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockResolvedValue({});
 

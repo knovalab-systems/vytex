@@ -10,7 +10,7 @@ describe('Fabric Table', () => {
 
 	it('renders correctly on empty fabrics', () => {
 		render(() => <FabricTable fabrics={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron telas.');
+		const tableHeader = screen.getByText('No se han encontrado telas.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

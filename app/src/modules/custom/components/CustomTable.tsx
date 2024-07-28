@@ -22,7 +22,7 @@ function CustomTable(props: { customs?: GetCustomsType }) {
 				<TableBody>
 					<Show when={(props.customs?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>No se han encontraron pedidos.</TableCell>
+							<TableCell colspan={6}>No se han encontrado pedidos.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.customs}>

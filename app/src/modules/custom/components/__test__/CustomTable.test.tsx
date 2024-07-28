@@ -29,7 +29,7 @@ describe('Custom Table', () => {
 
 	it('renders correctly on empty customs', () => {
 		render(() => <CustomTable customs={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron pedidos.');
+		const tableHeader = screen.getByText('No se han encontrado pedidos.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

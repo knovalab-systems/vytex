@@ -18,7 +18,7 @@ describe('SupplierTable', () => {
 
 	it('renders correctly on empty suppliers', () => {
 		render(() => <SupplierTable suppliers={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron proveedores.');
+		const tableHeader = screen.getByText('No se han encontrado proveedores.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

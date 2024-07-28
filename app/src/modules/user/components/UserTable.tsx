@@ -23,7 +23,7 @@ function UserTable(props: { users?: GetUsersType }) {
 				<TableBody>
 					<Show when={(props.users?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>No se han encontraron usuarios.</TableCell>
+							<TableCell colspan={6}>No se han encontrado usuarios.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.users}>

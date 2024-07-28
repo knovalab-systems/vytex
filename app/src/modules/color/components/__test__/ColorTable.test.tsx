@@ -16,7 +16,7 @@ describe('Color Table', () => {
 
 	it('renders correctly on empty colors', () => {
 		render(() => <ColorTable colors={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron colores.');
+		const tableHeader = screen.getByText('No se han encontrado colores.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

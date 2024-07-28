@@ -52,18 +52,13 @@ func SupplierNitExists() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Supplier NIT already exists", ""))
 }
 
-// Order
-func OrderFinished() *echo.HTTPError {
+// Custom
+func CustomCanceled() *echo.HTTPError {
 	code := http.StatusConflict
-	return echo.NewHTTPError(code, NewPD(code, "", "", "Order already finished", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Custom already canceled", ""))
 }
 
-func OrderCanceled() *echo.HTTPError {
+func CustomFinished() *echo.HTTPError {
 	code := http.StatusConflict
-	return echo.NewHTTPError(code, NewPD(code, "", "", "Order already canceled", ""))
-}
-
-func OrderFinishedCanceled() *echo.HTTPError {
-	code := http.StatusConflict
-	return echo.NewHTTPError(code, NewPD(code, "", "", "Order already finished and canceled", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Custom already finished", ""))
 }

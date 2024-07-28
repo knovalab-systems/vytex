@@ -23,7 +23,7 @@ function ColorTable(props: { colors?: GetColorsType }) {
 				<TableBody>
 					<Show when={(props.colors?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={6}>No se han encontraron colores.</TableCell>
+							<TableCell colspan={6}>No se han encontrado colores.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.colors}>
