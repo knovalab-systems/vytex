@@ -24,7 +24,7 @@ describe('User Table', () => {
 
 	it('renders correctly on empty users', () => {
 		render(() => <UserTable users={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron usuarios.');
+		const tableHeader = screen.getByText('No se han encontrado usuarios.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

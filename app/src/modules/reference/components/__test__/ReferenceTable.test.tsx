@@ -10,7 +10,7 @@ describe('Reference Table', () => {
 
 	it('renders correctly on empty references', () => {
 		render(() => <ReferenceTable references={undefined} />);
-		const tableHeader = screen.getByText('No se han encontraron referencias.');
+		const tableHeader = screen.getByText('No se han encontrado referencias.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});
