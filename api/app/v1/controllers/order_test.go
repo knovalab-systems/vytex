@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
@@ -12,8 +13,107 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
+
+func TestSelectOrders(t *testing.T) {
+	defaultError := errors.New("ERROR")
+
+	t.Run("Fail select orders", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("SelectOrders").Return(defaultError)
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		// test
+		err := orderController.ReadOrders(c)
+		assert.Error(t, err)
+
+	})
+
+	t.Run("Select orders successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("SelectOrders").Return(nil)
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		// test
+		err := orderController.ReadOrders(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
+func TestAggregateOrder(t *testing.T) {
+	defaultError := errors.New("ERROR")
+
+	t.Run("Fail aggregate orders", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("AggregationOrders", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		// test
+		err := orderController.AggregateOrders(c)
+		assert.Error(t, err)
+
+	})
+
+	t.Run("Aggregate orders successfully", func(t *testing.T) {
+		//
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("AggregationOrders", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		// test
+		err := orderController.AggregateOrders(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
 
 func TestCreateOrder(t *testing.T) {
 	t.Run("Fail binding, color_by_reference_id", func(t *testing.T) {

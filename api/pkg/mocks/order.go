@@ -9,6 +9,16 @@ type OrderMock struct {
 	mock.Mock
 }
 
+func (m *OrderMock) SelectOrders(req *models.Query) ([]*models.Order, error) {
+	args := m.Called()
+	return []*models.Order{}, args.Error(0)
+}
+
+func (m *OrderMock) AggregationOrders(req *models.AggregateQuery) ([]*models.AggregateData, error) {
+	args := m.Called(req)
+	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
+}
+
 func (m *OrderMock) CreateOrder(req *models.OrderCreateBody) (*models.Order, error) {
 	args := m.Called()
 	return &models.Order{}, args.Error(0)
