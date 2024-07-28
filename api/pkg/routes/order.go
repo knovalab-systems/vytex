@@ -11,5 +11,7 @@ func privateOrderRoutes(g *echo.Group) {
 
 	orderController := controllers.OrderController{OrderRepository: &services.OrderService{}}
 
+	route.GET("", orderController.ReadOrders)
+	route.GET("/aggregate", orderController.AggregateOrders)
 	route.POST("", orderController.CreateOrder)
 }
