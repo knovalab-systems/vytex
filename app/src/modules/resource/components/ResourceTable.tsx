@@ -28,7 +28,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 				<TableBody>
 					<Show when={(props.resources?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={9}>No se han encontraron insumos.</TableCell>
+							<TableCell colspan={9}>No se han encontrado insumos.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.resources}>
