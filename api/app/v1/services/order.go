@@ -181,12 +181,10 @@ func checkValidCustom(customID uint) error {
 		return problems.ServerError()
 	}
 
-	if custom.FinishedAt != nil && custom.CanceledAt != nil {
-		return problems.OrderFinishedCanceled()
-	} else if custom.FinishedAt != nil {
-		return problems.OrderFinished()
+	if custom.FinishedAt != nil {
+		return problems.CustomFinished()
 	} else if custom.CanceledAt != nil {
-		return problems.OrderCanceled()
+		return problems.CustomCanceled()
 	}
 
 	return nil
