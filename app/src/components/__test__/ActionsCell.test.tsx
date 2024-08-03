@@ -25,12 +25,13 @@ describe('ActionsCell', () => {
 	});
 
 	it('renders correctly on update n details n create', () => {
-		render(() => <ActionsCell
-			update={{ path: '', title: '' }}
-			details={{ path: '', title: '' }}
-			create={{ path: '', title: '' }}
-		/>);
-
+		render(() => (
+			<ActionsCell
+				update={{ path: '', title: '' }}
+				details={{ path: '', title: '' }}
+				create={{ path: '', title: '' }}
+			/>
+		));
 
 		const updateButton = screen.getByText('Actualizar');
 		const detailsButton = screen.getByText('Detalles');

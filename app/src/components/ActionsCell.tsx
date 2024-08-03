@@ -9,7 +9,7 @@ type Action = {
 	path: string;
 };
 
-function ActionsCell(props: { update?: Action; details?: Action, create?: Action }) {
+function ActionsCell(props: { update?: Action; details?: Action; create?: Action }) {
 	return (
 		<TableCell>
 			<Show when={props.update}>

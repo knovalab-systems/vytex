@@ -9,6 +9,11 @@
 		"outDir": "./dist",
 
 		/* Linting */
-		"strict": true
+		"strict": true,
+		"lib": ["DOM"]
+	},
+	"include": ["src" ],
+	"typedocOptions": {
+		"entryPoints": ["./src/client.ts", "./src/*/index.ts"]
 	}
 }

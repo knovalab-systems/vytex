@@ -9,5 +9,8 @@
     "app",
     "client"
   ],
-  "author": "KnovaLab"
+  "author": "KnovaLab",
+  "devDependencies": {
+    "@biomejs/biome": "^1.8.3"
+  }
 }

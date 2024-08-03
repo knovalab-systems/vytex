@@ -17,10 +17,6 @@ describe('ResourceCreateForm', () => {
 		vi.resetAllMocks();
 	});
 
-	beforeEach(() => {
-		vi.resetAllMocks();
-	});
-
 	it('renders correctly', () => {
 		render(() => <ResourceCreateForm colors={[]} suppliers={[]} />);
 		const nameField = screen.getByPlaceholderText('Insumo');

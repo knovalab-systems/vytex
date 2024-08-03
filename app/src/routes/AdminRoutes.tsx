@@ -35,7 +35,7 @@ function AdminRoutes() {
 				<Route path={PATHS.CREATE_PATH} component={CustomCreate} />
 				<Route path={`${PATHS.ORDERS_CREATE_PATH}/:id`} component={OrderCreate} />
 			</Route>
-			<Route path={PATHS.ORDERS_PATH} >
+			<Route path={PATHS.ORDERS_PATH}>
 				<Route path={'/'} component={Orders} />
 			</Route>
 			<Route path={PATHS.ROLES_PATH} component={Roles} />
