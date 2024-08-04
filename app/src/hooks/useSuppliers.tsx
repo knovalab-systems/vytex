@@ -3,7 +3,6 @@ import { readSuppliers } from '@vytex/client';
 import { type Accessor, type JSXElement, createContext, createMemo, createSignal, useContext } from 'solid-js';
 import { client } from '~/lib/client';
 import { queryClient } from '~/lib/queryClient';
-import { getMeQueryKey, type getMeType } from '~/requests/getMe';
 
 const queryKey = 'supplierContext';
 
@@ -35,13 +34,12 @@ type SuppliersContext = {
 };
 
 export function SuppliersProvider(props: { children: JSXElement }) {
-	const user = queryClient.getQueryData<getMeType>([getMeQueryKey]);
 	const [enabled, setEnabled] = createSignal(false);
 	const suppliers = createQuery(() => ({
 		queryFn: suppliersContextReq,
 		queryKey: [queryKey],
 		staleTime: Number.POSITIVE_INFINITY,
-		enabled: Boolean(user?.role) && enabled(),
+		enabled: enabled(),
 	}));
 
 	const suppliersRecord = createMemo(() => {

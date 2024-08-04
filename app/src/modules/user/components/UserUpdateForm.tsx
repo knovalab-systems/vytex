@@ -1,6 +1,7 @@
 import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
+import { Show } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
@@ -49,7 +50,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 
 		return updateUserRequest(props.user?.id, user)
 			.then(() => {
-				toast.success('Usuario actualizado correctamente');
+				toast.success('Usuario actualizado correctamente.');
 				navigate(USERS_PATH);
 			})
 			.catch(error => {
@@ -127,9 +128,12 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 								placeholder='Selecciona un rol'
 								itemComponent={props => <SelectItem item={props.item}>{roles[props.item.rawValue].label}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Roles'>
+								<SelectTrigger aria-label='Roles' title='Ver roles' aria-errormessage={field.error}>
 									<SelectValue<string>>{state => roles[state.selectedOption()].label}</SelectValue>
 								</SelectTrigger>
+								<Show when={Boolean(field.error)}>
+									<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+								</Show>
 								<SelectContent />
 							</Select>
 						</div>
@@ -148,9 +152,12 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 								placeholder='Selecciona un estado'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>
-								<SelectTrigger aria-label='Estado'>
+								<SelectTrigger aria-label='Estado' title='Ver estados' aria-errormessage={field.error}>
 									<SelectValue<string>>{state => state.selectedOption()}</SelectValue>
 								</SelectTrigger>
+								<Show when={Boolean(field.error)}>
+									<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+								</Show>
 								<SelectContent />
 							</Select>
 						</div>
@@ -160,7 +167,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 					<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
 						Cancelar
 					</Button>
-					<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
+					<Button type='submit' disabled={form.submitting || !form.dirty} class='bg-green-600 hover:bg-green-700'>
 						Actualizar
 					</Button>
 				</div>
