@@ -12,6 +12,7 @@ const FabricCreate = lazy(() => import('~/modules/fabric/pages/FabricCreate'));
 const References = lazy(() => import('~/modules/reference/pages/References'));
 const Resources = lazy(() => import('~/modules/resource/pages/Resources'));
 const ResourceCreate = lazy(() => import('~/modules/resource/pages/ResourceCreate'));
+const ResourceUpdate = lazy(() => import('~/modules/resource/pages/ResourceUpdate'));
 
 function DesignerRoutes() {
 	return (
@@ -32,6 +33,7 @@ function DesignerRoutes() {
 			<Route path={PATHS.RESOURCES_PATH}>
 				<Route path={'/'} component={Resources} />
 				<Route path={PATHS.CREATE_PATH} component={ResourceCreate} />
+				<Route path={`${PATHS.UPDATE_PATH}/:id`} component={ResourceUpdate} />
 			</Route>
 		</Route>
 	);
