@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"log"
 	"strings"
 
 	"gorm.io/gorm"
@@ -45,6 +46,31 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 	}
 
 	return resources, nil
+}
+
+func (m *ResourceService) SelectResource(q *models.ReadResource) (*models.Resource, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.ResourceBadRequest()
+	}
+
+	// def query
+	table := query.Resource
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = resourceFields(s, q.Fields)
+
+	// run query
+	resource, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return resource, nil
 }
 
 func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*models.AggregateData, error) {
@@ -169,4 +195,45 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 		s = s.Select(f...)
 	}
 	return s
+}
+
+func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.Resource, error) {
+	// print data of b using for
+	log.Println("code", b.Code)
+	log.Println("color", b.Color)
+	log.Println("supplier", b.Supplier)
+
+	err := checkResourceExist(b.Code)
+
+	if err != nil {
+		log.Println("22222222")
+		return nil, err
+	}
+
+	table := query.Resource
+
+	updateMap := b.ToUpdate()
+	log.Println(len(updateMap))
+
+	if len(updateMap) == 0 {
+		log.Println("updatemap")
+		return nil, problems.ResourceBadRequest()
+	}
+
+	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, problems.ReadAccess()
+	}
+
+	resource, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return resource, nil
 }
