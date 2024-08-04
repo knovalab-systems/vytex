@@ -103,7 +103,7 @@ function ResourceUpdateForm(props: {
                             <div>
                                 <Label for='name-field'>Nombre</Label>
                                 <Input
-                                    placeholder='Insumo'
+                                    placeholder='Nombre del insumo'
                                     autocomplete='off'
                                     id='name-field'
                                     aria-errormessage={field.error}
@@ -120,7 +120,7 @@ function ResourceUpdateForm(props: {
                                 <Label for='code-field'>Código</Label>
                                 <Input
                                     type='number'
-                                    placeholder='23231'
+                                    placeholder='2322'
                                     autocomplete='off'
                                     id='code-field'
                                     aria-errormessage={field.error}
@@ -193,46 +193,45 @@ function ResourceUpdateForm(props: {
                                     </Show>
                                     <ComboboxContent />
                                 </Combobox>
-
-                                <Field name='supplier' type='number'>
-                                    {field => (
-                                        <div class='gap-4 w-full'>
-                                            <LabelSpan class='my-auto whitespace-nowrap'>Proveedor del insumo</LabelSpan>
-                                            <Combobox<Suppliers[0]>
-                                                class='whitespace-nowrap min-w-48'
-                                                value={suppliersRecord()[field.value || 0]}
-                                                onChange={value => {
-                                                    setValue(form, 'supplier', value ? value.id : 0);
-                                                }}
-                                                onInputChange={value => {
-                                                    if (value === '') {
-                                                        setValue(form, 'supplier', 0);
-                                                    }
-                                                }}
-                                                multiple={false}
-                                                optionLabel='name'
-                                                optionValue='id'
-                                                placeholder='Selecciona o escribe un proveedor'
-                                                itemComponent={props => (
-                                                    <ComboboxItem item={props.item}>
-                                                        <ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
-                                                        <ComboboxItemIndicator />
-                                                    </ComboboxItem>
-                                                )}
-                                                options={props.suppliers}
-                                            >
-                                                <ComboboxControl aria-errormessage={field.error} aria-label='Proveedores'>
-                                                    <ComboboxInput />
-                                                    <ComboboxTrigger title='Ver proveedores' />
-                                                </ComboboxControl>
-                                                <Show when={Boolean(field.error)}>
-                                                    <div class={'text-sm my-auto text-red-600'}>{field.error}</div>
-                                                </Show>
-                                                <ComboboxContent />
-                                            </Combobox>
-                                        </div>
+                            </div>
+                        )}
+                    </Field>
+                    <Field name='supplier' type='number'>
+                        {field => (
+                            <div class='gap-4 w-full'>
+                                <LabelSpan class='my-auto whitespace-nowrap'>Proveedor del insumo</LabelSpan>
+                                <Combobox<Suppliers[0]>
+                                    class='whitespace-nowrap min-w-48'
+                                    value={suppliersRecord()[field.value || 0]}
+                                    onChange={value => {
+                                        setValue(form, 'supplier', value ? value.id : 0);
+                                    }}
+                                    onInputChange={value => {
+                                        if (value === '') {
+                                            setValue(form, 'supplier', 0);
+                                        }
+                                    }}
+                                    multiple={false}
+                                    optionLabel='name'
+                                    optionValue='id'
+                                    placeholder='Selecciona o escribe un proveedor'
+                                    itemComponent={props => (
+                                        <ComboboxItem item={props.item}>
+                                            <ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
+                                            <ComboboxItemIndicator />
+                                        </ComboboxItem>
                                     )}
-                                </Field>
+                                    options={props.suppliers}
+                                >
+                                    <ComboboxControl aria-errormessage={field.error} aria-label='Proveedores'>
+                                        <ComboboxInput />
+                                        <ComboboxTrigger title='Ver proveedores' />
+                                    </ComboboxControl>
+                                    <Show when={Boolean(field.error)}>
+                                        <div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+                                    </Show>
+                                    <ComboboxContent />
+                                </Combobox>
                             </div>
                         )}
                     </Field>
