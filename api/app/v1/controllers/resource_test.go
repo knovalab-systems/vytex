@@ -17,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadResources(t *testing.T) {
+func TestSelectResources(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get resources", func(t *testing.T) {
@@ -63,6 +63,68 @@ func TestReadResources(t *testing.T) {
 		}
 	})
 
+}
+
+func TestSelectResource(t *testing.T) {
+	t.Run("Fail binding, id is not find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.ReadResource(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not found resource", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("resourceId")
+		c.SetParamValues("1")
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("SelectResource").Return(errors.New("error"))
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.ReadResource(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get resource successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("resourceId")
+		c.SetParamValues("1")
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("SelectResource").Return(nil, nil)
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.ReadResource(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }
 
 func TestAggregateResource(t *testing.T) {
@@ -117,7 +179,7 @@ func TestCreateResource(t *testing.T) {
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": -1, "supplier_id": -1})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": -1, "supplier_id": -1})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -172,7 +234,7 @@ func TestCreateResource(t *testing.T) {
 		t.Run("Fail validate, missing field or zero value", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code, "cost": testCase.Cost, "color_id": testCase.Color,
+			_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code, "cost": testCase.Cost, "color_id": testCase.Color,
 				"supplier_id": testCase.Supplier})
 			req := httptest.NewRequest(http.MethodGet, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -216,7 +278,7 @@ func TestCreateResource(t *testing.T) {
 		t.Run("Fail validate, cost less than 0", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": testCase.Cost, "color_id": testCase.Color, "supplier_id": testCase.Supplier})
+			_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": testCase.Cost, "color_id": testCase.Color, "supplier_id": testCase.Supplier})
 			req := httptest.NewRequest(http.MethodGet, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -242,7 +304,7 @@ func TestCreateResource(t *testing.T) {
 		code := "1"
 		cost := 23000.0
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -269,7 +331,7 @@ func TestCreateResource(t *testing.T) {
 		code := "1"
 		cost := 23000.0
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -290,4 +352,114 @@ func TestCreateResource(t *testing.T) {
 		}
 	})
 
+}
+
+func TestUpdateResource(t *testing.T) {
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": 1, "supplier_id": 1})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+
+		// controller
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.UpdateResource(c)
+
+		assert.Error(t, err)
+
+	})
+
+	t.Run("Fail update, resource code exits", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"code": "1"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("resourceId")
+		c.SetParamValues("1")
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("UpdateResource").Return(&models.Resource{}, errors.New("error"))
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.UpdateResource(c)
+		assert.Error(t, err)
+	})
+
+	testCasesOneValue := map[string]interface{}{
+		"name":        "Boton",
+		"code":        "1",
+		"cost":        23000.0,
+		"color_id":    1,
+		"supplier_id": 1,
+		"deleted_at":  "2021-09-01T00:00:00Z",
+	}
+
+	for key, value := range testCasesOneValue {
+		t.Run("Update resource successfully with some value", func(t *testing.T) {
+			// context
+			body := new(bytes.Buffer)
+			_ = json.NewEncoder(body).Encode(map[string]interface{}{key: value})
+			req := httptest.NewRequest(http.MethodPost, "/", body)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			config.EchoValidator(e)
+			c := e.NewContext(req, rec)
+			c.SetParamNames("resourceId")
+			c.SetParamValues("1")
+
+			// mocks
+			resourceMock := mocks.ResourceMock{}
+			resourceMock.On("UpdateResource").Return(&models.Resource{}, nil)
+			resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+			// test
+			err := resourceController.UpdateResource(c)
+			if assert.NoError(t, err) {
+				assert.Equal(t, http.StatusOK, rec.Code)
+			}
+		})
+	}
+
+	t.Run("Update resource successfully with all values", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": 23000.0, "color_id": 1, "supplier_id": 1})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("resourceId")
+		c.SetParamValues("1")
+
+		// mocks
+		resourceMock := mocks.ResourceMock{}
+		resourceMock.On("UpdateResource").Return(&models.Resource{}, nil)
+		resourceController := ResourceController{ResourceRepository: &resourceMock}
+
+		// test
+		err := resourceController.UpdateResource(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }
