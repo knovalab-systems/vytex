@@ -76,6 +76,11 @@ func AggregateFabricsBadRequest() *echo.HTTPError {
 }
 
 // resource
+func ResourceBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get resources", ""))
+}
+
 func ResourcesBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get resources", ""))
@@ -84,6 +89,11 @@ func ResourcesBadRequest() *echo.HTTPError {
 func CreateResourceBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create resource", ""))
+}
+
+func UpdateResourceBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to update resource", ""))
 }
 
 // reference
