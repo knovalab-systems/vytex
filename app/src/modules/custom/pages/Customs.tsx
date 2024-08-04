@@ -2,6 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -18,6 +19,14 @@ import CustomTable from '../components/CustomTable';
 import { countCustomsQuery, getCustomsQuery } from '../requests/CustomGet';
 
 function Customs() {
+	return (
+		<AllowRoles roles={['admin']}>
+			<CustomsPage />
+		</AllowRoles>
+	);
+}
+
+function CustomsPage() {
 	const [page, setPage] = createSignal(1);
 	const customs = createQuery(() => getCustomsQuery(page()));
 	const countCustoms = createQuery(() => countCustomsQuery());

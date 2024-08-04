@@ -1,5 +1,6 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -15,6 +16,14 @@ import UserTable from '../components/UserTable';
 import { countUsersQuery, getUsersQuery } from '../requests/userGet';
 
 function Users() {
+	return (
+		<AllowRoles roles={['admin']}>
+			<UsersPage />
+		</AllowRoles>
+	);
+}
+
+function UsersPage() {
 	const [page, setPage] = createSignal(1);
 	const [nameFilter, setNameFilter] = createSignal('');
 	const [usernameFilter, setUsernameFilter] = createSignal('');

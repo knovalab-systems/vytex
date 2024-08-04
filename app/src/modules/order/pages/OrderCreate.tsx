@@ -1,6 +1,7 @@
 import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
 import { getCustomQuery } from '~/modules/custom/requests/CustomGet';
@@ -8,6 +9,14 @@ import OrderCreateForm from '../components/OrderCreateForm';
 import { type RefByOrderCreate, getRefByOrderCreateQuery } from '../request/OrderCreate';
 
 function OrderCreate() {
+	return (
+		<AllowRoles roles={['admin']}>
+			<OrderCreatePage />
+		</AllowRoles>
+	);
+}
+
+function OrderCreatePage() {
 	const params = useParams();
 	const custom = createQuery(() => getCustomQuery(Number(params.id)));
 

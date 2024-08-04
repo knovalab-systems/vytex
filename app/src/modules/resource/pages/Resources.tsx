@@ -2,6 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -19,6 +20,14 @@ import ResourceTable from '../components/ResourceTable';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourceGet';
 
 function Resources() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<ResourcesPage />
+		</AllowRoles>
+	);
+}
+
+function ResourcesPage() {
 	const [page, setPage] = createSignal(1);
 	const resources = createQuery(() => getResourcesQuery(page()));
 	const countResources = createQuery(() => countResourcesQuery());

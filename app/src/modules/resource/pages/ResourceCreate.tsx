@@ -1,10 +1,19 @@
 import { Match, Switch } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import ResourceCreateForm from '../components/ResourceCreateForm';
 
 function ResourceCreate() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<ResourceCreatePage />
+		</AllowRoles>
+	);
+}
+
+function ResourceCreatePage() {
 	const { colorsQuery } = useColors();
 	const { suppliersQuery } = useSuppliers();
 

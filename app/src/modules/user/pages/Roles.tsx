@@ -1,8 +1,17 @@
+import AllowRoles from '~/components/AllowRoles';
 import { permissions } from '~/constants/permissions';
 import { roleList, rolePermissions } from '~/constants/roles';
 import RoleTable from '../components/RoleTable';
 
 function Roles() {
+	return (
+		<AllowRoles roles={['admin']}>
+			<RolesPage />
+		</AllowRoles>
+	);
+}
+
+function RolesPage() {
 	return (
 		<div class='h-full'>
 			<RoleTable roles={roleList} rolePermmissions={rolePermissions} permissions={Object.values(permissions)} />

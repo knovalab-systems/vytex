@@ -1,11 +1,20 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
 import CustomCreateForm from '../components/CustomCreateForm';
 import { type RefByCustomCreate, getRefByCustomCreateQuery } from '../requests/CustomCreate';
 
 function CustomCreate() {
+	return (
+		<AllowRoles roles={['admin']}>
+			<CustomCreatePage />
+		</AllowRoles>
+	);
+}
+
+function CustomCreatePage() {
 	const { colorsQuery } = useColors();
 	const references = createQuery(() => getRefByCustomCreateQuery());
 

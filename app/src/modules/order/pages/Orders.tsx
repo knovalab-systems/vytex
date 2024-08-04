@@ -1,5 +1,6 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -13,6 +14,14 @@ import OrderTable from '../components/OrderTable';
 import { countOrdersQuery, getOrdersQuery } from '../request/OrderGet';
 
 function Orders() {
+	return (
+		<AllowRoles roles={['admin']}>
+			<OrdersPage />
+		</AllowRoles>
+	);
+}
+
+function OrdersPage() {
 	const [page, setPage] = createSignal(1);
 	const orders = createQuery(() => getOrdersQuery(page()));
 	const countOrders = createQuery(() => countOrdersQuery());
