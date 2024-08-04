@@ -14,6 +14,7 @@ export * from './panels.js';
 export * from './permissions.js';
 export * from './presets.js';
 export * from './relations.js';
+export * from './resources.js';
 export * from './roles.js';
 export * from './settings.js';
 export * from './shares.js';
