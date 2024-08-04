@@ -3,9 +3,10 @@ import { RiSystemLogoutBoxLine } from 'solid-icons/ri';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { LOGIN_PATH } from '~/constants/paths';
-import RoleRoot from '~/hooks/roleRoot';
 import { useAuth } from '~/hooks/useAuth';
+import { queryClient } from '~/lib/queryClient';
 import { cn } from '~/lib/utils';
+import { getMeQueryKey } from '~/requests/getMe';
 
 /**
  *
@@ -15,12 +16,11 @@ import { cn } from '~/lib/utils';
 function LogoutNavButton(props: { class?: string }) {
 	const { logout } = useAuth();
 	const navigate = useNavigate();
-	const { setRole } = RoleRoot;
 
 	const handleLogOut = () => {
 		logout()
 			.then(() => {
-				setRole(null);
+				queryClient.removeQueries({ queryKey: [getMeQueryKey], exact: true });
 				navigate(LOGIN_PATH);
 				toast.success('Sessión cerrada correctamente');
 			})

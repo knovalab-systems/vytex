@@ -1,9 +1,9 @@
 import { type CreateQueryResult, createQuery } from '@tanstack/solid-query';
 import { readSuppliers } from '@vytex/client';
 import { type Accessor, type JSXElement, createContext, createMemo, createSignal, useContext } from 'solid-js';
-import RoleRoot from '~/hooks/roleRoot';
 import { client } from '~/lib/client';
 import { queryClient } from '~/lib/queryClient';
+import { getMeQueryKey, type getMeType } from '~/requests/getMe';
 
 const queryKey = 'supplierContext';
 
@@ -35,13 +35,13 @@ type SuppliersContext = {
 };
 
 export function SuppliersProvider(props: { children: JSXElement }) {
-	const { role } = RoleRoot;
+	const user = queryClient.getQueryData<getMeType>([getMeQueryKey]);
 	const [enabled, setEnabled] = createSignal(false);
 	const suppliers = createQuery(() => ({
 		queryFn: suppliersContextReq,
 		queryKey: [queryKey],
 		staleTime: Number.POSITIVE_INFINITY,
-		enabled: Boolean(role()) && enabled(),
+		enabled: Boolean(user?.role) && enabled(),
 	}));
 
 	const suppliersRecord = createMemo(() => {
