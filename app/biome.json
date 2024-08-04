@@ -4,12 +4,5 @@
 		"formatter": {
 			"jsxQuoteStyle": "single"
 		}
-	}, 
-	"linter": {
-		"rules" : {
-			"correctness": {
-				"useJsxKeyInIterable": "off"
-			}
-		}
 	}
 }

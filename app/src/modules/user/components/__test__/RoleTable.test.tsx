@@ -1,5 +1,6 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
+import type { RoleItem } from '~/constants/roles';
 import RoleTable from '../RoleTable';
 
 describe('Role Table', () => {
@@ -11,14 +12,16 @@ describe('Role Table', () => {
 	});
 
 	it('renders correctly on roles', () => {
-		const roles = [
+		const roles: RoleItem[] = [
 			{
 				label: 'Administrador',
 				key: 'admin',
+				type: 'admin',
 			},
 			{
 				label: 'Sin rol',
 				key: 'no',
+				type: 'norole',
 			},
 		];
 

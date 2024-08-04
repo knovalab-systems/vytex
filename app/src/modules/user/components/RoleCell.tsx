@@ -13,7 +13,7 @@ import {
 } from '~/components/ui/Dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { TableCell } from '~/components/ui/Table';
-import { type RoleItems, roleList, roles } from '~/constants/roles';
+import { type RoleItem, roleList, roles } from '~/constants/roles';
 import { NO_ROLE } from '~/envs/roles';
 import type { User } from '~/schemas/core';
 import { updateUserRequest } from '../requests/userUpdate';
@@ -74,7 +74,7 @@ function RoleCell(props: {
 							itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.label}</SelectItem>}
 						>
 							<SelectTrigger aria-label='Roles' title='Ver roles'>
-								<SelectValue<RoleItems>>{state => state.selectedOption().label}</SelectValue>
+								<SelectValue<RoleItem>>{state => state.selectedOption().label}</SelectValue>
 							</SelectTrigger>
 							<SelectContent />
 						</Select>

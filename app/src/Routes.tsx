@@ -3,8 +3,14 @@ import { lazy } from 'solid-js';
 import NavWrapper from '~/components/NavWrapper';
 import ProtectedWrapper from '~/components/ProtectedWrapper';
 import * as PATHS from '~/constants/paths';
-import AdminRoutes from './AdminRoutes';
-import DesignerRoutes from './DesignerRoutes';
+import ColorRoutes from './modules/color/ColorRoutes';
+import CustomRoutes from './modules/custom/CustomRoutes';
+import FabricRoutes from './modules/fabric/FabricRoutes';
+import OrderRoutes from './modules/order/OrderRoutes';
+import ReferenceRoutes from './modules/reference/ReferenceRoutes';
+import ResourceRoutes from './modules/resource/ResourceRoutes';
+import SupplierRoutes from './modules/supplier/SupplierRoutes';
+import UserRoutes from './modules/user/UserRoutes';
 
 const Login = lazy(() => import('~/pages/Login'));
 const NotFound = lazy(() => import('~/pages/NotFound'));
@@ -16,8 +22,14 @@ function Routes() {
 			<Route path={'/'} component={ProtectedWrapper}>
 				<Route path={'/'} component={NavWrapper}>
 					<Route path={'/'} component={Home} />
-					<AdminRoutes />
-					<DesignerRoutes />
+					<ColorRoutes />
+					<CustomRoutes />
+					<FabricRoutes />
+					<OrderRoutes />
+					<ReferenceRoutes />
+					<ResourceRoutes />
+					<SupplierRoutes />
+					<UserRoutes />
 				</Route>
 			</Route>
 			<Route path={PATHS.LOGIN_PATH} component={Login} />

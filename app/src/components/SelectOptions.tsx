@@ -1,4 +1,4 @@
-import { splitProps } from 'solid-js';
+import { For, splitProps } from 'solid-js';
 import { cn } from '~/lib/utils';
 
 interface SelectOptionsProps {
@@ -29,9 +29,7 @@ function SelectOptions(props: SelectOptionsProps) {
 			{...rest}
 		>
 			<option value=''>{props.placeholder}</option>
-			{props.options.map(option => (
-				<option value={option.value}>{option.label}</option>
-			))}
+			<For each={props.options}>{option => <option value={option.value}>{option.label}</option>}</For>
 		</select>
 	);
 }
