@@ -13,7 +13,7 @@ vi.mock('@solidjs/router', () => ({
 	Navigate: () => <div>Navigate</div>,
 }));
 
-describe('ActionsCell', () => {
+describe('AllowRoles', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
