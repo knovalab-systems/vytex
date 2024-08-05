@@ -4,16 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"testing"
 )
 
 func TestSelectSuppliers(t *testing.T) {
@@ -177,7 +178,7 @@ func TestCreateSupplier(t *testing.T) {
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -200,7 +201,7 @@ func TestCreateSupplier(t *testing.T) {
 	t.Run("Fail validate nit no len=10", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -244,7 +245,7 @@ func TestCreateSupplier(t *testing.T) {
 		t.Run("Fail validate, missing field or zero value", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code,
+			json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code,
 				"nit": testCase.Nit})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -274,7 +275,7 @@ func TestCreateSupplier(t *testing.T) {
 		nit := "111111111"
 		brand := "brand"
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -300,7 +301,7 @@ func TestCreateSupplier(t *testing.T) {
 		nit := "111111111"
 		brand := "brand"
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -327,7 +328,7 @@ func TestUpdateSupplier(t *testing.T) {
 	t.Run("Fail binding, id is missing", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -349,7 +350,7 @@ func TestUpdateSupplier(t *testing.T) {
 	t.Run("Fail validate nit no len=10", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -374,7 +375,7 @@ func TestUpdateSupplier(t *testing.T) {
 		code := "1"
 		id := "1"
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
+		json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -401,7 +402,7 @@ func TestUpdateSupplier(t *testing.T) {
 		nit := "111111111"
 		id := "1"
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
+		json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -436,7 +437,7 @@ func TestUpdateSupplier(t *testing.T) {
 			// context
 			id := "1"
 			body := new(bytes.Buffer)
-			_ = json.NewEncoder(body).Encode(map[string]interface{}{key: value})
+			json.NewEncoder(body).Encode(map[string]interface{}{key: value})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -471,7 +472,7 @@ func TestUpdateSupplier(t *testing.T) {
 		deleted_at := "2021-09-01T00:00:00Z"
 
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
 			"nit": nit, "brand": brand, "deleted_at": deleted_at})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

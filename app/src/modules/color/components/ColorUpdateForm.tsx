@@ -161,7 +161,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 				<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
 					Cancelar
 				</Button>
-				<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
+				<Button type='submit' disabled={form.submitting || !form.dirty} class='bg-green-600 hover:bg-green-700'>
 					Actualizar
 				</Button>
 			</div>

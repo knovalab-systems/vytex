@@ -51,7 +51,7 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 func (m *ResourceService) SelectResource(q *models.ReadResource) (*models.Resource, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ResourceBadRequest()
+		return nil, problems.ResourcesBadRequest()
 	}
 
 	// def query
@@ -198,15 +198,10 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 }
 
 func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.Resource, error) {
-	// print data of b using for
-	log.Println("code", b.Code)
-	log.Println("color", b.Color)
-	log.Println("supplier", b.Supplier)
 
 	err := checkResourceExist(b.Code)
 
 	if err != nil {
-		log.Println("22222222")
 		return nil, err
 	}
 
@@ -216,8 +211,7 @@ func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.
 	log.Println(len(updateMap))
 
 	if len(updateMap) == 0 {
-		log.Println("updatemap")
-		return nil, problems.ResourceBadRequest()
+		return nil, problems.ResourcesBadRequest()
 	}
 
 	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)

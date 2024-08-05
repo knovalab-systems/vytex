@@ -3,10 +3,8 @@ import '@testing-library/jest-dom';
 import type { GetSuppliersType } from '../../requests/supplierGet';
 import SupplierTable from '../SupplierTable';
 
-const mockActions = vi.fn();
 vi.mock('../ActionsCell', () => ({
 	default: () => {
-		mockActions();
 		return <td>Actions</td>;
 	},
 }));
