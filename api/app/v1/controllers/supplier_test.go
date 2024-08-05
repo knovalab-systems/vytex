@@ -4,17 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"testing"
-
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
 )
 
 func TestSelectSuppliers(t *testing.T) {
@@ -178,7 +177,7 @@ func TestCreateSupplier(t *testing.T) {
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -201,7 +200,7 @@ func TestCreateSupplier(t *testing.T) {
 	t.Run("Fail validate nit no len=10", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -245,7 +244,7 @@ func TestCreateSupplier(t *testing.T) {
 		t.Run("Fail validate, missing field or zero value", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code,
+			_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code,
 				"nit": testCase.Nit})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -275,7 +274,7 @@ func TestCreateSupplier(t *testing.T) {
 		nit := "111111111"
 		brand := "brand"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -301,7 +300,7 @@ func TestCreateSupplier(t *testing.T) {
 		nit := "111111111"
 		brand := "brand"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "nit": nit, "brand": brand})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -328,7 +327,7 @@ func TestUpdateSupplier(t *testing.T) {
 	t.Run("Fail binding, id is missing", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "nit": "fsdfdsfsa"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -350,7 +349,7 @@ func TestUpdateSupplier(t *testing.T) {
 	t.Run("Fail validate nit no len=10", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "supplier", "code": "3232", "nit": "1123232323"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -370,12 +369,12 @@ func TestUpdateSupplier(t *testing.T) {
 		}
 	})
 
-	t.Run("Fail create, supplier code exits", func(t *testing.T) {
+	t.Run("Fail update, supplier code exits", func(t *testing.T) {
 		// context
 		code := "1"
 		id := "1"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -397,12 +396,12 @@ func TestUpdateSupplier(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Fail create, supplier nit exits", func(t *testing.T) {
+	t.Run("Fail update, supplier nit exits", func(t *testing.T) {
 		// context
 		nit := "111111111"
 		id := "1"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -424,151 +423,43 @@ func TestUpdateSupplier(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Update supplier successfully with name", func(t *testing.T) {
-		// context
-		name := "Supplier"
-		id := "1"
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name})
-		req := httptest.NewRequest(http.MethodGet, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("supplierId")
-		c.SetParamValues(id)
+	testCasesOneValue := map[string]interface{}{
+		"name":       "Supplier",
+		"code":       "1",
+		"nit":        "111111111",
+		"brand":      "brand",
+		"deleted_at": "2021-09-01T00:00:00Z",
+	}
 
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
+	for key, value := range testCasesOneValue {
+		t.Run("Update supplier successfully on some values", func(t *testing.T) {
+			// context
+			id := "1"
+			body := new(bytes.Buffer)
+			_ = json.NewEncoder(body).Encode(map[string]interface{}{key: value})
+			req := httptest.NewRequest(http.MethodPost, "/", body)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			config.EchoValidator(e)
+			c := e.NewContext(req, rec)
+			c.SetParamNames("supplierId")
+			c.SetParamValues(id)
 
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
+			// mocks
+			supplierMock := mocks.SupplierMock{}
+			supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
 
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
-	})
+			// controller
+			supplierController := SupplierController{SupplierRepository: &supplierMock}
 
-	t.Run("Update supplier successfully with code", func(t *testing.T) {
-		// context
-		code := "1"
-		id := "1"
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"code": code})
-		req := httptest.NewRequest(http.MethodGet, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("supplierId")
-		c.SetParamValues(id)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
-	})
-
-	t.Run("Update supplier successfully with nit", func(t *testing.T) {
-		// context
-		nit := "111111111"
-		id := "1"
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"nit": nit})
-		req := httptest.NewRequest(http.MethodGet, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("supplierId")
-		c.SetParamValues(id)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
-	})
-
-	t.Run("Update supplier successfully with brand", func(t *testing.T) {
-		// context
-		brand := "brand"
-		id := "1"
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"brand": brand})
-		req := httptest.NewRequest(http.MethodGet, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("supplierId")
-		c.SetParamValues(id)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
-	})
-
-	t.Run("Update supplier successfully with deleted_at", func(t *testing.T) {
-		// context
-		id := "1"
-		delete_at := "2021-09-01T00:00:00Z"
-
-		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"deleted_at": delete_at})
-		req := httptest.NewRequest(http.MethodGet, "/", body)
-		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		rec := httptest.NewRecorder()
-		e := echo.New()
-		config.EchoValidator(e)
-		c := e.NewContext(req, rec)
-		c.SetParamNames("supplierId")
-		c.SetParamValues(id)
-
-		// mocks
-		supplierMock := mocks.SupplierMock{}
-		supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
-
-		// controller
-		supplierController := SupplierController{SupplierRepository: &supplierMock}
-
-		// test
-		err := supplierController.UpdateSupplier(c)
-		if assert.NoError(t, err) {
-			assert.Equal(t, http.StatusOK, rec.Code)
-		}
-	})
+			// test
+			err := supplierController.UpdateSupplier(c)
+			if assert.NoError(t, err) {
+				assert.Equal(t, http.StatusOK, rec.Code)
+			}
+		})
+	}
 
 	t.Run("Update supplier successfully with all fields", func(t *testing.T) {
 		// context
@@ -577,11 +468,11 @@ func TestUpdateSupplier(t *testing.T) {
 		code := "1"
 		nit := "111111111"
 		brand := "brand"
-		delete_at := "2021-09-01T00:00:00Z"
+		deleted_at := "2021-09-01T00:00:00Z"
 
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
-			"nit": nit, "brand": brand, "deleted_at": delete_at})
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
+			"nit": nit, "brand": brand, "deleted_at": deleted_at})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -604,4 +495,5 @@ func TestUpdateSupplier(t *testing.T) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
+
 }

@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readResources } from '@vytex/client';
+import { aggregate, readResource, readResources } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -38,3 +38,16 @@ async function countResources() {
 		}),
 	);
 }
+
+export function getResourceQuery(id: number) {
+	return queryOptions({
+		queryFn: () => getResource(id),
+		queryKey: ['getResource', id],
+	});
+}
+
+async function getResource(id: number) {
+	return await client.request(readResource(id));
+}
+
+export type GetResourceType = Awaited<ReturnType<typeof getResource>>;

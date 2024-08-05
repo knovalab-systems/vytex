@@ -13,6 +13,38 @@ type ResourceController struct {
 	repository.ResourceRepository
 }
 
+// ReadResource Get a resource
+// @Summary      Get a resource
+// @Description  Get a resource by id
+// @Tags         Resources
+// @Produce      json
+// @Param        id path string true "Resource ID"
+// @Success      200 {object} models.Resource
+// @Failure      400
+// @Failure      500
+// @Router       /resources/{id} [get]
+func (m *ResourceController) ReadResource(c echo.Context) error {
+	u := new(models.ReadResource)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.ResourceBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.ResourceBadRequest()
+	}
+
+	// get resource
+	resource, err := m.ResourceRepository.SelectResource(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, resource)
+}
+
 // Get the resources
 // @Summary      Get resources from db
 // @Description  Get all the resources, limit for query o default limit
@@ -106,4 +138,37 @@ func (m *ResourceController) CreateResource(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, resource)
+}
+
+// UpdateResource Update a resource
+// @Summary      Update a resource
+// @Description  Update a resource by id
+// @Tags         Resources
+// @Param        resourceId path string true "Resource ID"
+// @Param        models.ResourceUpdateBody body string true "Resource update values"
+// @Produce      json
+// @Success      200 {object} models.Resource
+// @Failure      400
+// @Failure      500
+// @Router       /resources/{resourceId} [patch]
+func (m *ResourceController) UpdateResource(c echo.Context) error {
+	u := new(models.ResourceUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateResourceBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateResourceBadRequest()
+	}
+
+	// update
+	resource, err := m.ResourceRepository.UpdateResource(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, resource)
 }

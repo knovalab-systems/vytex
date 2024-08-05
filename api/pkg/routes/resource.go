@@ -14,4 +14,6 @@ func privateResourceRoutes(g *echo.Group) {
 	route.GET("", resourceController.ReadResources)
 	route.GET("/aggregate", resourceController.AggregateResources)
 	route.POST("", resourceController.CreateResource)
+	route.GET("/:resourceId", resourceController.ReadResource)
+	route.PATCH("/:resourceId", resourceController.UpdateResource)
 }

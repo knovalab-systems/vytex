@@ -1,6 +1,8 @@
 import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { RESOURCES_UPDATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
 import { useSuppliers } from '~/hooks/useSuppliers';
 import type { GetResourcesType } from '../requests/resourceGet';
@@ -51,7 +53,10 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell>
 									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>
-								<TableCell>Acciones</TableCell>
+								<ActionsCell update={{
+									path: `${RESOURCES_UPDATE_PATH}/${resource.id}`,
+									title: 'Actualizar Insumo',
+								}} />
 							</TableRow>
 						)}
 					</For>
