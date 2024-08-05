@@ -172,3 +172,36 @@ func (m *ResourceController) UpdateResource(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, resource)
 }
+
+// UpdateResource Update a resource
+// @Summary      Update a resource
+// @Description  Update a resource by id
+// @Tags         Resources
+// @Param        resourceId path string true "Resource ID"
+// @Param        models.ResourceUpdateBody body string true "Resource update values"
+// @Produce      json
+// @Success      200 {object} models.Resource
+// @Failure      400
+// @Failure      500
+// @Router       /resources/{resourceId} [patch]
+func (m *ResourceController) UpdateResource(c echo.Context) error {
+	u := new(models.ResourceUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateResourceBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateResourceBadRequest()
+	}
+
+	// update
+	resource, err := m.ResourceRepository.UpdateResource(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, resource)
+}

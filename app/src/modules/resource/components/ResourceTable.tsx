@@ -1,7 +1,9 @@
 import { For, Show } from 'solid-js';
 import ActionsCell from '~/components/ActionsCell';
+import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { RESOURCES_UPDATE_PATH } from '~/constants/paths';
 import { RESOURCES_UPDATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
 import { useSuppliers } from '~/hooks/useSuppliers';
