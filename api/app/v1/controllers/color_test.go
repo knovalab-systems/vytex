@@ -259,7 +259,7 @@ func TestCreateColor(t *testing.T) {
 	})
 }
 
-func TestSelectColor(t *testing.T) {
+func TestReadColor(t *testing.T) {
 
 	t.Run("Fail binding, id is missing", func(t *testing.T) {
 		// context

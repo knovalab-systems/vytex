@@ -171,6 +171,9 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request"
                     },
+                    "409": {
+                        "description": "Conflict"
+                    },
                     "500": {
                         "description": "Internal Server Error"
                     }
@@ -187,6 +190,216 @@ const docTemplate = `{
                     "Colors"
                 ],
                 "summary": "Get aggregate from colors",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AggregateData"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/colors/colorId": {
+            "get": {
+                "description": "Get an color by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Colors"
+                ],
+                "summary": "Get a given color",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Color ID",
+                        "name": "colorId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Color"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/colors/{colorId}": {
+            "post": {
+                "description": "Updates the fields from color",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Colors"
+                ],
+                "summary": "Update use",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Color ID",
+                        "name": "colorId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Color update values",
+                        "name": "models.UpdateColorBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Color"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/custom/customId": {
+            "get": {
+                "description": "Get an custom by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "customs"
+                ],
+                "summary": "Get a given custom",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Custom ID",
+                        "name": "customId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Custom"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/customs": {
+            "get": {
+                "description": "Get all the customs, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customs"
+                ],
+                "summary": "Get customs from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Custom"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new custom",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customs"
+                ],
+                "summary": "Create custom",
+                "parameters": [
+                    {
+                        "description": "Custom create values",
+                        "name": "models.CustomCreateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Custom"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/customs/aggregate": {
+            "get": {
+                "description": "Get result of aggregate function from customs",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customs"
+                ],
+                "summary": "Get aggregate from customs",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -228,6 +441,44 @@ const docTemplate = `{
                     },
                     "400": {
                         "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new fabric",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Fabrics"
+                ],
+                "summary": "Create fabric",
+                "parameters": [
+                    {
+                        "description": "Fabric create values",
+                        "name": "models.FabricCreateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Fabric"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
                     },
                     "500": {
                         "description": "Internal Server Error"
@@ -293,6 +544,99 @@ const docTemplate = `{
                 }
             }
         },
+        "/orders": {
+            "get": {
+                "description": "Get all the orders, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get orders from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Order"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new order",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Create an order",
+                "parameters": [
+                    {
+                        "description": "Order create data",
+                        "name": "models.OrderCreateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.OrderCreateBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/orders/aggregate": {
+            "get": {
+                "description": "Get result of aggregate function from orders",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get aggregate from orders",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AggregateData"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/reference": {
             "post": {
                 "description": "Create a new reference",
@@ -319,6 +663,38 @@ const docTemplate = `{
                         "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/models.Reference"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/references": {
+            "get": {
+                "description": "Get all the references, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "References"
+                ],
+                "summary": "Get references from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Reference"
+                            }
                         }
                     },
                     "400": {
@@ -357,6 +733,44 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "post": {
+                "description": "Create a new resource",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Create a resource",
+                "parameters": [
+                    {
+                        "description": "Resource create values",
+                        "name": "resource",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ResourceCreateBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resource"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/resources/aggregate": {
@@ -377,6 +791,85 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.AggregateData"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/resources/{id}": {
+            "get": {
+                "description": "Get a resource by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Get a resource",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Resource ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resource"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/resources/{resourceId}": {
+            "patch": {
+                "description": "Update a resource by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Resources"
+                ],
+                "summary": "Update a resource",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Resource ID",
+                        "name": "resourceId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Resource update values",
+                        "name": "models.ResourceUpdateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Resource"
                         }
                     },
                     "400": {
@@ -415,6 +908,44 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "post": {
+                "description": "Create a new supplier",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Create supplier",
+                "parameters": [
+                    {
+                        "description": "Supplier create values",
+                        "name": "models.SupplierCreateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Supplier"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/suppliers/aggregate": {
@@ -435,6 +966,88 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.AggregateData"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/suppliers/{id}": {
+            "get": {
+                "description": "Get supplier by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Get supplier from db",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Supplier ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Supplier"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/suppliers/{supplierId}": {
+            "patch": {
+                "description": "Updates the fields from supplier",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Suppliers"
+                ],
+                "summary": "Update supplier",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Supplier ID",
+                        "name": "supplierId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Supplier update values",
+                        "name": "models.SupplierUpdateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Supplier"
                         }
                     },
                     "400": {
@@ -690,6 +1303,140 @@ const docTemplate = `{
                 }
             }
         },
+        "models.ColorByReference": {
+            "type": "object",
+            "properties": {
+                "color": {
+                    "$ref": "#/definitions/models.Color"
+                },
+                "color_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fabrics": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.FabricByReference"
+                    }
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "reference_": {
+                    "$ref": "#/definitions/models.Reference"
+                },
+                "reference_id": {
+                    "type": "integer"
+                },
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ResourceByReference"
+                    }
+                }
+            }
+        },
+        "models.Composition": {
+            "type": "object",
+            "properties": {
+                "algod": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "elast": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "hilom": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lino": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "nylon": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "polye": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "rayon": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "rayvis": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "tencel": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                },
+                "visco": {
+                    "type": "integer",
+                    "maximum": 10000,
+                    "minimum": 0
+                }
+            }
+        },
+        "models.Custom": {
+            "type": "object",
+            "properties": {
+                "cancel_user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "canceled_at": {
+                    "type": "string"
+                },
+                "canceled_by": {
+                    "type": "string"
+                },
+                "client": {
+                    "type": "string"
+                },
+                "create_user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "orders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Order"
+                    }
+                }
+            }
+        },
         "models.DataAuthResponse": {
             "type": "object",
             "properties": {
@@ -713,6 +1460,12 @@ const docTemplate = `{
                 "color_id": {
                     "type": "integer"
                 },
+                "composition": {
+                    "$ref": "#/definitions/models.Composition"
+                },
+                "composition_id": {
+                    "type": "integer"
+                },
                 "cost": {
                     "type": "number"
                 },
@@ -725,11 +1478,89 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "key": {
-                    "type": "string"
-                },
                 "name": {
                     "type": "string"
+                },
+                "supplier": {
+                    "$ref": "#/definitions/models.Supplier"
+                },
+                "supplier_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.FabricByReference": {
+            "type": "object",
+            "properties": {
+                "2XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "2XS": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "3XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "4XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "5XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "6XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "7XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "8XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "L": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "M": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "S": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "XS": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "code": {
+                    "type": "string"
+                },
+                "color_by_reference_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "fabric": {
+                    "$ref": "#/definitions/models.Fabric"
+                },
+                "fabric_id": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },
@@ -762,6 +1593,173 @@ const docTemplate = `{
                 }
             }
         },
+        "models.Order": {
+            "type": "object",
+            "properties": {
+                "2XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "2XS": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "3XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "4XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "5XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "6XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "7XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "8XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "L": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "M": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "S": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "XS": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "cancel_user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "canceled_at": {
+                    "type": "string"
+                },
+                "canceled_by": {
+                    "type": "string"
+                },
+                "color_by_reference": {
+                    "$ref": "#/definitions/models.ColorByReference"
+                },
+                "color_by_reference_id": {
+                    "type": "integer"
+                },
+                "create_user": {
+                    "$ref": "#/definitions/models.User"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "custom": {
+                    "$ref": "#/definitions/models.Custom"
+                },
+                "custom_id": {
+                    "type": "integer"
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "$ref": "#/definitions/models.StatusOrder"
+                }
+            }
+        },
+        "models.OrderCreateBody": {
+            "type": "object",
+            "required": [
+                "color_by_reference_id",
+                "created_by",
+                "custom_id"
+            ],
+            "properties": {
+                "2XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "2XS": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "3XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "4XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "5XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "6XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "7XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "8XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "L": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "M": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "S": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "XL": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "XS": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "color_by_reference_id": {
+                    "type": "integer"
+                },
+                "created_by": {
+                    "type": "string"
+                },
+                "custom_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "models.Reference": {
             "type": "object",
             "properties": {
@@ -771,10 +1769,19 @@ const docTemplate = `{
                 "back_image": {
                     "$ref": "#/definitions/models.Image"
                 },
-                "create_by": {
+                "code": {
                     "type": "string"
                 },
+                "colors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ColorByReference"
+                    }
+                },
                 "created_at": {
+                    "type": "string"
+                },
+                "created_by": {
                     "type": "string"
                 },
                 "deleted_at": {
@@ -788,12 +1795,6 @@ const docTemplate = `{
                 },
                 "id": {
                     "type": "integer"
-                },
-                "key": {
-                    "type": "string"
-                },
-                "reference": {
-                    "type": "string"
                 },
                 "user": {
                     "$ref": "#/definitions/models.User"
@@ -824,17 +1825,137 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "key": {
+                "name": {
                     "type": "string"
+                },
+                "supplier": {
+                    "$ref": "#/definitions/models.Supplier"
+                },
+                "supplier_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ResourceByReference": {
+            "type": "object",
+            "properties": {
+                "2XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "2XS": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "3XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "4XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "5XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "6XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "7XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "8XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "L": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "M": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "S": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "XL": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "XS": {
+                    "type": "number",
+                    "minimum": 0
+                },
+                "code": {
+                    "type": "string"
+                },
+                "color_by_reference_id": {
+                    "type": "integer"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "resource": {
+                    "$ref": "#/definitions/models.Resource"
+                },
+                "resource_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.ResourceCreateBody": {
+            "type": "object",
+            "required": [
+                "code",
+                "color_id",
+                "cost",
+                "name",
+                "supplier_id"
+            ],
+            "properties": {
+                "code": {
+                    "type": "string"
+                },
+                "color_id": {
+                    "type": "integer"
+                },
+                "cost": {
+                    "type": "number"
                 },
                 "name": {
                     "type": "string"
+                },
+                "supplier_id": {
+                    "type": "integer"
                 }
             }
+        },
+        "models.StatusOrder": {
+            "type": "string",
+            "enum": [
+                "Created"
+            ],
+            "x-enum-varnames": [
+                "Created"
+            ]
         },
         "models.Supplier": {
             "type": "object",
             "properties": {
+                "brand": {
+                    "type": "string"
+                },
+                "code": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },

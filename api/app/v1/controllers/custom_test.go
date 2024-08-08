@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSelectCustoms(t *testing.T) {
+func TestReadCustoms(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get customs", func(t *testing.T) {
@@ -66,7 +66,7 @@ func TestSelectCustoms(t *testing.T) {
 
 }
 
-func TestSelectCustom(t *testing.T) {
+func TestReadCustom(t *testing.T) {
 
 	t.Run("Fail binding, customId is no find", func(t *testing.T) {
 		// context

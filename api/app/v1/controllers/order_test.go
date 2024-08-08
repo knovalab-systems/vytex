@@ -4,6 +4,11 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
@@ -11,13 +16,9 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"testing"
 )
 
-func TestSelectOrders(t *testing.T) {
+func TestReadOrders(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail select orders", func(t *testing.T) {

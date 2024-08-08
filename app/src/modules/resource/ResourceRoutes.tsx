@@ -11,7 +11,6 @@ function ResourceRoutes() {
 		<Route path={PATHS.RESOURCES_PATH}>
 			<Route path={'/'} component={Resources} />
 			<Route path={PATHS.CREATE_PATH} component={ResourceCreate} />
-			<Route path={PATHS.CREATE_PATH} component={ResourceCreate} />
 			<Route path={`${PATHS.UPDATE_PATH}/:id`} component={ResourceUpdate} />
 		</Route>
 	);

@@ -4,19 +4,20 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"testing"
 )
 
-func TestSelectSuppliers(t *testing.T) {
+func TestReadSuppliers(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get suppliers", func(t *testing.T) {
@@ -64,7 +65,7 @@ func TestSelectSuppliers(t *testing.T) {
 
 }
 
-func TestSelectSupplier(t *testing.T) {
+func TestReadSupplier(t *testing.T) {
 
 	t.Run("Fail binding, id is no find", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -370,7 +371,6 @@ func TestUpdateSupplier(t *testing.T) {
 	})
 
 	t.Run("Fail update, supplier code exits", func(t *testing.T) {
-	t.Run("Fail update, supplier code exits", func(t *testing.T) {
 		// context
 		code := "1"
 		id := "1"
@@ -397,7 +397,6 @@ func TestUpdateSupplier(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Fail update, supplier nit exits", func(t *testing.T) {
 	t.Run("Fail update, supplier nit exits", func(t *testing.T) {
 		// context
 		nit := "111111111"
@@ -451,22 +450,10 @@ func TestUpdateSupplier(t *testing.T) {
 			// mocks
 			supplierMock := mocks.SupplierMock{}
 			supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
-			// mocks
-			supplierMock := mocks.SupplierMock{}
-			supplierMock.On("UpdateSupplier").Return(&models.Supplier{}, nil)
 
 			// controller
 			supplierController := SupplierController{SupplierRepository: &supplierMock}
-			// controller
-			supplierController := SupplierController{SupplierRepository: &supplierMock}
 
-			// test
-			err := supplierController.UpdateSupplier(c)
-			if assert.NoError(t, err) {
-				assert.Equal(t, http.StatusOK, rec.Code)
-			}
-		})
-	}
 			// test
 			err := supplierController.UpdateSupplier(c)
 			if assert.NoError(t, err) {
@@ -482,7 +469,6 @@ func TestUpdateSupplier(t *testing.T) {
 		code := "1"
 		nit := "111111111"
 		brand := "brand"
-		deleted_at := "2021-09-01T00:00:00Z"
 		deleted_at := "2021-09-01T00:00:00Z"
 
 		body := new(bytes.Buffer)
@@ -510,6 +496,5 @@ func TestUpdateSupplier(t *testing.T) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
-
 
 }
