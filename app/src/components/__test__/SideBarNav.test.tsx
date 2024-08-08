@@ -3,10 +3,10 @@ import '@testing-library/jest-dom';
 import type { NavPages } from '../NavWrapper';
 import SideBarNav from '../SideBarNav';
 
-const MockA = vi.fn();
+const AMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	A: (props: { href: string }) => {
-		MockA();
+		AMock();
 		return <div>{props.href}</div>;
 	},
 }));
@@ -48,16 +48,6 @@ describe('SideBarNav', () => {
 		const A = screen.getByText('/');
 		fireEvent.click(A);
 
-		expect(MockA).toHaveBeenCalledOnce();
-	});
-
-	it('calls LogOut correctly', () => {
-		const pages: NavPages[] = [{ name: 'Usuario', path: '/', icon: () => <div /> }];
-		render(() => <SideBarNav pages={pages} />);
-
-		const logOut = screen.getByText('LogOut');
-		fireEvent.click(logOut);
-
-		expect(MockLogOut).toHaveBeenCalledOnce();
+		expect(AMock).toHaveBeenCalledOnce();
 	});
 });

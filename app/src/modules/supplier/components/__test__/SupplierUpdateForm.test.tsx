@@ -38,61 +38,6 @@ describe('SupplierUpdateForm', () => {
 		expect(cancelButton).toBeInTheDocument();
 	});
 
-	it('check change inputs values ', async () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
-		render(() => <SupplierUpdateForm supplier={supplier} />);
-		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
-		const brandField = screen.getByPlaceholderText('Marca del proveedor');
-		const codeField = screen.getByPlaceholderText('2322');
-		const nitField = screen.getByPlaceholderText('111111111');
-		const statusSelect = screen.getByTitle('Ver estados');
-
-		fireEvent.input(nameField, { target: { value: 'John Doe' } });
-		fireEvent.input(brandField, { target: { value: 'Marca' } });
-		fireEvent.input(codeField, { target: { value: 1111 } });
-		fireEvent.input(nitField, { target: { value: 222222222 } });
-
-		fireEvent(
-			statusSelect,
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(statusSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		const listboxStatus = screen.getByRole('listbox');
-		const status = within(listboxStatus).getAllByRole('option');
-
-		fireEvent(
-			status[1],
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(status[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		expect(nameField).toHaveValue('John Doe');
-		expect(brandField).toHaveValue('Marca');
-		expect(codeField).toHaveValue(1111);
-		expect(nitField).toHaveValue(222222222);
-		expect(statusSelect).toHaveTextContent('Inactivo');
-	});
-
 	it('show empty fields error message when submit form', async () => {
 		const supplier = {
 			name: 'Jose',

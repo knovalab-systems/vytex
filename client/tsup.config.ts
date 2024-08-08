@@ -9,7 +9,7 @@ export default defineConfig({
 	clean: true, // clean dist before build
 	dts: true, // generate dts file for main module
 	minify: env === 'production',
-	bundle: env === 'production',
+	bundle: true,
 	sourcemap: env === 'production',
 	watch: env === 'development',
 	format: ['esm'], // generate esm files

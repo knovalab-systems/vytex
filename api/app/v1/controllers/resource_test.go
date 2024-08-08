@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"github.com/knovalab-systems/vytex/pkg/problems"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"testing"
+
+	"github.com/knovalab-systems/vytex/pkg/problems"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
@@ -17,7 +18,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSelectResources(t *testing.T) {
+func TestReadResources(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get resources", func(t *testing.T) {
@@ -65,7 +66,7 @@ func TestSelectResources(t *testing.T) {
 
 }
 
-func TestSelectResource(t *testing.T) {
+func TestReadResource(t *testing.T) {
 	t.Run("Fail binding, id is not find", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)

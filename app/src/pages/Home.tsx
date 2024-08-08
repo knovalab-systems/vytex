@@ -1,11 +1,12 @@
 import { Match, Switch, lazy } from 'solid-js';
 import { NO_ROLE } from '~/envs/roles';
-import RoleRoot from '~/hooks/roleRoot';
+import { queryClient } from '~/lib/queryClient';
+import { getMeQueryKey, type getMeType } from '~/requests/getMe';
 
 const NotPermission = lazy(() => import('~/pages/NotPermission'));
 
 function Home() {
-	const { role } = RoleRoot;
+	const user = queryClient.getQueryData<getMeType>([getMeQueryKey]);
 
 	return (
 		<Switch
@@ -20,7 +21,7 @@ function Home() {
 				</div>
 			}
 		>
-			<Match when={role() === NO_ROLE || role() === null}>
+			<Match when={user?.role === NO_ROLE || !user}>
 				<NotPermission />
 			</Match>
 		</Switch>

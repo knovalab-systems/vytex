@@ -9,16 +9,15 @@
 	"files": [
 		"dist"
 	],
+	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.js",
-			"import": "./dist/index.mjs",
-			"types": "./dist/index.d.ts"
-		}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		},
+		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.js",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.ts",
 	"scripts": {
 		"build": "NODE_ENV=production tsup",
 		"check": "biome check --apply ./src",
@@ -29,10 +28,10 @@
 	},
 	"keywords": [],
 	"devDependencies": {
-		"@biomejs/biome": "1.6.4",
+		"@biomejs/biome": "1.8.3",
 		"@types/node-fetch": "^2.6.11",
 		"tsup": "^8.1.0",
 		"typescript": "^5.4.5",
-		"vitest": "^1.6.0"
+		"vitest": "^2.0.3"
 	}
 }

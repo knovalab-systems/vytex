@@ -1,11 +1,20 @@
 import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import ColorUpdateForm from '../components/ColorUpdateForm';
 import { getColorQuery } from '../requests/colorGet';
 
 function ColorUpdate() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<ColorUpdatePage />
+		</AllowRoles>
+	);
+}
+
+function ColorUpdatePage() {
 	const params = useParams();
 	const color = createQuery(() => getColorQuery(Number(params.id)));
 

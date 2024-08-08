@@ -4,19 +4,20 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"net/http"
+	"net/http/httptest"
+	"net/url"
+	"testing"
+
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
-	"net/http"
-	"net/http/httptest"
-	"net/url"
-	"testing"
 )
 
-func TestSelectSuppliers(t *testing.T) {
+func TestReadSuppliers(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
 	t.Run("Fail on get suppliers", func(t *testing.T) {
@@ -64,7 +65,7 @@ func TestSelectSuppliers(t *testing.T) {
 
 }
 
-func TestSelectSupplier(t *testing.T) {
+func TestReadSupplier(t *testing.T) {
 
 	t.Run("Fail binding, id is no find", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
@@ -436,7 +437,7 @@ func TestUpdateSupplier(t *testing.T) {
 			// context
 			id := "1"
 			body := new(bytes.Buffer)
-			_ = json.NewEncoder(body).Encode(map[string]interface{}{key: value})
+			json.NewEncoder(body).Encode(map[string]interface{}{key: value})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -471,7 +472,7 @@ func TestUpdateSupplier(t *testing.T) {
 		deleted_at := "2021-09-01T00:00:00Z"
 
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code,
 			"nit": nit, "brand": brand, "deleted_at": deleted_at})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)

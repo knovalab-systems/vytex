@@ -1,5 +1,6 @@
 import { createQueries } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { type Colors, useColors } from '~/hooks/useColors';
 import ReferenceCreateForm from '../components/ReferenceCreateForm';
@@ -11,6 +12,14 @@ import {
 } from '../requests/referenceCreate';
 
 function ReferenceCreate() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<ReferenceCreatePage />
+		</AllowRoles>
+	);
+}
+
+function ReferenceCreatePage() {
 	const { colorsQuery: colorsArray } = useColors();
 	const data = createQueries(() => ({
 		queries: [getFabricsByRefCreateQuery(), getResourcesByRefCreateQuery()],

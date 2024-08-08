@@ -1,12 +1,14 @@
-import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
+import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
+import { Show } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
-import { Label } from '~/components/ui/Label';
+import { Label, LabelSpan } from '~/components/ui/Label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { USERS_PATH } from '~/constants/paths';
-import { roleList } from '~/constants/roles';
+import { roleList, roles } from '~/constants/roles';
 import { createUserRequest } from '../requests/userCreate';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreate';
 
@@ -15,20 +17,19 @@ function UserCreateForm() {
 
 	const [form, { Form, Field }] = createForm<UserCreateType>({
 		validate: valiForm(UserCreateSchema),
-		initialValues: { name: '', username: '', password: '', role: '' },
 	});
 
 	const handleSubmit: SubmitHandler<UserCreateType> = async data => {
 		return createUserRequest(data.name, data.username, data.password, data.role)
 			.then(() => {
-				toast.success('Usuario creado correctamente');
+				toast.success('Usuario creado correctamente.');
 				navigate(USERS_PATH);
 			})
 			.catch(error => {
 				if (error.response.status === STATUS_CODE.conflict) {
 					toast.error(`El nombre de usuario "${data.username}" no está disponible. Intente con otro.`);
 				} else {
-					toast.error('Error al crear usuario');
+					toast.error('Error al crear usuario.');
 				}
 			});
 	};
@@ -88,23 +89,26 @@ function UserCreateForm() {
 					)}
 				</Field>
 				<Field name='role'>
-					{(field, props) => (
+					{field => (
 						<div>
-							<Label for='role-field'>Rol</Label>
-							<select
-								class='w-full h-10 px-3 py-2 text-base bg-white border rounded-lg focus:shadow-outline'
-								id='role-field'
-								aria-errormessage={field.error}
+							<LabelSpan>Rol</LabelSpan>
+							<Select
 								value={field.value}
-								required
-								{...props}
+								onChange={value => {
+									setValue(form, 'role', value);
+								}}
+								options={roleList.map(e => e.key)}
+								placeholder='Selecciona un rol'
+								itemComponent={props => <SelectItem item={props.item}>{roles[props.item.rawValue].label}</SelectItem>}
 							>
-								<option value=''>Selecciona un rol</option>
-								{roleList.map(role => (
-									<option value={role.key}>{role.label}</option>
-								))}
-							</select>
-							{field.error && <div class='text-sm text-red-600'>{field.error}</div>}
+								<SelectTrigger title='Ver roles' aria-label='Roles' aria-errormessage={field.error}>
+									<SelectValue<string>>{state => roles[state.selectedOption()].label}</SelectValue>
+								</SelectTrigger>
+								<Show when={Boolean(field.error)}>
+									<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
+								</Show>
+								<SelectContent />
+							</Select>
 						</div>
 					)}
 				</Field>

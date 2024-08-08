@@ -1,28 +1,22 @@
 import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { readMe } from '@vytex/client';
 import { BsPersonWorkspace } from 'solid-icons/bs';
 import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
-import { type JSXElement, Match, Show, Suspense, Switch, createEffect } from 'solid-js';
+import { type JSXElement, Match, Show, Suspense, Switch } from 'solid-js';
 import Loading from '~/components/Loading';
 import MenuNav from '~/components/MenuNav';
 import MobileNav from '~/components/MobileNav';
 import SideBarNav from '~/components/SideBarNav';
 import * as PATHS from '~/constants/paths';
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
-import RoleRoot from '~/hooks/roleRoot';
-import { client } from '~/lib/client';
+import { getMyUserQuery } from '~/requests/getMe';
 
 function NavWrapper(props: RouteSectionProps) {
-	const { setRole } = RoleRoot;
 	const isRouting = useIsRouting();
-	const user = createQuery(() => ({
-		queryFn: async () => client.request(readMe({ fields: ['role'] })),
-		queryKey: ['role'],
-	}));
+	const user = createQuery(getMyUserQuery);
 
 	const pages: Record<string, NavPages[]> = {
 		[ADMIN_ROLE]: [
@@ -39,12 +33,6 @@ function NavWrapper(props: RouteSectionProps) {
 			{ name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
 		],
 	};
-
-	createEffect(() => {
-		if (user.isSuccess) {
-			setRole(user.data?.role);
-		}
-	});
 
 	return (
 		<Switch>

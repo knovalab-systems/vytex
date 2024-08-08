@@ -4,7 +4,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { GetResourcesType } from '../../requests/resourceGet';
 import ResourceTable from '../ResourceTable';
 
-describe('Color Table', () => {
+vi.mock('~/components/ActionsCell', () => ({
+	default: () => {
+		return <td>Actions</td>;
+	},
+}));
+
+describe('Resources Table', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});

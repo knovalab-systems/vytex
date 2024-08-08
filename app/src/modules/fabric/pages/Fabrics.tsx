@@ -2,6 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -18,6 +19,14 @@ import FabricTable from '../components/FabricTable';
 import { countFabricsQuery, getFabricsQuery } from '../requests/fabricGet';
 
 function Fabrics() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<FabricsPage />
+		</AllowRoles>
+	);
+}
+
+function FabricsPage() {
 	const [page, setPage] = createSignal(1);
 	const fabrics = createQuery(() => getFabricsQuery(page()));
 	const countFabrics = createQuery(() => countFabricsQuery());

@@ -31,6 +31,101 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.ColorByReference:
+    properties:
+      color:
+        $ref: '#/definitions/models.Color'
+      color_id:
+        type: integer
+      created_at:
+        type: string
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      fabrics:
+        items:
+          $ref: '#/definitions/models.FabricByReference'
+        type: array
+      id:
+        type: integer
+      reference_:
+        $ref: '#/definitions/models.Reference'
+      reference_id:
+        type: integer
+      resources:
+        items:
+          $ref: '#/definitions/models.ResourceByReference'
+        type: array
+    type: object
+  models.Composition:
+    properties:
+      algod:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      elast:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      hilom:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      id:
+        type: integer
+      lino:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      nylon:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      polye:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      rayon:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      rayvis:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      tencel:
+        maximum: 10000
+        minimum: 0
+        type: integer
+      visco:
+        maximum: 10000
+        minimum: 0
+        type: integer
+    type: object
+  models.Custom:
+    properties:
+      cancel_user:
+        $ref: '#/definitions/models.User'
+      canceled_at:
+        type: string
+      canceled_by:
+        type: string
+      client:
+        type: string
+      create_user:
+        $ref: '#/definitions/models.User'
+      created_at:
+        type: string
+      created_by:
+        type: string
+      finished_at:
+        type: string
+      id:
+        type: integer
+      orders:
+        items:
+          $ref: '#/definitions/models.Order'
+        type: array
+    type: object
   models.DataAuthResponse:
     properties:
       access_token:
@@ -46,6 +141,10 @@ definitions:
         $ref: '#/definitions/models.Color'
       color_id:
         type: integer
+      composition:
+        $ref: '#/definitions/models.Composition'
+      composition_id:
+        type: integer
       cost:
         type: number
       created_at:
@@ -54,10 +153,66 @@ definitions:
         $ref: '#/definitions/gorm.DeletedAt'
       id:
         type: integer
-      key:
-        type: string
       name:
         type: string
+      supplier:
+        $ref: '#/definitions/models.Supplier'
+      supplier_id:
+        type: integer
+    type: object
+  models.FabricByReference:
+    properties:
+      2XL:
+        minimum: 0
+        type: number
+      2XS:
+        minimum: 0
+        type: number
+      3XL:
+        minimum: 0
+        type: number
+      4XL:
+        minimum: 0
+        type: number
+      5XL:
+        minimum: 0
+        type: number
+      6XL:
+        minimum: 0
+        type: number
+      7XL:
+        minimum: 0
+        type: number
+      8XL:
+        minimum: 0
+        type: number
+      L:
+        minimum: 0
+        type: number
+      M:
+        minimum: 0
+        type: number
+      S:
+        minimum: 0
+        type: number
+      XL:
+        minimum: 0
+        type: number
+      XS:
+        minimum: 0
+        type: number
+      code:
+        type: string
+      color_by_reference_id:
+        type: integer
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      fabric:
+        $ref: '#/definitions/models.Fabric'
+      fabric_id:
+        type: integer
+      id:
+        type: integer
     type: object
   models.Image:
     properties:
@@ -79,15 +234,141 @@ definitions:
     - password
     - username
     type: object
+  models.Order:
+    properties:
+      2XL:
+        minimum: 0
+        type: integer
+      2XS:
+        minimum: 0
+        type: integer
+      3XL:
+        minimum: 0
+        type: integer
+      4XL:
+        minimum: 0
+        type: integer
+      5XL:
+        minimum: 0
+        type: integer
+      6XL:
+        minimum: 0
+        type: integer
+      7XL:
+        minimum: 0
+        type: integer
+      8XL:
+        minimum: 0
+        type: integer
+      L:
+        minimum: 0
+        type: integer
+      M:
+        minimum: 0
+        type: integer
+      S:
+        minimum: 0
+        type: integer
+      XL:
+        minimum: 0
+        type: integer
+      XS:
+        minimum: 0
+        type: integer
+      cancel_user:
+        $ref: '#/definitions/models.User'
+      canceled_at:
+        type: string
+      canceled_by:
+        type: string
+      color_by_reference:
+        $ref: '#/definitions/models.ColorByReference'
+      color_by_reference_id:
+        type: integer
+      create_user:
+        $ref: '#/definitions/models.User'
+      created_at:
+        type: string
+      created_by:
+        type: string
+      custom:
+        $ref: '#/definitions/models.Custom'
+      custom_id:
+        type: integer
+      finished_at:
+        type: string
+      id:
+        type: integer
+      status:
+        $ref: '#/definitions/models.StatusOrder'
+    type: object
+  models.OrderCreateBody:
+    properties:
+      2XL:
+        minimum: 0
+        type: integer
+      2XS:
+        minimum: 0
+        type: integer
+      3XL:
+        minimum: 0
+        type: integer
+      4XL:
+        minimum: 0
+        type: integer
+      5XL:
+        minimum: 0
+        type: integer
+      6XL:
+        minimum: 0
+        type: integer
+      7XL:
+        minimum: 0
+        type: integer
+      8XL:
+        minimum: 0
+        type: integer
+      L:
+        minimum: 0
+        type: integer
+      M:
+        minimum: 0
+        type: integer
+      S:
+        minimum: 0
+        type: integer
+      XL:
+        minimum: 0
+        type: integer
+      XS:
+        minimum: 0
+        type: integer
+      color_by_reference_id:
+        type: integer
+      created_by:
+        type: string
+      custom_id:
+        type: integer
+    required:
+    - color_by_reference_id
+    - created_by
+    - custom_id
+    type: object
   models.Reference:
     properties:
       back:
         type: string
       back_image:
         $ref: '#/definitions/models.Image'
-      create_by:
+      code:
         type: string
+      colors:
+        items:
+          $ref: '#/definitions/models.ColorByReference'
+        type: array
       created_at:
+        type: string
+      created_by:
         type: string
       deleted_at:
         $ref: '#/definitions/gorm.DeletedAt'
@@ -97,10 +378,6 @@ definitions:
         $ref: '#/definitions/models.Image'
       id:
         type: integer
-      key:
-        type: string
-      reference:
-        type: string
       user:
         $ref: '#/definitions/models.User'
     type: object
@@ -120,13 +397,98 @@ definitions:
         $ref: '#/definitions/gorm.DeletedAt'
       id:
         type: integer
-      key:
-        type: string
       name:
         type: string
+      supplier:
+        $ref: '#/definitions/models.Supplier'
+      supplier_id:
+        type: integer
     type: object
+  models.ResourceByReference:
+    properties:
+      2XL:
+        minimum: 0
+        type: number
+      2XS:
+        minimum: 0
+        type: number
+      3XL:
+        minimum: 0
+        type: number
+      4XL:
+        minimum: 0
+        type: number
+      5XL:
+        minimum: 0
+        type: number
+      6XL:
+        minimum: 0
+        type: number
+      7XL:
+        minimum: 0
+        type: number
+      8XL:
+        minimum: 0
+        type: number
+      L:
+        minimum: 0
+        type: number
+      M:
+        minimum: 0
+        type: number
+      S:
+        minimum: 0
+        type: number
+      XL:
+        minimum: 0
+        type: number
+      XS:
+        minimum: 0
+        type: number
+      code:
+        type: string
+      color_by_reference_id:
+        type: integer
+      deleted_at:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      resource:
+        $ref: '#/definitions/models.Resource'
+      resource_id:
+        type: integer
+    type: object
+  models.ResourceCreateBody:
+    properties:
+      code:
+        type: string
+      color_id:
+        type: integer
+      cost:
+        type: number
+      name:
+        type: string
+      supplier_id:
+        type: integer
+    required:
+    - code
+    - color_id
+    - cost
+    - name
+    - supplier_id
+    type: object
+  models.StatusOrder:
+    enum:
+    - Created
+    type: string
+    x-enum-varnames:
+    - Created
   models.Supplier:
     properties:
+      brand:
+        type: string
+      code:
+        type: string
       created_at:
         type: string
       deleted_at:
@@ -263,9 +625,40 @@ paths:
             $ref: '#/definitions/models.Color'
         "400":
           description: Bad Request
+        "409":
+          description: Conflict
         "500":
           description: Internal Server Error
       summary: Create color
+      tags:
+      - Colors
+  /colors/{colorId}:
+    post:
+      description: Updates the fields from color
+      parameters:
+      - description: Color ID
+        in: path
+        name: colorId
+        required: true
+        type: string
+      - description: Color update values
+        in: body
+        name: models.UpdateColorBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Color'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update use
       tags:
       - Colors
   /colors/aggregate:
@@ -287,6 +680,115 @@ paths:
       summary: Get aggregate from colors
       tags:
       - Colors
+  /colors/colorId:
+    get:
+      description: Get an color by its ID
+      parameters:
+      - description: Color ID
+        in: path
+        name: colorId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Color'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a given color
+      tags:
+      - Colors
+  /custom/customId:
+    get:
+      description: Get an custom by its ID
+      parameters:
+      - description: Custom ID
+        in: path
+        name: customId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Custom'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a given custom
+      tags:
+      - customs
+  /customs:
+    get:
+      description: Get all the customs, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Custom'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get customs from db
+      tags:
+      - Customs
+    post:
+      description: Create a new custom
+      parameters:
+      - description: Custom create values
+        in: body
+        name: models.CustomCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Custom'
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create custom
+      tags:
+      - Customs
+  /customs/aggregate:
+    get:
+      description: Get result of aggregate function from customs
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from customs
+      tags:
+      - Customs
   /fabrics:
     get:
       description: Get all the fabrics, limit for query o default limit
@@ -304,6 +806,31 @@ paths:
         "500":
           description: Internal Server Error
       summary: Get fabrics from db
+      tags:
+      - Fabrics
+    post:
+      description: Create a new fabric
+      parameters:
+      - description: Fabric create values
+        in: body
+        name: models.FabricCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Fabric'
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create fabric
       tags:
       - Fabrics
   /fabrics/aggregate:
@@ -344,6 +871,67 @@ paths:
       summary: Create image
       tags:
       - Files
+  /orders:
+    get:
+      description: Get all the orders, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Order'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get orders from db
+      tags:
+      - Orders
+    post:
+      description: Create a new order
+      parameters:
+      - description: Order create data
+        in: body
+        name: models.OrderCreateBody
+        required: true
+        schema:
+          $ref: '#/definitions/models.OrderCreateBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Create an order
+      tags:
+      - Orders
+  /orders/aggregate:
+    get:
+      description: Get result of aggregate function from orders
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from orders
+      tags:
+      - Orders
   /reference:
     post:
       description: Create a new reference
@@ -363,9 +951,30 @@ paths:
             $ref: '#/definitions/models.Reference'
         "400":
           description: Bad Request
+        "409":
+          description: Conflict
         "500":
           description: Internal Server Error
       summary: Create reference
+      tags:
+      - References
+  /references:
+    get:
+      description: Get all the references, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Reference'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get references from db
       tags:
       - References
   /resources:
@@ -385,6 +994,83 @@ paths:
         "500":
           description: Internal Server Error
       summary: Get resources from db
+      tags:
+      - Resources
+    post:
+      description: Create a new resource
+      parameters:
+      - description: Resource create values
+        in: body
+        name: resource
+        required: true
+        schema:
+          $ref: '#/definitions/models.ResourceCreateBody'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Resource'
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create a resource
+      tags:
+      - Resources
+  /resources/{id}:
+    get:
+      description: Get a resource by id
+      parameters:
+      - description: Resource ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Resource'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a resource
+      tags:
+      - Resources
+  /resources/{resourceId}:
+    patch:
+      description: Update a resource by id
+      parameters:
+      - description: Resource ID
+        in: path
+        name: resourceId
+        required: true
+        type: string
+      - description: Resource update values
+        in: body
+        name: models.ResourceUpdateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Resource'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update a resource
       tags:
       - Resources
   /resources/aggregate:
@@ -423,6 +1109,85 @@ paths:
         "500":
           description: Internal Server Error
       summary: Get suppliers from db
+      tags:
+      - Suppliers
+    post:
+      description: Create a new supplier
+      parameters:
+      - description: Supplier create values
+        in: body
+        name: models.SupplierCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Supplier'
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create supplier
+      tags:
+      - Suppliers
+  /suppliers/{id}:
+    get:
+      description: Get supplier by id
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Supplier'
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "500":
+          description: Internal Server Error
+      summary: Get supplier from db
+      tags:
+      - Suppliers
+  /suppliers/{supplierId}:
+    patch:
+      description: Updates the fields from supplier
+      parameters:
+      - description: Supplier ID
+        in: path
+        name: supplierId
+        required: true
+        type: string
+      - description: Supplier update values
+        in: body
+        name: models.SupplierUpdateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Supplier'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update supplier
       tags:
       - Suppliers
   /suppliers/aggregate:

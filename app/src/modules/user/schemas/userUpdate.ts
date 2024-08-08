@@ -9,7 +9,10 @@ export const UserUpdateSchema = object({
 		[pipe(string(), minLength(8, 'La contraseña debe ser de mínimo 8 caracteres.')), literal('')],
 		'La contraseña debe ser de mínimo 8 caracteres.',
 	),
-	role: picklist<string[]>(roleList.map(role => role.key)),
+	role: picklist(
+		roleList.map(role => role.key),
+		'Selecciona un rol.',
+	),
 	deleted_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
 });
 

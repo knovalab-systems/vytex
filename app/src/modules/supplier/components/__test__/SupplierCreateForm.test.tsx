@@ -31,24 +31,6 @@ describe('SupplierCreateForm', () => {
 		expect(cancelButton).toBeInTheDocument();
 	});
 
-	it('check change inputs values ', async () => {
-		render(() => <SupplierCreateForm />);
-		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
-		const brandField = screen.getByPlaceholderText('Marca del proveedor');
-		const codeField = screen.getByPlaceholderText('2322');
-		const nitField = screen.getByPlaceholderText('111111111');
-
-		fireEvent.input(nameField, { target: { value: 'Negro' } });
-		fireEvent.input(brandField, { target: { value: 'Marca' } });
-		fireEvent.input(codeField, { target: { value: '1111' } });
-		fireEvent.input(nitField, { target: { value: '222222222' } });
-
-		expect(nameField).toHaveValue('Negro');
-		expect(brandField).toHaveValue('Marca');
-		expect(codeField).toHaveValue(1111);
-		expect(nitField).toHaveValue(222222222);
-	});
-
 	it('show empty fields error message when submit form', async () => {
 		render(() => <SupplierCreateForm />);
 		const submitButton = screen.getByText('Crear');

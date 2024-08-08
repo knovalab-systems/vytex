@@ -1,10 +1,19 @@
-import { type SubmitHandler, createForm, getValues, insert, remove, setValue, valiForm } from '@modular-forms/solid';
+import {
+	type SubmitHandler,
+	createForm,
+	getValues,
+	insert,
+	remove,
+	reset,
+	setValue,
+	valiForm,
+} from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import type { VytexSize } from '@vytex/client';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
-import { For, Show, createSignal } from 'solid-js';
+import { For, Show } from 'solid-js';
 import toast from 'solid-toast';
-import ImagePreviewSelect from '~/components/ImagePreviewSelect';
+import FileInput from '~/components/FileInput';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -22,12 +31,12 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, Ta
 import { STATUS_CODE } from '~/constants/http';
 import { REFS_PATH } from '~/constants/paths';
 import { type Colors, useColors } from '~/hooks/useColors';
-import useImageUploader from '~/hooks/useImageUploader';
 import {
 	type FabricsByRefCreate,
 	type ResourcesByRefCreate,
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreate';
+import { uploadImagesRequest } from '~/requests/imageUpload';
 import type { Reference } from '~/schemas/core';
 import { type ResourceFabric, SIZES, defaultSizeValues } from '~/schemas/sizes';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreate';
@@ -43,9 +52,6 @@ function ReferenceCreateForm(props: {
 }) {
 	const { colorsRecord } = useColors();
 	const navigate = useNavigate();
-	const [frontImage, setFrontImage] = createSignal<File | undefined>(undefined);
-	const [backImage, setBackImage] = createSignal<File | undefined>(undefined);
-	const { uploadLocalImages, uploadedFiles, error } = useImageUploader();
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name as string })),
@@ -72,24 +78,10 @@ function ReferenceCreateForm(props: {
 		},
 	});
 
-	async function handleImageUpload() {
-		const images = [frontImage(), backImage()].filter(Boolean);
-		const filteredImages = images.filter((image): image is File => image !== undefined);
-		await uploadLocalImages(filteredImages);
-
-		if (error()) {
-			toast.error('Error al subir imagenes');
-			return;
-		}
-	}
-
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
-		await handleImageUpload();
 		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: Reference = {
 			code: data.code.toString(),
-			front: uploadedFiles()?.[0].id || '',
-			back: uploadedFiles()?.[1].id || '',
 			colors: data.colors.map((color, i) => ({
 				color_id: color.color,
 				...color.resources.reduce(
@@ -117,18 +109,26 @@ function ReferenceCreateForm(props: {
 			return toast.error('Cada color de la referencia debe tener al menos una tela.');
 		}
 
-		return createReferenceRequest(reference)
-			.then(() => {
-				toast.success('Referencia creada correctamente');
-				navigate(REFS_PATH);
+		const formData = new FormData();
+		formData.append('files', data.front);
+		formData.append('files', data.back);
+
+		return uploadImagesRequest(formData)
+			.then(async res => {
+				return createReferenceRequest({ ...reference, front: res[0].id, back: res[1].id })
+					.then(() => {
+						toast.success('Referencia creada correctamente');
+						navigate(REFS_PATH);
+					})
+					.catch(error => {
+						if (error.response.status === STATUS_CODE.conflict) {
+							toast.error(`El código de la referencia "${data.code}" no está disponible. Intente con otro.`);
+						} else {
+							toast.error('Error al crear referencia.');
+						}
+					});
 			})
-			.catch(error => {
-				if (error.response.status === STATUS_CODE.conflict) {
-					toast.error(`El código de la referencia "${data.code}" no está disponible. Intente con otro.`);
-				} else {
-					toast.error('Error al crear referencia.');
-				}
-			});
+			.catch(() => toast.error('Error al subir imagenes'));
 	};
 
 	const handleCancel = () => navigate(REFS_PATH);
@@ -393,25 +393,57 @@ function ReferenceCreateForm(props: {
 				</Button>
 			</div>
 			<div class='flex flex-row gap-2'>
-				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md xl:col-span-2'>
-					<p>Foto frontal</p>
-					<ImagePreviewSelect
-						id='front'
-						onFileSelected={setFrontImage}
-						width='26rem'
-						height='26rem'
-						aria-label='Foto frontal'
-					/>
+				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md '>
+					<Field name='front' type='File'>
+						{(field, props) => (
+							<div class='w-[26rem] h-[26rem]'>
+								<LabelSpan>Foto frontal</LabelSpan>
+								<FileInput
+									label='Foto frontal'
+									preview
+									class='w-full h-full'
+									value={field.value}
+									error={field.error}
+									required
+									{...props}
+								/>
+								<Show when={field.value}>
+									<div class='mt-2 flex justify-center w-full'>
+										<Button class='bg-red-500 hover:bg-red-600' onClick={() => reset(form, field.name)}>
+											<FiTrash2 size={22} />
+											<span class='xl:block'>Eliminar foto</span>
+										</Button>
+									</div>
+								</Show>
+							</div>
+						)}
+					</Field>
 				</div>
-				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md xl:col-span-2'>
-					<p>Foto posterior</p>
-					<ImagePreviewSelect
-						id='back'
-						onFileSelected={setBackImage}
-						width='26rem'
-						height='26rem'
-						aria-label='Foto posterior'
-					/>
+				<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md '>
+					<Field name='back' type='File'>
+						{(field, props) => (
+							<div class='w-[26rem] h-[26rem]'>
+								<LabelSpan>Foto posterior</LabelSpan>
+								<FileInput
+									label='Foto posterior'
+									preview
+									class='w-full h-full'
+									value={field.value}
+									error={field.error}
+									required
+									{...props}
+								/>
+								<Show when={field.value}>
+									<div class='mt-2 flex justify-center w-full'>
+										<Button class='bg-red-500 hover:bg-red-600' onClick={() => reset(form, field.name)}>
+											<FiTrash2 size={22} />
+											<span class='xl:block'>Eliminar foto</span>
+										</Button>
+									</div>
+								</Show>
+							</div>
+						)}
+					</Field>
 				</div>
 			</div>
 		</Form>

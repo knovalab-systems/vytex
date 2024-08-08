@@ -28,12 +28,12 @@ func (m *ResourceController) ReadResource(c echo.Context) error {
 
 	// bind
 	if err := c.Bind(u); err != nil {
-		return problems.ResourceBadRequest()
+		return problems.ResourcesBadRequest()
 	}
 
 	// validate
 	if err := c.Validate(u); err != nil {
-		return problems.ResourceBadRequest()
+		return problems.ResourcesBadRequest()
 	}
 
 	// get resource

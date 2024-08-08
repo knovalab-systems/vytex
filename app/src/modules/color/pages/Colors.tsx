@@ -2,6 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -18,6 +19,14 @@ import ColorTable from '../components/ColorTable';
 import { countColorsQuery, getColorsQuery } from '../requests/colorGet';
 
 function Colors() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<ColorsPage />
+		</AllowRoles>
+	);
+}
+
+function ColorsPage() {
 	const [page, setPage] = createSignal(1);
 	const colors = createQuery(() => getColorsQuery(page()));
 	const countColors = createQuery(() => countColorsQuery());

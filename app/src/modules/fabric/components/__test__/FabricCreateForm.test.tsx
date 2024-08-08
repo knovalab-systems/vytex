@@ -16,10 +16,6 @@ describe('FabricCreateForm', () => {
 		vi.resetAllMocks();
 	});
 
-	beforeEach(() => {
-		vi.resetAllMocks();
-	});
-
 	it('renders correctly', () => {
 		render(() => <FabricCreateForm colors={[]} suppliers={[]} />);
 		const nameField = screen.getByPlaceholderText('Tela');

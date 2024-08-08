@@ -1,14 +1,18 @@
-import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
+import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
+import toast from 'solid-toast';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createPointerEvent, installPointerEvent } from '~/utils/event';
+import * as requests from '../../requests/userCreate';
 import UserCreateForm from '../UserCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 describe('UserCreateForm', () => {
+	installPointerEvent();
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
@@ -18,34 +22,16 @@ describe('UserCreateForm', () => {
 		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
-		const roleIdFilterInput = screen.getByText('Selecciona un rol');
+		const roleField = screen.getByText('Selecciona un rol');
 		const submitButton = screen.getByText('Crear');
 		const cancelButton = screen.getByText('Cancelar');
 
 		expect(nameField).toBeInTheDocument();
 		expect(usernameField).toBeInTheDocument();
 		expect(passwordField).toBeInTheDocument();
-		expect(roleIdFilterInput).toBeInTheDocument();
+		expect(roleField).toBeInTheDocument();
 		expect(submitButton).toBeInTheDocument();
 		expect(cancelButton).toBeInTheDocument();
-	});
-
-	it('check change inputs values ', async () => {
-		render(() => <UserCreateForm />);
-		const nameField = screen.getByPlaceholderText('Jose Perez');
-		const usernameField = screen.getByPlaceholderText('jperez');
-		const passwordField = screen.getByPlaceholderText('********');
-		const roleIdFilterInput = screen.getByText('Selecciona un rol');
-
-		fireEvent.input(nameField, { target: { value: 'John Doe' } });
-		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
-		fireEvent.input(passwordField, { target: { value: '12345678' } });
-		fireEvent.change(roleIdFilterInput, { target: { value: 'admin' } });
-
-		expect(nameField).toHaveValue('John Doe');
-		expect(usernameField).toHaveValue('jdoe');
-		expect(passwordField).toHaveValue('12345678');
-		expect(roleIdFilterInput).toHaveValue('admin');
 	});
 
 	it('show empty fields error message when submit form', async () => {
@@ -53,34 +39,15 @@ describe('UserCreateForm', () => {
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
 
-		const errorname = await screen.findByText('Ingresa el nombre.');
-		const errorusername = await screen.findByText('Ingresa el usuario.');
-		const errorpassword = await screen.findByText('Ingresa la contraseña.');
+		const nameError = await screen.findByText('Ingresa el nombre.');
+		const usernameError = screen.getByText('Ingresa el usuario.');
+		const passwordError = screen.getByText('Ingresa la contraseña.');
+		const roleError = screen.getByText('Selecciona un rol.');
 
-		expect(errorname).toBeInTheDocument();
-		expect(errorusername).toBeInTheDocument();
-		expect(errorpassword).toBeInTheDocument();
-	});
-
-	it('dont show empty fields error message when submit form', async () => {
-		render(() => <UserCreateForm />);
-		const nameField = screen.getByPlaceholderText('Jose Perez');
-		const usernameField = screen.getByPlaceholderText('jperez');
-		const passwordField = screen.getByPlaceholderText('********');
-		const roleIdFilterInput = screen.getByText('Selecciona un rol');
-		const submitButton = screen.getByText('Crear');
-
-		fireEvent.input(nameField, { target: { value: 'John Doe' } });
-		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
-		fireEvent.input(passwordField, { target: { value: '12345678' } });
-		fireEvent.change(roleIdFilterInput, { target: { value: 'admin' } });
-		fireEvent.click(submitButton);
-
-		await waitFor(() => {
-			expect(screen.queryByText('Ingresa el nombre.')).not.toBeInTheDocument();
-			expect(screen.queryByText('Ingresa el usuario./')).not.toBeInTheDocument();
-			expect(screen.queryByText('Ingresa la contraseña./')).not.toBeInTheDocument();
-		});
+		expect(nameError).toBeInTheDocument();
+		expect(usernameError).toBeInTheDocument();
+		expect(passwordError).toBeInTheDocument();
+		expect(roleError).toBeInTheDocument();
 	});
 
 	it('shows bad length password error', async () => {
@@ -94,10 +61,133 @@ describe('UserCreateForm', () => {
 		expect(errorPasswordField).toBeInTheDocument();
 	});
 
+	it('calls submit succesfully', async () => {
+		const requestMock = vi.spyOn(requests, 'createUserRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
+		render(() => <UserCreateForm />);
+
+		const nameField = screen.getByPlaceholderText('Jose Perez');
+		const usernameField = screen.getByPlaceholderText('jperez');
+		const passwordField = screen.getByPlaceholderText('********');
+		const roleSelect = screen.getByTitle('Ver roles');
+
+		fireEvent(
+			roleSelect,
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(roleSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
+
+		const listboxRol = screen.getByRole('listbox');
+		const roles = within(listboxRol).getAllByRole('option');
+
+		fireEvent(
+			roles[0],
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(roles[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
+
+		fireEvent.input(nameField, { target: { value: 'John Doe' } });
+		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
+		fireEvent.input(passwordField, { target: { value: '12345678' } });
+
+		const submitButton = screen.getByText('Crear');
+		fireEvent.click(submitButton);
+
+		await waitFor(() => {
+			expect(requestMock).toHaveBeenCalled();
+			expect(toastMock).toHaveBeenCalled();
+		});
+	});
+
+	const requestsErrors = [
+		{
+			title: 'calls submit with code exists',
+			textExp: 'El nombre de usuario "jdoe" no está disponible. Intente con otro.',
+			error: {
+				response: {
+					status: 409,
+				},
+			},
+		},
+		{
+			title: 'calls submit with server error',
+			textExp: 'Error al crear usuario.',
+			error: {
+				response: {
+					status: 400,
+				},
+			},
+		},
+	];
+
+	for (const err of requestsErrors) {
+		it(err.title, async () => {
+			const requestMock = vi.spyOn(requests, 'createUserRequest').mockRejectedValue(err.error);
+			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+			render(() => <UserCreateForm />);
+
+			const nameField = screen.getByPlaceholderText('Jose Perez');
+			const usernameField = screen.getByPlaceholderText('jperez');
+			const passwordField = screen.getByPlaceholderText('********');
+			const roleSelect = screen.getByTitle('Ver roles');
+
+			fireEvent(
+				roleSelect,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(roleSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const listboxRol = screen.getByRole('listbox');
+			const roles = within(listboxRol).getAllByRole('option');
+
+			fireEvent(
+				roles[0],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(roles[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			fireEvent.input(nameField, { target: { value: 'John Doe' } });
+			fireEvent.input(usernameField, { target: { value: 'jdoe' } });
+			fireEvent.input(passwordField, { target: { value: '12345678' } });
+
+			const submitButton = screen.getByText('Crear');
+			fireEvent.click(submitButton);
+
+			await waitFor(() => {
+				expect(requestMock).toHaveBeenCalled();
+				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+			});
+		});
+	}
+
 	it('calls cancel successfully', async () => {
 		render(() => <UserCreateForm />);
 		const cancelButton = screen.getByText('Cancelar');
 		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
+		expect(navigateMock).toHaveBeenCalled();
 	});
 });

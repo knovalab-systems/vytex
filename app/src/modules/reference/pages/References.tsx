@@ -2,6 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import AllowRoles from '~/components/AllowRoles';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -18,6 +19,14 @@ import ReferenceTable from '../components/ReferenceTable';
 import { countReferencesQuery, getReferencesQuery } from '../requests/referenceGet';
 
 function References() {
+	return (
+		<AllowRoles roles={['designer']}>
+			<ReferencesPage />
+		</AllowRoles>
+	);
+}
+
+function ReferencesPage() {
 	const [page, setPage] = createSignal(1);
 	const references = createQuery(() => getReferencesQuery(page()));
 	const countReferences = createQuery(() => countReferencesQuery());

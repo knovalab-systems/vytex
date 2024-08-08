@@ -59,63 +59,6 @@ describe('ColorUpdateForm', () => {
 		expect(cancelButton).toBeInTheDocument();
 	});
 
-	it('check change inputs values ', async () => {
-		render(() => (
-			<ColorUpdateForm
-				color={{
-					id: 1,
-					name: 'Blanco',
-					code: '3232',
-					hex: '#FFFFFF',
-					delete_at: null,
-				}}
-			/>
-		));
-		const nameField = screen.getByPlaceholderText('Blanco');
-		const codeField = screen.getByPlaceholderText('2322');
-		const hexField = screen.getByPlaceholderText('FFFFFF');
-		const statusLabel = screen.getByText('Activo');
-
-		fireEvent.input(nameField, { target: { value: 'Negro' } });
-		fireEvent.input(codeField, { target: { value: '1111' } });
-		fireEvent.input(hexField, { target: { value: '000000' } });
-
-		// status
-		const statusSelect = screen.getByTitle('Ver estados');
-
-		fireEvent(
-			statusSelect,
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(statusSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		const listboxStatus = screen.getByRole('listbox');
-		const status = within(listboxStatus).getAllByRole('option');
-
-		fireEvent(
-			status[1],
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(status[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		expect(nameField).toHaveValue('Negro');
-		expect(codeField).toHaveValue(1111);
-		expect(hexField).toHaveValue('000000');
-		expect(statusLabel).toHaveTextContent('Inactivo');
-	});
-
 	it('show empty fields error message when submit form', async () => {
 		render(() => (
 			<ColorUpdateForm

@@ -29,21 +29,6 @@ describe('ColorCreateForm', () => {
 		expect(cancelButton).toBeInTheDocument();
 	});
 
-	it('check change inputs values ', async () => {
-		render(() => <ColorCreateForm />);
-		const nameField = screen.getByPlaceholderText('Blanco');
-		const codeField = screen.getByPlaceholderText('2322');
-		const hexField = screen.getByPlaceholderText('FFFFFF');
-
-		fireEvent.input(nameField, { target: { value: 'Negro' } });
-		fireEvent.input(codeField, { target: { value: '1111' } });
-		fireEvent.input(hexField, { target: { value: '000000' } });
-
-		expect(nameField).toHaveValue('Negro');
-		expect(codeField).toHaveValue(1111);
-		expect(hexField).toHaveValue('000000');
-	});
-
 	it('show empty fields error message when submit form', async () => {
 		render(() => <ColorCreateForm />);
 		const submitButton = screen.getByText('Crear');

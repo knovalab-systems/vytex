@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { installPointerEvent } from '~/utils/event';
 import RoleCell from '../RoleCell';
 
 window.scrollTo = vi.fn(() => {});
@@ -29,8 +28,6 @@ vi.mock('~/constants/roles', () => ({
 }));
 
 describe('RoleCell', () => {
-	installPointerEvent();
-
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
