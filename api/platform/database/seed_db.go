@@ -19,10 +19,10 @@ func SeedDB(db *gorm.DB) {
 		"b3c766e9-3d70-4f33-a816-b0cd6168da81", // Designer Role
 	}
 
-	insertUsers(db, roles)
+	generateUsers(db, roles)
 
 	var wg sync.WaitGroup
-	functions := []func(*gorm.DB){insertColors, generateSupplier, generateComposition}
+	functions := []func(*gorm.DB){generateColors, generateSupplier, generateComposition}
 
 	for _, fn := range functions {
 		wg.Add(1)
@@ -33,8 +33,13 @@ func SeedDB(db *gorm.DB) {
 	}
 
 	wg.Wait()
+
 	generateResource(db)
 	generateFabric(db)
+	generateImage(db)
+
+	// last
+	generateReference(db)
 }
 
 func reduceStringLength(input string, length int) string {
@@ -65,7 +70,7 @@ func generateUniqueCode(existingCodes map[string]struct{}, length int) string {
 	return code
 }
 
-func insertUsers(db *gorm.DB, roles []string) {
+func generateUsers(db *gorm.DB, roles []string) {
 	predefinedUsers := []struct {
 		Username string
 		Name     string
@@ -128,7 +133,7 @@ func insertUsers(db *gorm.DB, roles []string) {
 	}
 }
 
-func insertColors(db *gorm.DB) {
+func generateColors(db *gorm.DB) {
 	var colors []models.Color
 	uniqueCodes := make(map[string]struct{})
 
@@ -342,11 +347,15 @@ func generateFabric(db *gorm.DB) {
 		log.Fatalf("No se pudo obtener las composiciones: %v", result.Error)
 	}
 
+	uniqueCodes := make(map[string]struct{})
+
 	for i := 0; i < 10; i++ {
+		code := generateUniqueCode(uniqueCodes, 5)
+
 		fabric := models.Fabric{
 			Name:          faker.Name(),
 			Cost:          float64(faker.UnixTime()),
-			Code:          faker.YearString(),
+			Code:          code,
 			ColorID:       colors[rand.Intn(len(colors))].ID,
 			SupplierID:    suppliers[rand.Intn(len(suppliers))].ID,
 			CompositionID: compositions[rand.Intn(len(compositions))].ID,
@@ -359,4 +368,123 @@ func generateFabric(db *gorm.DB) {
 	}
 
 	result = db.Create(&fabrics)
+}
+
+func generateImage(db *gorm.DB) {
+	var images []models.Image
+
+	for i := 0; i < 10; i++ {
+		image := models.Image{
+			ID:       uuid.New().String(),
+			Location: faker.Name(),
+		}
+
+		images = append(images, image)
+	}
+
+	result := db.Create(&images)
+	if result.Error != nil {
+		log.Fatalf("No se pudo crear las imágenes: %v", result.Error)
+	}
+}
+
+func generateFakeColorsByReference(db *gorm.DB) []models.ColorByReference {
+	var colors []models.Color
+	if err := db.Find(&colors).Error; err != nil {
+		log.Fatalf("No se pudo obtener los colores: %v", err)
+	}
+
+	var colorsByReference []models.ColorByReference
+	for i := 0; i < 3; i++ {
+		colorsByReference = append(colorsByReference, models.ColorByReference{
+			ColorID:   colors[rand.Intn(len(colors))].ID,
+			Fabrics:   generateFakeFabricsByReference(db),
+			Resources: generateFakeResourcesByReference(db),
+		})
+	}
+	return colorsByReference
+}
+
+func generateFakeResourcesByReference(db *gorm.DB) []models.ResourceByReference {
+	var resources []models.Resource
+	if err := db.Find(&resources).Error; err != nil {
+		log.Fatalf("No se pudo obtener los recursos: %v", err)
+	}
+
+	var resourcesByReference []models.ResourceByReference
+	for i := 0; i < 2; i++ {
+		resourcesByReference = append(resourcesByReference, models.ResourceByReference{
+			ResourceId: resources[rand.Intn(len(resources))].ID,
+			Size:       generateFakeSize(),
+		})
+	}
+	return resourcesByReference
+}
+
+func generateFakeFabricsByReference(db *gorm.DB) []models.FabricByReference {
+	var fabrics []models.Fabric
+	if err := db.Find(&fabrics).Error; err != nil {
+		log.Fatalf("No se pudo obtener las telas: %v", err)
+	}
+
+	var fabricsByReference []models.FabricByReference
+	for i := 0; i < 2; i++ {
+		fabricsByReference = append(fabricsByReference, models.FabricByReference{
+			FabricId: fabrics[rand.Intn(len(fabrics))].ID,
+			Size:     generateFakeSize(),
+		})
+	}
+	return fabricsByReference
+}
+
+func generateFakeSize() models.Size {
+	return models.Size{
+		XS2: float64(rand.Intn(2)),
+		XS:  float64(rand.Intn(2)),
+		S:   float64(rand.Intn(2)),
+		M:   float64(rand.Intn(2)),
+		L:   float64(rand.Intn(2)),
+		XL:  float64(rand.Intn(2)),
+		XL2: float64(rand.Intn(2)),
+		XL3: float64(rand.Intn(2)),
+		XL4: float64(rand.Intn(2)),
+		XL5: float64(rand.Intn(2)),
+		XL6: float64(rand.Intn(2)),
+		XL7: float64(rand.Intn(2)),
+		XL8: float64(rand.Intn(2)),
+	}
+}
+
+func generateReference(db *gorm.DB) {
+	uniqueCodes := make(map[string]struct{})
+
+	// Get all user IDs
+	var users []models.User
+	if err := db.Find(&users).Error; err != nil {
+		log.Fatalf("No se pudo obtener los usuarios: %v", err)
+	}
+
+	var images []models.Image
+	if err := db.Find(&images).Error; err != nil {
+		log.Fatalf("No se pudo obtener las imágenes: %v", err)
+	}
+
+	for i := 0; i < 3; i++ {
+		code := generateUniqueCode(uniqueCodes, 5)
+
+		// Create a fake reference
+		reference := &models.Reference{
+			Code:      code,
+			CreatedBy: users[rand.Intn(len(users))].ID,
+			Front:     images[rand.Intn(len(images))].ID,
+			Back:      images[rand.Intn(len(images))].ID,
+			Colors:    generateFakeColorsByReference(db),
+		}
+
+		// Insert the reference into the database
+		err := db.Create(&reference).Error
+		if err != nil {
+			log.Fatalf("No se pudo crear la referencia: %v", err)
+		}
+	}
 }
