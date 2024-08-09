@@ -22,24 +22,30 @@ func SeedDB(db *gorm.DB) {
 	generateUsers(db, roles)
 
 	var wg sync.WaitGroup
-	functions := []func(*gorm.DB){generateColors, generateSupplier, generateComposition}
 
-	for _, fn := range functions {
+	stage1Functions := []func(*gorm.DB){generateColors, generateSupplier, generateComposition}
+	for _, fn := range stage1Functions {
 		wg.Add(1)
 		go func(f func(*gorm.DB)) {
 			defer wg.Done()
 			f(db)
 		}(fn)
 	}
-
 	wg.Wait()
 
-	generateResource(db)
-	generateFabric(db)
-	generateImage(db)
+	stage2Functions := []func(*gorm.DB){generateResource, generateFabric, generateImage}
+	for _, fn := range stage2Functions {
+		wg.Add(1)
+		go func(f func(*gorm.DB)) {
+			defer wg.Done()
+			f(db)
+		}(fn)
+	}
+	wg.Wait()
 
-	// last
 	generateReference(db)
+
+	generateCustoms(db)
 }
 
 func reduceStringLength(input string, length int) string {
@@ -439,19 +445,19 @@ func generateFakeFabricsByReference(db *gorm.DB) []models.FabricByReference {
 
 func generateFakeSize() models.Size {
 	return models.Size{
-		XS2: float64(rand.Intn(2)),
-		XS:  float64(rand.Intn(2)),
-		S:   float64(rand.Intn(2)),
-		M:   float64(rand.Intn(2)),
-		L:   float64(rand.Intn(2)),
-		XL:  float64(rand.Intn(2)),
-		XL2: float64(rand.Intn(2)),
-		XL3: float64(rand.Intn(2)),
-		XL4: float64(rand.Intn(2)),
-		XL5: float64(rand.Intn(2)),
-		XL6: float64(rand.Intn(2)),
-		XL7: float64(rand.Intn(2)),
-		XL8: float64(rand.Intn(2)),
+		XS2: float64(rand.Intn(999)),
+		XS:  float64(rand.Intn(999)),
+		S:   float64(rand.Intn(999)),
+		M:   float64(rand.Intn(999)),
+		L:   float64(rand.Intn(999)),
+		XL:  float64(rand.Intn(999)),
+		XL2: float64(rand.Intn(999)),
+		XL3: float64(rand.Intn(999)),
+		XL4: float64(rand.Intn(999)),
+		XL5: float64(rand.Intn(999)),
+		XL6: float64(rand.Intn(999)),
+		XL7: float64(rand.Intn(999)),
+		XL8: float64(rand.Intn(999)),
 	}
 }
 
@@ -486,5 +492,76 @@ func generateReference(db *gorm.DB) {
 		if err != nil {
 			log.Fatalf("No se pudo crear la referencia: %v", err)
 		}
+	}
+}
+
+func generateCustoms(db *gorm.DB) {
+	var customs []models.Custom
+	var users []models.User
+	var colorByReferences []models.ColorByReference
+
+	// Fetch all users and color references
+	if err := db.Find(&users).Error; err != nil {
+		log.Fatalf("No se pudo obtener los usuarios: %v", err)
+	}
+	if err := db.Find(&colorByReferences).Error; err != nil {
+		log.Fatalf("No se pudo obtener las referencias de color: %v", err)
+	}
+
+	for i := 0; i < 3; i++ {
+		createdBy := users[rand.Intn(len(users))].ID
+
+		custom := models.Custom{
+			Client:    faker.Name(),
+			CreatedBy: createdBy,
+			Orders:    generateOrders(createdBy, colorByReferences),
+		}
+
+		now := time.Now()
+		custom.CreatedAt = &now
+
+		customs = append(customs, custom)
+	}
+
+	if err := db.Create(&customs).Error; err != nil {
+		log.Fatalf("No se pudo crear los customs: %v", err)
+	}
+}
+
+func generateOrders(createdBy string, colorByReferences []models.ColorByReference) []models.Order {
+	var orders []models.Order
+
+	for i := 0; i < 3; i++ {
+		order := models.Order{
+			Status:             models.Created,
+			CreatedBy:          createdBy,
+			ColorByReferenceID: colorByReferences[rand.Intn(len(colorByReferences))].ID,
+			SizeInt:            generateSizeInt(),
+		}
+
+		now := time.Now()
+		order.CreatedAt = &now
+
+		orders = append(orders, order)
+	}
+
+	return orders
+}
+
+func generateSizeInt() models.SizeInt {
+	return models.SizeInt{
+		XS2: rand.Intn(999),
+		XS:  rand.Intn(999),
+		S:   rand.Intn(999),
+		M:   rand.Intn(999),
+		L:   rand.Intn(999),
+		XL:  rand.Intn(999),
+		XL2: rand.Intn(999),
+		XL3: rand.Intn(999),
+		XL4: rand.Intn(999),
+		XL5: rand.Intn(999),
+		XL6: rand.Intn(999),
+		XL7: rand.Intn(999),
+		XL8: rand.Intn(999),
 	}
 }
