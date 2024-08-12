@@ -1,12 +1,12 @@
 package database
 
 import (
-	"log"
-
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/envs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
+	"os"
 )
 
 type Config struct {
@@ -19,8 +19,15 @@ type Config struct {
 }
 
 func DB() *gorm.DB {
+	var err error
+	var db *gorm.DB
 
-	db, err := gorm.Open(postgres.Open(envs.DSN()), &gorm.Config{})
+	if os.Getenv("ENV") == "lab" {
+		db, err = gorm.Open(postgres.Open(envs.DSNTEST()), &gorm.Config{})
+	} else {
+		db, err = gorm.Open(postgres.Open(envs.DSN()), &gorm.Config{})
+	}
+
 	if err != nil {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
@@ -38,6 +45,7 @@ func DB() *gorm.DB {
 		models.ResourceByReference{}, models.FabricByReference{},
 		models.Image{}, models.Supplier{}, models.Composition{},
 		models.Custom{}, models.Order{})
+
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}
