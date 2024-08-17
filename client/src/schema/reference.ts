@@ -11,7 +11,7 @@ import type {
 /**
  * vytex_reference type
  */
-export type VytexReference<Schema extends object> = MergeCoreCollection<
+export type VytexReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
@@ -27,7 +27,7 @@ export type VytexReference<Schema extends object> = MergeCoreCollection<
 	}
 >;
 
-export type VytexColorByReference<Schema extends object> = MergeCoreCollection<
+export type VytexColorByReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
@@ -42,7 +42,7 @@ export type VytexColorByReference<Schema extends object> = MergeCoreCollection<
 	}
 >;
 
-export type VytexResourceByReference<Schema extends object> = MergeCoreCollection<
+export type VytexResourceByReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
@@ -55,7 +55,7 @@ export type VytexResourceByReference<Schema extends object> = MergeCoreCollectio
 	} & VytexSize
 >;
 
-export type VytexFabricByReference<Schema extends object> = MergeCoreCollection<
+export type VytexFabricByReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{

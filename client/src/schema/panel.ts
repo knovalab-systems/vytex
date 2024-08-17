@@ -2,7 +2,7 @@ import type { MergeCoreCollection } from '../index.js';
 import type { DirectusDashboard } from './dashboard.js';
 import type { VytexUser } from './user.js';
 
-export type DirectusPanel<Schema extends object> = MergeCoreCollection<
+export type DirectusPanel<Schema = any> = MergeCoreCollection<
 	Schema,
 	'directus_panels',
 	{

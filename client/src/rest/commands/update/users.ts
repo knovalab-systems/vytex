@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateUserOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexUser<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -20,7 +20,7 @@ export type UpdateUserOutput<
  * @throws Will throw if keys is empty
  */
 export const updateUsers =
-	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexUser<Schema>>>(
 		keys: VytexUser<Schema>['id'][],
 		item: Partial<VytexUser<Schema>>,
 		query?: TQuery,
@@ -47,7 +47,7 @@ export const updateUsers =
  * @throws Will throw if key is empty
  */
 export const updateUser =
-	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexUser<Schema>>>(
 		key: VytexUser<Schema>['id'],
 		item: Partial<VytexUser<Schema>>,
 		query?: TQuery,
@@ -72,7 +72,7 @@ export const updateUser =
  * @returns Returns the updated user object for the authenticated user.
  */
 export const updateMe =
-	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexUser<Schema>>>(
 		item: Partial<VytexUser<Schema>>,
 		query?: TQuery,
 	): RestCommand<UpdateUserOutput<Schema, TQuery>, Schema> =>

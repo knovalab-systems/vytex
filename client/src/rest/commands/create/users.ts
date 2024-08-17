@@ -3,7 +3,7 @@ import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 
 export type CreateUserOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexUser<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type CreateUserOutput<
  * @returns Returns the user objects for the created users.
  */
 export const createUsers =
-	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexUser<Schema>>>(
 		items: Partial<VytexUser<Schema>>[],
 		query?: TQuery,
 	): RestCommand<CreateUserOutput<Schema, TQuery>[], Schema> =>
@@ -37,7 +37,7 @@ export const createUsers =
  * @returns Returns the user object for the created user.
  */
 export const createUser =
-	<Schema extends object, const TQuery extends Query<Schema, VytexUser<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexUser<Schema>>>(
 		item: Partial<VytexUser<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateUserOutput<Schema, TQuery>, Schema> =>

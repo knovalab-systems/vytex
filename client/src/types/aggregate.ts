@@ -55,7 +55,7 @@ export type AggregateRecord<Fields = string> = {
 /**
  * GroupBy parameters
  */
-export type GroupByFields<Schema extends object, Item> =
+export type GroupByFields<Schema, Item> =
 	| WrappedFields<LiteralFields<Item, 'datetime'>, DateTimeFunctions>
 	| WrappedFields<RelationalFields<Schema, Item>, ArrayFunctions>;
 

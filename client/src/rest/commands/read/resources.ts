@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadResourceOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexResource<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type ReadResourceOutput<
  * @returns An array of up to limit resources objects. If no items are available, data will be an empty array.
  */
 export const readResources =
-	<Schema extends object, const TQuery extends Query<Schema, VytexResource<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexResource<Schema>>>(
 		query?: TQuery,
 	): RestCommand<ReadResourceOutput<Schema, TQuery>[], Schema> =>
 	() => ({
@@ -35,7 +35,7 @@ export const readResources =
  * @throws Will throw if key is empty
  */
 export const readResource =
-	<Schema extends object, const TQuery extends Query<Schema, VytexResource<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexResource<Schema>>>(
 		key: VytexResource<Schema>['id'],
 		query?: TQuery,
 	): RestCommand<ReadResourceOutput<Schema, TQuery>, Schema> =>

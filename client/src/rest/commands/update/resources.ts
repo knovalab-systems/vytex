@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types';
 import { throwIfEmpty } from '../../utils';
 
 export type UpdateResourceOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexResource<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -20,7 +20,7 @@ export type UpdateResourceOutput<
  * @throws Will throw if key is empty
  */
 export const updateResource =
-	<Schema extends object, const TQuery extends Query<Schema, VytexResource<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexResource<Schema>>>(
 		key: VytexResource<Schema>['id'],
 		item: Partial<VytexResource<Schema>>,
 		query?: TQuery,

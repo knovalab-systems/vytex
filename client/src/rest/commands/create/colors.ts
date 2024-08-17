@@ -3,7 +3,7 @@ import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types';
 
 export type CreateColorOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexColor<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type CreateColorOutput<
  * @returns Returns the color object for the created color.
  */
 export const createColor =
-	<Schema extends object, const TQuery extends Query<Schema, VytexColor<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexColor<Schema>>>(
 		item: Partial<VytexColor<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateColorOutput<Schema, TQuery>, Schema> =>

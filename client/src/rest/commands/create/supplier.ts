@@ -3,7 +3,7 @@ import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types';
 
 export type CreateSupplierOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexSupplier<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type CreateSupplierOutput<
  * @returns Returns the supplier object for the created supplier.
  */
 export const createSupplier =
-	<Schema extends object, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
 		item: Partial<VytexSupplier<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateSupplierOutput<Schema, TQuery>, Schema> =>

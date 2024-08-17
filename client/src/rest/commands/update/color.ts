@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateColorOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexColor<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -20,7 +20,7 @@ export type UpdateColorOutput<
  * @throws Will throw if key is empty
  */
 export const updateColor =
-	<Schema extends object, const TQuery extends Query<Schema, VytexColor<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexColor<Schema>>>(
 		key: VytexColor<Schema>['id'],
 		item: Partial<VytexColor<Schema>>,
 		query?: TQuery,

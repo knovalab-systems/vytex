@@ -17,7 +17,7 @@ export interface AuthenticationConfig {
 	storage?: AuthenticationStorage;
 }
 
-export interface AuthenticationClient<_Schema extends object> {
+export interface AuthenticationClient<_Schema> {
 	login(username: string, password: string): Promise<AuthenticationData>;
 	refresh(): Promise<AuthenticationData>;
 	logout(): Promise<void>;
@@ -26,7 +26,7 @@ export interface AuthenticationClient<_Schema extends object> {
 	setToken(access_token: string | null): void;
 }
 
-export interface StaticTokenClient<_Schema extends object> {
+export interface StaticTokenClient<_Schema> {
 	getToken(): Promise<string | null>;
 	setToken(access_token: string | null): void;
 }

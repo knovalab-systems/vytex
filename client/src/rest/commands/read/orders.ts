@@ -3,7 +3,7 @@ import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 
 export type ReadOrderOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexOrder<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -16,7 +16,7 @@ export type ReadOrderOutput<
  * @returns An array of up to limit orders objects. If no items are available, data will be an empty array.
  */
 export const readOrders =
-	<Schema extends object, const TQuery extends Query<Schema, VytexOrder<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexOrder<Schema>>>(
 		query?: TQuery,
 	): RestCommand<ReadOrderOutput<Schema, TQuery>[], Schema> =>
 	() => ({

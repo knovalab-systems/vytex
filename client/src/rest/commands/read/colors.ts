@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadColorOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexColor<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type ReadColorOutput<
  * @returns An array of up to limit colors objects. If no items are available, data will be an empty array.
  */
 export const readColors =
-	<Schema extends object, const TQuery extends Query<Schema, VytexColor<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexColor<Schema>>>(
 		query?: TQuery,
 	): RestCommand<ReadColorOutput<Schema, TQuery>[], Schema> =>
 	() => ({
@@ -36,7 +36,7 @@ export const readColors =
  * @throws Will throw if key is empty
  */
 export const readColor =
-	<Schema extends object, const TQuery extends Query<Schema, VytexColor<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexColor<Schema>>>(
 		key: VytexColor<Schema>['id'],
 		query?: TQuery,
 	): RestCommand<ReadColorOutput<Schema, TQuery>, Schema> =>

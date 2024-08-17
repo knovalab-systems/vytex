@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadCustomOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexCustom<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type ReadCustomOutput<
  * @returns An array of up to limit customs objects. If no items are available, data will be an empty array.
  */
 export const readCustoms =
-	<Schema extends object, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
 		query?: TQuery,
 	): RestCommand<ReadCustomOutput<Schema, TQuery>[], Schema> =>
 	() => ({
@@ -35,7 +35,7 @@ export const readCustoms =
  * @throws Will throw if key is empty
  */
 export const readCustom =
-	<Schema extends object, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
 		key: VytexCustom<Schema>['id'],
 		query?: TQuery,
 	): RestCommand<ReadCustomOutput<Schema, TQuery>, Schema> =>

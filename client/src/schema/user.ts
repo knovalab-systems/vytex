@@ -3,7 +3,7 @@ import type { MergeCoreCollection } from '../index.js';
 /**
  * vytex_users type
  */
-export type VytexUser<Schema extends object> = MergeCoreCollection<
+export type VytexUser<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_users',
 	{

@@ -9,7 +9,7 @@ import type { RestCommand } from '../../types.js';
  * @returns Authentication Credentials
  */
 export const authenticateShare =
-	<Schema extends object>(
+	<Schema>(
 		share: string,
 		password: string,
 	): RestCommand<
@@ -35,7 +35,7 @@ export const authenticateShare =
  * @returns Nothing
  */
 export const inviteShare =
-	<Schema extends object>(share: string, emails: string[]): RestCommand<void, Schema> =>
+	<Schema>(share: string, emails: string[]): RestCommand<void, Schema> =>
 	() => ({
 		path: '/shares/invite',
 		method: 'POST',
@@ -50,7 +50,7 @@ export const inviteShare =
  * @returns The share objects for the given UUID, if it's still valid.
  */
 export const readShareInfo =
-	<Schema extends object>(
+	<Schema>(
 		id: string,
 	): RestCommand<
 		{

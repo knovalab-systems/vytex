@@ -4,7 +4,7 @@ import type { VytexColor } from './color.js';
 /**
  * vytex_fabrics type
  */
-export type VytexFabric<Schema extends object> = MergeCoreCollection<
+export type VytexFabric<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_fabrics',
 	{

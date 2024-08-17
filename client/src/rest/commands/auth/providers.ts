@@ -12,7 +12,7 @@ export interface ReadProviderOutput {
  * @returns Array of configured auth providers.
  */
 export const readProviders =
-	<Schema extends object>(): RestCommand<ReadProviderOutput[], Schema> =>
+	<Schema>(): RestCommand<ReadProviderOutput[], Schema> =>
 	() => ({
 		path: '/auth',
 		method: 'GET',
