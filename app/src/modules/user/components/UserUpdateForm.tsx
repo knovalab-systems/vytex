@@ -22,8 +22,8 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 	const [form, { Form, Field }] = createForm<UserUpdateType>({
 		validate: valiForm(UserUpdateSchema),
 		initialValues: {
-			name: props.user?.name,
-			username: props.user?.username,
+			name: props.user?.name || '',
+			username: props.user?.username || '',
 			role: props.user?.role || NO_ROLE,
 			deleted_at: !props.user?.deleted_at ? 'Activo' : 'Inactivo',
 		},
@@ -33,7 +33,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 		const { deleted_at, ...rest } = data;
 		const user: User = Object.keys(rest).reduce((p: User, v) => {
 			const field = rest[v as keyof typeof rest];
-			const oldField = props.user?.[v];
+			const oldField = props.user?.[v as keyof typeof props.user];
 			if (field && field !== oldField) {
 				p[v as keyof typeof p] = field;
 			}
@@ -48,7 +48,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 
 		if (Object.keys(user).length === 0) return;
 
-		return updateUserRequest(props.user?.id, user)
+		return updateUserRequest(props.user?.id || '', user)
 			.then(() => {
 				toast.success('Usuario actualizado correctamente.');
 				navigate(USERS_PATH);

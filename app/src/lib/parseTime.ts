@@ -16,7 +16,7 @@ export function convert24To12(time: string) {
 	return formattedTime;
 }
 
-export function parseDateTimeHuman(dateTime?: string) {
+export function parseDateTimeHuman(dateTime?: string | null) {
 	if (dateTime) {
 		const local = parseAbsoluteToLocal(dateTime);
 		const parse = `${toCalendarDate(local)} ${convertTimeTo12(toTime(local))}`;

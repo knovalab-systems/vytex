@@ -123,7 +123,7 @@ function ResourceCreateForm(props: {
 								<LabelSpan class='my-auto whitespace-nowrap'>Color del insumo</LabelSpan>
 								<Combobox<Colors[0]>
 									class='whitespace-nowrap min-w-48'
-									value={colorsRecord()[field.value || 0]}
+									value={colorsRecord()[field.value || 0] || null}
 									onChange={value => {
 										setValue(form, 'color', value ? value.id : 0);
 									}}

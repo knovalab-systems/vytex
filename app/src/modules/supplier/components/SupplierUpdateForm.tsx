@@ -21,8 +21,8 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 	const [form, { Form, Field }] = createForm<SupplierUpdateType>({
 		validate: valiForm(SupplierUpdateSchema),
 		initialValues: {
-			name: props.supplier?.name,
-			brand: props.supplier?.brand,
+			name: props.supplier?.name || '',
+			brand: props.supplier?.brand || '',
 			code: Number(props.supplier?.code),
 			nit: Number(props.supplier?.nit),
 			deleted_at: !props.supplier?.deleted_at ? 'Activo' : 'Inactivo',
@@ -39,7 +39,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 		const { deleted_at, ...rest } = formData;
 		const supplier: Supplier = Object.keys(rest).reduce((p: Omit<Supplier, 'id'>, v) => {
 			const field = rest[v as keyof typeof rest];
-			const oldField = props.supplier?.[v];
+			const oldField = props.supplier?.[v as keyof typeof props.supplier];
 			if (field && field !== oldField) {
 				p[v as keyof typeof p] = field;
 			}
@@ -54,7 +54,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 
 		if (Object.keys(supplier).length === 0) return;
 
-		return updateSupplierRequest(props.supplier?.id, supplier)
+		return updateSupplierRequest(props.supplier?.id || 0, supplier)
 			.then(() => {
 				toast.success('Proveedor actualizado correctamente.');
 				navigate(SUPPLIERS_PATH);

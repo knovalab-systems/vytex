@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
+import type { GetUserType } from '../../requests/userGet';
 import UserCard from '../UserCard';
 
 const mockNavigate = vi.fn();
@@ -36,7 +37,7 @@ describe('UserCard', () => {
 			role: 'admin',
 		};
 
-		render(() => <UserCard user={user} />);
+		render(() => <UserCard user={user as GetUserType} />);
 
 		const name = screen.getByText('Jose');
 		const deleted_at = screen.getByText('2024-05-10 5:36 PM');
@@ -55,7 +56,7 @@ describe('UserCard', () => {
 			role: 'admin',
 		};
 
-		render(() => <UserCard user={user} />);
+		render(() => <UserCard user={user as GetUserType} />);
 
 		const name = screen.getByText('Jose');
 		const items = screen.getAllByRole('listitem');
@@ -74,7 +75,7 @@ describe('UserCard', () => {
 			role: 'admin',
 		};
 
-		render(() => <UserCard user={user} />);
+		render(() => <UserCard user={user as GetUserType} />);
 
 		const back = screen.getByText('Volver');
 		fireEvent.click(back);
@@ -93,7 +94,7 @@ describe('UserCard', () => {
 			role: 'admin',
 		};
 
-		render(() => <UserCard user={user} />);
+		render(() => <UserCard user={user as GetUserType} />);
 
 		const edit = screen.getByText('Editar');
 		fireEvent.click(edit);

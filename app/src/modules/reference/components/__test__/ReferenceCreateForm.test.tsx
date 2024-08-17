@@ -278,8 +278,24 @@ describe('ReferenceCreateForm', () => {
 		));
 
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({});
-		const imageRequestMock = vi.spyOn(imageRequest, 'uploadImagesRequest').mockResolvedValue([{ id: 1 }, { id: 2 }]);
+		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({
+			code: null,
+			id: 0,
+			deleted_at: null,
+			created_at: null,
+			front: null,
+			front_image: null,
+			back: null,
+			back_image: null,
+			created_by: null,
+			user: null,
+			colors: null,
+			'count(colors)': undefined,
+		});
+		const imageRequestMock = vi
+			.spyOn(imageRequest, 'uploadImagesRequest')
+			// biome-ignore lint/suspicious/noExplicitAny: type infer fail, dont knos if is a list o item
+			.mockResolvedValue([{ id: 1 }, { id: 2 }] as any);
 
 		const file = fileMock('image.png', 1024 * 1024, 'image/png');
 		const referenceField = screen.getByPlaceholderText('3453');
@@ -409,7 +425,20 @@ describe('ReferenceCreateForm', () => {
 		));
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
-		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({
+			code: null,
+			id: 0,
+			deleted_at: null,
+			created_at: null,
+			front: null,
+			front_image: null,
+			back: null,
+			back_image: null,
+			created_by: null,
+			user: null,
+			colors: null,
+			'count(colors)': undefined,
+		});
 		const imageRequestMock = vi.spyOn(imageRequest, 'uploadImagesRequest').mockRejectedValue({});
 
 		const file = fileMock('image.png', 1024 * 1024, 'image/png');
@@ -569,7 +598,9 @@ describe('ReferenceCreateForm', () => {
 			));
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 			const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockRejectedValue(err.error);
-			const imageRequestMock = vi.spyOn(imageRequest, 'uploadImagesRequest').mockResolvedValue([{ id: 1 }, { id: 2 }]);
+			const imageRequestMock = vi
+				.spyOn(imageRequest, 'uploadImagesRequest') // biome-ignore lint/suspicious/noExplicitAny: type infer fail, dont knos if is a list o item
+				.mockResolvedValue([{ id: 1 }, { id: 2 }] as any);
 
 			const file = fileMock('image.png', 1024 * 1024, 'image/png');
 			const referenceField = screen.getByPlaceholderText('3453');

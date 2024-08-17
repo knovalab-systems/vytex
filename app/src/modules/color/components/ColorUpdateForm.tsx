@@ -20,9 +20,9 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 	const [form, { Form, Field }] = createForm<ColorUpdateType>({
 		validate: valiForm(ColorUpdateSchema),
 		initialValues: {
-			name: props.color?.name,
+			name: props.color?.name || '',
 			code: Number(props.color?.code),
-			hex: props.color?.hex.slice(1),
+			hex: props.color?.hex?.slice(1),
 			deleted_at: !props.color?.deleted_at ? 'Activo' : 'Inactivo',
 		},
 	});
@@ -37,7 +37,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 
 		const color: Color = Object.keys(rest).reduce((p: Omit<Color, 'id'>, v) => {
 			const field = rest[v as keyof typeof rest];
-			const oldField = props.color?.[v];
+			const oldField = props.color?.[v as keyof typeof props.color];
 			if (field && field !== oldField) {
 				p[v as keyof typeof p] = field;
 			}
@@ -52,7 +52,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 
 		if (Object.keys(color).length === 0) return;
 
-		return updateColorRequest(props.color?.id, color)
+		return updateColorRequest(props.color?.id || 0, color)
 			.then(() => {
 				toast.success('Color actualizado correctamente');
 				navigate(COLORS_PATH);

@@ -141,7 +141,7 @@ function CustomCreateForm(props: {
 																<TableCell>
 																	<Combobox<ColorReference>
 																		class='whitespace-nowrap min-w-48'
-																		value={colorRerences().obj[field.value || 0]}
+																		value={colorRerences().obj[field.value || 0] || null}
 																		onChange={value => {
 																			setValue(form, `${fieldOrders.name}.${i()}.colorByRef`, value ? value.id : 0);
 																		}}

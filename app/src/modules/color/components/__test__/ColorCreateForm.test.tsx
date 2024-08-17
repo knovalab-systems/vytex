@@ -71,7 +71,15 @@ describe('ColorCreateForm', () => {
 
 	it('calls submit succesfully', async () => {
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({
+			id: 0,
+			name: null,
+			code: null,
+			hex: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+		});
 		render(() => <ColorCreateForm />);
 
 		const nameField = screen.getByPlaceholderText('Blanco');

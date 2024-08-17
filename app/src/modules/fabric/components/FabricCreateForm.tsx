@@ -144,7 +144,7 @@ function FabricCreateForm(props: {
 
 									<Combobox<Colors[0]>
 										class='whitespace-nowrap min-w-48'
-										value={colorsRecord()[field.value || 0]}
+										value={colorsRecord()[field.value || 0] || null}
 										onChange={value => {
 											setValue(form, 'color', value ? value.id : 0);
 										}}
@@ -191,7 +191,7 @@ function FabricCreateForm(props: {
 									<LabelSpan class='my-auto whitespace-nowrap'>Proveedor de la tela</LabelSpan>
 									<Combobox<Suppliers[0]>
 										class='whitespace-nowrap min-w-48'
-										value={suppliersRecord()[field.value || 0]}
+										value={suppliersRecord()[field.value || 0] || null}
 										onChange={value => {
 											setValue(form, 'supplier', value ? value.id : 0);
 										}}

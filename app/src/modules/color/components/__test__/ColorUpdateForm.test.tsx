@@ -40,7 +40,9 @@ describe('ColorUpdateForm', () => {
 					name: 'Negro',
 					code: '3232',
 					hex: '#000000',
-					delete_at: null,
+					deleted_at: null,
+					updated_at: null,
+					created_at: null,
 				}}
 			/>
 		));
@@ -64,10 +66,12 @@ describe('ColorUpdateForm', () => {
 			<ColorUpdateForm
 				color={{
 					id: 1,
-					name: 'Blanco',
+					name: 'Negro',
 					code: '3232',
-					hex: '#FFFFFF',
-					delete_at: null,
+					hex: '#000000',
+					deleted_at: null,
+					updated_at: null,
+					created_at: null,
 				}}
 			/>
 		));
@@ -152,15 +156,25 @@ describe('ColorUpdateForm', () => {
 
 	it('calls submit succesfully', async () => {
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'updateColorRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'updateColorRequest').mockResolvedValue({
+			code: null,
+			id: 0,
+			name: null,
+			hex: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+		});
 		render(() => (
 			<ColorUpdateForm
 				color={{
 					id: 1,
-					name: 'Blanco',
+					name: 'Negro',
 					code: '3232',
-					hex: '#FFFFFF',
-					delete_at: null,
+					hex: '#000000',
+					deleted_at: null,
+					updated_at: null,
+					created_at: null,
 				}}
 			/>
 		));
@@ -241,10 +255,12 @@ describe('ColorUpdateForm', () => {
 				<ColorUpdateForm
 					color={{
 						id: 1,
-						name: 'Blanco',
+						name: 'Negro',
 						code: '3232',
-						hex: '#FFFFFF',
-						delete_at: null,
+						hex: '#000000',
+						deleted_at: null,
+						updated_at: null,
+						created_at: null,
 					}}
 				/>
 			));
