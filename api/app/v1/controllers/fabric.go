@@ -47,6 +47,38 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 
 }
 
+// ReadFabric Get a fabric
+// @Summary      Get a fabric
+// @Description  Get a fabric by id
+// @Tags         Fabrics
+// @Produce      json
+// @Param        fabricId path string true "Fabrics ID"
+// @Success      200 {object} models.Fabric
+// @Failure      400
+// @Failure      500
+// @Router       /fabrics/fabricId [get]
+func (m *FabricController) ReadFabric(c echo.Context) error {
+	u := new(models.FabricRead)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.FabricsBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.FabricsBadRequest()
+	}
+
+	// get fabric
+	fabric, err := m.FabricRepository.SelectFabric(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, fabric)
+}
+
 // Get aggregate from fabrics
 // @Summary      Get aggregate from fabrics
 // @Description  Get aggregate from fabrics

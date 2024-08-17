@@ -19,7 +19,7 @@ type Resource struct {
 	DeletedAt  gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
-type ReadResource struct {
+type ResourceRead struct {
 	ID uint `param:"resourceId" validate:"required"`
 	Query
 }

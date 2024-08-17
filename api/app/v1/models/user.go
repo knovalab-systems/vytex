@@ -42,7 +42,7 @@ func (b *User) AfterFind(tx *gorm.DB) (err error) {
 	return
 }
 
-type ReadUser struct {
+type UserRead struct {
 	ID string `param:"userId" validate:"required,uuid"`
 	Query
 }

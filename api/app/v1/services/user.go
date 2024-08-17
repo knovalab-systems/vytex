@@ -47,7 +47,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	return users, nil
 }
 
-func (m *UserService) SelectUser(q *models.ReadUser) (*models.User, error) {
+func (m *UserService) SelectUser(q *models.UserRead) (*models.User, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.UsersBadRequest()

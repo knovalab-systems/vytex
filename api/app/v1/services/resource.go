@@ -48,7 +48,7 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 	return resources, nil
 }
 
-func (m *ResourceService) SelectResource(q *models.ReadResource) (*models.Resource, error) {
+func (m *ResourceService) SelectResource(q *models.ResourceRead) (*models.Resource, error) {
 	// sanitize
 	if err := q.SanitizedQuery(); err != nil {
 		return nil, problems.ResourcesBadRequest()

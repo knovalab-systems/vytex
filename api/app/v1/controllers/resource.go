@@ -24,7 +24,7 @@ type ResourceController struct {
 // @Failure      500
 // @Router       /resources/{id} [get]
 func (m *ResourceController) ReadResource(c echo.Context) error {
-	u := new(models.ReadResource)
+	u := new(models.ResourceRead)
 
 	// bind
 	if err := c.Bind(u); err != nil {

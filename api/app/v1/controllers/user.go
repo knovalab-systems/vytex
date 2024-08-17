@@ -59,7 +59,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 // @Router       /users/userId [get]
 func (m *UserController) ReadUser(c echo.Context) error {
 	// for query params
-	u := new(models.ReadUser)
+	u := new(models.UserRead)
 
 	// bind
 	if err := c.Bind(u); err != nil {
@@ -92,7 +92,7 @@ func (m *UserController) ReadUser(c echo.Context) error {
 // @Router       /users/me [get]
 func (m *UserController) ReadMe(c echo.Context) error {
 	// for query params
-	u := new(models.ReadUser)
+	u := new(models.UserRead)
 
 	// bind
 	if err := c.Bind(u); err != nil {

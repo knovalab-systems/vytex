@@ -14,7 +14,7 @@ func (m *UserMock) SelectUsers(req *models.Query) ([]*models.User, error) {
 	return []*models.User{}, args.Error(0)
 }
 
-func (m *UserMock) SelectUser(req *models.ReadUser) (*models.User, error) {
+func (m *UserMock) SelectUser(req *models.UserRead) (*models.User, error) {
 	args := m.Called()
 	return &models.User{}, args.Error(0)
 }

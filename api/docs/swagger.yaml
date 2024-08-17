@@ -852,6 +852,29 @@ paths:
       summary: Get aggregate from fabrics
       tags:
       - Fabrics
+  /fabrics/fabricId:
+    get:
+      description: Get a fabric by id
+      parameters:
+      - description: Fabrics ID
+        in: path
+        name: fabricId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Fabric'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a fabric
+      tags:
+      - Fabrics
   /images:
     post:
       description: Create a new image

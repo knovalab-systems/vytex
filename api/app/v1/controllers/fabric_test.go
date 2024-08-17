@@ -66,6 +66,68 @@ func TestReadFabrics(t *testing.T) {
 
 }
 
+func TestReadFabric(t *testing.T) {
+	t.Run("Fail binding, id is not find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.ReadFabric(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not found fabric", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("fabricId")
+		c.SetParamValues("1")
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabric").Return(errors.New("error"))
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.ReadFabric(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get fabric successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("fabricId")
+		c.SetParamValues("1")
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabric").Return(nil, nil)
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.ReadFabric(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
 func TestAggregateFabrics(t *testing.T) {
 	t.Run("Fail on get aggregate", func(t *testing.T) {
 		// context

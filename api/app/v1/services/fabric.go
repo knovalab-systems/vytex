@@ -47,6 +47,31 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	return fabrics, nil
 }
 
+func (m *FabricService) SelectFabric(q *models.FabricRead) (*models.Fabric, error) {
+	// sanitize
+	if err := q.SanitizedQuery(); err != nil {
+		return nil, problems.FabricsBadRequest()
+	}
+
+	// def query
+	table := query.Fabric
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = fabricFields(s, q.Fields)
+
+	// run query
+	fabric, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return fabric, nil
+}
+
 func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.Fabric
 	s := table.Unscoped().Group(table.Code)

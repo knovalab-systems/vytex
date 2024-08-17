@@ -21,6 +21,11 @@ type Fabric struct {
 	DeletedAt     gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
+type FabricRead struct {
+	ID uint `param:"fabricId" validate:"required"`
+	Query
+}
+
 type FabricCreateBody struct {
 	Name        string      `json:"name" validate:"required"`
 	Cost        float64     `json:"cost" validate:"required,gt=0"`
