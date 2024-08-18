@@ -4,7 +4,7 @@ import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
 export type UpdateSupplierOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexSupplier<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -20,7 +20,7 @@ export type UpdateSupplierOutput<
  * @throws Will throw if keys is empty
  */
 export const updateSuppliers =
-	<Schema extends object, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
 		keys: VytexSupplier<Schema>['id'][],
 		item: Partial<VytexSupplier<Schema>>,
 		query?: TQuery,
@@ -46,7 +46,7 @@ export const updateSuppliers =
  * @throws Will throw if key is empty
  */
 export const updateSupplier =
-	<Schema extends object, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexSupplier<Schema>>>(
 		key: VytexSupplier<Schema>['id'],
 		item: Partial<VytexSupplier<Schema>>,
 		query?: TQuery,

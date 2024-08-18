@@ -1,8 +1,7 @@
 import type { RequestOptions, RequestTransformer, ResponseTransformer } from '../types/request.js';
 
-export type RestCommand<_Output extends object | unknown, _Schema extends object> = () => RequestOptions;
-
-export interface RestClient<Schema extends object> {
+export type RestCommand<_Output extends object | unknown, _Schema> = () => RequestOptions;
+export interface RestClient<Schema> {
 	request<Output>(options: RestCommand<Output, Schema>): Promise<Output>;
 }
 

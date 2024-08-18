@@ -109,7 +109,7 @@ function OrderCreateForm(props: { references: RefByOrderCreate; custom?: GetCust
 											<TableCell>
 												<Combobox<ColorReference>
 													class='whitespace-nowrap min-w-48'
-													value={colorReferences().obj[field.value || 0]}
+													value={colorReferences().obj[field.value || 0] || null}
 													onChange={value => {
 														setValue(form, 'colorByRef', value ? value.id : 0);
 													}}

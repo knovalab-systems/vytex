@@ -16,7 +16,7 @@ const defaultConfigValues: AuthenticationConfig = {
  * @returns A Vytex authentication client.
  */
 export const authentication = (config: Partial<AuthenticationConfig> = {}) => {
-	return <Schema extends object>(client: VytexClient<Schema>): AuthenticationClient<Schema> => {
+	return <Schema>(client: VytexClient<Schema>): AuthenticationClient<Schema> => {
 		const authConfig = { ...defaultConfigValues, ...config };
 		let refreshPromise: Promise<AuthenticationData> | null = null;
 		let refreshTimeout: ReturnType<typeof setTimeout> | null = null;

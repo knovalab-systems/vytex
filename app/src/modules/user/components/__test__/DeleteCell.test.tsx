@@ -24,7 +24,16 @@ describe('DeleteCell', () => {
 
 	it('changes active to no active', () => {
 		render(() => <DeletedAtCell deleted_at={null} userId='1' />);
-		vi.spyOn(request, 'updateUserRequest').mockResolvedValueOnce({});
+		vi.spyOn(request, 'updateUserRequest').mockResolvedValueOnce({
+			id: '',
+			name: null,
+			username: null,
+			password: null,
+			role: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+		});
 
 		const checkButton = screen.getByRole('switch');
 		fireEvent.click(checkButton);
@@ -35,7 +44,16 @@ describe('DeleteCell', () => {
 
 	it('changes no active to active', () => {
 		render(() => <DeletedAtCell deleted_at={'admin'} userId='1' />);
-		vi.spyOn(request, 'updateUserRequest').mockResolvedValueOnce({});
+		vi.spyOn(request, 'updateUserRequest').mockResolvedValueOnce({
+			id: '',
+			name: null,
+			username: null,
+			password: null,
+			role: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+		});
 
 		const checkButton = screen.getByRole('switch');
 		fireEvent.click(checkButton);

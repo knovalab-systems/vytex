@@ -20,7 +20,7 @@
 	"main": "./dist/index.js",
 	"scripts": {
 		"build": "NODE_ENV=production tsup",
-		"check": "biome check --apply ./src",
+		"check": "biome check --write ./src",
 		"dev": "NODE_ENV=development tsup",
 		"format": "biome format ./src",
 		"lint": "biome lint ./src",

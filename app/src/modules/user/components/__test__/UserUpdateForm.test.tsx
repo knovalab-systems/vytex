@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
+import type { GetUserType } from '../../requests/userGet';
 import * as requests from '../../requests/userUpdate';
 import UserUpdateForm from '../UserUpdateForm';
 
@@ -23,7 +24,7 @@ describe('UserUpdateForm', () => {
 			deleted_at: 'delete',
 		};
 
-		render(() => <UserUpdateForm user={user} />);
+		render(() => <UserUpdateForm user={user as GetUserType} />);
 		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByText('Contraseña');
@@ -45,7 +46,7 @@ describe('UserUpdateForm', () => {
 			username: 'jose',
 			deleted_at: 'delete',
 		};
-		render(() => <UserUpdateForm user={user} />);
+		render(() => <UserUpdateForm user={user as GetUserType} />);
 
 		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
@@ -69,7 +70,7 @@ describe('UserUpdateForm', () => {
 			username: 'jose',
 			deleted_at: 'delete',
 		};
-		render(() => <UserUpdateForm user={user} />);
+		render(() => <UserUpdateForm user={user as GetUserType} />);
 		const passwordField = screen.getByPlaceholderText('********');
 		const submitButton = screen.getByText('Actualizar');
 
@@ -80,14 +81,23 @@ describe('UserUpdateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		const requestMock = vi.spyOn(requests, 'updateUserRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'updateUserRequest').mockResolvedValue({
+			id: '',
+			name: null,
+			username: null,
+			password: null,
+			role: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		const user = {
 			name: 'Jose',
 			username: 'jose',
 			deleted_at: 'delete',
 		};
-		render(() => <UserUpdateForm user={user} />);
+		render(() => <UserUpdateForm user={user as GetUserType} />);
 		const nameField = screen.getByPlaceholderText('Jose Perez');
 		const usernameField = screen.getByPlaceholderText('jperez');
 		const passwordField = screen.getByPlaceholderText('********');
@@ -196,7 +206,7 @@ describe('UserUpdateForm', () => {
 				username: 'jose',
 				deleted_at: 'delete',
 			};
-			render(() => <UserUpdateForm user={user} />);
+			render(() => <UserUpdateForm user={user as GetUserType} />);
 			const nameField = screen.getByPlaceholderText('Jose Perez');
 			const usernameField = screen.getByPlaceholderText('jperez');
 			const passwordField = screen.getByPlaceholderText('********');

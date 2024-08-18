@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
+import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../request/OrderCreate';
 import OrderCreateForm from '../OrderCreateForm';
@@ -17,7 +18,7 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <OrderCreateForm references={[]} custom={[]} />);
+		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
 
 		const refField = screen.getByText('Referencia');
 		const submitButton = screen.getByText('Crear');
@@ -29,7 +30,7 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <OrderCreateForm references={[]} custom={[]} />);
+		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -41,7 +42,7 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('calls cancel successfully', async () => {
-		render(() => <OrderCreateForm references={[]} custom={[]} />);
+		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
 		const cancelButton = screen.getByText('Cancelar');
 		fireEvent.click(cancelButton);
 		expect(mockNavigate).toHaveBeenCalled();
@@ -49,7 +50,21 @@ describe('OrderCreateForm', () => {
 
 	it('calls submit with pending values for sizes', async () => {
 		render(() => (
-			<OrderCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} custom={[]} />
+			<OrderCreateForm
+				references={[
+					{
+						id: 1,
+						code: '3232',
+						colors: [
+							{
+								id: 1,
+								color_id: 1,
+							},
+						],
+					},
+				]}
+				custom={[] as unknown as GetCustomType}
+			/>
 		));
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
@@ -93,7 +108,21 @@ describe('OrderCreateForm', () => {
 
 	it('calls submit with error server', async () => {
 		render(() => (
-			<OrderCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} custom={[]} />
+			<OrderCreateForm
+				references={[
+					{
+						id: 1,
+						code: '3232',
+						colors: [
+							{
+								id: 1,
+								color_id: 1,
+							},
+						],
+					},
+				]}
+				custom={[] as unknown as GetCustomType}
+			/>
 		));
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
@@ -137,11 +166,52 @@ describe('OrderCreateForm', () => {
 
 	it('calls submit succesfully', async () => {
 		render(() => (
-			<OrderCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} custom={[{ id: 1 }]} />
+			<OrderCreateForm
+				references={[
+					{
+						id: 1,
+						code: '3232',
+						colors: [
+							{
+								id: 1,
+								color_id: 1,
+							},
+						],
+					},
+				]}
+				custom={[{ id: 1 }] as unknown as GetCustomType}
+			/>
 		));
 
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({
+			status: null,
+			custom: null,
+			id: 0,
+			created_at: null,
+			finished_at: null,
+			canceled_at: null,
+			created_by: null,
+			canceled_by: null,
+			color_by_reference_id: null,
+			custom_id: null,
+			color_by_reference: null,
+			create_user: null,
+			cancel_user: null,
+			'2XS': null,
+			XS: null,
+			S: null,
+			M: null,
+			L: null,
+			XL: null,
+			'2XL': null,
+			'3XL': null,
+			'4XL': null,
+			'5XL': null,
+			'6XL': null,
+			'7XL': null,
+			'8XL': null,
+		});
 
 		const referenceSelect = screen.getByTitle('Ver referencias');
 

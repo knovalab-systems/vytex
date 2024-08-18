@@ -10,16 +10,19 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+const supplier = {
+	name: 'Jose',
+	brand: 'brand',
+	code: '2322',
+	nit: '111111111',
+	deleted_at: null,
+	id: 0,
+	updated_at: null,
+	created_at: null,
+};
+
 describe('SupplierUpdateForm', () => {
 	it('renders correctly', () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
 		render(() => <SupplierUpdateForm supplier={supplier} />);
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
 		const brandField = screen.getByPlaceholderText('Marca del proveedor');
@@ -39,14 +42,6 @@ describe('SupplierUpdateForm', () => {
 	});
 
 	it('show empty fields error message when submit form', async () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
 		render(() => <SupplierUpdateForm supplier={supplier} />);
 
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
@@ -105,14 +100,6 @@ describe('SupplierUpdateForm', () => {
 	});
 
 	it('dont show empty fields error message when submit form', async () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
 		render(() => <SupplierUpdateForm supplier={supplier} />);
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
 		const brandField = screen.getByPlaceholderText('Marca del proveedor');
@@ -165,14 +152,6 @@ describe('SupplierUpdateForm', () => {
 	});
 
 	it('show bad length error for nit', async () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
 		render(() => <SupplierUpdateForm supplier={supplier} />);
 		const nitField = screen.getByPlaceholderText('111111111');
 		const submitButton = screen.getByText('Actualizar');
@@ -235,14 +214,6 @@ describe('SupplierUpdateForm', () => {
 
 	for (const err of requestsErrors) {
 		it(err.title, async () => {
-			const supplier = {
-				name: 'Jose',
-				brand: 'brand',
-				code: '2322',
-				nit: '111111111',
-				deleted_at: null,
-			};
-
 			render(() => <SupplierUpdateForm supplier={supplier} />);
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 			const requestMock = vi.spyOn(requests, 'updateSupplierRequest').mockRejectedValue(err.error);
@@ -267,14 +238,6 @@ describe('SupplierUpdateForm', () => {
 	}
 
 	it('calls calcel successfully', async () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
 		render(() => <SupplierUpdateForm supplier={supplier} />);
 
 		const cancelButton = screen.getByText('Cancelar');
@@ -283,17 +246,18 @@ describe('SupplierUpdateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		const supplier = {
-			name: 'Jose',
-			brand: 'brand',
-			code: '2322',
-			nit: '111111111',
-			deleted_at: null,
-		};
-
 		render(() => <SupplierUpdateForm supplier={supplier} />);
 
-		const requestMock = vi.spyOn(requests, 'updateSupplierRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'updateSupplierRequest').mockResolvedValue({
+			brand: null,
+			code: null,
+			id: 0,
+			nit: null,
+			name: null,
+			deleted_at: null,
+			updated_at: null,
+			created_at: null,
+		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');

@@ -4,7 +4,7 @@ import type { ApplyQueryFields, DeepPartial, Query } from '../../../types/index.
 import type { RestCommand } from '../../types.js';
 
 export type CreateOrderOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexOrder<Schema>,
 > = ApplyQueryFields<VytexOrder<CoreSchema>, Item, TQuery['fields']>;
@@ -18,7 +18,7 @@ export type CreateOrderOutput<
  * @returns Returns the order object for the created order.
  */
 export const createOrder =
-	<Schema extends object, const TQuery extends Query<Schema, VytexOrder<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexOrder<Schema>>>(
 		item: DeepPartial<VytexOrder<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateOrderOutput<Schema, TQuery>, Schema> =>

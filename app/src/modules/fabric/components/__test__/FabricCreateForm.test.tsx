@@ -177,7 +177,20 @@ describe('FabricCreateForm', () => {
 		));
 
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createFabricRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createFabricRequest').mockResolvedValue({
+			id: 0,
+			code: null,
+			deleted_at: null,
+			created_at: null,
+			name: null,
+			cost: null,
+			color_id: null,
+			color: null,
+			supplier_id: null,
+			supplier: null,
+			composition_id: null,
+			composition: null,
+		});
 
 		const nameField = screen.getByPlaceholderText('Tela');
 		const codeField = screen.getByPlaceholderText('23231');

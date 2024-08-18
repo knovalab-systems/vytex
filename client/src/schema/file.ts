@@ -3,7 +3,7 @@ import type { DirectusFolder } from './folder.js';
 import type { VytexUser } from './user.js';
 
 // Base type for directus_files
-export type DirectusFile<Schema extends object> = MergeCoreCollection<
+export type DirectusFile<Schema = any> = MergeCoreCollection<
 	Schema,
 	'directus_files',
 	{

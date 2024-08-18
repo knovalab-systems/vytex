@@ -3,7 +3,7 @@ import type { MergeCoreCollection, VytexColor, VytexSupplier } from '../index.js
 /**
  * vytex_resources type
  */
-export type VytexResource<Schema extends object> = MergeCoreCollection<
+export type VytexResource<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_resources',
 	{

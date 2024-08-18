@@ -34,7 +34,20 @@ describe('Custom Table', () => {
 	});
 
 	it('renders correctly on customs', () => {
-		const customs: GetCustomsType = [{ id: 123, client: 'pepe', created_at: '2024-05-12T22:36:52.140901Z' }];
+		const customs: GetCustomsType = [
+			{
+				id: 123,
+				client: 'pepe',
+				created_at: '2024-05-12T22:36:52.140901Z',
+				finished_at: null,
+				canceled_at: null,
+				created_by: null,
+				canceled_by: null,
+				create_user: null,
+				cancel_user: null,
+				orders: null,
+			},
+		];
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');
 		const customClient = screen.getByText('pepe');
@@ -52,6 +65,12 @@ describe('Custom Table', () => {
 				client: 'pepe',
 				created_at: '2024-05-12T22:36:52.140901Z',
 				finished_at: '2024-06-12T22:36:52.140901Z',
+				canceled_at: null,
+				created_by: null,
+				canceled_by: null,
+				create_user: null,
+				cancel_user: null,
+				orders: null,
 			},
 		];
 
@@ -77,6 +96,12 @@ describe('Custom Table', () => {
 				client: 'pepe',
 				created_at: '2024-05-12T22:36:52.140901Z',
 				canceled_at: '2024-06-12T22:36:52.140901Z',
+				finished_at: null,
+				created_by: null,
+				canceled_by: null,
+				create_user: null,
+				cancel_user: null,
+				orders: null,
 			},
 		];
 
@@ -103,6 +128,11 @@ describe('Custom Table', () => {
 				created_at: '2024-05-12T22:36:52.140901Z',
 				finished_at: '2024-06-12T22:36:52.140901Z',
 				canceled_at: '2024-07-12T22:36:52.140901Z',
+				created_by: null,
+				canceled_by: null,
+				create_user: null,
+				cancel_user: null,
+				orders: null,
 			},
 		];
 
@@ -124,7 +154,20 @@ describe('Custom Table', () => {
 	});
 
 	it('renders action cell with create action if no finished or canceled date is present', () => {
-		const customs: GetCustomsType = [{ id: 123, client: 'pepe', created_at: '2024-05-12T22:36:52.140901Z' }];
+		const customs: GetCustomsType = [
+			{
+				id: 123,
+				client: 'pepe',
+				created_at: '2024-05-12T22:36:52.140901Z',
+				finished_at: null,
+				canceled_at: null,
+				created_by: null,
+				canceled_by: null,
+				create_user: null,
+				cancel_user: null,
+				orders: null,
+			},
+		];
 
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');

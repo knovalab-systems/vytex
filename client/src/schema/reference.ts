@@ -11,23 +11,25 @@ import type {
 /**
  * vytex_reference type
  */
-export type VytexReference<Schema extends object> = MergeCoreCollection<
+export type VytexReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
 		id: number;
 		code: string | null; // use for version purpose n erp interface
-		front: VytexImage<Schema[]> | null;
-		back: VytexImage<Schema[]> | null;
+		front: string | null;
+		front_image: VytexImage<Schema[]> | null;
+		back: string | null;
+		back_image: VytexImage<Schema[]> | null;
 		deleted_at: string | null;
 		created_at: string | null;
 		created_by: string | null;
 		user: VytexUser<Schema[]> | null;
-		colors: VytexColorByReference<Schema[]>[] | null;
+		colors: VytexColorByReference<Schema>[] | null;
 	}
 >;
 
-export type VytexColorByReference<Schema extends object> = MergeCoreCollection<
+export type VytexColorByReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
@@ -42,7 +44,7 @@ export type VytexColorByReference<Schema extends object> = MergeCoreCollection<
 	}
 >;
 
-export type VytexResourceByReference<Schema extends object> = MergeCoreCollection<
+export type VytexResourceByReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{
@@ -55,7 +57,7 @@ export type VytexResourceByReference<Schema extends object> = MergeCoreCollectio
 	} & VytexSize
 >;
 
-export type VytexFabricByReference<Schema extends object> = MergeCoreCollection<
+export type VytexFabricByReference<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_references',
 	{

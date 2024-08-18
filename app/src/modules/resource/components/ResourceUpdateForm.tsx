@@ -40,11 +40,11 @@ function ResourceUpdateForm(props: {
 	const [form, { Form, Field }] = createForm<ResourceUpdateType>({
 		validate: valiForm(ResourceUpdateSchema),
 		initialValues: {
-			name: props.resource?.name,
+			name: props.resource?.name || '',
 			code: Number(props.resource?.code),
 			cost: Number(props.resource?.cost),
-			color: props.resource?.color_id,
-			supplier: props.resource?.supplier_id,
+			color: props.resource?.color_id || 0,
+			supplier: props.resource?.supplier_id || 0,
 			deleted_at: !props.resource?.deleted_at ? 'Activo' : 'Inactivo',
 		},
 	});
@@ -61,7 +61,7 @@ function ResourceUpdateForm(props: {
 
 		const resource: Omit<Resource, 'id' | 'color' | 'supplier'> = Object.keys(formData).reduce((p, v) => {
 			const field = formData[v as keyof typeof formData];
-			const oldField = props.resource?.[v];
+			const oldField = props.resource?.[v as keyof typeof props.resource];
 			if (field !== undefined && field !== oldField) {
 				// @ts-ignore: type is corresponding
 				p[v as keyof typeof p] = field;
@@ -79,7 +79,7 @@ function ResourceUpdateForm(props: {
 
 		if (Object.keys(resource).length === 0) return;
 
-		return updateResourceRequest(props.resource?.id, resource)
+		return updateResourceRequest(props.resource?.id || 0, resource)
 			.then(() => {
 				toast.success('Insumo actualizado correctamente.');
 				navigate(RESOURCES_PATH);
@@ -156,7 +156,7 @@ function ResourceUpdateForm(props: {
 								<LabelSpan class='my-auto whitespace-nowrap'>Color del insumo</LabelSpan>
 								<Combobox<Colors[0]>
 									class='whitespace-nowrap min-w-48'
-									value={colorsRecord()[field.value || 0]}
+									value={colorsRecord()[field.value || 0] || null}
 									onChange={value => {
 										setValue(form, 'color', value ? value.id : 0);
 									}}
@@ -204,7 +204,7 @@ function ResourceUpdateForm(props: {
 								<LabelSpan class='my-auto whitespace-nowrap'>Proveedor del insumo</LabelSpan>
 								<Combobox<Suppliers[0]>
 									class='whitespace-nowrap min-w-48'
-									value={suppliersRecord()[field.value || 0]}
+									value={suppliersRecord()[field.value || 0] || null}
 									onChange={value => {
 										setValue(form, 'supplier', value ? value.id : 0);
 									}}

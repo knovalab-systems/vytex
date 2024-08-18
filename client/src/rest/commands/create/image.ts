@@ -3,7 +3,7 @@ import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 
 export type CreateImageOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexImage<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
@@ -17,7 +17,7 @@ export type CreateImageOutput<
  * @returns Returns the image object for the uploaded image, or an array of image objects if multiple images were uploaded at once.
  */
 export const uploadImages =
-	<Schema extends object, const TQuery extends Query<Schema, VytexImage<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexImage<Schema>>>(
 		data: FormData,
 		query?: TQuery,
 	): RestCommand<CreateImageOutput<Schema, TQuery>, Schema> =>

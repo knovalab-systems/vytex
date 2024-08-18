@@ -8,7 +8,8 @@
 		"rules": {
 			"recommended": true,
 			"suspicious": {
-				"noConsoleLog": "warn"
+				"noConsoleLog": "warn",
+				"noExplicitAny": "warn"
 			},
 			"style": {
 				"useImportType": {

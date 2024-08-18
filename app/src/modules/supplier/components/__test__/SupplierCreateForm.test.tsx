@@ -63,7 +63,16 @@ describe('SupplierCreateForm', () => {
 	it('calls submit succesfully', async () => {
 		render(() => <SupplierCreateForm />);
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockResolvedValue({
+			id: 0,
+			name: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+			code: null,
+			nit: null,
+			brand: null,
+		});
 
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
 		const brandField = screen.getByPlaceholderText('Marca del proveedor');

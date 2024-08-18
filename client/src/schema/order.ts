@@ -3,7 +3,7 @@ import type { MergeCoreCollection, VytexColorByReference, VytexCustom, VytexSize
 /**
  * vytex_customs type
  */
-export type VytexOrder<Schema extends object> = MergeCoreCollection<
+export type VytexOrder<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_orders',
 	{

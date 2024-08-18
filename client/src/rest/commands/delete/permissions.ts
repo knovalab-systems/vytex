@@ -9,7 +9,7 @@ import { throwIfEmpty } from '../../utils/index.js';
  * @throws Will throw if keys is empty
  */
 export const deletePermissions =
-	<Schema extends object>(keys: DirectusPermission<Schema>['id'][]): RestCommand<void, Schema> =>
+	<Schema>(keys: DirectusPermission<Schema>['id'][]): RestCommand<void, Schema> =>
 	() => {
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
@@ -27,7 +27,7 @@ export const deletePermissions =
  * @throws Will throw if key is empty
  */
 export const deletePermission =
-	<Schema extends object>(key: DirectusPermission<Schema>['id']): RestCommand<void, Schema> =>
+	<Schema>(key: DirectusPermission<Schema>['id']): RestCommand<void, Schema> =>
 	() => {
 		throwIfEmpty(String(key), 'Key cannot be empty');
 

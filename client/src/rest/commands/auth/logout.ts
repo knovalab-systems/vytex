@@ -8,7 +8,7 @@ import type { RestCommand } from '../../types.js';
  * @returns Empty body.
  */
 export const logout =
-	<Schema extends object>(refresh_token?: string): RestCommand<void, Schema> =>
+	<Schema>(refresh_token?: string): RestCommand<void, Schema> =>
 	() => ({
 		path: '/logout',
 		method: 'POST',

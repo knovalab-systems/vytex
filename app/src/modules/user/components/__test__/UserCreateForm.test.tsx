@@ -62,7 +62,16 @@ describe('UserCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		const requestMock = vi.spyOn(requests, 'createUserRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createUserRequest').mockResolvedValue({
+			id: '',
+			name: null,
+			username: null,
+			password: null,
+			role: null,
+			deleted_at: null,
+			created_at: null,
+			updated_at: null,
+		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => <UserCreateForm />);
 

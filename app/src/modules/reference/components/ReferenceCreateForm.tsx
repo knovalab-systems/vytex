@@ -115,7 +115,11 @@ function ReferenceCreateForm(props: {
 
 		return uploadImagesRequest(formData)
 			.then(async res => {
-				return createReferenceRequest({ ...reference, front: res[0].id, back: res[1].id })
+				return createReferenceRequest({
+					...reference,
+					front: (res as unknown as Array<Record<'id', string | undefined>>)[0].id as string,
+					back: (res as unknown as Array<Record<'id', string | undefined>>)[1].id as string,
+				})
 					.then(() => {
 						toast.success('Referencia creada correctamente');
 						navigate(REFS_PATH);
@@ -183,7 +187,7 @@ function ReferenceCreateForm(props: {
 
 													<Combobox<Colors[0]>
 														class='whitespace-nowrap min-w-48'
-														value={colorsRecord()[field.value || 0]}
+														value={colorsRecord()[field.value || 0] || null}
 														onChange={value => {
 															setValue(form, `${fieldColors.name}.${iColor()}.color`, value ? value.id : 0);
 														}}
@@ -256,7 +260,7 @@ function ReferenceCreateForm(props: {
 																					<TableCell>
 																						<Combobox<Combined>
 																							class='whitespace-nowrap min-w-48'
-																							value={resourceObject()[field.value || '']}
+																							value={resourceObject()[field.value || ''] || null}
 																							onChange={value => {
 																								setValue(
 																									form,

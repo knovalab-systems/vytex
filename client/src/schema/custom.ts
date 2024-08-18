@@ -4,7 +4,7 @@ import type { VytexOrder } from './order.js';
 /**
  * vytex_customs type
  */
-export type VytexCustom<Schema extends object> = MergeCoreCollection<
+export type VytexCustom<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_custom',
 	{

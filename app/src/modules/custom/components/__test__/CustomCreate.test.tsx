@@ -51,7 +51,22 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls submit with pending values for sizes', async () => {
-		render(() => <CustomCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
+		render(() => (
+			<CustomCreateForm
+				references={[
+					{
+						id: 1,
+						code: null,
+						colors: [
+							{
+								id: 1,
+								color_id: 1,
+							},
+						],
+					},
+				]}
+			/>
+		));
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
@@ -95,7 +110,22 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls submit with error server', async () => {
-		render(() => <CustomCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
+		render(() => (
+			<CustomCreateForm
+				references={[
+					{
+						id: 1,
+						code: null,
+						colors: [
+							{
+								id: 1,
+								color_id: 1,
+							},
+						],
+					},
+				]}
+			/>
+		));
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
@@ -140,9 +170,36 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		render(() => <CustomCreateForm references={[{ id: 1, code: '3232', colors: [{ id: 1, color_id: 1 }] }]} />);
+		render(() => (
+			<CustomCreateForm
+				references={[
+					{
+						id: 1,
+						code: null,
+						colors: [
+							{
+								id: 1,
+								color_id: 1,
+							},
+						],
+					},
+				]}
+			/>
+		));
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockResolvedValue({
+			id: 0,
+			created_at: null,
+			created_by: null,
+			client: null,
+			finished_at: null,
+			canceled_at: null,
+			canceled_by: null,
+			create_user: null,
+			cancel_user: null,
+			orders: null,
+			'count(orders)': undefined,
+		});
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
 		fireEvent.input(clientField, { target: { value: 'cliente' } });

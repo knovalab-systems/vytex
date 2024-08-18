@@ -8,7 +8,7 @@ import type { VytexResource } from './resource.js';
 import type { VytexSupplier } from './supplier.js';
 import type { VytexUser } from './user.js';
 
-export interface CoreSchema<Schema extends object = object> {
+export interface CoreSchema<Schema = any> {
 	vytex_users: VytexUser<Schema>[];
 	vytex_colors: VytexColor<Schema>[];
 	vytex_fabrics: VytexFabric<Schema>[];

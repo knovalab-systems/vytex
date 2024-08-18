@@ -4,7 +4,7 @@ import type { ApplyQueryFields, DeepPartial, Query } from '../../../types/index.
 import type { RestCommand } from '../../types.js';
 
 export type CreateCustomOutput<
-	Schema extends object,
+	Schema,
 	TQuery extends Query<Schema, Item>,
 	Item extends object = VytexCustom<Schema>,
 > = ApplyQueryFields<VytexCustom<CoreSchema>, Item, TQuery['fields']>;
@@ -18,7 +18,7 @@ export type CreateCustomOutput<
  * @returns Returns the custom object for the created custom.
  */
 export const createCustom =
-	<Schema extends object, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexCustom<Schema>>>(
 		item: DeepPartial<VytexCustom<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateCustomOutput<Schema, TQuery>, Schema> =>

@@ -1,6 +1,6 @@
 import type { AggregationTypes, GroupByFields, Query } from '../../types/index.js';
 
-type ExtendedQuery<Schema extends object, Item> = Query<Schema, Item> & {
+type ExtendedQuery<Schema, Item> = Query<Schema, Item> & {
 	aggregate?: Record<keyof AggregationTypes, string>;
 	groupBy?: (string | GroupByFields<Schema, Item>)[];
 };
@@ -12,9 +12,7 @@ type ExtendedQuery<Schema extends object, Item> = Query<Schema, Item> & {
  *
  * @returns Flat query parameters
  */
-export const queryToParams = <Schema extends object, Item>(
-	query: ExtendedQuery<Schema, Item>,
-): Record<string, string> => {
+export const queryToParams = <Schema, Item>(query: ExtendedQuery<Schema, Item>): Record<string, string> => {
 	const params: Record<string, string> = {};
 
 	if (Array.isArray(query.fields) && query.fields.length > 0) {
@@ -44,7 +42,7 @@ export const queryToParams = <Schema extends object, Item>(
 					}
 				}
 
-				return result.flatMap(items => items);
+				return result.flat();
 			}
 
 			return [...chain, String(value)].join('.');

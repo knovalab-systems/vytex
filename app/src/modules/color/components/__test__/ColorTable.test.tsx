@@ -22,7 +22,26 @@ describe('Color Table', () => {
 	});
 
 	it('renders correctly on colors', () => {
-		const colors: GetColorsType = [{ id: 123 }, { name: 'blanco' }];
+		const colors: GetColorsType = [
+			{
+				id: 123,
+				code: null,
+				name: null,
+				hex: null,
+				deleted_at: null,
+				created_at: null,
+				updated_at: null,
+			},
+			{
+				name: 'blanco',
+				code: null,
+				id: 0,
+				hex: null,
+				deleted_at: null,
+				created_at: null,
+				updated_at: null,
+			},
+		];
 		render(() => <ColorTable colors={colors} />);
 		const colorId = screen.getByText('123');
 		const colorName = screen.getByText('blanco');

@@ -11,7 +11,7 @@ import type { RestCommand } from '../../types.js';
  * @returns The access and refresh tokens for the session
  */
 export const login =
-	<Schema extends object>(email: string, password: string): RestCommand<AuthenticationData, Schema> =>
+	<Schema>(email: string, password: string): RestCommand<AuthenticationData, Schema> =>
 	() => {
 		const data: Record<string, string> = { email, password };
 		return { path: '/login', method: 'POST', body: JSON.stringify(data) };

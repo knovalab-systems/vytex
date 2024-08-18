@@ -1,7 +1,8 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import { createPointerEvent } from '~/utils/event';
+import { createPointerEvent, installPointerEvent } from '~/utils/event';
+import type { GetResourceType } from '../../requests/resourceGet';
 import * as requests from '../../requests/resourceUpdate';
 import ResourceUpdateForm from '../ResourceUpdateForm';
 
@@ -10,18 +11,33 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/hooks/useColors', () => ({
+	useColors: () => ({ colorsRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }) }),
+}));
+
+vi.mock('~/hooks/useSuppliers', () => ({
+	useSuppliers: () => ({ suppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }) }),
+}));
+
 describe('ResourceUpdateForm', () => {
+	installPointerEvent();
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
 	it('renders correctly', () => {
 		render(() => (
 			<ResourceUpdateForm
-				resource={{
-					name: 'Resource 1',
-					code: 1,
-					cost: 100,
-					color: 1,
-					supplier: 1,
-					deleted_at: null,
-				}}
+				resource={
+					{
+						name: 'Resource 1',
+						code: '1',
+						cost: 100,
+						color_id: 1,
+						supplier_id: 1,
+						deleted_at: null,
+					} as GetResourceType
+				}
 				colors={[
 					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
 					{ id: 2, name: 'Rojo', hex: '', deleted_at: null },
@@ -55,14 +71,16 @@ describe('ResourceUpdateForm', () => {
 	it('show empty fields error message when submit form', async () => {
 		render(() => (
 			<ResourceUpdateForm
-				resource={{
-					name: 'Resource 1',
-					code: 1,
-					cost: 100,
-					color: 1,
-					supplier: 1,
-					deleted_at: null,
-				}}
+				resource={
+					{
+						name: 'Resource 1',
+						code: '1',
+						cost: 100,
+						color_id: 1,
+						supplier_id: 1,
+						deleted_at: null,
+					} as GetResourceType
+				}
 				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[{ id: 1, name: 'Supplier 1', deleted_at: null }]}
 			/>
@@ -71,15 +89,15 @@ describe('ResourceUpdateForm', () => {
 		const nameField = screen.getByPlaceholderText('Nombre del insumo');
 		const codeField = screen.getByPlaceholderText('2322');
 		const costField = screen.getByPlaceholderText('12000');
-		const colorSelect = screen.getByTitle('Ver colores');
-		const supplierSelect = screen.getByTitle('Ver proveedores');
-		const statusSelect = screen.getByText('Activo');
 
 		fireEvent.input(nameField, { target: { value: '' } });
 		fireEvent.input(codeField, { target: { value: '' } });
 		fireEvent.input(costField, { target: { value: '' } });
 
 		// select status
+
+		const statusSelect = screen.getByTitle('Ver estados');
+
 		fireEvent(
 			statusSelect,
 			createPointerEvent('pointerdown', {
@@ -92,10 +110,7 @@ describe('ResourceUpdateForm', () => {
 		fireEvent(statusSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
 
-		// select all listbox
-		const listboxes = screen.getAllByRole('listbox');
-
-		const listboxStatus = listboxes[0];
+		const listboxStatus = screen.getByRole('listbox');
 		const status = within(listboxStatus).getAllByRole('option');
 
 		fireEvent(
@@ -111,6 +126,9 @@ describe('ResourceUpdateForm', () => {
 		await Promise.resolve();
 
 		// select color
+
+		const colorSelect = screen.getByTitle('Ver colores');
+
 		fireEvent(
 			colorSelect,
 			createPointerEvent('pointerdown', {
@@ -123,7 +141,7 @@ describe('ResourceUpdateForm', () => {
 		fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
 
-		const listboxColor = listboxes[0];
+		const listboxColor = screen.getByRole('listbox');
 		const color = within(listboxColor).getAllByRole('option');
 
 		fireEvent(
@@ -135,10 +153,23 @@ describe('ResourceUpdateForm', () => {
 		);
 		await Promise.resolve();
 
-		fireEvent(status[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		fireEvent(color[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
+
+		fireEvent(
+			colorSelect,
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
 
 		// select supplier
+		const supplierSelect = screen.getByTitle('Ver proveedores');
 
 		fireEvent(
 			supplierSelect,
@@ -152,7 +183,7 @@ describe('ResourceUpdateForm', () => {
 		fireEvent(supplierSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
 
-		const listboxSupplier = listboxes[0];
+		const listboxSupplier = screen.getByRole('listbox');
 		const supplier = within(listboxSupplier).getAllByRole('option');
 
 		fireEvent(
@@ -171,11 +202,11 @@ describe('ResourceUpdateForm', () => {
 		fireEvent.click(submitButton);
 
 		const nameError = await screen.findByText('Ingresa el nombre.');
-		const codeError = await screen.findByText('Ingresa el código.');
-		const costError = await screen.findByText('Ingresa el costo.');
-		const statusError = await screen.findByText('Selecciona un estado.');
-		const colorError = await screen.findByText('Selecciona un color.');
-		const supplierError = await screen.findByText('Selecciona un proveedor.');
+		const codeError = screen.getByText('Ingresa el código.');
+		const costError = screen.getByText('Ingresa el costo.');
+		const statusError = screen.getByText('Selecciona un estado.');
+		const colorError = screen.getByText('Selecciona un color.');
+		const supplierError = screen.getByText('Selecciona un proveedor.');
 
 		expect(nameError).toBeInTheDocument();
 		expect(codeError).toBeInTheDocument();
@@ -210,16 +241,24 @@ describe('ResourceUpdateForm', () => {
 		it(requestError.title, async () => {
 			render(() => (
 				<ResourceUpdateForm
-					resource={{
-						name: 'Resource 1',
-						code: 1,
-						cost: 100,
-						color: 1,
-						supplier: 1,
-						deleted_at: null,
-					}}
-					colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
-					suppliers={[{ id: 1, name: 'Supplier 1', deleted_at: null }]}
+					resource={
+						{
+							name: 'Resource 1',
+							code: '1',
+							cost: 100,
+							color_id: 1,
+							supplier_id: 1,
+							deleted_at: null,
+						} as GetResourceType
+					}
+					colors={[
+						{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
+						{ id: 2, name: 'Blanco 2', hex: '', deleted_at: null },
+					]}
+					suppliers={[
+						{ id: 1, name: 'Supplier 1', deleted_at: null },
+						{ id: 2, name: 'Supplier 2', deleted_at: null },
+					]}
 				/>
 			));
 
@@ -236,62 +275,6 @@ describe('ResourceUpdateForm', () => {
 			fireEvent.input(nameField, { target: { value: 'Resource 2' } });
 			fireEvent.input(codeField, { target: { value: 2322 } });
 			fireEvent.input(costField, { target: { value: 200 } });
-
-			fireEvent(
-				colorSelect,
-				createPointerEvent('pointerdown', {
-					pointerId: 1,
-					pointerType: 'mouse',
-				}),
-			);
-			await Promise.resolve();
-
-			fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-			await Promise.resolve();
-
-			const listboxColor = screen.getByRole('listbox');
-			const colors = within(listboxColor).getAllByRole('option');
-
-			fireEvent(
-				colors[0],
-				createPointerEvent('pointerdown', {
-					pointerId: 1,
-					pointerType: 'mouse',
-				}),
-			);
-			await Promise.resolve();
-
-			fireEvent(colors[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-			await Promise.resolve();
-
-			// select supplier
-
-			fireEvent(
-				supplierSelect,
-				createPointerEvent('pointerdown', {
-					pointerId: 1,
-					pointerType: 'mouse',
-				}),
-			);
-			await Promise.resolve();
-
-			fireEvent(supplierSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-			await Promise.resolve();
-
-			const listboxSupplier = screen.getByRole('listbox');
-			const suppliers = within(listboxSupplier).getAllByRole('option');
-
-			fireEvent(
-				suppliers[0],
-				createPointerEvent('pointerdown', {
-					pointerId: 1,
-					pointerType: 'mouse',
-				}),
-			);
-			await Promise.resolve();
-
-			fireEvent(suppliers[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-			await Promise.resolve();
 
 			// select status
 			fireEvent(
@@ -321,6 +304,86 @@ describe('ResourceUpdateForm', () => {
 			fireEvent(status[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 			await Promise.resolve();
 
+			fireEvent(
+				colorSelect,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const listboxColor = screen.getByRole('listbox');
+			const colors = within(listboxColor).getAllByRole('option');
+
+			fireEvent(
+				colors[1],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(colors[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			fireEvent(
+				colorSelect,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			fireEvent(
+				colorSelect,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			// select supplier
+
+			fireEvent(
+				supplierSelect,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(supplierSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
+			const listboxSupplier = screen.getByRole('listbox');
+			const suppliers = within(listboxSupplier).getAllByRole('option');
+
+			fireEvent(
+				suppliers[1],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
+
+			fireEvent(suppliers[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
+
 			const submitButton = screen.getByText('Actualizar');
 			fireEvent.click(submitButton);
 
@@ -334,14 +397,16 @@ describe('ResourceUpdateForm', () => {
 	it('calls calcel successfully', async () => {
 		render(() => (
 			<ResourceUpdateForm
-				resource={{
-					name: 'Resource 1',
-					code: 1,
-					cost: 100,
-					color: 1,
-					supplier: 1,
-					deleted_at: null,
-				}}
+				resource={
+					{
+						name: 'Resource 1',
+						code: '1',
+						cost: 100,
+						color_id: 1,
+						supplier_id: 1,
+						deleted_at: null,
+					} as GetResourceType
+				}
 				colors={[]}
 				suppliers={[]}
 			/>
@@ -355,20 +420,56 @@ describe('ResourceUpdateForm', () => {
 	it('calls submit successfully', async () => {
 		render(() => (
 			<ResourceUpdateForm
-				resource={{
-					name: 'Resource 1',
-					code: 1,
-					cost: 100,
-					color: 1,
-					supplier: 1,
-					deleted_at: null,
-				}}
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
-				suppliers={[{ id: 1, name: 'Supplier 1', deleted_at: null }]}
+				resource={
+					{
+						name: 'Resource 1',
+						code: '1',
+						cost: 100,
+						color_id: 1,
+						supplier_id: 1,
+						deleted_at: null,
+					} as GetResourceType
+				}
+				colors={[
+					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
+					{ id: 2, name: 'Blanco 2', hex: '', deleted_at: null },
+				]}
+				suppliers={[
+					{ id: 1, name: 'Supplier 1', deleted_at: null },
+					{ id: 1, name: 'Supplier 2', deleted_at: null },
+				]}
 			/>
 		));
 
-		const requestMock = vi.spyOn(requests, 'updateResourceRequest').mockResolvedValue({});
+		const requestMock = vi.spyOn(requests, 'updateResourceRequest').mockResolvedValue({
+			code: null,
+			id: 0,
+			cost: null,
+			name: null,
+			color_id: null,
+			color: {
+				id: 0,
+				name: null,
+				code: null,
+				hex: null,
+				deleted_at: null,
+				created_at: null,
+				updated_at: null,
+			},
+			supplier_id: null,
+			supplier: {
+				id: 0,
+				nit: null,
+				name: null,
+				brand: null,
+				code: null,
+				deleted_at: null,
+				updated_at: null,
+				created_at: null,
+			},
+			deleted_at: null,
+			created_at: null,
+		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 
 		const nameField = screen.getByPlaceholderText('Nombre del insumo');
@@ -381,62 +482,6 @@ describe('ResourceUpdateForm', () => {
 		fireEvent.input(nameField, { target: { value: 'Resource 2' } });
 		fireEvent.input(codeField, { target: { value: 2 } });
 		fireEvent.input(costField, { target: { value: 200 } });
-
-		fireEvent(
-			colorSelect,
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		const listboxColor = screen.getByRole('listbox');
-		const colors = within(listboxColor).getAllByRole('option');
-
-		fireEvent(
-			colors[0],
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(colors[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		// select supplier
-
-		fireEvent(
-			supplierSelect,
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(supplierSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		const listboxSupplier = screen.getByRole('listbox');
-		const suppliers = within(listboxSupplier).getAllByRole('option');
-
-		fireEvent(
-			suppliers[0],
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(suppliers[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
 
 		// select status
 		fireEvent(
@@ -468,6 +513,62 @@ describe('ResourceUpdateForm', () => {
 
 		const submitButton = screen.getByText('Actualizar');
 		fireEvent.click(submitButton);
+
+		fireEvent(
+			colorSelect,
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
+
+		const listboxColor = screen.getByRole('listbox');
+		const colors = within(listboxColor).getAllByRole('option');
+
+		fireEvent(
+			colors[1],
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(colors[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
+
+		// select supplier
+
+		fireEvent(
+			supplierSelect,
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(supplierSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
+
+		const listboxSupplier = screen.getByRole('listbox');
+		const suppliers = within(listboxSupplier).getAllByRole('option');
+
+		fireEvent(
+			suppliers[1],
+			createPointerEvent('pointerdown', {
+				pointerId: 1,
+				pointerType: 'mouse',
+			}),
+		);
+		await Promise.resolve();
+
+		fireEvent(suppliers[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+		await Promise.resolve();
 
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();

@@ -10,7 +10,7 @@ import { throwIfEmpty } from '../../utils/index.js';
  * @throws Will throw if keys is empty
  */
 export const deleteUsers =
-	<Schema extends object>(keys: VytexUser<Schema>['id'][]): RestCommand<void, Schema> =>
+	<Schema>(keys: VytexUser<Schema>['id'][]): RestCommand<void, Schema> =>
 	() => {
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
@@ -29,7 +29,7 @@ export const deleteUsers =
  * @throws Will throw if key is empty
  */
 export const deleteUser =
-	<Schema extends object>(key: VytexUser<Schema>['id']): RestCommand<void, Schema> =>
+	<Schema>(key: VytexUser<Schema>['id']): RestCommand<void, Schema> =>
 	() => {
 		throwIfEmpty(String(key), 'Key cannot be empty');
 

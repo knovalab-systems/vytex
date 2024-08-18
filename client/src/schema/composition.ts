@@ -5,7 +5,7 @@ import type { VytexColor } from './color.js';
  * vytex_compositions type
  * number fields (except id) range from 0 to 10000
  */
-export type VytexComposition<Schema extends object> = MergeCoreCollection<
+export type VytexComposition<Schema = any> = MergeCoreCollection<
 	Schema,
 	'vytex_compositions',
 	{
