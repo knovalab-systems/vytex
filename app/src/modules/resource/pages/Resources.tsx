@@ -39,8 +39,8 @@ function ResourcesPage() {
 	});
 
 	return (
-		<div class='h-full w-full flex flex-col'>
-			<div class='mb-2'>
+		<div class='h-full w-full flex flex-col gap-2'>
+			<div>
 				<A href={RESOURCES_CREATE_PATH}>
 					<Button class='bg-purple-600 hover:bg-purple-700'>
 						Nuevo Insumo <AiOutlinePlus class='ml-2' size={22} />
@@ -54,7 +54,7 @@ function ResourcesPage() {
 				<Match when={resources.isSuccess && countResources.isSuccess && colorsArray.isSuccess}>
 					<ResourceTable resources={resources.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}

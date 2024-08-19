@@ -2,7 +2,8 @@ import { For, Show } from 'solid-js';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import type { GetSuppliersType } from '../requests/supplierGet';
-import ActionsCell from './ActionsCell';
+import ActionsCell from '~/components/ActionsCell';
+import { SUPPLIERS_UPDATE_PATH } from '~/constants/paths';
 
 function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 	return (
@@ -36,7 +37,12 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 								<TableCell>
 									<StatusLabel status={!supplier.deleted_at} />
 								</TableCell>
-								<ActionsCell supplierId={supplier.id} />
+								<ActionsCell
+									update={{
+										path: `${SUPPLIERS_UPDATE_PATH}/${supplier.id}`,
+										title: 'Actualizar Insumo',
+									}}
+								/>
 							</TableRow>
 						)}
 					</For>

@@ -32,7 +32,7 @@ function OrdersPage() {
 	});
 
 	return (
-		<div class='h-full flex flex-col'>
+		<div class='h-full flex flex-col gap-2'>
 			<Switch>
 				<Match when={orders.isLoading || countOrders.isLoading}>
 					<Loading label='Cargando ordenes' />
@@ -40,7 +40,7 @@ function OrdersPage() {
 				<Match when={orders.isSuccess && countOrders.isSuccess}>
 					<OrderTable orders={orders.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}

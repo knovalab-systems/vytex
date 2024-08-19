@@ -37,8 +37,8 @@ function FabricsPage() {
 	});
 
 	return (
-		<div class='h-full w-full flex flex-col'>
-			<div class='mb-2'>
+		<div class='h-full w-full flex flex-col gap-2'>
+			<div>
 				<A href={FABRICS_CREATE_PATH}>
 					<Button class='bg-purple-600 hover:bg-purple-700'>
 						Nuevo Tela <AiOutlinePlus class='ml-2' size={22} />
@@ -52,7 +52,7 @@ function FabricsPage() {
 				<Match when={fabrics.isSuccess && countFabrics.isSuccess}>
 					<FabricTable fabrics={fabrics.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}

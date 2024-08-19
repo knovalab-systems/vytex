@@ -37,8 +37,8 @@ function CustomsPage() {
 	});
 
 	return (
-		<div class='h-full flex flex-col'>
-			<div class='mb-2'>
+		<div class='h-full flex flex-col gap-2'>
+			<div>
 				<A href={CUSTOMS_CREATE_PATH}>
 					<Button class='bg-purple-600 hover:bg-purple-700'>
 						Nuevo Pedido <AiOutlinePlus class='ml-2' size={22} />
@@ -52,7 +52,7 @@ function CustomsPage() {
 				<Match when={customs.isSuccess && countCustoms.isSuccess}>
 					<CustomTable customs={customs.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}
