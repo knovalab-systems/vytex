@@ -1,4 +1,4 @@
-package models
+package formats
 
 import (
 	"net/http"
@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"testing"
 
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/envs"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -14,7 +15,7 @@ import (
 )
 
 func controller(c echo.Context) error {
-	u := new(Query)
+	u := new(models.Query)
 
 	// bind
 	if err := c.Bind(u); err != nil {

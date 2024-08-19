@@ -11,6 +11,7 @@ import (
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -21,9 +22,7 @@ type UserService struct {
 
 func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.UsersBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.User
@@ -49,9 +48,7 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 
 func (m *UserService) SelectUser(q *models.UserRead) (*models.User, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.UsersBadRequest()
-	}
+	formats.SanitizedQuery(&q.Query)
 
 	// def query
 	table := query.User
@@ -119,7 +116,7 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
-func (m *UserService) UpdateUser(b *models.UpdateUserBody) (*models.User, error) {
+func (m *UserService) UpdateUser(b *models.UserUpdateBody) (*models.User, error) {
 	table := query.User
 
 	if b.Username != "" {
@@ -129,7 +126,7 @@ func (m *UserService) UpdateUser(b *models.UpdateUserBody) (*models.User, error)
 		}
 	}
 
-	updateMap, err := b.ToUpdate()
+	updateMap, err := formats.UserUpdateMap(b)
 	if err != nil || len(updateMap) == 0 {
 		return nil, problems.UpdateUserBadRequest()
 	}

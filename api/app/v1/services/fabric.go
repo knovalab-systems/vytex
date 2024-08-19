@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -18,9 +19,7 @@ type FabricService struct {
 func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error) {
 
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.FabricsBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Fabric
@@ -49,9 +48,7 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 
 func (m *FabricService) SelectFabric(q *models.FabricRead) (*models.Fabric, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.FabricsBadRequest()
-	}
+	formats.SanitizedQuery(&q.Query)
 
 	// def query
 	table := query.Fabric
@@ -118,7 +115,7 @@ func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric
 		return nil, err
 	}
 
-	c, err := getCompositionId(&b.Composition)
+	c, err := getComposition(&b.Composition)
 	if err != nil {
 		return nil, err
 	}
@@ -142,64 +139,15 @@ func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric
 
 func (m *FabricService) UpdateFabric(b *models.FabricUpdateBody) (*models.Fabric, error) {
 	table := query.Fabric
-	hasChanges := false
 
 	fabric, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
-	if b.Composition != nil {
-		c, err := getCompositionId(b.Composition)
-		if err != nil {
-			return nil, err
-		}
-		if fabric.CompositionID != c.ID {
-			fabric.CompositionID = c.ID
-			hasChanges = true
-		}
-	}
-
-	if b.Name != "" && b.Name != fabric.Name {
-		fabric.Name = b.Name
-		hasChanges = true
-	}
-
-	if b.Code != "" && b.Code != fabric.Code {
-		err := checkFabricExists(b.Code)
-		if err != nil {
-			return nil, err
-		}
-		fabric.Code = b.Code
-		hasChanges = true
-	}
-
-	if b.Cost != 0 && b.Cost != fabric.Cost {
-		fabric.Cost = b.Cost
-		hasChanges = true
-	}
-
-	if b.Color != 0 && b.Color != fabric.ColorID {
-		fabric.ColorID = b.Color
-		hasChanges = true
-	}
-
-	if b.Supplier != 0 && b.Supplier != fabric.SupplierID {
-		fabric.SupplierID = b.Supplier
-		hasChanges = true
-	}
-
-	if !b.DeletedAt.IsNil() {
-		var deleted_at = gorm.DeletedAt{}
-		if b.DeletedAt.IsNullDefined() && fabric.DeletedAt.Valid {
-			fabric.DeletedAt = deleted_at
-			hasChanges = true
-		} else if !b.DeletedAt.IsNullDefined() && !fabric.DeletedAt.Valid {
-			deleted_at.Time = *b.DeletedAt.Value
-			deleted_at.Valid = true
-			fabric.DeletedAt = deleted_at
-			hasChanges = true
-		}
+	hasChanges, err := formats.FabricUpdateVersion(b, fabric, getComposition, checkFabricExists)
+	if err != nil {
+		return nil, err
 	}
 
 	if hasChanges {
@@ -271,7 +219,17 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 func checkFabricExists(code string) error {
 	table := query.Fabric
 
-	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+	// def subquery
+	table2 := table.As("table2")
+	subQuery := table.Unscoped().
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
+		As("table2")
+
+	_, err := table.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(table.Where(field.NewInt64("table2", "id_max").EqCol(table.ID)).Where(table.Code.Eq(code))).
+		First()
+
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
@@ -281,7 +239,7 @@ func checkFabricExists(code string) error {
 	return problems.FabricExists()
 }
 
-func getCompositionId(c *models.Composition) (*models.Composition, error) {
+func getComposition(c *models.Composition) (*models.Composition, error) {
 	table := query.Composition
 	compMap := make(map[string]interface{}) // for allow zero values
 	compMap["algod"] = c.Algod

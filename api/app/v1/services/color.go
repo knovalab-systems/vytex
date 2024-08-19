@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -16,9 +17,7 @@ type ColorService struct {
 
 func (m *ColorService) SelectColors(q *models.Query) ([]*models.Color, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ColorsBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Color
@@ -96,9 +95,7 @@ func (m *ColorService) CreateColor(b *models.ColorCreateBody) (*models.Color, er
 
 func (m *ColorService) SelectColor(q *models.ReadColor) (*models.Color, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ColorsBadRequest()
-	}
+	formats.SanitizedQuery(&q.Query)
 
 	// def query
 	table := query.Color
@@ -129,7 +126,7 @@ func (m *ColorService) UpdateColor(b *models.ColorUpdateBody) (*models.Color, er
 	}
 
 	// get update map
-	updateMap := b.ToUpdate()
+	updateMap := formats.ColorUpdateMap(b)
 	if len(updateMap) == 0 {
 		return nil, problems.UpdateColorBadRequest()
 	}

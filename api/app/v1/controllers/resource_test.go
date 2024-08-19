@@ -180,7 +180,7 @@ func TestCreateResource(t *testing.T) {
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": -1, "supplier_id": -1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": -1, "supplier_id": -1})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -235,7 +235,7 @@ func TestCreateResource(t *testing.T) {
 		t.Run("Fail validate, missing field or zero value", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code, "cost": testCase.Cost, "color_id": testCase.Color,
+			json.NewEncoder(body).Encode(map[string]interface{}{"name": testCase.Name, "code": testCase.Code, "cost": testCase.Cost, "color_id": testCase.Color,
 				"supplier_id": testCase.Supplier})
 			req := httptest.NewRequest(http.MethodGet, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -279,7 +279,7 @@ func TestCreateResource(t *testing.T) {
 		t.Run("Fail validate, cost less than 0", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": testCase.Cost, "color_id": testCase.Color, "supplier_id": testCase.Supplier})
+			json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": testCase.Cost, "color_id": testCase.Color, "supplier_id": testCase.Supplier})
 			req := httptest.NewRequest(http.MethodGet, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -305,7 +305,7 @@ func TestCreateResource(t *testing.T) {
 		code := "1"
 		cost := 23000.0
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -332,7 +332,7 @@ func TestCreateResource(t *testing.T) {
 		code := "1"
 		cost := 23000.0
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": name, "code": code, "cost": cost, "supplier_id": 1, "color_id": 1})
 		req := httptest.NewRequest(http.MethodGet, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -359,7 +359,7 @@ func TestUpdateResource(t *testing.T) {
 	t.Run("Fail binding, id is missing", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": 1, "supplier_id": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": 1, "supplier_id": 1})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -383,7 +383,7 @@ func TestUpdateResource(t *testing.T) {
 	t.Run("Fail update, resource code exits", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"code": "1"})
+		json.NewEncoder(body).Encode(map[string]interface{}{"code": "1"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -416,7 +416,7 @@ func TestUpdateResource(t *testing.T) {
 		t.Run("Update resource successfully with some value", func(t *testing.T) {
 			// context
 			body := new(bytes.Buffer)
-			_ = json.NewEncoder(body).Encode(map[string]interface{}{key: value})
+			json.NewEncoder(body).Encode(map[string]interface{}{key: value})
 			req := httptest.NewRequest(http.MethodPost, "/", body)
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 			rec := httptest.NewRecorder()
@@ -442,7 +442,7 @@ func TestUpdateResource(t *testing.T) {
 	t.Run("Update resource successfully with all values", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		_ = json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": 23000.0, "color_id": 1, "supplier_id": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": 23000.0, "color_id": 1, "supplier_id": 1})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()

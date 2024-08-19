@@ -1,15 +1,16 @@
 package database
 
 import (
+	"log"
+	"math/rand"
+	"sync"
+	"time"
+
 	"github.com/go-faker/faker/v4"
 	"github.com/google/uuid"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
-	"log"
-	"math/rand"
-	"sync"
-	"time"
 )
 
 func SeedDB(db *gorm.DB) {
@@ -223,12 +224,12 @@ func generateResource(db *gorm.DB) {
 		}
 
 		now := time.Now()
-		resource.CreatedAt = now
+		resource.CreatedAt = &now
 
 		resources = append(resources, resource)
 	}
 
-	result = db.Create(&resources)
+	db.Create(&resources)
 }
 
 func generateComposition(db *gorm.DB) {
@@ -373,7 +374,7 @@ func generateFabric(db *gorm.DB) {
 		fabrics = append(fabrics, fabric)
 	}
 
-	result = db.Create(&fabrics)
+	db.Create(&fabrics)
 }
 
 func generateImage(db *gorm.DB) {

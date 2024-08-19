@@ -31,6 +31,7 @@ func newResource(db *gorm.DB, opts ...gen.DOOption) resource {
 	_resource.Name = field.NewString(tableName, "name")
 	_resource.Cost = field.NewFloat64(tableName, "cost")
 	_resource.Code = field.NewString(tableName, "code")
+	_resource.Track = field.NewString(tableName, "track")
 	_resource.ColorID = field.NewUint(tableName, "color_id")
 	_resource.SupplierID = field.NewUint(tableName, "supplier_id")
 	_resource.CreatedAt = field.NewTime(tableName, "created_at")
@@ -60,6 +61,7 @@ type resource struct {
 	Name       field.String
 	Cost       field.Float64
 	Code       field.String
+	Track      field.String
 	ColorID    field.Uint
 	SupplierID field.Uint
 	CreatedAt  field.Time
@@ -87,6 +89,7 @@ func (r *resource) updateTableName(table string) *resource {
 	r.Name = field.NewString(table, "name")
 	r.Cost = field.NewFloat64(table, "cost")
 	r.Code = field.NewString(table, "code")
+	r.Track = field.NewString(table, "track")
 	r.ColorID = field.NewUint(table, "color_id")
 	r.SupplierID = field.NewUint(table, "supplier_id")
 	r.CreatedAt = field.NewTime(table, "created_at")
@@ -107,11 +110,12 @@ func (r *resource) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *resource) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 10)
+	r.fieldMap = make(map[string]field.Expr, 11)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["name"] = r.Name
 	r.fieldMap["cost"] = r.Cost
 	r.fieldMap["code"] = r.Code
+	r.fieldMap["track"] = r.Track
 	r.fieldMap["color_id"] = r.ColorID
 	r.fieldMap["supplier_id"] = r.SupplierID
 	r.fieldMap["created_at"] = r.CreatedAt

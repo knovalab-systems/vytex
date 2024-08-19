@@ -1,28 +1,29 @@
-package models
+package formats
 
 import (
 	"testing"
 	"time"
 
+	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestToUpdateColor(t *testing.T) {
 	t.Run("valid deleted_at", func(t *testing.T) {
 		detele_at, _ := time.Parse(time.RFC3339, "2020-12-09T16:09:53+00:00")
-		optional := Optional[time.Time]{Value: &detele_at, Defined: true}
-		u := ColorUpdateBody{DeletedAt: optional}
+		optional := models.Optional[time.Time]{Value: &detele_at, Defined: true}
+		u := models.ColorUpdateBody{DeletedAt: optional}
 
-		test := u.ToUpdate()
+		test := ColorUpdateMap(&u)
 		v, ok := test["deleted_at"]
 		assert.Equal(t, true, ok)
 		assert.Equal(t, detele_at.String(), v.(*time.Time).String())
 	})
 
 	t.Run("nil body", func(t *testing.T) {
-		u := ColorUpdateBody{}
+		u := models.ColorUpdateBody{}
 
-		test := u.ToUpdate()
+		test := ColorUpdateMap(&u)
 
 		for k := range test {
 			var ok bool
@@ -33,10 +34,10 @@ func TestToUpdateColor(t *testing.T) {
 
 	t.Run("nil body", func(t *testing.T) {
 		detele_at, _ := time.Parse(time.RFC3339, "2020-12-09T16:09:53+00:00")
-		optional := Optional[time.Time]{Value: &detele_at, Defined: true}
-		u := ColorUpdateBody{DeletedAt: optional, Name: "name", Hex: "#000", Code: "code"}
+		optional := models.Optional[time.Time]{Value: &detele_at, Defined: true}
+		u := models.ColorUpdateBody{DeletedAt: optional, Name: "name", Hex: "#000", Code: "code"}
 
-		test := u.ToUpdate()
+		test := ColorUpdateMap(&u)
 
 		for k := range test {
 			var ok bool

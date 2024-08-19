@@ -1,27 +1,29 @@
-package models
+package formats
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/stretchr/testify/assert"
 )
 
-func TestToUpdateResource(t *testing.T) {
+func TestToUpdateSupplier(t *testing.T) {
 	t.Run("valid deleted_at", func(t *testing.T) {
 		deleted_at, _ := time.Parse(time.RFC3339, "2022-1-09T14:09:53+00:00")
-		optional := Optional[time.Time]{Value: &deleted_at, Defined: true}
-		u := ResourceUpdateBody{DeletedAt: optional}
+		optional := models.Optional[time.Time]{Value: &deleted_at, Defined: true}
+		u := models.SupplierUpdateBody{DeletedAt: optional}
 
-		test := u.ToUpdate()
+		test := SupplierUpdateMap(&u)
 		v, ok := test["deleted_at"]
 		assert.Equal(t, true, ok)
 		assert.Equal(t, deleted_at.String(), v.(*time.Time).String())
 	})
 
 	t.Run("nil body", func(t *testing.T) {
-		u := ResourceUpdateBody{}
+		u := models.SupplierUpdateBody{}
 
-		test := u.ToUpdate()
+		test := SupplierUpdateMap(&u)
 
 		for k := range test {
 			var ok bool
@@ -32,10 +34,10 @@ func TestToUpdateResource(t *testing.T) {
 
 	t.Run("full body", func(t *testing.T) {
 		deleted_at, _ := time.Parse(time.RFC3339, "2022-1-09T14:09:53+00:00")
-		optional := Optional[time.Time]{Value: &deleted_at, Defined: true}
-		u := ResourceUpdateBody{DeletedAt: optional, Name: "test", Code: "test", Cost: 1, Color: 1, Supplier: 1}
+		optional := models.Optional[time.Time]{Value: &deleted_at, Defined: true}
+		u := models.SupplierUpdateBody{DeletedAt: optional, Name: "test", Brand: "test", Nit: "test", Code: "test"}
 
-		test := u.ToUpdate()
+		test := SupplierUpdateMap(&u)
 
 		for k := range test {
 			var ok bool
@@ -43,4 +45,5 @@ func TestToUpdateResource(t *testing.T) {
 			assert.Equal(t, true, ok)
 		}
 	})
+
 }

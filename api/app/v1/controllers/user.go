@@ -159,7 +159,7 @@ func (m *UserController) AggregateUsers(c echo.Context) error {
 // @Failure      500
 // @Router       /users/{userId} [post]
 func (m *UserController) UpdateUser(c echo.Context) error {
-	u := new(models.UpdateUserBody)
+	u := new(models.UserUpdateBody)
 
 	// bind
 	if err := c.Bind(u); err != nil {

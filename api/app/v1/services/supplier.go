@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -17,9 +18,7 @@ type SupplierService struct {
 func (m *SupplierService) SelectSuppliers(q *models.Query) ([]*models.Supplier, error) {
 
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.SuppliersBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Supplier
@@ -39,9 +38,7 @@ func (m *SupplierService) SelectSuppliers(q *models.Query) ([]*models.Supplier, 
 
 func (m *SupplierService) SelectSupplier(q *models.ReadSupplier) (*models.Supplier, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.SuppliersBadRequest()
-	}
+	formats.SanitizedQuery(&q.Query)
 
 	// def query
 	table := query.Supplier
@@ -180,7 +177,7 @@ func (m *SupplierService) UpdateSupplier(b *models.SupplierUpdateBody) (*models.
 
 	table := query.Supplier
 
-	updateMap := b.ToUpdate()
+	updateMap := formats.SupplierUpdateMap(b)
 	if len(updateMap) == 0 {
 		return nil, problems.SuppliersBadRequest()
 	}

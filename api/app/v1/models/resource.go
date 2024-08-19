@@ -3,6 +3,7 @@ package models
 import (
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -11,12 +12,21 @@ type Resource struct {
 	Name       string         `json:"name,omitempty"`
 	Cost       float64        `json:"cost,omitempty" gorm:"type:float"`
 	Code       string         `json:"code,omitempty"`
+	Track      string         `json:"track,omitempty" gorm:"type:uuid"`
 	ColorID    uint           `json:"color_id,omitempty"`
 	Color      *Color         `json:"color,omitempty"`
 	SupplierID uint           `json:"supplier_id,omitempty"`
 	Supplier   *Supplier      `json:"supplier,omitempty"`
-	CreatedAt  time.Time      `json:"created_at,omitempty"`
+	CreatedAt  *time.Time     `json:"created_at,omitempty"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+}
+
+// BeforeCreate will set a UUID
+func (b *Resource) BeforeCreate(tx *gorm.DB) (err error) {
+	if b.Track == "" {
+		b.Track = uuid.New().String()
+	}
+	return nil
 }
 
 type ResourceRead struct {
@@ -40,38 +50,4 @@ type ResourceUpdateBody struct {
 	Color     uint                `json:"color_id,omitempty" validate:"omitempty,gt=0"`
 	Supplier  uint                `json:"supplier_id,omitempty" validate:"omitempty,gt=0"`
 	DeletedAt Optional[time.Time] `json:"deleted_at"`
-}
-
-func (m *ResourceUpdateBody) ToUpdate() map[string]interface{} {
-	updateMap := map[string]interface{}{}
-
-	if m.Name != "" {
-		updateMap["name"] = m.Name
-	}
-
-	if m.Cost != 0 {
-		updateMap["cost"] = m.Cost
-	}
-
-	if m.Code != "" {
-		updateMap["code"] = m.Code
-	}
-
-	if m.Color != 0 {
-		updateMap["color_id"] = m.Color
-	}
-
-	if m.Supplier != 0 {
-		updateMap["supplier_id"] = m.Supplier
-	}
-
-	if !m.DeletedAt.IsNil() {
-		if m.DeletedAt.IsNullDefined() {
-			updateMap["deleted_at"] = nil
-		} else {
-			updateMap["deleted_at"] = m.DeletedAt.Value
-		}
-	}
-
-	return updateMap
 }

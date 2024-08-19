@@ -7,5 +7,5 @@ type ResourceRepository interface {
 	SelectResource(*models.ResourceRead) (*models.Resource, error)
 	AggregationResources(*models.AggregateQuery) ([]*models.AggregateData, error)
 	CreateResource(*models.ResourceCreateBody) (*models.Resource, error)
-	UpdateResource(body *models.ResourceUpdateBody) (*models.Resource, error)
+	UpdateResource(*models.ResourceUpdateBody) (*models.Resource, error)
 }
