@@ -548,6 +548,48 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "patch": {
+                "description": "Update a fabric by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Fabrics"
+                ],
+                "summary": "Update a fabric",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Fabric ID",
+                        "name": "fabricId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Fabric update values",
+                        "name": "models.FabricUpdateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Fabric"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
         "/images": {
@@ -1521,6 +1563,9 @@ const docTemplate = `{
                 },
                 "supplier_id": {
                     "type": "integer"
+                },
+                "track": {
+                    "type": "string"
                 }
             }
         },
@@ -1868,6 +1913,9 @@ const docTemplate = `{
                 },
                 "supplier_id": {
                     "type": "integer"
+                },
+                "track": {
+                    "type": "string"
                 }
             }
         },

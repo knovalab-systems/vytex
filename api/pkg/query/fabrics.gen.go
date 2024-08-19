@@ -31,6 +31,7 @@ func newFabric(db *gorm.DB, opts ...gen.DOOption) fabric {
 	_fabric.Name = field.NewString(tableName, "name")
 	_fabric.Cost = field.NewFloat64(tableName, "cost")
 	_fabric.Code = field.NewString(tableName, "code")
+	_fabric.Track = field.NewString(tableName, "track")
 	_fabric.ColorID = field.NewUint(tableName, "color_id")
 	_fabric.SupplierID = field.NewUint(tableName, "supplier_id")
 	_fabric.CompositionID = field.NewUint(tableName, "composition_id")
@@ -67,6 +68,7 @@ type fabric struct {
 	Name          field.String
 	Cost          field.Float64
 	Code          field.String
+	Track         field.String
 	ColorID       field.Uint
 	SupplierID    field.Uint
 	CompositionID field.Uint
@@ -97,6 +99,7 @@ func (f *fabric) updateTableName(table string) *fabric {
 	f.Name = field.NewString(table, "name")
 	f.Cost = field.NewFloat64(table, "cost")
 	f.Code = field.NewString(table, "code")
+	f.Track = field.NewString(table, "track")
 	f.ColorID = field.NewUint(table, "color_id")
 	f.SupplierID = field.NewUint(table, "supplier_id")
 	f.CompositionID = field.NewUint(table, "composition_id")
@@ -118,11 +121,12 @@ func (f *fabric) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (f *fabric) fillFieldMap() {
-	f.fieldMap = make(map[string]field.Expr, 12)
+	f.fieldMap = make(map[string]field.Expr, 13)
 	f.fieldMap["id"] = f.ID
 	f.fieldMap["name"] = f.Name
 	f.fieldMap["cost"] = f.Cost
 	f.fieldMap["code"] = f.Code
+	f.fieldMap["track"] = f.Track
 	f.fieldMap["color_id"] = f.ColorID
 	f.fieldMap["supplier_id"] = f.SupplierID
 	f.fieldMap["composition_id"] = f.CompositionID

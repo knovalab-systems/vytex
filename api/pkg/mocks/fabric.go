@@ -28,3 +28,8 @@ func (m *FabricMock) CreateFabric(u *models.FabricCreateBody) (*models.Fabric, e
 	args := m.Called(u)
 	return args.Get(0).(*models.Fabric), args.Error(1)
 }
+
+func (m *FabricMock) UpdateFabric(body *models.FabricUpdateBody) (*models.Fabric, error) {
+	args := m.Called()
+	return args.Get(0).(*models.Fabric), args.Error(1)
+}

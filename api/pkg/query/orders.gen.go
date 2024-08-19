@@ -194,15 +194,15 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("Custom", "models.Custom"),
-		CreateUser: struct {
-			field.RelationField
-		}{
-			RelationField: field.NewRelation("Custom.CreateUser", "models.User"),
-		},
 		CancelUser: struct {
 			field.RelationField
 		}{
 			RelationField: field.NewRelation("Custom.CancelUser", "models.User"),
+		},
+		CreateUser: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Custom.CreateUser", "models.User"),
 		},
 		Orders: struct {
 			field.RelationField
@@ -635,10 +635,10 @@ type orderBelongsToCustom struct {
 
 	field.RelationField
 
-	CreateUser struct {
+	CancelUser struct {
 		field.RelationField
 	}
-	CancelUser struct {
+	CreateUser struct {
 		field.RelationField
 	}
 	Orders struct {

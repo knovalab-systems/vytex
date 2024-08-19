@@ -29,16 +29,16 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	// def subquery
 	table2 := table.As("u2")
 	subQuery := table.Unscoped().
-		Group(table.Code).
-		Select(table.Code, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
 		As("u2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	s = fabricFields(s, q.Fields)
 
 	// run query
-	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Code.EqCol(table.Code)).
-		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
+	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(field.NewInt64("u2", "id_max").EqCol(table.ID)).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()
@@ -140,6 +140,80 @@ func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric
 	return fabric, nil
 }
 
+func (m *FabricService) UpdateFabric(b *models.FabricUpdateBody) (*models.Fabric, error) {
+	table := query.Fabric
+	hasChanges := false
+
+	fabric, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if b.Composition != nil {
+		c, err := getCompositionId(b.Composition)
+		if err != nil {
+			return nil, err
+		}
+		if fabric.CompositionID != c.ID {
+			fabric.CompositionID = c.ID
+			hasChanges = true
+		}
+	}
+
+	if b.Name != "" && b.Name != fabric.Name {
+		fabric.Name = b.Name
+		hasChanges = true
+	}
+
+	if b.Code != "" && b.Code != fabric.Code {
+		err := checkFabricExists(b.Code)
+		if err != nil {
+			return nil, err
+		}
+		fabric.Code = b.Code
+		hasChanges = true
+	}
+
+	if b.Cost != 0 && b.Cost != fabric.Cost {
+		fabric.Cost = b.Cost
+		hasChanges = true
+	}
+
+	if b.Color != 0 && b.Color != fabric.ColorID {
+		fabric.ColorID = b.Color
+		hasChanges = true
+	}
+
+	if b.Supplier != 0 && b.Supplier != fabric.SupplierID {
+		fabric.SupplierID = b.Supplier
+		hasChanges = true
+	}
+
+	if !b.DeletedAt.IsNil() {
+		var deleted_at = gorm.DeletedAt{}
+		if b.DeletedAt.IsNullDefined() && fabric.DeletedAt.Valid {
+			fabric.DeletedAt = deleted_at
+			hasChanges = true
+		} else if !b.DeletedAt.IsNullDefined() && !fabric.DeletedAt.Valid {
+			deleted_at.Time = *b.DeletedAt.Value
+			deleted_at.Valid = true
+			fabric.DeletedAt = deleted_at
+			hasChanges = true
+		}
+	}
+
+	if hasChanges {
+		fabric.ID = 0
+		fabric.CreatedAt = nil
+		err = table.Create(fabric)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+	}
+
+	return fabric, nil
+}
+
 func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 	if fields != "" {
 		table := query.Fabric
@@ -169,6 +243,8 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				f = append(f, table.Cost)
 			case "code":
 				f = append(f, table.Code)
+			case "track":
+				f = append(f, table.Track)
 			case "color_id":
 				f = append(f, table.ColorID)
 			case "color":

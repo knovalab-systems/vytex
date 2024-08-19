@@ -7,4 +7,5 @@ type FabricRepository interface {
 	SelectFabric(*models.FabricRead) (*models.Fabric, error)
 	AggregationFabrics(*models.AggregateQuery) ([]*models.AggregateData, error)
 	CreateFabric(*models.FabricCreateBody) (*models.Fabric, error)
+	UpdateFabric(*models.FabricUpdateBody) (*models.Fabric, error)
 }
