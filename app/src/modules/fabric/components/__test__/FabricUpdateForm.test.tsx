@@ -2,9 +2,9 @@ import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-lib
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
-import type { GetResourceType } from '../../requests/resourceGet';
-import * as requests from '../../requests/resourceUpdate';
-import ResourceUpdateForm from '../ResourceUpdateForm';
+import type { GetFabricType } from '../../requests/fabricGet';
+import * as requests from '../../requests/fabricUpdate';
+import FabricUpdateForm from '../FabricUpdateForm';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
@@ -19,7 +19,7 @@ vi.mock('~/hooks/useSuppliers', () => ({
 	useSuppliers: () => ({ suppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }) }),
 }));
 
-describe('ResourceUpdateForm', () => {
+describe('FabricUpdateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -27,16 +27,16 @@ describe('ResourceUpdateForm', () => {
 
 	it('renders correctly', () => {
 		render(() => (
-			<ResourceUpdateForm
-				resource={
+			<FabricUpdateForm
+				fabric={
 					{
-						name: 'Resource 1',
+						name: 'Fabric 1',
 						code: '1',
 						cost: 100,
 						color_id: 1,
 						supplier_id: 1,
 						deleted_at: null,
-					} as GetResourceType
+					} as GetFabricType
 				}
 				colors={[
 					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
@@ -49,8 +49,8 @@ describe('ResourceUpdateForm', () => {
 			/>
 		));
 
-		const nameField = screen.getByPlaceholderText('Insumo');
-		const codeField = screen.getByPlaceholderText('2322');
+		const nameField = screen.getByPlaceholderText('Tela');
+		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
 		const colorSelect = screen.getByTitle('Ver colores');
 		const supplierSelect = screen.getByTitle('Ver proveedores');
@@ -68,27 +68,67 @@ describe('ResourceUpdateForm', () => {
 		expect(cancelButton).toBeInTheDocument();
 	});
 
-	it('show empty fields error message when submit form', async () => {
+	it('shows overflow error on compositions fields', async () => {
 		render(() => (
-			<ResourceUpdateForm
-				resource={
+			<FabricUpdateForm
+				fabric={
 					{
-						name: 'Resource 1',
+						name: 'Fabric 1',
 						code: '1',
 						cost: 100,
 						color_id: 1,
 						supplier_id: 1,
 						deleted_at: null,
-					} as GetResourceType
+					} as GetFabricType
+				}
+				colors={[
+					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
+					{ id: 2, name: 'Rojo', hex: '', deleted_at: null },
+				]}
+				suppliers={[
+					{ id: 1, name: 'Supplier 1', deleted_at: null },
+					{ id: 2, name: 'Supplier 2', deleted_at: null },
+				]}
+			/>
+		));
+
+		const compositionFields = screen.getAllByPlaceholderText('10');
+		fireEvent.input(compositionFields[0], { target: { value: 101 } });
+
+		const submitButton = screen.getByText('Actualizar');
+		fireEvent.click(submitButton);
+
+		const overflowCompositionFieldErr = await screen.findByText('Ingresa un valor igual o menor 100.');
+
+		expect(overflowCompositionFieldErr).toBeInTheDocument();
+	});
+
+	it('show empty fields error message when submit form', async () => {
+		render(() => (
+			<FabricUpdateForm
+				fabric={
+					{
+						name: 'Fabric 1',
+						code: '1',
+						cost: 100,
+						color_id: 1,
+						supplier_id: 1,
+						deleted_at: null,
+						composition: {
+							algod: 10000,
+						},
+					} as GetFabricType
 				}
 				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[{ id: 1, name: 'Supplier 1', deleted_at: null }]}
 			/>
 		));
 
-		const nameField = screen.getByPlaceholderText('Insumo');
-		const codeField = screen.getByPlaceholderText('2322');
+		const nameField = screen.getByPlaceholderText('Tela');
+		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
+		const compositionFields = screen.getAllByPlaceholderText('10');
+		fireEvent.input(compositionFields[0], { target: { value: '' } });
 
 		fireEvent.input(nameField, { target: { value: '' } });
 		fireEvent.input(codeField, { target: { value: '' } });
@@ -207,6 +247,7 @@ describe('ResourceUpdateForm', () => {
 		const statusError = screen.getByText('Selecciona un estado.');
 		const colorError = screen.getByText('Selecciona un color.');
 		const supplierError = screen.getByText('Selecciona un proveedor.');
+		const compositionsError = screen.getByText('Ingresa un valor.');
 
 		expect(nameError).toBeInTheDocument();
 		expect(codeError).toBeInTheDocument();
@@ -214,12 +255,13 @@ describe('ResourceUpdateForm', () => {
 		expect(statusError).toBeInTheDocument();
 		expect(colorError).toBeInTheDocument();
 		expect(supplierError).toBeInTheDocument();
+		expect(compositionsError).toBeInTheDocument();
 	});
 
 	const requestsErrors = [
 		{
 			title: 'calls submit with code exists',
-			textExp: 'El código del insumo "2322" no está disponible. Intente con otro.',
+			textExp: 'El código de la tela "2322" no está disponible. Intente con otro.',
 			error: {
 				response: {
 					status: 409,
@@ -228,7 +270,7 @@ describe('ResourceUpdateForm', () => {
 		},
 		{
 			title: 'calls submit with server error',
-			textExp: 'Error al actualizar el insumo.',
+			textExp: 'Error al actualizar la tela.',
 			error: {
 				response: {
 					status: 400,
@@ -240,16 +282,16 @@ describe('ResourceUpdateForm', () => {
 	for (const requestError of requestsErrors) {
 		it(requestError.title, async () => {
 			render(() => (
-				<ResourceUpdateForm
-					resource={
+				<FabricUpdateForm
+					fabric={
 						{
-							name: 'Resource 1',
+							name: 'Fabric 1',
 							code: '1',
 							cost: 100,
 							color_id: 1,
 							supplier_id: 1,
 							deleted_at: null,
-						} as GetResourceType
+						} as GetFabricType
 					}
 					colors={[
 						{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
@@ -262,17 +304,19 @@ describe('ResourceUpdateForm', () => {
 				/>
 			));
 
-			const requestMock = vi.spyOn(requests, 'updateResourceRequest').mockRejectedValue(requestError.error);
+			const requestMock = vi.spyOn(requests, 'updateFabricRequest').mockRejectedValue(requestError.error);
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
-			const nameField = screen.getByPlaceholderText('Insumo');
-			const codeField = screen.getByPlaceholderText('2322');
+			const nameField = screen.getByPlaceholderText('Tela');
+			const codeField = screen.getByPlaceholderText('23231');
 			const costField = screen.getByPlaceholderText('12000');
 			const colorSelect = screen.getByTitle('Ver colores');
 			const supplierSelect = screen.getByTitle('Ver proveedores');
 			const statusSelect = screen.getByText('Activo');
+			const compositionFields = screen.getAllByPlaceholderText('10');
 
-			fireEvent.input(nameField, { target: { value: 'Resource 2' } });
+			fireEvent.input(compositionFields[0], { target: { value: 100 } });
+			fireEvent.input(nameField, { target: { value: 'Fabric 2' } });
 			fireEvent.input(codeField, { target: { value: 2322 } });
 			fireEvent.input(costField, { target: { value: 200 } });
 
@@ -396,16 +440,16 @@ describe('ResourceUpdateForm', () => {
 
 	it('calls calcel successfully', async () => {
 		render(() => (
-			<ResourceUpdateForm
-				resource={
+			<FabricUpdateForm
+				fabric={
 					{
-						name: 'Resource 1',
+						name: 'Fabric 1',
 						code: '1',
 						cost: 100,
 						color_id: 1,
 						supplier_id: 1,
 						deleted_at: null,
-					} as GetResourceType
+					} as GetFabricType
 				}
 				colors={[]}
 				suppliers={[]}
@@ -419,16 +463,16 @@ describe('ResourceUpdateForm', () => {
 
 	it('calls submit successfully', async () => {
 		render(() => (
-			<ResourceUpdateForm
-				resource={
+			<FabricUpdateForm
+				fabric={
 					{
-						name: 'Resource 1',
+						name: 'Fabric 1',
 						code: '1',
 						cost: 100,
 						color_id: 1,
 						supplier_id: 1,
 						deleted_at: null,
-					} as GetResourceType
+					} as GetFabricType
 				}
 				colors={[
 					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
@@ -441,7 +485,7 @@ describe('ResourceUpdateForm', () => {
 			/>
 		));
 
-		const requestMock = vi.spyOn(requests, 'updateResourceRequest').mockResolvedValue({
+		const requestMock = vi.spyOn(requests, 'updateFabricRequest').mockResolvedValue({
 			code: null,
 			id: 0,
 			cost: null,
@@ -452,17 +496,21 @@ describe('ResourceUpdateForm', () => {
 			supplier: null,
 			deleted_at: null,
 			created_at: null,
+			composition_id: null,
+			composition: null,
 		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 
-		const nameField = screen.getByPlaceholderText('Insumo');
-		const codeField = screen.getByPlaceholderText('2322');
+		const nameField = screen.getByPlaceholderText('Tela');
+		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
 		const colorSelect = screen.getByTitle('Ver colores');
 		const supplierSelect = screen.getByTitle('Ver proveedores');
 		const statusSelect = screen.getByText('Activo');
+		const compositionFields = screen.getAllByPlaceholderText('10');
 
-		fireEvent.input(nameField, { target: { value: 'Resource 2' } });
+		fireEvent.input(compositionFields[0], { target: { value: 100 } });
+		fireEvent.input(nameField, { target: { value: 'Fabric 2' } });
 		fireEvent.input(codeField, { target: { value: 2 } });
 		fireEvent.input(costField, { target: { value: 200 } });
 

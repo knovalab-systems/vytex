@@ -19,12 +19,10 @@ function FabricUpdate() {
 function FabricUpdatePage() {
 	const params = useParams();
 	const fabric = createQuery(() => getFabricQuery(Number(params.id)));
-
 	const { colorsQuery } = useColors();
 	const { suppliersQuery } = useSuppliers();
 
 	const isLoading = () => suppliersQuery.isLoading || colorsQuery.isLoading || fabric.isLoading;
-
 	const isSuccess = () => suppliersQuery.isSuccess && colorsQuery.isSuccess && fabric.isSuccess;
 
 	return (

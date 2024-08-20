@@ -182,6 +182,12 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				continue
 			}
 
+			if strings.HasPrefix(v, "composition.") {
+				f = append(f, table.CompositionID)
+				s = s.Preload(table.Composition)
+				continue
+			}
+
 			switch v {
 			case "id":
 				f = append(f, table.ID)
@@ -207,6 +213,8 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				f = append(f, table.CreatedAt)
 			case "deleted_at":
 				f = append(f, table.DeletedAt)
+			case "composition_id":
+				f = append(f, table.CompositionID)
 			default:
 				f = append(f, table.ALL)
 			}

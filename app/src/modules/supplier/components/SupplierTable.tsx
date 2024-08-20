@@ -1,9 +1,9 @@
 import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { GetSuppliersType } from '../requests/supplierGet';
-import ActionsCell from '~/components/ActionsCell';
 import { SUPPLIERS_UPDATE_PATH } from '~/constants/paths';
+import type { GetSuppliersType } from '../requests/supplierGet';
 
 function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 	return (

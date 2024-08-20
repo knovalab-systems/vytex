@@ -47,7 +47,7 @@ export function getFabricQuery(id: number) {
 }
 
 async function getFabric(id: number) {
-	return await client.request(readFabric(id));
+	return await client.request(readFabric(id, { fields: ['*', { composition: ['*'] }] }));
 }
 
 export type GetFabricType = Awaited<ReturnType<typeof getFabric>>;

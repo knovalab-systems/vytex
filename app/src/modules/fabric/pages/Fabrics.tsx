@@ -41,7 +41,7 @@ function FabricsPage() {
 			<div>
 				<A href={FABRICS_CREATE_PATH}>
 					<Button class='bg-purple-600 hover:bg-purple-700'>
-						Nuevo Tela <AiOutlinePlus class='ml-2' size={22} />
+						Nueva Tela <AiOutlinePlus class='ml-2' size={22} />
 					</Button>
 				</A>
 			</div>

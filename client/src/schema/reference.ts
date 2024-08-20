@@ -18,13 +18,13 @@ export type VytexReference<Schema = any> = MergeCoreCollection<
 		id: number;
 		code: string | null; // use for version purpose n erp interface
 		front: string | null;
-		front_image: VytexImage<Schema[]> | null;
+		front_image: VytexImage<Schema> | null;
 		back: string | null;
-		back_image: VytexImage<Schema[]> | null;
+		back_image: VytexImage<Schema> | null;
 		deleted_at: string | null;
 		created_at: string | null;
 		created_by: string | null;
-		user: VytexUser<Schema[]> | null;
+		user: VytexUser<Schema> | null;
 		colors: VytexColorByReference<Schema>[] | null;
 	}
 >;
@@ -38,7 +38,7 @@ export type VytexColorByReference<Schema = any> = MergeCoreCollection<
 		deleted_at: string | null;
 		created_at: string | null;
 		color_id: number | null;
-		color: VytexColor<Schema[]> | null;
+		color: VytexColor<Schema> | null;
 		fabrics: VytexFabricByReference<Schema>[] | null;
 		resources: VytexResourceByReference<Schema>[] | null;
 	}

@@ -1,4 +1,5 @@
 import type { VytexColor } from './color.js';
+import type { VytexComposition } from './composition.js';
 import type { VytexCustom } from './custom.js';
 import type { VytexFabric } from './fabric.js';
 import type { VytexImage } from './image.js';
@@ -11,6 +12,7 @@ import type { VytexUser } from './user.js';
 export interface CoreSchema<Schema = any> {
 	vytex_users: VytexUser<Schema>[];
 	vytex_colors: VytexColor<Schema>[];
+	vytex_compositions: VytexComposition<Schema>[];
 	vytex_fabrics: VytexFabric<Schema>[];
 	vytex_references: VytexReference<Schema>[];
 	vytex_resources: VytexResource<Schema>[];

@@ -59,7 +59,7 @@ function ResourceUpdateForm(props: {
 			supplier_id: supplier,
 		};
 
-		const resource: Omit<Resource, 'id' | 'color' | 'supplier'> = Object.keys(formData).reduce((p, v) => {
+		const resource = Object.keys(formData).reduce((p: Omit<Resource, 'id' | 'color' | 'supplier'>, v) => {
 			const field = formData[v as keyof typeof formData];
 			const oldField = props.resource?.[v as keyof typeof props.resource];
 			if (field !== undefined && field !== oldField) {
@@ -76,8 +76,6 @@ function ResourceUpdateForm(props: {
 		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && isDeleted) {
 			resource.deleted_at = null;
 		}
-
-		if (Object.keys(resource).length === 0) return;
 
 		return updateResourceRequest(props.resource?.id || 0, resource)
 			.then(() => {
@@ -105,7 +103,7 @@ function ResourceUpdateForm(props: {
 							<div>
 								<Label for='name-field'>Nombre</Label>
 								<Input
-									placeholder='Nombre del insumo'
+									placeholder='Insumo'
 									autocomplete='off'
 									id='name-field'
 									aria-errormessage={field.error}

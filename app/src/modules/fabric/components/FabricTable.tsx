@@ -50,7 +50,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell>
 								<StatusLabel status={!fabric.deleted_at} />
 							</TableCell>
-							<TableCell>
+							<TableCell class='py-0'>
 								<ActionsCell
 									update={{
 										path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
