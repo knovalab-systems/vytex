@@ -37,8 +37,8 @@ function ReferencesPage() {
 	});
 
 	return (
-		<div class='h-full w-full flex flex-col'>
-			<div class='mb-2'>
+		<div class='h-full w-full flex flex-col gap-2'>
+			<div>
 				<A href={REFS_CREATE_PATH}>
 					<Button class='bg-purple-600 hover:bg-purple-700'>
 						Nueva Referencia <AiOutlinePlus class='ml-2' size={22} />
@@ -52,7 +52,7 @@ function ReferencesPage() {
 				<Match when={references.isSuccess && countReferences.isSuccess}>
 					<ReferenceTable references={references.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}

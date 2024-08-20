@@ -66,6 +66,68 @@ func TestReadFabrics(t *testing.T) {
 
 }
 
+func TestReadFabric(t *testing.T) {
+	t.Run("Fail binding, id is not find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.ReadFabric(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not found fabric", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("fabricId")
+		c.SetParamValues("1")
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabric").Return(errors.New("error"))
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.ReadFabric(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get fabric successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("fabricId")
+		c.SetParamValues("1")
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("SelectFabric").Return(nil, nil)
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.ReadFabric(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
 func TestAggregateFabrics(t *testing.T) {
 	t.Run("Fail on get aggregate", func(t *testing.T) {
 		// context
@@ -302,4 +364,116 @@ func TestCreateFabric(t *testing.T) {
 		}
 	})
 
+}
+
+func TestUpdateFabric(t *testing.T) {
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": 32321, "code": 3232, "cost": "cost", "color_id": 1, "supplier_id": 1})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+
+		// controller
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.UpdateFabric(c)
+
+		assert.Error(t, err)
+
+	})
+
+	t.Run("Fail update, fabric code exits", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"code": "1"})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("fabricId")
+		c.SetParamValues("1")
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("UpdateFabric").Return(&models.Fabric{}, errors.New("error"))
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.UpdateFabric(c)
+		assert.Error(t, err)
+	})
+
+	testCasesOneValue := map[string]interface{}{
+		"name":        "Boton",
+		"code":        "1",
+		"cost":        23000.0,
+		"color_id":    1,
+		"supplier_id": 1,
+		"deleted_at":  "2021-09-01T00:00:00Z",
+		"composition": models.Composition{Algod: 10000},
+	}
+
+	for key, value := range testCasesOneValue {
+		t.Run("Update fabric successfully with some value", func(t *testing.T) {
+			// context
+			body := new(bytes.Buffer)
+			json.NewEncoder(body).Encode(map[string]interface{}{key: value})
+			req := httptest.NewRequest(http.MethodPost, "/", body)
+			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+			rec := httptest.NewRecorder()
+			e := echo.New()
+			config.EchoValidator(e)
+			c := e.NewContext(req, rec)
+			c.SetParamNames("fabricId")
+			c.SetParamValues("1")
+
+			// mocks
+			fabricMock := mocks.FabricMock{}
+			fabricMock.On("UpdateFabric").Return(&models.Fabric{}, nil)
+			fabricController := FabricController{FabricRepository: &fabricMock}
+
+			// test
+			err := fabricController.UpdateFabric(c)
+			if assert.NoError(t, err) {
+				assert.Equal(t, http.StatusOK, rec.Code)
+			}
+		})
+	}
+
+	t.Run("Update fabric successfully with all values", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"name": "Boton", "code": "1", "cost": 23000.0, "color_id": 1,
+			"supplier_id": 1, "composition": models.Composition{Algod: 10000}})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("fabricId")
+		c.SetParamValues("1")
+
+		// mocks
+		fabricMock := mocks.FabricMock{}
+		fabricMock.On("UpdateFabric").Return(&models.Fabric{}, nil)
+		fabricController := FabricController{FabricRepository: &fabricMock}
+
+		// test
+		err := fabricController.UpdateFabric(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
 }

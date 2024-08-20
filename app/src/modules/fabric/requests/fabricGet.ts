@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readFabrics } from '@vytex/client';
+import { aggregate, readFabric, readFabrics } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -38,3 +38,16 @@ async function countFabrics() {
 }
 
 export type GetFabricsType = Awaited<ReturnType<typeof getFabrics>>;
+
+export function getFabricQuery(id: number) {
+	return queryOptions({
+		queryKey: ['getFabric', id],
+		queryFn: () => getFabric(id),
+	});
+}
+
+async function getFabric(id: number) {
+	return await client.request(readFabric(id, { fields: ['*', { composition: ['*'] }] }));
+}
+
+export type GetFabricType = Awaited<ReturnType<typeof getFabric>>;

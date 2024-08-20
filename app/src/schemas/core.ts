@@ -2,6 +2,7 @@ import type {
 	CoreSchema,
 	DeepPartial,
 	VytexColor,
+	VytexComposition,
 	VytexCustom,
 	VytexFabric,
 	VytexOrder,
@@ -20,3 +21,4 @@ export type Supplier = Partial<VytexSupplier<CoreSchema>>;
 export type Reference = DeepPartial<VytexReference<CoreSchema>>;
 export type Custom = DeepPartial<VytexCustom<CoreSchema>>;
 export type Order = Partial<VytexOrder<CoreSchema>>;
+export type Composition = VytexComposition<CoreSchema>;

@@ -67,48 +67,44 @@ const UserControls = (props: UserControlsProps) => {
 	};
 
 	return (
-		<div class='flex flex-wrap justify-between pt-1'>
-			<div class='flex flex-wrap gap-4'>
+		<div class='flex flex-wrap gap-2 md:gap-4 pt-1'>
+			<Button
+				class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
+				title='Nuevo Usuario'
+				onclick={goToUserCreationPage}
+			>
+				Nuevo usuario
+				<AiOutlinePlus class='ml-2' size={22} />
+			</Button>
+			<FilterInput
+				class='w-52'
+				filterValue={props.usernameFilterValue}
+				setFilter={debounce(setUsername, 300)}
+				placeholder='Usuario'
+			/>
+			<FilterInput filterValue={props.nameFilterValue} setFilter={debounce(setName, 300)} placeholder='Nombre' />
+			<SelectOptions
+				options={USER_STATUS_OPTIONS}
+				placeholder='Estado de usuario'
+				setSelect={setStatus}
+				value={props.statusFilterValue}
+			/>
+			<SelectOptions
+				options={roleList.map(role => ({ label: role.label, value: role.key }))}
+				placeholder='Rol de usuario'
+				setSelect={setRole}
+				value={props.roleIdFilterValue}
+			/>
+			<Show when={areFiltersApplied()}>
 				<Button
-					class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
-					title='Nuevo Usuario'
-					onclick={goToUserCreationPage}
+					class='w-auto font-bold ml-auto bg-red-500 h-12 hover:bg-red-600'
+					onclick={clearFilter}
+					disabled={!areFiltersApplied()}
 				>
-					Nuevo usuario
-					<AiOutlinePlus class='ml-2' size={22} />
+					<TbFilterX class='mr-2' size={20} />
+					Limpiar filtros
 				</Button>
-				<FilterInput
-					class='w-52'
-					filterValue={props.usernameFilterValue}
-					setFilter={debounce(setUsername, 300)}
-					placeholder='Usuario'
-				/>
-				<FilterInput filterValue={props.nameFilterValue} setFilter={debounce(setName, 300)} placeholder='Nombre' />
-				<SelectOptions
-					options={USER_STATUS_OPTIONS}
-					placeholder='Estado de usuario'
-					setSelect={setStatus}
-					value={props.statusFilterValue}
-				/>
-				<SelectOptions
-					options={roleList.map(role => ({ label: role.label, value: role.key }))}
-					placeholder='Rol de usuario'
-					setSelect={setRole}
-					value={props.roleIdFilterValue}
-				/>
-			</div>
-			<div>
-				<Show when={areFiltersApplied()}>
-					<Button
-						class='w-auto font-bold bg-red-500 h-12 hover:bg-red-600'
-						onclick={clearFilter}
-						disabled={!areFiltersApplied()}
-					>
-						<TbFilterX class='mr-2' size={20} />
-						Limpiar filtros
-					</Button>
-				</Show>
-			</div>
+			</Show>
 		</div>
 	);
 };

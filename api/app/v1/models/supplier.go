@@ -37,34 +37,3 @@ type SupplierUpdateBody struct {
 	Code      string              `json:"code,omitempty" validate:"omitempty"`
 	DeletedAt Optional[time.Time] `json:"deleted_at"`
 }
-
-func (m *SupplierUpdateBody) ToUpdate() map[string]interface{} {
-	updateMap := map[string]interface{}{}
-
-	if m.Name != "" {
-		updateMap["name"] = m.Name
-	}
-
-	if m.Brand != "" {
-		updateMap["brand"] = m.Brand
-	}
-
-	if m.Nit != "" {
-		updateMap["nit"] = m.Nit
-	}
-
-	if m.Code != "" {
-		updateMap["code"] = m.Code
-	}
-
-	if !m.DeletedAt.IsNil() {
-		if m.DeletedAt.IsNullDefined() {
-			updateMap["deleted_at"] = nil
-		} else {
-			updateMap["deleted_at"] = m.DeletedAt.Value
-		}
-
-	}
-
-	return updateMap
-}

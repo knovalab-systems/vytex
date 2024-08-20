@@ -37,8 +37,8 @@ function SuppliersPage() {
 	});
 
 	return (
-		<div class='h-full w-full flex flex-col'>
-			<div class='mb-2'>
+		<div class='h-full w-full flex flex-col gap-2'>
+			<div>
 				<A href={SUPPLIERS_CREATE_PATH}>
 					<Button class='bg-practice_date h-12 hover:bg-blue-800'>
 						Nuevo Proveedor <AiOutlinePlus class='ml-2' size={22} />
@@ -52,7 +52,7 @@ function SuppliersPage() {
 				<Match when={suppliers.isSuccess && countSuppliers.isSuccess}>
 					<SupplierTable suppliers={suppliers.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}

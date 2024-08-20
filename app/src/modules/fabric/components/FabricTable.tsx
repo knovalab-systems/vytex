@@ -1,6 +1,8 @@
 import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { FABRICS_UPDATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
 import type { GetFabricsType } from '../requests/fabricGet';
 
@@ -48,7 +50,14 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell>
 								<StatusLabel status={!fabric.deleted_at} />
 							</TableCell>
-							<TableCell>Acciones</TableCell>
+							<TableCell class='py-0'>
+								<ActionsCell
+									update={{
+										path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
+										title: 'Actualizar Insumo',
+									}}
+								/>
+							</TableCell>
 						</TableRow>
 					)}
 				</For>

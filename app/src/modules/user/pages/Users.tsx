@@ -40,7 +40,7 @@ function UsersPage() {
 	});
 
 	return (
-		<div class='h-full flex flex-col'>
+		<div class='h-full flex flex-col gap-2'>
 			<UserControls
 				setPage={() => setPage(1)}
 				setNameFilter={setNameFilter}
@@ -59,7 +59,7 @@ function UsersPage() {
 				<Match when={users.isSuccess && usersCount.isSuccess}>
 					<UserTable users={users.data} />
 					<Pagination
-						class='pt-2 [&>*]:justify-center'
+						class='[&>*]:justify-center'
 						count={pages()}
 						page={page()}
 						onPageChange={setPage}

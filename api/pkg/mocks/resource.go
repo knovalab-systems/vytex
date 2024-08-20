@@ -14,7 +14,7 @@ func (m *ResourceMock) SelectResources(req *models.Query) ([]*models.Resource, e
 	return []*models.Resource{}, args.Error(0)
 }
 
-func (m *ResourceMock) SelectResource(resource *models.ReadResource) (*models.Resource, error) {
+func (m *ResourceMock) SelectResource(resource *models.ResourceRead) (*models.Resource, error) {
 	args := m.Called()
 	return &models.Resource{}, args.Error(0)
 }

@@ -223,10 +223,10 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 		},
 		Custom: struct {
 			field.RelationField
-			CreateUser struct {
+			CancelUser struct {
 				field.RelationField
 			}
-			CancelUser struct {
+			CreateUser struct {
 				field.RelationField
 			}
 			Orders struct {
@@ -234,15 +234,15 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 			}
 		}{
 			RelationField: field.NewRelation("Orders.Custom", "models.Custom"),
-			CreateUser: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("Orders.Custom.CreateUser", "models.User"),
-			},
 			CancelUser: struct {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("Orders.Custom.CancelUser", "models.User"),
+			},
+			CreateUser: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Orders.Custom.CreateUser", "models.User"),
 			},
 			Orders: struct {
 				field.RelationField
@@ -252,16 +252,16 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 		},
 	}
 
-	_custom.CreateUser = customBelongsToCreateUser{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("CreateUser", "models.User"),
-	}
-
 	_custom.CancelUser = customBelongsToCancelUser{
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("CancelUser", "models.User"),
+	}
+
+	_custom.CreateUser = customBelongsToCreateUser{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("CreateUser", "models.User"),
 	}
 
 	_custom.fillFieldMap()
@@ -282,9 +282,9 @@ type custom struct {
 	CanceledBy field.String
 	Orders     customHasManyOrders
 
-	CreateUser customBelongsToCreateUser
-
 	CancelUser customBelongsToCancelUser
+
+	CreateUser customBelongsToCreateUser
 
 	fieldMap map[string]field.Expr
 }
@@ -406,10 +406,10 @@ type customHasManyOrders struct {
 	}
 	Custom struct {
 		field.RelationField
-		CreateUser struct {
+		CancelUser struct {
 			field.RelationField
 		}
-		CancelUser struct {
+		CreateUser struct {
 			field.RelationField
 		}
 		Orders struct {
@@ -483,77 +483,6 @@ func (a customHasManyOrdersTx) Count() int64 {
 	return a.tx.Count()
 }
 
-type customBelongsToCreateUser struct {
-	db *gorm.DB
-
-	field.RelationField
-}
-
-func (a customBelongsToCreateUser) Where(conds ...field.Expr) *customBelongsToCreateUser {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a customBelongsToCreateUser) WithContext(ctx context.Context) *customBelongsToCreateUser {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a customBelongsToCreateUser) Session(session *gorm.Session) *customBelongsToCreateUser {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a customBelongsToCreateUser) Model(m *models.Custom) *customBelongsToCreateUserTx {
-	return &customBelongsToCreateUserTx{a.db.Model(m).Association(a.Name())}
-}
-
-type customBelongsToCreateUserTx struct{ tx *gorm.Association }
-
-func (a customBelongsToCreateUserTx) Find() (result *models.User, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a customBelongsToCreateUserTx) Append(values ...*models.User) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a customBelongsToCreateUserTx) Replace(values ...*models.User) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a customBelongsToCreateUserTx) Delete(values ...*models.User) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a customBelongsToCreateUserTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a customBelongsToCreateUserTx) Count() int64 {
-	return a.tx.Count()
-}
-
 type customBelongsToCancelUser struct {
 	db *gorm.DB
 
@@ -622,6 +551,77 @@ func (a customBelongsToCancelUserTx) Clear() error {
 }
 
 func (a customBelongsToCancelUserTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type customBelongsToCreateUser struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a customBelongsToCreateUser) Where(conds ...field.Expr) *customBelongsToCreateUser {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a customBelongsToCreateUser) WithContext(ctx context.Context) *customBelongsToCreateUser {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a customBelongsToCreateUser) Session(session *gorm.Session) *customBelongsToCreateUser {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a customBelongsToCreateUser) Model(m *models.Custom) *customBelongsToCreateUserTx {
+	return &customBelongsToCreateUserTx{a.db.Model(m).Association(a.Name())}
+}
+
+type customBelongsToCreateUserTx struct{ tx *gorm.Association }
+
+func (a customBelongsToCreateUserTx) Find() (result *models.User, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a customBelongsToCreateUserTx) Append(values ...*models.User) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a customBelongsToCreateUserTx) Replace(values ...*models.User) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a customBelongsToCreateUserTx) Delete(values ...*models.User) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a customBelongsToCreateUserTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a customBelongsToCreateUserTx) Count() int64 {
 	return a.tx.Count()
 }
 

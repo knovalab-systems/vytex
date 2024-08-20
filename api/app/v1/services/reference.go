@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -16,9 +17,7 @@ type ReferenceService struct {
 
 func (m *ReferenceService) SelectReferences(q *models.Query) ([]*models.Reference, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ReferencesBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Reference

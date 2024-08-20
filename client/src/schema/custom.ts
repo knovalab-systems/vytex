@@ -15,8 +15,8 @@ export type VytexCustom<Schema = any> = MergeCoreCollection<
 		canceled_at: string | null;
 		created_by: string | null;
 		canceled_by: string | null;
-		create_user: VytexUser<Schema[]> | null;
-		cancel_user: VytexUser<Schema[]> | null;
-		orders: VytexOrder<Schema[]>[] | null;
+		create_user: VytexUser<Schema> | null;
+		cancel_user: VytexUser<Schema> | null;
+		orders: VytexOrder<Schema>[] | null;
 	}
 >;

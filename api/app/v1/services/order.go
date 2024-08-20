@@ -2,12 +2,14 @@ package services
 
 import (
 	"errors"
+	"strings"
+
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
 	"gorm.io/gorm"
-	"strings"
 )
 
 type OrderService struct {
@@ -15,9 +17,7 @@ type OrderService struct {
 
 func (m *OrderService) SelectOrders(q *models.Query) ([]*models.Order, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.OrdersBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Order

@@ -49,7 +49,7 @@ describe('ResourceUpdateForm', () => {
 			/>
 		));
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
+		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('2322');
 		const costField = screen.getByPlaceholderText('12000');
 		const colorSelect = screen.getByTitle('Ver colores');
@@ -86,7 +86,7 @@ describe('ResourceUpdateForm', () => {
 			/>
 		));
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
+		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('2322');
 		const costField = screen.getByPlaceholderText('12000');
 
@@ -265,7 +265,7 @@ describe('ResourceUpdateForm', () => {
 			const requestMock = vi.spyOn(requests, 'updateResourceRequest').mockRejectedValue(requestError.error);
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
-			const nameField = screen.getByPlaceholderText('Nombre del insumo');
+			const nameField = screen.getByPlaceholderText('Insumo');
 			const codeField = screen.getByPlaceholderText('2322');
 			const costField = screen.getByPlaceholderText('12000');
 			const colorSelect = screen.getByTitle('Ver colores');
@@ -447,32 +447,15 @@ describe('ResourceUpdateForm', () => {
 			cost: null,
 			name: null,
 			color_id: null,
-			color: {
-				id: 0,
-				name: null,
-				code: null,
-				hex: null,
-				deleted_at: null,
-				created_at: null,
-				updated_at: null,
-			},
+			color: null,
 			supplier_id: null,
-			supplier: {
-				id: 0,
-				nit: null,
-				name: null,
-				brand: null,
-				code: null,
-				deleted_at: null,
-				updated_at: null,
-				created_at: null,
-			},
+			supplier: null,
 			deleted_at: null,
 			created_at: null,
 		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
+		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('2322');
 		const costField = screen.getByPlaceholderText('12000');
 		const colorSelect = screen.getByTitle('Ver colores');

@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -18,9 +19,7 @@ type FabricService struct {
 func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error) {
 
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.FabricsBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Fabric
@@ -29,22 +28,45 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 	// def subquery
 	table2 := table.As("u2")
 	subQuery := table.Unscoped().
-		Group(table.Code).
-		Select(table.Code, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
 		As("u2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	s = fabricFields(s, q.Fields)
 
 	// run query
-	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Code.EqCol(table.Code)).
-		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
+	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(field.NewInt64("u2", "id_max").EqCol(table.ID)).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
 	return fabrics, nil
+}
+
+func (m *FabricService) SelectFabric(q *models.FabricRead) (*models.Fabric, error) {
+	// sanitize
+	formats.SanitizedQuery(&q.Query)
+
+	// def query
+	table := query.Fabric
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = fabricFields(s, q.Fields)
+
+	// run query
+	fabric, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return fabric, nil
 }
 
 func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.AggregateData, error) {
@@ -93,7 +115,7 @@ func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric
 		return nil, err
 	}
 
-	c, err := getCompositionId(&b.Composition)
+	c, err := getComposition(&b.Composition)
 	if err != nil {
 		return nil, err
 	}
@@ -110,6 +132,31 @@ func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric
 	err = query.Fabric.Create(fabric)
 	if err != nil {
 		return nil, err
+	}
+
+	return fabric, nil
+}
+
+func (m *FabricService) UpdateFabric(b *models.FabricUpdateBody) (*models.Fabric, error) {
+	table := query.Fabric
+
+	fabric, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	hasChanges, err := formats.FabricUpdateVersion(b, fabric, getComposition, checkFabricExists)
+	if err != nil {
+		return nil, err
+	}
+
+	if hasChanges {
+		fabric.ID = 0
+		fabric.CreatedAt = nil
+		err = table.Create(fabric)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
 	}
 
 	return fabric, nil
@@ -135,6 +182,12 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				continue
 			}
 
+			if strings.HasPrefix(v, "composition.") {
+				f = append(f, table.CompositionID)
+				s = s.Preload(table.Composition)
+				continue
+			}
+
 			switch v {
 			case "id":
 				f = append(f, table.ID)
@@ -144,6 +197,8 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				f = append(f, table.Cost)
 			case "code":
 				f = append(f, table.Code)
+			case "track":
+				f = append(f, table.Track)
 			case "color_id":
 				f = append(f, table.ColorID)
 			case "color":
@@ -158,6 +213,8 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 				f = append(f, table.CreatedAt)
 			case "deleted_at":
 				f = append(f, table.DeletedAt)
+			case "composition_id":
+				f = append(f, table.CompositionID)
 			default:
 				f = append(f, table.ALL)
 			}
@@ -170,7 +227,17 @@ func fabricFields(s query.IFabricDo, fields string) query.IFabricDo {
 func checkFabricExists(code string) error {
 	table := query.Fabric
 
-	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+	// def subquery
+	table2 := table.As("table2")
+	subQuery := table.Unscoped().
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
+		As("table2")
+
+	_, err := table.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(table.Where(field.NewInt64("table2", "id_max").EqCol(table.ID)).Where(table.Code.Eq(code))).
+		First()
+
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil
@@ -180,7 +247,7 @@ func checkFabricExists(code string) error {
 	return problems.FabricExists()
 }
 
-func getCompositionId(c *models.Composition) (*models.Composition, error) {
+func getComposition(c *models.Composition) (*models.Composition, error) {
 	table := query.Composition
 	compMap := make(map[string]interface{}) // for allow zero values
 	compMap["algod"] = c.Algod

@@ -50,8 +50,6 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 			color.deleted_at = null;
 		}
 
-		if (Object.keys(color).length === 0) return;
-
 		return updateColorRequest(props.color?.id || 0, color)
 			.then(() => {
 				toast.success('Color actualizado correctamente');

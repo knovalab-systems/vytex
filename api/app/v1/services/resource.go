@@ -2,11 +2,11 @@ package services
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"gorm.io/gorm"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -19,9 +19,7 @@ type ResourceService struct {
 func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, error) {
 
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ResourcesBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Resource
@@ -30,16 +28,16 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 	// def subquery
 	table2 := table.As("table2")
 	subQuery := table.Unscoped().
-		Group(table.Code).
-		Select(table.Code, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
 		As("table2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	s = resourceFields(s, q.Fields)
 
 	// run query
-	resources, err := s.Unscoped().LeftJoin(subQuery, table2.Code.EqCol(table.Code)).
-		Where(field.NewInt64("table2", "created_at_max").EqCol(table.CreatedAt)).
+	resources, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(field.NewInt64("table2", "id_max").EqCol(table.ID)).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()
@@ -48,11 +46,9 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 	return resources, nil
 }
 
-func (m *ResourceService) SelectResource(q *models.ReadResource) (*models.Resource, error) {
+func (m *ResourceService) SelectResource(q *models.ResourceRead) (*models.Resource, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.ResourcesBadRequest()
-	}
+	formats.SanitizedQuery(&q.Query)
 
 	// def query
 	table := query.Resource
@@ -131,10 +127,44 @@ func (m *ResourceService) CreateResource(b *models.ResourceCreateBody) (*models.
 	return resource, nil
 }
 
+func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.Resource, error) {
+	table := query.Resource
+
+	resource, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	hasChanges, err := formats.ResourceUpdateVersion(b, resource, checkResourceExist)
+	if err != nil {
+		return nil, err
+	}
+
+	if hasChanges {
+		resource.ID = 0
+		resource.CreatedAt = nil
+		err = table.Create(resource)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+	}
+
+	return resource, nil
+}
+
 func checkResourceExist(code string) error {
 	table := query.Resource
 
-	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
+	// def subquery
+	table2 := table.As("table2")
+	subQuery := table.Unscoped().
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
+		As("table2")
+
+	_, err := table.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(table.Where(field.NewInt64("table2", "id_max").EqCol(table.ID)).Where(table.Code.Eq(code))).
+		First()
 
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -195,39 +225,4 @@ func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
 		s = s.Select(f...)
 	}
 	return s
-}
-
-func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.Resource, error) {
-
-	err := checkResourceExist(b.Code)
-
-	if err != nil {
-		return nil, err
-	}
-
-	table := query.Resource
-
-	updateMap := b.ToUpdate()
-	log.Println(len(updateMap))
-
-	if len(updateMap) == 0 {
-		return nil, problems.ResourcesBadRequest()
-	}
-
-	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(updateMap)
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	if rows.RowsAffected == 0 {
-		return nil, problems.ReadAccess()
-	}
-
-	resource, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
-
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	return resource, nil
 }

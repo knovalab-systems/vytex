@@ -2,10 +2,12 @@ package services
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"reflect"
 	"strings"
 
+	"gorm.io/gorm"
+
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -18,9 +20,7 @@ type CustomService struct {
 func (m *CustomService) SelectCustoms(q *models.Query) ([]*models.Custom, error) {
 
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.CustomsBadRequest()
-	}
+	formats.SanitizedQuery(q)
 
 	// def query
 	table := query.Custom
@@ -155,9 +155,7 @@ func customFields(s query.ICustomDo, fields string) query.ICustomDo {
 
 func (m *CustomService) SelectCustom(q *models.ReadCustom) (*models.Custom, error) {
 	// sanitize
-	if err := q.SanitizedQuery(); err != nil {
-		return nil, problems.CustomsBadRequest()
-	}
+	formats.SanitizedQuery(&q.Query)
 
 	// def query
 	table := query.Custom

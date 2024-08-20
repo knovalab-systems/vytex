@@ -52,8 +52,6 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 			supplier.deleted_at = null;
 		}
 
-		if (Object.keys(supplier).length === 0) return;
-
 		return updateSupplierRequest(props.supplier?.id || 0, supplier)
 			.then(() => {
 				toast.success('Proveedor actualizado correctamente.');

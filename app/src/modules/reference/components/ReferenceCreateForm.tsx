@@ -117,8 +117,8 @@ function ReferenceCreateForm(props: {
 			.then(async res => {
 				return createReferenceRequest({
 					...reference,
-					front: (res as unknown as Array<Record<'id', string | undefined>>)[0].id as string,
-					back: (res as unknown as Array<Record<'id', string | undefined>>)[1].id as string,
+					front: (res as unknown as Array<Record<'id', string>>)[0].id,
+					back: (res as unknown as Array<Record<'id', string>>)[1].id,
 				})
 					.then(() => {
 						toast.success('Referencia creada correctamente');

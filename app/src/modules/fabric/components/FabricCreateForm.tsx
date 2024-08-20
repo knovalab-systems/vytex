@@ -1,6 +1,5 @@
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
-import type { CoreSchema, VytexComposition } from '@vytex/client';
 import { For, Show } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
@@ -21,7 +20,7 @@ import { FABRICS_PATH } from '~/constants/paths';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import { COMPOSITIONS } from '~/schemas/compositions';
-import type { Fabric } from '~/schemas/core';
+import type { Composition, Fabric } from '~/schemas/core';
 import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
 
@@ -61,7 +60,7 @@ function FabricCreateForm(props: {
 			code: code.toString(),
 			color_id: color,
 			supplier_id: supplier,
-			composition: composition as VytexComposition<CoreSchema>,
+			composition: composition as Composition,
 		};
 
 		return createFabricRequest(fabric)

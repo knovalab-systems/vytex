@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import type { GetSuppliersType } from '../../requests/supplierGet';
 import SupplierTable from '../SupplierTable';
 
-vi.mock('../ActionsCell', () => ({
+vi.mock('~/components/ActionsCell', () => ({
 	default: () => {
 		return <td>Actions</td>;
 	},

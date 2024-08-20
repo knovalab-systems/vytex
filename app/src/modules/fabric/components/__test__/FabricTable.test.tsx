@@ -3,6 +3,12 @@ import '@testing-library/jest-dom';
 import type { GetFabricsType } from '../../requests/fabricGet';
 import FabricTable from '../FabricTable';
 
+vi.mock('~/components/ActionsCell', () => ({
+	default: () => {
+		return <td>Actions</td>;
+	},
+}));
+
 describe('Fabric Table', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();

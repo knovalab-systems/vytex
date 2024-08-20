@@ -46,8 +46,6 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 			user.deleted_at = null;
 		}
 
-		if (Object.keys(user).length === 0) return;
-
 		return updateUserRequest(props.user?.id || '', user)
 			.then(() => {
 				toast.success('Usuario actualizado correctamente.');

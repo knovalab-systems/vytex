@@ -47,6 +47,38 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 
 }
 
+// ReadFabric Get a fabric
+// @Summary      Get a fabric
+// @Description  Get a fabric by id
+// @Tags         Fabrics
+// @Produce      json
+// @Param        fabricId path string true "Fabrics ID"
+// @Success      200 {object} models.Fabric
+// @Failure      400
+// @Failure      500
+// @Router       /fabrics/fabricId [get]
+func (m *FabricController) ReadFabric(c echo.Context) error {
+	u := new(models.FabricRead)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.FabricsBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.FabricsBadRequest()
+	}
+
+	// get fabric
+	fabric, err := m.FabricRepository.SelectFabric(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, fabric)
+}
+
 // Get aggregate from fabrics
 // @Summary      Get aggregate from fabrics
 // @Description  Get aggregate from fabrics
@@ -105,4 +137,37 @@ func (m *FabricController) CreateFabric(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, fabric)
+}
+
+// UpdateFabric Update a fabric
+// @Summary      Update a fabric
+// @Description  Update a fabric by id
+// @Tags         Fabrics
+// @Param        fabricId path string true "Fabric ID"
+// @Param        models.FabricUpdateBody body string true "Fabric update values"
+// @Produce      json
+// @Success      200 {object} models.Fabric
+// @Failure      400
+// @Failure      500
+// @Router       /fabrics/fabricId [patch]
+func (m *FabricController) UpdateFabric(c echo.Context) error {
+	u := new(models.FabricUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateFabricBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateFabricBadRequest()
+	}
+
+	// update
+	resource, err := m.FabricRepository.UpdateFabric(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, resource)
 }
