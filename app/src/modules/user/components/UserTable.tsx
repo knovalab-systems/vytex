@@ -11,7 +11,7 @@ function UserTable(props: { users?: GetUsersType }) {
 		<TableContainer>
 			<Table class='md:table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
-					<TableRow class=' bg-trailway *:text-white hover:bg-trailway'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Usuario</TableHead>
 						<TableHead>Nombre</TableHead>

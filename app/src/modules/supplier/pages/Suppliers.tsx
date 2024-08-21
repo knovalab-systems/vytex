@@ -40,7 +40,7 @@ function SuppliersPage() {
 		<div class='h-full w-full flex flex-col gap-2'>
 			<div>
 				<A href={SUPPLIERS_CREATE_PATH}>
-					<Button class='bg-practice_date h-12 hover:bg-blue-800'>
+					<Button variant='new'>
 						Nuevo Proveedor <AiOutlinePlus class='ml-2' size={22} />
 					</Button>
 				</A>

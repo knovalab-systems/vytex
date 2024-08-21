@@ -15,7 +15,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 		<TableContainer>
 			<Table class='table-auto'>
 				<TableHeader class='sticky top-0'>
-					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Code</TableHead>
 						<TableHead>Nombre</TableHead>
@@ -56,7 +56,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<ActionsCell
 									update={{
 										path: `${RESOURCES_UPDATE_PATH}/${resource.id}`,
-										title: 'Actualizar Insumo',
+										title: 'Actualizar insumo',
 									}}
 								/>
 							</TableRow>

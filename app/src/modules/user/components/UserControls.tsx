@@ -67,12 +67,8 @@ const UserControls = (props: UserControlsProps) => {
 	};
 
 	return (
-		<div class='flex flex-wrap gap-2 md:gap-4 pt-1'>
-			<Button
-				class='w-auto font-bold bg-practice_date h-12 hover:bg-blue-800'
-				title='Nuevo Usuario'
-				onclick={goToUserCreationPage}
-			>
+		<div class='flex flex-wrap gap-2 md:gap-4 p-1'>
+			<Button variant='new' class='h-full' onclick={goToUserCreationPage}>
 				Nuevo usuario
 				<AiOutlinePlus class='ml-2' size={22} />
 			</Button>

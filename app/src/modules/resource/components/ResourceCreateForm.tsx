@@ -208,10 +208,10 @@ function ResourceCreateForm(props: {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
+				<Button type='button' onclick={handleCancel} variant='destructive'>
 					Cancelar
 				</Button>
-				<Button type='submit' class='bg-green-500 hover:bg-green-600'>
+				<Button type='submit' variant='success'>
 					Crear
 				</Button>
 			</div>

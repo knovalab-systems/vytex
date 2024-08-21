@@ -17,10 +17,10 @@ function SideBarNav(props: { pages: NavPages[] }) {
 					{page => (
 						<li>
 							<A
-								activeClass='bg-practice_date'
+								activeClass='bg-nav'
 								href={page.path}
 								end={page.end}
-								class='w-full flex items-center group p-2 font-semibold text-sm rounded-lg text-white gap-1 transition-colors duration-200 hover:bg-practice_date'
+								class='w-full flex items-center group p-2 font-semibold text-sm rounded-lg text-white gap-1 transition-colors duration-200 hover:bg-nav'
 							>
 								{page.icon()}
 								<span class='ml-3'>{page.name}</span>

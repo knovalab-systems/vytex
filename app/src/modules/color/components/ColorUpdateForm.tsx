@@ -156,10 +156,10 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 				</Field>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
+				<Button type='button' onclick={handleCancel} variant='destructive'>
 					Cancelar
 				</Button>
-				<Button type='submit' disabled={form.submitting || !form.dirty} class='bg-green-600 hover:bg-green-700'>
+				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>
 			</div>

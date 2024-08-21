@@ -10,7 +10,7 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 		<TableContainer>
 			<Table class='md:table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
-					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>Marca</TableHead>

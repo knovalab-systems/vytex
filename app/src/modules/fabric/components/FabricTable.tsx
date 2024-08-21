@@ -13,7 +13,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 		<TableContainer>
 			<Table class='table-auto'>
 				<TableHeader class='sticky top-0'>
-					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Code</TableHead>
 						<TableHead>Nombre</TableHead>
@@ -50,14 +50,12 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell>
 								<StatusLabel status={!fabric.deleted_at} />
 							</TableCell>
-							<TableCell class='py-0'>
-								<ActionsCell
-									update={{
-										path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
-										title: 'Actualizar Insumo',
-									}}
-								/>
-							</TableCell>
+							<ActionsCell
+								update={{
+									path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
+									title: 'Actualizar tela',
+								}}
+							/>
 						</TableRow>
 					)}
 				</For>

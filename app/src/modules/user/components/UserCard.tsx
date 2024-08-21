@@ -51,11 +51,11 @@ function UserCard(props: { user?: GetUserType }) {
 				</div>
 			</div>
 			<div class='flex m-4 justify-between'>
-				<Button type='button' onclick={handleCancel} class='bg-orange-400 hover:bg-orange-600'>
+				<Button type='button' onclick={handleCancel} variant='secondary'>
 					Volver
 				</Button>
-				<Button type='button' onclick={handleEdit} class='bg-practice_date hover:bg-blue-800'>
-					Editar
+				<Button type='button' onclick={handleEdit} variant='action'>
+					Actualizar
 				</Button>
 			</div>
 		</div>

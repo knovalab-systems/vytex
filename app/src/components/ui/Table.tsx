@@ -15,7 +15,7 @@ const Table: Component<ComponentProps<'table'>> = props => {
 
 const TableHeader: Component<ComponentProps<'thead'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
-	return <thead class={cn('bg-gray-50 dark:bg-gray-800', props.class)} {...rest} />;
+	return <thead class={cn('bg-header text-header-foreground', props.class)} {...rest} />;
 };
 
 const TableBody: Component<ComponentProps<'tbody'>> = props => {
@@ -32,7 +32,7 @@ const TableRow: Component<ComponentProps<'tr'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
 	return (
 		<tr
-			class={cn('border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted', props.class)}
+			class={cn('border-b transition-colors hover:bg-muted/10 data-[state=selected]:bg-muted', props.class)}
 			{...rest}
 		/>
 	);
@@ -42,10 +42,7 @@ const TableHead: Component<ComponentProps<'th'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
 	return (
 		<th
-			class={cn(
-				'px-4 py-3.5 text-left align-middle text-muted-foreground [&:has([role=checkbox])]:pr-0 font-semibold',
-				props.class,
-			)}
+			class={cn('px-4 py-3.5 text-left align-middle [&:has([role=checkbox])]:pr-0 font-semibold', props.class)}
 			{...rest}
 		/>
 	);

@@ -1,23 +1,12 @@
 /**@type {import("tailwindcss").Config} */
 export default {
-	darkMode: ['class', '[data-kb-theme="dark"]'],
 	content: ['./index.html', './src/**/*.{ts,tsx}'],
 	theme: {
-		container: {
-			center: true,
-			padding: '2rem',
-			screens: {
-				'2xl': '1400px',
-			},
-		},
 		extend: {
 			width: {
 				'1/8': '12.5%',
 			},
 			colors: {
-				practice_date: '#3C4FED',
-				trailway: '#744AC7',
-				baby_blue: '#BADEF4',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -42,6 +31,22 @@ export default {
 				success: {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))',
+				},
+				nav: {
+					DEFAULT: 'hsl(var(--nav))',
+					foreground: 'hsl(var(--nav-foreground))',
+				},
+				new: {
+					DEFAULT: 'hsl(var(--new))',
+					foreground: 'hsl(var(--new-foreground))',
+				},
+				action: {
+					DEFAULT: 'hsl(var(--action))',
+					foreground: 'hsl(var(--action-foreground))',
+				},
+				header: {
+					DEFAULT: 'hsl(var(--header))',
+					foreground: 'hsl(var(--header-foreground))',
 				},
 				warning: {
 					DEFAULT: 'hsl(var(--warning))',

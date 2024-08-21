@@ -11,7 +11,7 @@ function RoleTable(props: {
 		<TableContainer>
 			<Table class='table-auto font-medium'>
 				<TableHeader class='sticky top-0 z-10'>
-					<TableRow class=' bg-trailway *:text-white hover:bg-trailway/90'>
+					<TableRow>
 						<TableHead>Función</TableHead>
 						<For each={props.roles}>{role => <TableHead>{role.label}</TableHead>}</For>
 					</TableRow>
