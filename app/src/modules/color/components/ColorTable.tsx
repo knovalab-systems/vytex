@@ -10,7 +10,7 @@ function ColorTable(props: { colors?: GetColorsType }) {
 		<TableContainer>
 			<Table class='md:table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
-					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>Hex</TableHead>

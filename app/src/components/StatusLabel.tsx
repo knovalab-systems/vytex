@@ -1,4 +1,7 @@
 import { Show } from 'solid-js';
+import { cn } from '~/lib/utils';
+
+const baseClass = 'inline-flex min-w-20 justify-center px-3 py-1 rounded-full';
 
 /**
  * @param {object} props
@@ -9,15 +12,9 @@ function StatusLabel(props: { status: boolean }) {
 	return (
 		<Show
 			when={props.status}
-			fallback={
-				<div class='inline-flex min-w-20 justify-center px-3 py-1 rounded-full text-red-500 gap-x-2 bg-red-100/60'>
-					Inactivo
-				</div>
-			}
+			fallback={<div class={cn(baseClass, 'text-red-500 gap-x-2 bg-red-100/60')}>Inactivo</div>}
 		>
-			<div class='inline-flex min-w-20 justify-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
-				Activo
-			</div>
+			<div class={cn(baseClass, 'text-emerald-500 gap-x-2 bg-emerald-100/60')}>Activo</div>
 		</Show>
 	);
 }

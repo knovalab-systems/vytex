@@ -16,11 +16,11 @@ function MenuNav(props: { pages: NavPages[] }) {
 					{page => (
 						<li class='my-auto'>
 							<A
-								activeClass='text-indigo-500'
+								activeClass='text-nav'
 								inactiveClass='text-gray-600 '
 								href={page.path}
 								end={page.end}
-								class='w-full my-auto p-3 font-semibold rounded-lg transition-colors duration-200 hover:text-gray-700 hover:shadow hover:bg-slate-300'
+								class='w-full my-auto duration-300 p-3 font-bold rounded-lg transition-colors hover:shadow-md  hover:scale-105 hover:text-nav/80 hover:bg-slate-300'
 							>
 								<span>{page.name}</span>
 							</A>

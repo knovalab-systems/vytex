@@ -40,7 +40,7 @@ function FabricsPage() {
 		<div class='h-full w-full flex flex-col gap-2'>
 			<div>
 				<A href={FABRICS_CREATE_PATH}>
-					<Button class='bg-purple-600 hover:bg-purple-700'>
+					<Button variant='new'>
 						Nueva Tela <AiOutlinePlus class='ml-2' size={22} />
 					</Button>
 				</A>

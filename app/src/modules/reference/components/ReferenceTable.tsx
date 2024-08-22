@@ -8,7 +8,7 @@ function ReferenceTable(props: { references?: GetReferenceType }) {
 		<TableContainer>
 			<Table class='table-auto'>
 				<TableHeader class='sticky top-0'>
-					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Code</TableHead>
 						<TableHead>Estado</TableHead>

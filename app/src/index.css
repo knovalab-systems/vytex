@@ -4,9 +4,6 @@
 
 @layer base {
   :root {
-    --practice_date: #3C4FED;
-    --trailway: #744AC7;
-    --baby_blue: #BADEF4;
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
 
@@ -25,8 +22,8 @@
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 240 5% 80%;
+    --secondary-foreground: 240 6% 10%;
 
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
@@ -37,8 +34,20 @@
     --info: 204 94% 94%;
     --info-foreground: 199 89% 48%;
 
-    --success: 149 80% 90%;
-    --success-foreground: 160 84% 39%;
+    --action: 225 80% 65%;
+    --action-foreground: 225 0% 98%;
+
+    --header: 260 53% 52%;
+    --header-foreground: 260 0% 98%;
+
+    --success: 116 46% 49%;
+    --success-foreground: 116 0% 98%;
+
+    --new: 202 62% 60%;
+    --new-foreground: 202 0% 98%;
+
+    --nav: 234 83% 58%;
+    --nav-foreground: 234 0% 98%;
 
     --warning: 48 96% 89%;
     --warning-foreground: 25 95% 53%;
@@ -51,50 +60,21 @@
     --radius: 0.5rem;
   }
 
-  .dark,
-  [data-kb-theme="dark"] {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+  .designer,
+  [data-kb-theme="designer"] {
+    --new: 271 81% 62%;
+    --new-foreground: 271 0% 98%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --action: 240 76% 62%;
+    --action-foreground: 232 0% 98%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
+    --header: 220 81% 62%;
+    --header-foreground: 291 0% 98%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --info: 204 94% 94%;
-    --info-foreground: 199 89% 48%;
-
-    --success: 149 80% 90%;
-    --success-foreground: 160 84% 39%;
-
-    --warning: 48 96% 89%;
-    --warning-foreground: 25 95% 53%;
-
-    --error: 0 93% 94%;
-    --error-foreground: 0 84% 60%;
-
-    --ring: 240 4.9% 83.9%;
-
-    --radius: 0.5rem;
+    --nav: 239 84% 67%;
+    --nav-foreground: 234 0% 98%;
   }
 }
 
@@ -108,11 +88,5 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
-  }
-}
-
-@media (max-width: 640px) {
-  .container {
-    @apply px-4;
   }
 }

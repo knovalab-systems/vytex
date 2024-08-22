@@ -165,10 +165,10 @@ function ReferenceCreateForm(props: {
 				</div>
 
 				<div class='xl:flex hidden justify-between'>
-					<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
+					<Button type='button' onclick={handleCancel} variant='destructive'>
 						Cancelar
 					</Button>
-					<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
+					<Button type='submit' disabled={form.submitting} variant='success'>
 						Crear
 					</Button>
 				</div>
@@ -334,7 +334,8 @@ function ReferenceCreateForm(props: {
 													</TableContainer>
 													<div class='flex justify-end'>
 														<Button
-															class='whitespace-nowrap gap-1 bg-blue-600 hover:bg-blue-700'
+															variant='action'
+															class='whitespace-nowrap gap-1'
 															onClick={() => {
 																insert(form, fieldResources.name, {
 																	value: {
@@ -357,7 +358,8 @@ function ReferenceCreateForm(props: {
 						</For>
 						<div class='flex justify-end my-2 gap-2'>
 							<Button
-								class='whitespace-nowrap gap-1 bg-blue-600 hover:bg-blue-700'
+								variant='action'
+								class='whitespace-nowrap gap-1'
 								onClick={() => {
 									const values = getValues(form, fieldColors.name);
 									const value = values[fieldColors.items.length - 1];
@@ -371,7 +373,8 @@ function ReferenceCreateForm(props: {
 								Duplicar color
 							</Button>
 							<Button
-								class='whitespace-nowrap gap-1 bg-blue-600 hover:bg-blue-700'
+								variant='action'
+								class='whitespace-nowrap gap-1'
 								onClick={() => {
 									insert(form, fieldColors.name, {
 										value: {
@@ -389,10 +392,10 @@ function ReferenceCreateForm(props: {
 				)}
 			</FieldArray>
 			<div class='flex xl:hidden my-2 justify-between'>
-				<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
+				<Button type='button' onclick={handleCancel} variant='destructive'>
 					Cancelar
 				</Button>
-				<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
+				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>
 			</div>
@@ -413,7 +416,7 @@ function ReferenceCreateForm(props: {
 								/>
 								<Show when={field.value}>
 									<div class='mt-2 flex justify-center w-full'>
-										<Button class='bg-red-500 hover:bg-red-600' onClick={() => reset(form, field.name)}>
+										<Button variant='destructive' onClick={() => reset(form, field.name)}>
 											<FiTrash2 size={22} />
 											<span class='xl:block'>Eliminar foto</span>
 										</Button>
@@ -439,7 +442,7 @@ function ReferenceCreateForm(props: {
 								/>
 								<Show when={field.value}>
 									<div class='mt-2 flex justify-center w-full'>
-										<Button class='bg-red-500 hover:bg-red-600' onClick={() => reset(form, field.name)}>
+										<Button variant='destructive' onClick={() => reset(form, field.name)}>
 											<FiTrash2 size={22} />
 											<span class='xl:block'>Eliminar foto</span>
 										</Button>

@@ -10,7 +10,7 @@ function CustomTable(props: { customs?: GetCustomsType }) {
 		<TableContainer>
 			<Table class='md:table-fixed'>
 				<TableHeader class='sticky top-0 z-10'>
-					<TableRow class=' bg-indigo-500 *:text-white hover:bg-indigo-500'>
+					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Cliente</TableHead>
 						<TableHead>Fecha de creación</TableHead>

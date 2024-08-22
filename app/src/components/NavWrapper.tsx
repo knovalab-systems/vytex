@@ -5,14 +5,18 @@ import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
-import { type JSXElement, Match, Show, Suspense, Switch } from 'solid-js';
+import { type JSXElement, Match, Show, Suspense, Switch, createEffect } from 'solid-js';
 import Loading from '~/components/Loading';
 import MenuNav from '~/components/MenuNav';
 import MobileNav from '~/components/MobileNav';
 import SideBarNav from '~/components/SideBarNav';
 import * as PATHS from '~/constants/paths';
+import { roles } from '~/constants/roles';
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
+import { cn } from '~/lib/utils';
 import { getMyUserQuery } from '~/requests/getMe';
+
+const baseClassMain = 'flex-1 m-2 overflow-auto';
 
 function NavWrapper(props: RouteSectionProps) {
 	const isRouting = useIsRouting();
@@ -34,6 +38,12 @@ function NavWrapper(props: RouteSectionProps) {
 		],
 	};
 
+	createEffect(() => {
+		if (user.isSuccess) {
+			document.documentElement.className = roles[user.data?.role as string].type || '';
+		}
+	});
+
 	return (
 		<Switch>
 			<Match when={user.isPending}>
@@ -43,7 +53,7 @@ function NavWrapper(props: RouteSectionProps) {
 				<div class='flex flex-col w-full h-fit lg:h-full lg:flex-row'>
 					<SideBarNav pages={pages[ADMIN_ROLE]} />
 					<MobileNav pages={pages[ADMIN_ROLE]} />
-					<main class='flex-1 m-2 overflow-auto'>
+					<main class={cn(baseClassMain)}>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}
 						</Suspense>
@@ -55,7 +65,7 @@ function NavWrapper(props: RouteSectionProps) {
 				<div class='flex flex-col w-full h-fit lg:h-full'>
 					<MenuNav pages={pages[user.data?.role as string]} />
 					<MobileNav pages={pages[user.data?.role as string]} />
-					<main class='flex-1 m-2 overflow-auto'>
+					<main class={cn(baseClassMain)}>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}
 						</Suspense>

@@ -113,10 +113,10 @@ function UserCreateForm() {
 					)}
 				</Field>
 				<div class='flex justify-between'>
-					<Button type='button' onclick={handleCancel} class='bg-red-500 hover:bg-red-600'>
+					<Button type='button' variant='destructive' onclick={handleCancel}>
 						Cancelar
 					</Button>
-					<Button type='submit' disabled={form.submitting} class='bg-green-600 hover:bg-green-700'>
+					<Button type='submit' variant='success' disabled={form.submitting}>
 						Crear
 					</Button>
 				</div>

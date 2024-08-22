@@ -40,7 +40,7 @@ function ColorsPage() {
 		<div class='h-full flex flex-col gap-2'>
 			<div>
 				<A href={COLORS_CREATE_PATH}>
-					<Button class='bg-purple-600 hover:bg-purple-700'>
+					<Button variant='new'>
 						Nuevo Color <AiOutlinePlus class='ml-2' size={22} />
 					</Button>
 				</A>

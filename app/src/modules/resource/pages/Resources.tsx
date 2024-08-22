@@ -42,7 +42,7 @@ function ResourcesPage() {
 		<div class='h-full w-full flex flex-col gap-2'>
 			<div>
 				<A href={RESOURCES_CREATE_PATH}>
-					<Button class='bg-purple-600 hover:bg-purple-700'>
+					<Button variant='new'>
 						Nuevo Insumo <AiOutlinePlus class='ml-2' size={22} />
 					</Button>
 				</A>
