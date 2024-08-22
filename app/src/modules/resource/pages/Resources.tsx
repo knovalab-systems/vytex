@@ -3,6 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -31,12 +32,16 @@ function ResourcesPage() {
 	const [page, setPage] = createSignal(1);
 	const resources = createQuery(() => getResourcesQuery(page()));
 	const countResources = createQuery(() => countResourcesQuery());
-	const { colorsQuery: colorsArray } = useColors();
+	const { colorsQuery } = useColors();
 	const pages = createMemo<number>(() => {
 		const count = countResources.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
 		return Math.ceil(safe / QUERY_LIMIT);
 	});
+
+	const isLoading = () => resources.isLoading || colorsQuery.isLoading || countResources.isLoading;
+	const isError = () => resources.isError || colorsQuery.isError || countResources.isError;
+	const isSuccess = () => resources.isSuccess && colorsQuery.isSuccess && countResources.isSuccess;
 
 	return (
 		<div class='h-full w-full flex flex-col gap-2'>
@@ -48,10 +53,13 @@ function ResourcesPage() {
 				</A>
 			</div>
 			<Switch>
-				<Match when={resources.isLoading || countResources.isLoading || colorsArray.isLoading}>
+				<Match when={isError()}>
+					<ErrorMessage title='Error al cargar insumos' />
+				</Match>
+				<Match when={isLoading()}>
 					<Loading label='Cargando insumos' />
 				</Match>
-				<Match when={resources.isSuccess && countResources.isSuccess && colorsArray.isSuccess}>
+				<Match when={isSuccess()}>
 					<ResourceTable resources={resources.data} />
 					<Pagination
 						class='[&>*]:justify-center'

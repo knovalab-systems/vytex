@@ -21,6 +21,10 @@ const supplier = {
 	created_at: null,
 };
 
+vi.mock('~/hooks/useSuppliers', () => ({
+	refetchSuppliers: vi.fn().mockResolvedValue({}),
+}));
+
 describe('SupplierUpdateForm', () => {
 	it('renders correctly', () => {
 		render(() => <SupplierUpdateForm supplier={supplier} />);

@@ -11,12 +11,10 @@ function Home() {
 	return (
 		<Switch
 			fallback={
-				<div class='flex flex-col h-full justify-between'>
-					<div class='mb-auto'>
-						<div class='mx-auto p-4'>
-							<h1 class='text-4xl font-bold text-center'>Home</h1>
-							<p class='text-lg text-center'>Welcome to the temporally home page</p>
-						</div>
+				<div class='flex flex-col w-full h-full'>
+					<div class='p-4'>
+						<h1 class='text-4xl font-bold text-center'>Home</h1>
+						<p class='text-lg text-center'>Welcome to the temporally home page</p>
 					</div>
 				</div>
 			}

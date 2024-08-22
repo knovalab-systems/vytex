@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { STATUS_CODE } from '~/constants/http';
 import { SUPPLIERS_PATH } from '~/constants/paths';
 import { STATUS_OPTIONS } from '~/constants/status';
+import { refetchSuppliers } from '~/hooks/useSuppliers';
 import type { Supplier } from '~/schemas/core';
 import type { GetSupplierType } from '../requests/supplierGet';
 import { updateSupplierRequest } from '../requests/supplierUpdate';
@@ -54,6 +55,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 
 		return updateSupplierRequest(props.supplier?.id || 0, supplier)
 			.then(() => {
+				refetchSuppliers();
 				toast.success('Proveedor actualizado correctamente.');
 				navigate(SUPPLIERS_PATH);
 			})

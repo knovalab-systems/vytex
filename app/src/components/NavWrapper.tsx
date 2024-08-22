@@ -15,6 +15,7 @@ import { roles } from '~/constants/roles';
 import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
 import { cn } from '~/lib/utils';
 import { getMyUserQuery } from '~/requests/getMe';
+import ErrorMessage from './ErrorMessage';
 
 const baseClassMain = 'flex-1 m-2 overflow-auto';
 
@@ -46,6 +47,9 @@ function NavWrapper(props: RouteSectionProps) {
 
 	return (
 		<Switch>
+			<Match when={user.isError}>
+				<ErrorMessage title='Error al cargar usuario' />
+			</Match>
 			<Match when={user.isPending}>
 				<Loading label='Cargando rol' />
 			</Match>

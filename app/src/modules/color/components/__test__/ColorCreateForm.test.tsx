@@ -9,6 +9,10 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/hooks/useColors', () => ({
+	refetchColors: vi.fn().mockResolvedValue({}),
+}));
+
 describe('ColorCreateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();

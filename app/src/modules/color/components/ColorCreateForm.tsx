@@ -6,6 +6,7 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { STATUS_CODE } from '~/constants/http';
 import { COLORS_PATH } from '~/constants/paths';
+import { refetchColors } from '~/hooks/useColors';
 import { createColorRequest } from '../requests/colorCreate';
 import { ColorCreateSchema, type ColorCreateType } from '../schemas/colorCreate';
 
@@ -21,6 +22,7 @@ function ColorCreateForm() {
 		const color = { ...data, hex: `#${data.hex}`, code: String(data.code) };
 		return createColorRequest(color)
 			.then(() => {
+				refetchColors();
 				toast.success('Color creado correctamente');
 				navigate(COLORS_PATH);
 			})
