@@ -1,6 +1,7 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -34,6 +35,9 @@ function OrdersPage() {
 	return (
 		<div class='h-full flex flex-col gap-2'>
 			<Switch>
+				<Match when={orders.isError || countOrders.isError}>
+					<ErrorMessage title='Error al cargar pedidos' />
+				</Match>
 				<Match when={orders.isLoading || countOrders.isLoading}>
 					<Loading label='Cargando ordenes' />
 				</Match>

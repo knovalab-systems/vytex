@@ -3,6 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -46,6 +47,9 @@ function ColorsPage() {
 				</A>
 			</div>
 			<Switch>
+				<Match when={colors.isError || countColors.isError}>
+					<ErrorMessage title='Error al cargar colores' />
+				</Match>
 				<Match when={colors.isLoading || countColors.isLoading}>
 					<Loading label='Cargando colores' />
 				</Match>

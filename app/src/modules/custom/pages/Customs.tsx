@@ -3,6 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
 import {
@@ -46,6 +47,9 @@ function CustomsPage() {
 				</A>
 			</div>
 			<Switch>
+				<Match when={customs.isError || countCustoms.isError}>
+					<ErrorMessage title='Error al cargar pedidos' />
+				</Match>
 				<Match when={customs.isLoading || countCustoms.isLoading}>
 					<Loading label='Cargando pedidos' />
 				</Match>

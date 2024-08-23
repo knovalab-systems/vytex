@@ -2,6 +2,7 @@ import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import ColorUpdateForm from '../components/ColorUpdateForm';
 import { getColorQuery } from '../requests/colorGet';
@@ -21,6 +22,9 @@ function ColorUpdatePage() {
 	return (
 		<div class='flex items-center justify-center h-full'>
 			<Switch>
+				<Match when={color.isError}>
+					<ErrorMessage title='Error al cargar color' />
+				</Match>
 				<Match when={color.isFetching}>
 					<Loading label='Cargando color' />
 				</Match>

@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { STATUS_CODE } from '~/constants/http';
 import { COLORS_PATH } from '~/constants/paths';
 import { STATUS_OPTIONS } from '~/constants/status';
+import { refetchColors } from '~/hooks/useColors';
 import type { Color } from '~/schemas/core';
 import type { GetColorType } from '../requests/colorGet';
 import { updateColorRequest } from '../requests/colorUpdate';
@@ -52,6 +53,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 
 		return updateColorRequest(props.color?.id || 0, color)
 			.then(() => {
+				refetchColors();
 				toast.success('Color actualizado correctamente');
 				navigate(COLORS_PATH);
 			})

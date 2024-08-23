@@ -1,6 +1,7 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
 import CustomCreateForm from '../components/CustomCreateForm';
@@ -25,6 +26,9 @@ function CustomCreatePage() {
 	return (
 		<div class='flex items-center justify-center h-full'>
 			<Switch>
+				<Match when={references.isError}>
+					<ErrorMessage title='Error al cargar referencias' />
+				</Match>
 				<Match when={isLoading()}>
 					<Loading label='Cargando datos' />
 				</Match>

@@ -9,6 +9,10 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/hooks/useSuppliers', () => ({
+	refetchSuppliers: vi.fn().mockResolvedValue({}),
+}));
+
 describe('SupplierCreateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();

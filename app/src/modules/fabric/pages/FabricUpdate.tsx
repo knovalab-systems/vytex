@@ -2,6 +2,7 @@ import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
@@ -28,6 +29,9 @@ function FabricUpdatePage() {
 	return (
 		<div class='flex items-center justify-center h-full'>
 			<Switch>
+				<Match when={fabric.isError}>
+					<ErrorMessage title='Error al cargar tela' />
+				</Match>
 				<Match when={isLoading()}>
 					<Loading label='Cargando datos' />
 				</Match>

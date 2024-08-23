@@ -2,6 +2,7 @@ import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import UserUpdateForm from '../components/UserUpdateForm';
 import { getUserQuery } from '../requests/userGet';
@@ -21,6 +22,9 @@ function UserUpdatePage() {
 	return (
 		<div class='flex items-center justify-center h-full'>
 			<Switch>
+				<Match when={user.isError}>
+					<ErrorMessage title='Error al cargar usuario' />
+				</Match>
 				<Match when={user.isFetching}>
 					<Loading label='Cargando usuario' />
 				</Match>

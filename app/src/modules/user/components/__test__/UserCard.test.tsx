@@ -96,7 +96,7 @@ describe('UserCard', () => {
 
 		render(() => <UserCard user={user as GetUserType} />);
 
-		const edit = screen.getByText('Editar');
+		const edit = screen.getByText('Actualizar');
 		fireEvent.click(edit);
 
 		await waitFor(() => expect(mockNavigate).toBeCalledWith(`${USER_UPDATE_PATH}/1`));

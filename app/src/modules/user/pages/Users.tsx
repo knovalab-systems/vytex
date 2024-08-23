@@ -1,6 +1,7 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowRoles from '~/components/AllowRoles';
+import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import {
 	Pagination,
@@ -53,7 +54,10 @@ function UsersPage() {
 				roleIdFilterValue={roleIdFilter()}
 			/>
 			<Switch>
-				<Match when={users.isLoading && usersCount.isLoading}>
+				<Match when={users.isError || users.isError}>
+					<ErrorMessage title='Error al cargar usuario' />
+				</Match>
+				<Match when={users.isLoading || usersCount.isLoading}>
 					<Loading label='Cargando usuario' />
 				</Match>
 				<Match when={users.isSuccess && usersCount.isSuccess}>
