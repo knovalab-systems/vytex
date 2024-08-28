@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"math/rand"
+	"os"
 	"sync"
 	"time"
 
@@ -15,9 +16,9 @@ import (
 
 func SeedDB(db *gorm.DB) {
 	roles := []string{
-		"31b63ffb-15f5-48d7-9a24-587f437f07ec", // Admin Role
-		"739c8723-85c0-42d8-aef0-5de054890dee", // No Role
-		"b3c766e9-3d70-4f33-a816-b0cd6168da81", // Designer Role
+		os.Getenv("ADMIN_ROLE"),
+		os.Getenv("NO_ROLE"),
+		os.Getenv("DESIGNER_ROLE"),
 	}
 
 	generateUsers(db, roles)
@@ -98,8 +99,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			Role:     u.Role,
 		}
 
-		password := "password123"
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatalf("No se pudo encriptar la contraseña: %v", err)
 		}
@@ -237,91 +237,27 @@ func generateComposition(db *gorm.DB) {
 
 	for i := 0; i < 10; i++ {
 		var algod, elast, lino, nylon, polye, rayon, rayvis, tencel, visco, hilom uint
-		total := 0
 
-		for total < 100 {
-			remaining := 100 - total
-			algod = uint(rand.Intn(remaining + 1))
-			total += int(algod)
-			if total >= 100 {
-				break
-			}
+		comp := []uint{algod, elast, lino, nylon, polye, rayon, rayvis, tencel, visco, hilom}
+		total := 10000
 
-			remaining = 100 - total
-			elast = uint(rand.Intn(remaining + 1))
-			total += int(elast)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			lino = uint(rand.Intn(remaining + 1))
-			total += int(lino)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			nylon = uint(rand.Intn(remaining + 1))
-			total += int(nylon)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			polye = uint(rand.Intn(remaining + 1))
-			total += int(polye)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			rayon = uint(rand.Intn(remaining + 1))
-			total += int(rayon)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			rayvis = uint(rand.Intn(remaining + 1))
-			total += int(rayvis)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			tencel = uint(rand.Intn(remaining + 1))
-			total += int(tencel)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			visco = uint(rand.Intn(remaining + 1))
-			total += int(visco)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			hilom = uint(rand.Intn(remaining + 1))
-			total += int(hilom)
-			if total >= 100 {
-				break
-			}
+		for j := 0; j < len(comp)-1; j++ {
+			comp[j] = uint(rand.Intn(total + 1))
+			total -= int(comp[j])
 		}
+		comp[len(comp)-1] = uint(total)
 
 		composition := models.Composition{
-			Algod:  algod,
-			Elast:  elast,
-			Lino:   lino,
-			Nylon:  nylon,
-			Polye:  polye,
-			Rayon:  rayon,
-			Rayvis: rayvis,
-			Tencel: tencel,
-			Visco:  visco,
-			Hilom:  hilom,
+			Algod:  comp[0],
+			Elast:  comp[1],
+			Lino:   comp[2],
+			Nylon:  comp[3],
+			Polye:  comp[4],
+			Rayon:  comp[5],
+			Rayvis: comp[6],
+			Tencel: comp[7],
+			Visco:  comp[8],
+			Hilom:  comp[9],
 		}
 
 		compositions = append(compositions, composition)

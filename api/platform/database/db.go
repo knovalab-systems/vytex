@@ -22,7 +22,7 @@ func DB() *gorm.DB {
 	var err error
 	var db *gorm.DB
 
-	if os.Getenv("ENV") == "lab" {
+	if os.Getenv("ENV") == "test" {
 		db, err = gorm.Open(postgres.Open(envs.DSNTEST()), &gorm.Config{})
 	} else {
 		db, err = gorm.Open(postgres.Open(envs.DSN()), &gorm.Config{})
