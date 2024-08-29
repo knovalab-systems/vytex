@@ -19,21 +19,21 @@ func Policies(roles models.AllowRoles) echo.MiddlewareFunc {
 			if roles.Admin {
 				role := envs.ADMIN_ROLE()
 				if claims.Role == role {
-					next(c)
+					return next(c)
 				}
 			}
 
 			if roles.Desinger {
 				role := envs.DESIGNER_ROLE()
 				if claims.Role == role {
-					next(c)
+					return next(c)
 				}
 			}
 
 			if roles.NoRole {
 				role := envs.NO_ROLE()
 				if claims.Role == role {
-					next(c)
+					return next(c)
 				}
 			}
 
