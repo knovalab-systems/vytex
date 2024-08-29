@@ -7,6 +7,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/routes"
 	"github.com/knovalab-systems/vytex/platform/database"
 	"github.com/labstack/echo/v4"
+	"os"
 )
 
 // @title Vytex API
@@ -27,6 +28,11 @@ func main() {
 	db := database.DB()
 	query.SetDefault(db)
 
+	// seed test data
+	if os.Getenv("env") == "test" {
+		database.SeedDB(db)
+	}
+	
 	// routes
 	routes.SwaggerRoutes(e)
 	routes.PublicRoutes(e)

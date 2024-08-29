@@ -20,34 +20,69 @@ func SeedDB(db *gorm.DB) {
 		os.Getenv("NO_ROLE"),
 		os.Getenv("DESIGNER_ROLE"),
 	}
-
-	generateUsers(db, roles)
+	var userCount int64
+	db.Model(&models.User{}).Count(&userCount)
+	if userCount == 0 {
+		generateUsers(db, roles)
+	}
 
 	var wg sync.WaitGroup
 
-	stage1Functions := []func(*gorm.DB){generateColors, generateSupplier, generateComposition}
-	for _, fn := range stage1Functions {
-		wg.Add(1)
-		go func(f func(*gorm.DB)) {
-			defer wg.Done()
-			f(db)
-		}(fn)
+	stage1Functions := []struct {
+		model interface{}
+		fn    func(*gorm.DB)
+	}{
+		{&models.Color{}, generateColors},
+		{&models.Supplier{}, generateSupplier},
+		{&models.Composition{}, generateComposition},
+	}
+
+	for _, item := range stage1Functions {
+		var count int64
+		db.Model(item.model).Count(&count)
+		if count == 0 {
+			wg.Add(1)
+			go func(f func(*gorm.DB)) {
+				defer wg.Done()
+				f(db)
+			}(item.fn)
+		}
 	}
 	wg.Wait()
 
-	stage2Functions := []func(*gorm.DB){generateResource, generateFabric, generateImage}
-	for _, fn := range stage2Functions {
-		wg.Add(1)
-		go func(f func(*gorm.DB)) {
-			defer wg.Done()
-			f(db)
-		}(fn)
+	stage2Functions := []struct {
+		model interface{}
+		fn    func(*gorm.DB)
+	}{
+		{&models.Resource{}, generateResource},
+		{&models.Fabric{}, generateFabric},
+		{&models.Image{}, generateImage},
+	}
+
+	for _, item := range stage2Functions {
+		var count int64
+		db.Model(item.model).Count(&count)
+		if count == 0 {
+			wg.Add(1)
+			go func(f func(*gorm.DB)) {
+				defer wg.Done()
+				f(db)
+			}(item.fn)
+		}
 	}
 	wg.Wait()
 
-	generateReference(db)
+	var referenceCount int64
+	db.Model(&models.Reference{}).Count(&referenceCount)
+	if referenceCount == 0 {
+		generateReference(db)
+	}
 
-	generateCustoms(db)
+	var customCount int64
+	db.Model(&models.Custom{}).Count(&customCount)
+	if customCount == 0 {
+		generateCustoms(db)
+	}
 }
 
 func reduceStringLength(input string, length int) string {
