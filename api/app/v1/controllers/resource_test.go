@@ -82,7 +82,9 @@ func TestReadResource(t *testing.T) {
 
 		// test
 		err := resourceController.ReadResource(c)
-		assert.Error(t, err)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
 	})
 
 	t.Run("Not found resource", func(t *testing.T) {
@@ -375,9 +377,9 @@ func TestUpdateResource(t *testing.T) {
 
 		// test
 		err := resourceController.UpdateResource(c)
-
-		assert.Error(t, err)
-
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
 	})
 
 	t.Run("Fail update, resource code exits", func(t *testing.T) {

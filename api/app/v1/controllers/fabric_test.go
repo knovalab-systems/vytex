@@ -386,9 +386,9 @@ func TestUpdateFabric(t *testing.T) {
 
 		// test
 		err := fabricController.UpdateFabric(c)
-
-		assert.Error(t, err)
-
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
 	})
 
 	t.Run("Fail update, fabric code exits", func(t *testing.T) {

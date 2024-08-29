@@ -23,3 +23,8 @@ func (m *ReferenceMock) CreateReference(req *models.ReferenceCreateBody) (*model
 	args := m.Called()
 	return &models.Reference{}, args.Error(0)
 }
+
+func (m *ReferenceMock) UpdateTimesReference(body *models.TimeByTaskReferenceUpdate) (*models.Reference, error) {
+	args := m.Called()
+	return args.Get(0).(*models.Reference), args.Error(1)
+}

@@ -249,17 +249,18 @@ func checkFabricExists(code string) error {
 
 func getComposition(c *models.Composition) (*models.Composition, error) {
 	table := query.Composition
-	compMap := make(map[string]interface{}) // for allow zero values
-	compMap["algod"] = c.Algod
-	compMap["elast"] = c.Elast
-	compMap["lino"] = c.Lino
-	compMap["nylon"] = c.Nylon
-	compMap["polye"] = c.Polye
-	compMap["rayon"] = c.Rayon
-	compMap["rayvis"] = c.Rayvis
-	compMap["tencel"] = c.Tencel
-	compMap["visco"] = c.Visco
-	compMap["hilom"] = c.Hilom
+	compMap := map[string]interface{}{
+		"algod":  c.Algod,
+		"elast":  c.Elast,
+		"lino":   c.Lino,
+		"nylon":  c.Nylon,
+		"polye":  c.Polye,
+		"rayon":  c.Rayon,
+		"rayvis": c.Rayvis,
+		"tencel": c.Tencel,
+		"visco":  c.Visco,
+		"hilom":  c.Hilom,
+	} // for allow zero values
 
 	var totalComp uint = 0
 	for _, v := range compMap {

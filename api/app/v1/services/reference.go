@@ -78,6 +78,92 @@ func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*m
 	return []*models.AggregateData{&aggregateElem}, nil
 }
 
+func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*models.Reference, error) {
+	// check reference exists
+	err := checkReferenceExists(b.Code)
+	if err != nil {
+		return nil, err
+	}
+
+	// format fabrics n resources
+	fabricsByReference := []models.FabricByReference{}
+	resourcesByReference := []models.ResourceByReference{}
+	for _, color := range b.Colors {
+		for _, fabric := range color.Fabrics {
+			fabricsByReference = append(fabricsByReference,
+				models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
+		}
+		for _, resource := range color.Resources {
+			resourcesByReference = append(resourcesByReference,
+				models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
+		}
+	}
+
+	// format colors
+	colorsByReference := []models.ColorByReference{}
+	for _, color := range b.Colors {
+		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
+	}
+
+	// create reference
+	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back, Colors: colorsByReference, TimeByTaskID: 1}
+
+	err = query.Reference.Create(reference)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return reference, nil
+}
+
+func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpdate) (*models.Reference, error) {
+
+	table := query.Reference
+
+	reference, err := table.Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	timeByTask, err := getTimeByTask(&b.TimeByTask)
+	if err != nil {
+		return nil, err
+	}
+
+	if reference.TimeByTaskID == 1 {
+		_, err := table.Where(table.ID.Eq(reference.ID)).Update(table.TimeByTaskID, timeByTask.ID)
+		if err != nil {
+			return nil, err
+		}
+		reference.TimeByTaskID = timeByTask.ID
+		reference.TimeByTask = timeByTask
+		return reference, nil
+	}
+
+	reference.ID = 0
+	reference.TimeByTaskID = timeByTask.ID
+
+	err = table.Create(reference)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return reference, nil
+}
+
+func checkReferenceExists(code string) error {
+	t := query.Reference
+
+	_, err := t.Unscoped().Where(t.Code.Eq(code)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil
+		}
+		return problems.ServerError()
+	}
+	return problems.ReferenceExists()
+}
+
 func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 	if fields != "" {
 		table := query.Reference
@@ -111,6 +197,11 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 			case "front_image":
 				f = append(f, table.Front)
 				s = s.Preload(table.FrontImage)
+			case "time_by_task_ID":
+				f = append(f, table.TimeByTaskID)
+			case "time_by_task":
+				f = append(f, table.TimeByTaskID)
+				s = s.Preload(table.TimeByTask)
 			case "back":
 				f = append(f, table.Back)
 			case "back_image":
@@ -128,53 +219,44 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 	return s
 }
 
-func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*models.Reference, error) {
-	// check reference exists
-	err := checkReferenceExists(b.Code)
+func getTimeByTask(c *models.TimeByTask) (*models.TimeByTask, error) {
+	table := query.TimeByTask
+	timeMap := map[string]interface{}{
+		"trazar":    c.Trazar,
+		"plantear":  c.Plantear,
+		"tender":    c.Tender,
+		"cortar":    c.Cortar,
+		"paquetear": c.Paquetear,
+		"filetear":  c.Filetear,
+		"armar":     c.Armar,
+		"tapar":     c.Tapar,
+		"figurar":   c.Figurar,
+		"marquilla": c.Marquilla,
+		"cerrar":    c.Cerrar,
+		"gafetes":   c.Gafetes,
+		"presillar": c.Presillar,
+		"pulir":     c.Pulir,
+		"revisar":   c.Revisar,
+		"acabados":  c.Acabados,
+		"bolsas":    c.Bolsas,
+		"tiquetear": c.Tiquetear,
+		"empacar":   c.Empacar,
+		"organizar": c.Organizar,
+		"grabar":    c.Grabar,
+		"paletizar": c.Paletizar,
+	} // for allow zero values
+
+	timeByTask, err := table.Where(field.Attrs(timeMap)).First()
 	if err != nil {
-		return nil, err
-	}
-
-	// format fabrics n resources
-	fabricsByReference := []models.FabricByReference{}
-	resourcesByReference := []models.ResourceByReference{}
-	for _, color := range b.Colors {
-		for _, fabric := range color.Fabrics {
-			fabricsByReference = append(fabricsByReference,
-				models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			err := table.Create(c)
+			if err != nil {
+				return nil, err
+			}
+			return c, nil
 		}
-		for _, resource := range color.Resources {
-			resourcesByReference = append(resourcesByReference,
-				models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
-		}
-	}
-
-	// format colors
-	colorsByReference := []models.ColorByReference{}
-	for _, color := range b.Colors {
-		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
-	}
-
-	// create reference
-	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back, Colors: colorsByReference}
-
-	err = query.Reference.Create(reference)
-	if err != nil {
 		return nil, problems.ServerError()
 	}
 
-	return reference, nil
-}
-
-func checkReferenceExists(code string) error {
-	t := query.Reference
-
-	_, err := t.Unscoped().Where(t.Code.Eq(code)).First()
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	return problems.ReferenceExists()
+	return timeByTask, nil
 }

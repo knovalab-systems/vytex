@@ -30,6 +30,7 @@ var (
 	ResourceByReference *resourceByReference
 	Session             *session
 	Supplier            *supplier
+	TimeByTask          *timeByTask
 	User                *user
 )
 
@@ -48,6 +49,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	ResourceByReference = &Q.ResourceByReference
 	Session = &Q.Session
 	Supplier = &Q.Supplier
+	TimeByTask = &Q.TimeByTask
 	User = &Q.User
 }
 
@@ -67,6 +69,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		ResourceByReference: newResourceByReference(db, opts...),
 		Session:             newSession(db, opts...),
 		Supplier:            newSupplier(db, opts...),
+		TimeByTask:          newTimeByTask(db, opts...),
 		User:                newUser(db, opts...),
 	}
 }
@@ -87,6 +90,7 @@ type Query struct {
 	ResourceByReference resourceByReference
 	Session             session
 	Supplier            supplier
+	TimeByTask          timeByTask
 	User                user
 }
 
@@ -108,6 +112,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		ResourceByReference: q.ResourceByReference.clone(db),
 		Session:             q.Session.clone(db),
 		Supplier:            q.Supplier.clone(db),
+		TimeByTask:          q.TimeByTask.clone(db),
 		User:                q.User.clone(db),
 	}
 }
@@ -136,6 +141,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		ResourceByReference: q.ResourceByReference.replaceDB(db),
 		Session:             q.Session.replaceDB(db),
 		Supplier:            q.Supplier.replaceDB(db),
+		TimeByTask:          q.TimeByTask.replaceDB(db),
 		User:                q.User.replaceDB(db),
 	}
 }
@@ -154,6 +160,7 @@ type queryCtx struct {
 	ResourceByReference IResourceByReferenceDo
 	Session             ISessionDo
 	Supplier            ISupplierDo
+	TimeByTask          ITimeByTaskDo
 	User                IUserDo
 }
 
@@ -172,6 +179,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		ResourceByReference: q.ResourceByReference.WithContext(ctx),
 		Session:             q.Session.WithContext(ctx),
 		Supplier:            q.Supplier.WithContext(ctx),
+		TimeByTask:          q.TimeByTask.WithContext(ctx),
 		User:                q.User.WithContext(ctx),
 	}
 }

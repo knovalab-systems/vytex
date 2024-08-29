@@ -56,7 +56,7 @@ func (m *FabricController) ReadFabrics(c echo.Context) error {
 // @Success      200 {object} models.Fabric
 // @Failure      400
 // @Failure      500
-// @Router       /fabrics/fabricId [get]
+// @Router       /fabrics/{fabricId} [get]
 func (m *FabricController) ReadFabric(c echo.Context) error {
 	u := new(models.FabricRead)
 
@@ -149,7 +149,7 @@ func (m *FabricController) CreateFabric(c echo.Context) error {
 // @Success      200 {object} models.Fabric
 // @Failure      400
 // @Failure      500
-// @Router       /fabrics/fabricId [patch]
+// @Router       /fabrics/{fabricId} [patch]
 func (m *FabricController) UpdateFabric(c echo.Context) error {
 	u := new(models.FabricUpdateBody)
 
@@ -164,10 +164,10 @@ func (m *FabricController) UpdateFabric(c echo.Context) error {
 	}
 
 	// update
-	resource, err := m.FabricRepository.UpdateFabric(u)
+	fabric, err := m.FabricRepository.UpdateFabric(u)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, resource)
+	return c.JSON(http.StatusOK, fabric)
 }

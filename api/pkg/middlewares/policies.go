@@ -30,6 +30,13 @@ func Policies(roles models.AllowRoles) echo.MiddlewareFunc {
 				}
 			}
 
+			if roles.ProSupervisor {
+				role := envs.PRO_SUPERVISOR_ROLE()
+				if claims.Role == role {
+					return next(c)
+				}
+			}
+
 			if roles.NoRole {
 				role := envs.NO_ROLE()
 				if claims.Role == role {
