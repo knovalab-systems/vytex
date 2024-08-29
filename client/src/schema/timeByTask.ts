@@ -2,11 +2,10 @@ import type { MergeCoreCollection } from '../index.js';
 
 /**
  * vytex_compositions type
- * number fields (except id) range from 0 to 10000
  */
-export type VytexComposition<Schema = any> = MergeCoreCollection<
+export type VytexTimeByTask<Schema = any> = MergeCoreCollection<
 	Schema,
-	'vytex_compositions',
+	'vytex_time-by-task',
 	{
 		id: number;
 		algod: number;

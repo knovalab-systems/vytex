@@ -1,46 +1,43 @@
 import { A } from '@solidjs/router';
 import { AiFillEdit, AiOutlinePlus } from 'solid-icons/ai';
-import { Show } from 'solid-js';
+import { CgNotes } from 'solid-icons/cg';
+import { For, type JSXElement, Show } from 'solid-js';
 import { cn } from '~/lib/utils';
 import { Button } from './ui/Button';
 import { TableCell } from './ui/Table';
 
+type Icons = 'update' | 'details' | 'create';
+
 type Action = {
 	title: string;
+	label: string;
 	path: string;
+	icon: Icons;
 };
 
-const baseClass = 'inline-flex gap-2 p-2 min-w-16';
+const baseClass = 'inline-flex gap-2 p-2 pr-3 min-w-16';
 
-function ActionsCell(props: { update?: Action; details?: Action; create?: Action }) {
+function ActionsCell(props: { actions: Action[] }) {
+	const icons: Record<Icons, () => JSXElement> = {
+		update: () => <AiFillEdit size={20} />,
+		details: () => <CgNotes size={20} />,
+		create: () => <AiOutlinePlus size={20} />,
+	};
+
 	return (
 		<TableCell>
 			<div class='flex gap-1'>
-				<Show when={props.update}>
-					<A href={props.update?.path as string} title={props.update?.title}>
-						<Button variant='action' class={cn(baseClass)}>
-							<AiFillEdit size={20} />
-							Actualizar
-						</Button>
-					</A>
-				</Show>
-				<Show when={props.details}>
-					<A href={props.details?.path as string} title={props.details?.title}>
-						<Button variant='action' class={cn(baseClass)}>
-							<AiOutlinePlus size={20} />
-							Detalles
-						</Button>
-					</A>
-				</Show>
-				<Show when={props.create}>
-					<A href={props.create?.path as string} title={props.create?.title}>
-						<Button variant='action' class={cn(baseClass)}>
-							<AiOutlinePlus size={20} />
-							Agregar
-						</Button>
-					</A>
-				</Show>
-				<Show when={Object.values(props).length === 0}>Acciones</Show>
+				<For each={props.actions}>
+					{a => (
+						<A href={a.path} title={a.title}>
+							<Button variant='action' class={cn(baseClass)}>
+								{icons[a.icon]()}
+								{a.label}
+							</Button>
+						</A>
+					)}
+				</For>
+				<Show when={Object.values(props.actions).length === 0}>Acciones</Show>
 			</div>
 		</TableCell>
 	);

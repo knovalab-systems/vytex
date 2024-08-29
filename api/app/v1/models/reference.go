@@ -18,7 +18,7 @@ type Reference struct {
 	FrontImage   *Image             `json:"front_image,omitempty" gorm:"foreignKey:Front"`
 	Back         string             `json:"back,omitempty"`
 	BackImage    *Image             `json:"back_image,omitempty" gorm:"foreignKey:Back"`
-	TimeByTaskID uint               `json:"time_by_task_ID,omitempty"`
+	TimeByTaskID uint               `json:"time_by_task_id,omitempty"`
 	TimeByTask   *TimeByTask        `json:"time_by_task,omitempty"`
 	Colors       []ColorByReference `json:"colors,omitempty"`
 }

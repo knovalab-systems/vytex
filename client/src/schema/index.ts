@@ -27,6 +27,7 @@ export * from './settings.js';
 export * from './share.js';
 export * from './size.js';
 export * from './supplier.js';
+export * from './timeByTask.js';
 export * from './translation.js';
 export * from './user.js';
 export * from './version.js';

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@solidjs/testing-library';
+import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import type { JSXElement } from 'solid-js';
 import ActionsCell from '../ActionsCell';
@@ -17,19 +17,36 @@ describe('ActionsCell', () => {
 	});
 
 	it('renders correctly on empty', () => {
-		render(() => <ActionsCell />);
+		render(() => <ActionsCell actions={[]} />);
 
 		const emptyTitle = screen.getByText('Acciones');
 
 		expect(emptyTitle).toBeInTheDocument();
 	});
 
-	it('renders correctly on update n details n create', () => {
+	it('renders correctly on actions', () => {
 		render(() => (
 			<ActionsCell
-				update={{ path: '', title: '' }}
-				details={{ path: '', title: '' }}
-				create={{ path: '', title: '' }}
+				actions={[
+					{
+						path: '/',
+						title: 'Agregar',
+						label: 'Agregar',
+						icon: 'create',
+					},
+					{
+						path: '/',
+						title: 'Detalles',
+						label: 'Detalles',
+						icon: 'details',
+					},
+					{
+						path: '/',
+						title: 'Actualizar',
+						label: 'Actualizar',
+						icon: 'update',
+					},
+				]}
 			/>
 		));
 
@@ -42,30 +59,41 @@ describe('ActionsCell', () => {
 		expect(createButton).toBeInTheDocument();
 	});
 
-	it('calls the Updates correctly', () => {
-		render(() => <ActionsCell update={{ path: '', title: '' }} />);
+	it('calls the Updates correctly', async () => {
+		render(() => (
+			<ActionsCell
+				actions={[
+					{
+						path: '/',
+						title: 'Agregar',
+						label: 'Agregar',
+						icon: 'create',
+					},
+					{
+						path: '/',
+						title: 'Detalles',
+						label: 'Detalles',
+						icon: 'details',
+					},
+					{
+						path: '/',
+						title: 'Actualizar',
+						label: 'Actualizar',
+						icon: 'update',
+					},
+				]}
+			/>
+		));
 
 		const updateButton = screen.getByText('Actualizar');
-		fireEvent.click(updateButton);
-
-		expect(actionMock).toBeCalled();
-	});
-
-	it('calls the Details correctly', () => {
-		render(() => <ActionsCell details={{ path: '', title: '' }} />);
-
 		const detailsButton = screen.getByText('Detalles');
-		fireEvent.click(detailsButton);
-
-		expect(actionMock).toBeCalled();
-	});
-
-	it('calls the Create correctly', () => {
-		render(() => <ActionsCell create={{ path: '', title: '' }} />);
-
 		const createButton = screen.getByText('Agregar');
+		fireEvent.click(updateButton);
+		fireEvent.click(detailsButton);
 		fireEvent.click(createButton);
 
-		expect(actionMock).toBeCalled();
+		await waitFor(() => {
+			expect(actionMock).toBeCalledTimes(3);
+		});
 	});
 });
