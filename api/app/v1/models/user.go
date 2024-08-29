@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/knovalab-systems/vytex/pkg/envs"
 	"gorm.io/gorm"
 )
 
@@ -23,11 +22,6 @@ type User struct {
 func (b *User) BeforeCreate(tx *gorm.DB) (err error) {
 	if len(b.ID) == 0 {
 		b.ID = uuid.New().String()
-
-	}
-	if len(b.Role) == 0 {
-		b.Role = envs.NO_ROLE()
-
 	}
 	return nil
 }

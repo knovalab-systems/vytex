@@ -2,9 +2,10 @@ package formats
 
 import (
 	"errors"
+	"slices"
 
-	"github.com/google/uuid"
 	"github.com/knovalab-systems/vytex/app/v1/models"
+	"github.com/knovalab-systems/vytex/pkg/envs"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -47,10 +48,9 @@ func UserUpdateMap(m *models.UserUpdateBody) (map[string]interface{}, error) {
 }
 
 func IsRole(role string) bool {
-
-	if err := uuid.Validate(role); err != nil {
-		return false
-	}
-
-	return true
+	admin := envs.ADMIN_ROLE()
+	norole := envs.NO_ROLE()
+	designer := envs.DESIGNER_ROLE()
+	roles := []string{admin, norole, designer}
+	return slices.IndexFunc(roles, func(s string) bool { return s == role }) != -1
 }

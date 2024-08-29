@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"log"
 	"mime/multipart"
 	"net/http"
 	"net/http/httptest"
@@ -76,7 +75,6 @@ func TestCreateImage(t *testing.T) {
 
 		err := imageController.CreateImage(c)
 		if assert.Error(t, err) {
-			log.Println(err)
 			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
 		}
 	})
