@@ -22,3 +22,9 @@ type Session struct {
 	UserID       string
 	User         User
 }
+
+type AllowRoles struct {
+	Admin    bool
+	NoRole   bool
+	Desinger bool
+}
