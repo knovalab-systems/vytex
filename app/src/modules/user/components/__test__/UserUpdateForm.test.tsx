@@ -80,6 +80,22 @@ describe('UserUpdateForm', () => {
 		expect(errorPasswordField).toBeInTheDocument();
 	});
 
+	it('shows bad format password error', async () => {
+		const user = {
+			name: 'Jose',
+			username: 'jose',
+			deleted_at: 'delete',
+		};
+		render(() => <UserUpdateForm user={user as GetUserType} />);
+		const passwordField = screen.getByPlaceholderText('********');
+		const submitButton = screen.getByText('Actualizar');
+
+		fireEvent.input(passwordField, { target: { value: '12345678' } });
+		fireEvent.click(submitButton);
+		const errorPasswordField = await screen.findByText('La contraseña debe contener mayúsculas, minúsculas y números.');
+		expect(errorPasswordField).toBeInTheDocument();
+	});
+
 	it('calls submit succesfully', async () => {
 		const requestMock = vi.spyOn(requests, 'updateUserRequest').mockResolvedValue({
 			id: '',
@@ -165,7 +181,7 @@ describe('UserUpdateForm', () => {
 
 		fireEvent.input(nameField, { target: { value: 'John Doe' } });
 		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
-		fireEvent.input(passwordField, { target: { value: '12345678' } });
+		fireEvent.input(passwordField, { target: { value: 'Passwd12' } });
 
 		const submitButton = screen.getByText('Actualizar');
 		fireEvent.click(submitButton);
@@ -274,7 +290,7 @@ describe('UserUpdateForm', () => {
 
 			fireEvent.input(nameField, { target: { value: 'John Doe' } });
 			fireEvent.input(usernameField, { target: { value: 'jdoe' } });
-			fireEvent.input(passwordField, { target: { value: '12345678' } });
+			fireEvent.input(passwordField, { target: { value: 'Passwd12' } });
 
 			const submitButton = screen.getByText('Actualizar');
 			fireEvent.click(submitButton);

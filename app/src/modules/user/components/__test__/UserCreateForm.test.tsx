@@ -61,6 +61,17 @@ describe('UserCreateForm', () => {
 		expect(errorPasswordField).toBeInTheDocument();
 	});
 
+	it('shows bad format password error', async () => {
+		render(() => <UserCreateForm />);
+		const passwordField = screen.getByPlaceholderText('********');
+		const submitButton = screen.getByText('Crear');
+
+		fireEvent.input(passwordField, { target: { value: '12345678' } });
+		fireEvent.click(submitButton);
+		const errorPasswordField = await screen.findByText('La contraseña debe contener mayúsculas, minúsculas y números.');
+		expect(errorPasswordField).toBeInTheDocument();
+	});
+
 	it('calls submit succesfully', async () => {
 		const requestMock = vi.spyOn(requests, 'createUserRequest').mockResolvedValue({
 			id: '',
@@ -109,7 +120,7 @@ describe('UserCreateForm', () => {
 
 		fireEvent.input(nameField, { target: { value: 'John Doe' } });
 		fireEvent.input(usernameField, { target: { value: 'jdoe' } });
-		fireEvent.input(passwordField, { target: { value: '12345678' } });
+		fireEvent.input(passwordField, { target: { value: 'Passwd12' } });
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -181,7 +192,7 @@ describe('UserCreateForm', () => {
 
 			fireEvent.input(nameField, { target: { value: 'John Doe' } });
 			fireEvent.input(usernameField, { target: { value: 'jdoe' } });
-			fireEvent.input(passwordField, { target: { value: '12345678' } });
+			fireEvent.input(passwordField, { target: { value: 'Passwd12' } });
 
 			const submitButton = screen.getByText('Crear');
 			fireEvent.click(submitButton);
