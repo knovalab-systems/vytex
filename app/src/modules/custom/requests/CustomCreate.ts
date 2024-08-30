@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { createCustom, readReferences } from '@vytex/client';
 import { client } from '~/lib/client';
-import type { Custom } from '~/schemas/core';
+import type { Custom } from '~/types/core';
 
 export async function createCustomRequest(custom: Custom) {
 	return await client.request(createCustom(custom));

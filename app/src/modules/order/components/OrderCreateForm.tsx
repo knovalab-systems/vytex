@@ -16,10 +16,10 @@ import {
 import { Input } from '~/components/ui/Input';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { CUSTOMS_PATH } from '~/constants/paths';
+import { DEFAULT_SIZES, SIZES } from '~/constants/sizes';
 import { useColors } from '~/hooks/useColors';
 import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
-import type { Order } from '~/schemas/core';
-import { SIZES, defaultSizeValues } from '~/schemas/sizes';
+import type { Order } from '~/types/core';
 import { type RefByOrderCreate, createOrderRequest } from '../request/OrderCreate';
 import { OrderCreateSchema, type OrderCreateType } from '../schemas/orderCreate';
 
@@ -63,7 +63,7 @@ function OrderCreateForm(props: { references: RefByOrderCreate; custom?: GetCust
 		validate: valiForm(OrderCreateSchema),
 		initialValues: {
 			colorByRef: 0,
-			sizes: defaultSizeValues,
+			sizes: DEFAULT_SIZES,
 		},
 	});
 

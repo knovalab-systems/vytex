@@ -19,7 +19,7 @@ import { STATUS_CODE } from '~/constants/http';
 import { RESOURCES_PATH } from '~/constants/paths';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
-import type { Resource } from '~/schemas/core';
+import type { Resource } from '~/types/core';
 import { createResourceRequest } from '../requests/resourceCreate';
 import { ResourceCreateSchema, type ResourceCreateType } from '../schema/resourceCreate';
 
