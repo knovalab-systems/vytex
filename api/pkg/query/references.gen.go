@@ -32,6 +32,7 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 	_reference.CreatedAt = field.NewTime(tableName, "created_at")
 	_reference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_reference.CreatedBy = field.NewString(tableName, "created_by")
+	_reference.Track = field.NewString(tableName, "track")
 	_reference.Front = field.NewString(tableName, "front")
 	_reference.Back = field.NewString(tableName, "back")
 	_reference.TimeByTaskID = field.NewUint(tableName, "time_by_task_id")
@@ -210,6 +211,7 @@ type reference struct {
 	CreatedAt    field.Time
 	DeletedAt    field.Field
 	CreatedBy    field.String
+	Track        field.String
 	Front        field.String
 	Back         field.String
 	TimeByTaskID field.Uint
@@ -243,6 +245,7 @@ func (r *reference) updateTableName(table string) *reference {
 	r.CreatedAt = field.NewTime(table, "created_at")
 	r.DeletedAt = field.NewField(table, "deleted_at")
 	r.CreatedBy = field.NewString(table, "created_by")
+	r.Track = field.NewString(table, "track")
 	r.Front = field.NewString(table, "front")
 	r.Back = field.NewString(table, "back")
 	r.TimeByTaskID = field.NewUint(table, "time_by_task_id")
@@ -262,12 +265,13 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 13)
+	r.fieldMap = make(map[string]field.Expr, 14)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["created_at"] = r.CreatedAt
 	r.fieldMap["deleted_at"] = r.DeletedAt
 	r.fieldMap["created_by"] = r.CreatedBy
+	r.fieldMap["track"] = r.Track
 	r.fieldMap["front"] = r.Front
 	r.fieldMap["back"] = r.Back
 	r.fieldMap["time_by_task_id"] = r.TimeByTaskID

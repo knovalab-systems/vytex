@@ -13,6 +13,7 @@ type Reference struct {
 	CreatedAt    *time.Time         `json:"created_at,omitempty"`
 	DeletedAt    gorm.DeletedAt     `json:"deleted_at,omitempty" gorm:"index"`
 	CreatedBy    string             `json:"created_by,omitempty"`
+	Track        string             `json:"track,omitempty" gorm:"type:uuid"`
 	User         *User              `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
 	Front        string             `json:"front,omitempty"`
 	FrontImage   *Image             `json:"front_image,omitempty" gorm:"foreignKey:Front"`
@@ -21,6 +22,14 @@ type Reference struct {
 	TimeByTaskID uint               `json:"time_by_task_id,omitempty"`
 	TimeByTask   *TimeByTask        `json:"time_by_task,omitempty"`
 	Colors       []ColorByReference `json:"colors,omitempty"`
+}
+
+// BeforeCreate will set a UUID
+func (b *Reference) BeforeCreate(tx *gorm.DB) (err error) {
+	if b.Track == "" {
+		b.Track = uuid.New().String()
+	}
+	return nil
 }
 
 type ColorByReference struct {
@@ -97,6 +106,11 @@ type ResourceByReferenceCreate struct {
 }
 
 type TimeByTaskReferenceUpdate struct {
+	ID         uint          `param:"referenceId" validate:"required"`
+	TimeByTask TimeByTaskDTO `json:"time_by_task"`
+}
+
+type ReferenceRead struct {
 	ID uint `param:"referenceId" validate:"required"`
-	TimeByTask
+	Query
 }

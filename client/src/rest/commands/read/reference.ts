@@ -1,6 +1,7 @@
 import type { VytexReference } from '../../../schema/reference';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadReferenceOutput<
 	Schema,
@@ -22,3 +23,26 @@ export const readReferences =
 		params: query ?? {},
 		method: 'GET',
 	});
+
+/**
+ * List an existing reference by primary key.
+ *
+ * @param key The primary key of the reference
+ * @param query  The query parameters
+ * @returns Returns the requested reference object.
+ * @throws Will throw if key is empty
+ */
+export const readReference =
+	<Schema, const TQuery extends Query<Schema, VytexReference<Schema>>>(
+		key: VytexReference<Schema>['id'],
+		query?: TQuery,
+	): RestCommand<ReadReferenceOutput<Schema, TQuery>, Schema> =>
+	() => {
+		throwIfEmpty(String(key), 'Key cannot be empty');
+
+		return {
+			path: `/references/${key}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};

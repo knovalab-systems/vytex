@@ -26,22 +26,45 @@ func (m *ReferenceService) SelectReferences(q *models.Query) ([]*models.Referenc
 	// def subquery
 	table2 := table.As("u2")
 	subQuery := table.Unscoped().
-		Group(table.Code).
-		Select(table.Code, table.CreatedAt.Max().As("created_at_max")).
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
 		As("u2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	s = referenceFields(s, q.Fields)
 
 	// run query
-	references, err := s.Unscoped().LeftJoin(subQuery, table2.Code.EqCol(table.Code)).
-		Where(field.NewInt64("u2", "created_at_max").EqCol(table.CreatedAt)).
+	references, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(field.NewInt64("u2", "id_max").EqCol(table.ID)).
 		Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
 	return references, nil
+}
+
+func (m *ReferenceService) SelectReference(q *models.ReferenceRead) (*models.Reference, error) {
+	// sanitize
+	formats.SanitizedQuery(&q.Query)
+
+	// def query
+	table := query.Reference
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = referenceFields(s, q.Fields)
+
+	// run query
+	reference, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return reference, nil
 }
 
 func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*models.AggregateData, error) {
@@ -141,6 +164,7 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 	}
 
 	reference.ID = 0
+	reference.CreatedAt = nil
 	reference.TimeByTaskID = timeByTask.ID
 
 	err = table.Create(reference)
@@ -178,6 +202,12 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 				continue
 			}
 
+			if strings.HasPrefix(v, "time_by_task.") {
+				f = append(f, table.TimeByTaskID)
+				s = s.Preload(table.TimeByTask)
+				continue
+			}
+
 			switch v {
 			case "id":
 				f = append(f, table.ID)
@@ -192,6 +222,8 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 			case "user":
 				f = append(f, table.CreatedBy)
 				s = s.Preload(table.User)
+			case "track":
+				f = append(f, table.Track)
 			case "front":
 				f = append(f, table.Front)
 			case "front_image":
@@ -219,44 +251,20 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 	return s
 }
 
-func getTimeByTask(c *models.TimeByTask) (*models.TimeByTask, error) {
+func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
 	table := query.TimeByTask
-	timeMap := map[string]interface{}{
-		"trazar":    c.Trazar,
-		"plantear":  c.Plantear,
-		"tender":    c.Tender,
-		"cortar":    c.Cortar,
-		"paquetear": c.Paquetear,
-		"filetear":  c.Filetear,
-		"armar":     c.Armar,
-		"tapar":     c.Tapar,
-		"figurar":   c.Figurar,
-		"marquilla": c.Marquilla,
-		"cerrar":    c.Cerrar,
-		"gafetes":   c.Gafetes,
-		"presillar": c.Presillar,
-		"pulir":     c.Pulir,
-		"revisar":   c.Revisar,
-		"acabados":  c.Acabados,
-		"bolsas":    c.Bolsas,
-		"tiquetear": c.Tiquetear,
-		"empacar":   c.Empacar,
-		"organizar": c.Organizar,
-		"grabar":    c.Grabar,
-		"paletizar": c.Paletizar,
-	} // for allow zero values
+	timeByTask := formats.TimeByTaskDTOFormat(*t)
 
-	timeByTask, err := table.Where(field.Attrs(timeMap)).First()
+	timeByTask, err := table.Where(field.Attrs(timeByTask)).First()
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			err := table.Create(c)
+			err := table.Create(timeByTask)
 			if err != nil {
 				return nil, err
 			}
-			return c, nil
+			return timeByTask, nil
 		}
 		return nil, problems.ServerError()
 	}
-
 	return timeByTask, nil
 }

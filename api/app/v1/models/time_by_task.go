@@ -1,6 +1,32 @@
 package models
 
-type TimeByTask struct { // 10000 = 100.00%
+type TimeByTask struct {
+	ID        uint  `json:"id,omitempty" gorm:"primary_key"`
+	Trazar    *uint `json:"trazar,omitempty"`
+	Plantear  *uint `json:"plantear,omitempty"`
+	Tender    *uint `json:"tender,omitempty"`
+	Cortar    *uint `json:"cortar,omitempty"`
+	Paquetear *uint `json:"paquetear,omitempty"`
+	Filetear  *uint `json:"filetear,omitempty"`
+	Armar     *uint `json:"armar,omitempty"`
+	Tapar     *uint `json:"tapar,omitempty"`
+	Figurar   *uint `json:"figurar,omitempty"`
+	Marquilla *uint `json:"marquilla,omitempty"`
+	Cerrar    *uint `json:"cerrar,omitempty"`
+	Gafetes   *uint `json:"gafetes,omitempty"`
+	Presillar *uint `json:"presillar,omitempty"`
+	Pulir     *uint `json:"pulir,omitempty"`
+	Revisar   *uint `json:"revisar,omitempty"`
+	Acabados  *uint `json:"acabados,omitempty"`
+	Bolsas    *uint `json:"bolsas,omitempty"`
+	Tiquetear *uint `json:"tiquetear,omitempty"`
+	Empacar   *uint `json:"empacar,omitempty"`
+	Organizar *uint `json:"organizar,omitempty"`
+	Grabar    *uint `json:"grabar,omitempty"`
+	Paletizar *uint `json:"paletizar,omitempty"`
+}
+
+type TimeByTaskDTO struct {
 	ID        uint `json:"id,omitempty" gorm:"primary_key"`
 	Trazar    uint `json:"trazar,omitempty" validate:"omitempty,gte=0"`
 	Plantear  uint `json:"plantear,omitempty" validate:"omitempty,gte=0"`

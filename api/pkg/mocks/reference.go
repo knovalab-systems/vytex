@@ -14,6 +14,11 @@ func (m *ReferenceMock) SelectReferences(req *models.Query) ([]*models.Reference
 	return []*models.Reference{}, args.Error(0)
 }
 
+func (m *ReferenceMock) SelectReference(resource *models.ReferenceRead) (*models.Reference, error) {
+	args := m.Called()
+	return &models.Reference{}, args.Error(0)
+}
+
 func (m *ReferenceMock) AggregationReferences(req *models.AggregateQuery) ([]*models.AggregateData, error) {
 	args := m.Called(req)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)

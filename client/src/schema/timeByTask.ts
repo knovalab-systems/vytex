@@ -8,15 +8,27 @@ export type VytexTimeByTask<Schema = any> = MergeCoreCollection<
 	'vytex_time-by-task',
 	{
 		id: number;
-		algod: number;
-		elast: number;
-		lino: number;
-		nylon: number;
-		polye: number;
-		rayon: number;
-		rayvis: number;
-		tencel: number;
-		visco: number;
-		hilom: number;
+		trazar: number;
+		plantear: number;
+		tender: number;
+		cortar: number;
+		paquetear: number;
+		filetear: number;
+		armar: number;
+		tapar: number;
+		figurar: number;
+		marquilla: number;
+		cerrar: number;
+		gafetes: number;
+		presillar: number;
+		pulir: number;
+		revisar: number;
+		acabados: number;
+		bolsas: number;
+		tiquetear: number;
+		empacar: number;
+		organizar: number;
+		grabar: number;
+		paletizar: number;
 	}
 >;
