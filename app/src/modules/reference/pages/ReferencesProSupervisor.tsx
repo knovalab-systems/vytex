@@ -1,11 +1,9 @@
-import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import AllowRoles from '~/components/AllowRoles';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -15,7 +13,7 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
-import { REFS_CREATE_PATH } from '~/constants/paths';
+import { REFS_PRO_SUPERVISOR_PATH, REFS_TIMES_PATH } from '~/constants/paths';
 import ReferenceTable from '../components/ReferenceTable';
 import { countReferencesQuery, getReferencesQuery } from '../requests/referenceGet';
 
@@ -47,14 +45,27 @@ function ReferencesProSupervisorPage() {
 					<Loading label='Cargando referencias' />
 				</Match>
 				<Match when={references.isSuccess && countReferences.isSuccess}>
-					<div>
-						<A href={REFS_CREATE_PATH}>
-							<Button variant='new'>
-								Nueva Referencia <AiOutlinePlus class='ml-2' size={22} />
-							</Button>
-						</A>
-					</div>
-					<ReferenceTable references={references.data} />
+					<ReferenceTable
+						references={references.data}
+						actions={reference => (
+							<ActionsCell
+								actions={[
+									{
+										icon: 'update',
+										label: 'Tiempos',
+										title: 'Actualizar tiempos',
+										path: `${REFS_TIMES_PATH}/${reference}`,
+									},
+									{
+										icon: 'details',
+										label: 'Detwalles',
+										title: 'Detalles de la referencia',
+										path: `${REFS_PRO_SUPERVISOR_PATH}/${reference}`,
+									},
+								]}
+							/>
+						)}
+					/>
 					<Pagination
 						class='[&>*]:justify-center'
 						count={pages()}

@@ -6,7 +6,7 @@ import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { REFS_PRO_SUPERVISOR_PATH } from '~/constants/paths';
-import { TASKS } from '~/constants/tasks';
+import { TASKS, TASKS_RECORD } from '~/constants/tasks';
 import type { TimeByTask } from '~/types/core';
 import type { GetReferenceForTimesType } from '../requests/referenceGet';
 import { updateTimesRefenceRequest } from '../requests/referenceTimesUpdate';
@@ -50,7 +50,7 @@ function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 							<Field name={e} type='number'>
 								{(field, props) => (
 									<div>
-										<Label for={`composition-field-${e}`}>{e.toUpperCase()}</Label>
+										<Label for={`composition-field-${e}`}>{TASKS_RECORD[e as keyof typeof TASKS_RECORD].label}</Label>
 										<Input
 											type='number'
 											placeholder='90'

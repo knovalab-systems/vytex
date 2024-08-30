@@ -55,3 +55,20 @@ async function getReferenceForTimes(key: number) {
 }
 
 export type GetReferenceForTimesType = Awaited<ReturnType<typeof getReferenceForTimes>>;
+
+export function getReferenceProSupervisorQuery(key: number) {
+	return queryOptions({
+		queryKey: ['getReferenceForTimes', key],
+		queryFn: () => getReferenceProSupervisor(key),
+	});
+}
+
+async function getReferenceProSupervisor(key: number) {
+	return await client.request(
+		readReference(key, {
+			fields: ['id', { time_by_task: ['*'] }],
+		}),
+	);
+}
+
+export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceProSupervisor>>;
