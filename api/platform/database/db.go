@@ -6,7 +6,6 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"log"
-	"os"
 )
 
 type Config struct {
@@ -22,7 +21,7 @@ func DB() *gorm.DB {
 	var err error
 	var db *gorm.DB
 
-	if os.Getenv("ENV") == "test" {
+	if envs.ENVIRONMENT() == "test" {
 		db, err = gorm.Open(postgres.Open(envs.DSNTEST()), &gorm.Config{})
 	} else {
 		db, err = gorm.Open(postgres.Open(envs.DSN()), &gorm.Config{})
