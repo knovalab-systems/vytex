@@ -40,7 +40,7 @@ services:
       - POSTGRES_PASSWORD=vytex_test
       - POSTGRES_DB=vytex_test
     volumes:
-      - db-test-vytex:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
     ports:
       - 5433:5432
     networks:
@@ -76,7 +76,6 @@ networks:
 
 volumes:
   pgadmin-vytex:
-  db-test-vytex:
 
 # to run: docker compose -f docker-compose-test.yaml up
 # remove logs from other services

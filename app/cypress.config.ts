@@ -7,8 +7,8 @@ export default defineConfig({
 	e2e: {
 		setupNodeEvents(on, config) {
 			config.baseUrl = config.env.baseUrl;
-			config.viewportWidth = 1280;
-			config.viewportHeight = 720;
+			config.viewportWidth = 1920;
+			config.viewportHeight = 1080;
 
 			return config;
 		},
