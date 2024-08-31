@@ -134,7 +134,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			Role:     u.Role,
 		}
 
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte("password123"), bcrypt.DefaultCost)
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatalf("No se pudo encriptar la contraseña: %v", err)
 		}
@@ -223,6 +223,16 @@ func generateSupplier(db *gorm.DB) {
 
 		suppliers = append(suppliers, supplier)
 	}
+
+	// add unique supplier
+	supplier := models.Supplier{
+		Name:  faker.Name(),
+		Brand: faker.LastName(),
+		Code:  "12345",
+		Nit:   "123456789",
+	}
+
+	suppliers = append(suppliers, supplier)
 
 	result := db.Create(&suppliers)
 	if result.Error != nil {
