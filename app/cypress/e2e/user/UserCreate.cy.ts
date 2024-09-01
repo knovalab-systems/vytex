@@ -5,10 +5,10 @@ import { faker } from '@faker-js/faker';
 describe('CreateUser test', () => {
 	before(() => {
 		// login
-		cy.visit('http://localhost:4040/');
-		cy.get('#username-field').type('admin');
+		cy.visit(Cypress.env('login'));
+		cy.get('#username-field').type(Cypress.env('ADMIN_USER'));
 		cy.get('#pass-field').clear();
-		cy.get('#pass-field').type('password123');
+		cy.get('#pass-field').type(Cypress.env('ADMIN_PASSWORD'));
 		cy.get('.inline-flex').click();
 	});
 

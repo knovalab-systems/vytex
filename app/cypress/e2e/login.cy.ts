@@ -2,13 +2,14 @@
 /// <reference types="cypress" />
 
 describe('Login test', () => {
-	before(() => {
-		cy.visit('/login');
+	beforeEach(() => {
+		cy.visit(Cypress.env('login'));
 	});
 
 	it('username-password-cv', () => {
-		cy.get('#username-field').type('admin');
-		cy.get('#pass-field').type('password123');
+		cy.get('#username-field').type(Cypress.env('ADMIN_USER'));
+		cy.get('#pass-field').clear();
+		cy.get('#pass-field').type(Cypress.env('ADMIN_PASSWORD'));
 		cy.get('.inline-flex').click();
 
 		// home should be in the page
