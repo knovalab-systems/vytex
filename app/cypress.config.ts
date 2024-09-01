@@ -3,6 +3,9 @@ import { defineConfig } from 'cypress';
 export default defineConfig({
 	env: {
 		baseUrl: 'http://localhost:4040',
+		login: 'http://localhost:4040/login',
+		customs: 'http://localhost:4040/customs',
+		// ...process.env,
 	},
 	e2e: {
 		setupNodeEvents(on, config) {
@@ -15,5 +18,6 @@ export default defineConfig({
 
 		// Enable cypress studio
 		experimentalStudio: true,
+		watchForFileChanges: true,
 	},
 });

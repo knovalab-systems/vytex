@@ -17,6 +17,7 @@ cypress/videos/
 # Environment variables
 .env
 *.db
+cypress.env.json
 
 # Logs
 logs
