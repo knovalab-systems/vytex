@@ -87,7 +87,7 @@ describe('ReferenceTimesUpdateForm', () => {
 
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();
-			expect(toastMock).toHaveBeenCalled();
+			expect(toastMock).toHaveBeenCalledWith('Tiempos actualizados correctamente');
 			expect(mockNavigate).toHaveBeenCalled();
 		});
 	});
@@ -104,7 +104,7 @@ describe('ReferenceTimesUpdateForm', () => {
 		fireEvent.click(submitButton);
 
 		await waitFor(() => {
-			expect(toastMock).toHaveBeenCalled();
+			expect(toastMock).toHaveBeenCalledWith('Error al actualizar tiempos.');
 			expect(requestMock).toHaveBeenCalled();
 		});
 	});

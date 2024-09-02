@@ -24,11 +24,11 @@ function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 
 		return updateTimesRefenceRequest(props.reference.id, { time_by_task: times })
 			.then(() => {
-				toast.success('Color actualizado correctamente');
+				toast.success('Tiempos actualizados correctamente');
 				navigate(REFS_PRO_SUPERVISOR_PATH);
 			})
 			.catch(() => {
-				toast.error('Error al actualizar color.');
+				toast.error('Error al actualizar tiempos.');
 			});
 	};
 

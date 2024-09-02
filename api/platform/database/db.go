@@ -1,10 +1,10 @@
 package database
 
 import (
-	"errors"
 	"log"
 	"os"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/envs"
 	"gorm.io/driver/postgres"
@@ -53,35 +53,9 @@ func DB() *gorm.DB {
 	}
 
 	if db.Migrator().HasTable(&models.TimeByTask{}) {
-		if err := db.First(&models.TimeByTask{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
-			time := map[string]interface{}{
-				"trazar":    0,
-				"plantear":  0,
-				"tender":    0,
-				"cortar":    0,
-				"paquetear": 0,
-				"filetear":  0,
-				"armar":     0,
-				"tapar":     0,
-				"figurar":   0,
-				"marquilla": 0,
-				"cerrar":    0,
-				"gafetes":   0,
-				"presillar": 0,
-				"pulir":     0,
-				"revisar":   0,
-				"acabados":  0,
-				"bolsas":    0,
-				"tiquetear": 0,
-				"empacar":   0,
-				"organizar": 0,
-				"grabar":    0,
-				"paletizar": 0,
-			}
-			err := db.Model(&models.TimeByTask{}).Create(time).Error
-			if err != nil {
-				log.Fatalln("error, not migrated, %w", err)
-			}
+		err := db.FirstOrCreate(&models.TimeByTask{}, formats.TimeByTaskDTOFormat(models.TimeByTaskDTO{})).Error
+		if err != nil {
+			log.Fatalln("error, not migrated, %w", err)
 		}
 	}
 

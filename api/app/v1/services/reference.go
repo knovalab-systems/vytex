@@ -128,8 +128,13 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
 	}
 
+	timeByTask, err := getDefaultTimeByTask()
+	if err != nil {
+		return nil, err
+	}
+
 	// create reference
-	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back, Colors: colorsByReference, TimeByTaskID: 1}
+	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back, Colors: colorsByReference, TimeByTaskID: timeByTask.ID}
 
 	err = query.Reference.Create(reference)
 	if err != nil {
@@ -148,12 +153,17 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 		return nil, problems.ServerError()
 	}
 
+	defaultTimeByTask, err := getDefaultTimeByTask()
+	if err != nil {
+		return nil, err
+	}
+
 	timeByTask, err := getTimeByTask(&b.TimeByTask)
 	if err != nil {
 		return nil, err
 	}
 
-	if reference.TimeByTaskID == 1 {
+	if reference.TimeByTaskID == defaultTimeByTask.ID {
 		_, err := table.Where(table.ID.Eq(reference.ID)).Update(table.TimeByTaskID, timeByTask.ID)
 		if err != nil {
 			return nil, err
@@ -253,17 +263,19 @@ func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 
 func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
 	table := query.TimeByTask
-	timeByTask := formats.TimeByTaskDTOFormat(*t)
+	timeByTaskFormat := formats.TimeByTaskDTOFormat(*t)
 
-	timeByTask, err := table.Where(field.Attrs(timeByTask)).First()
+	timeByTask, err := table.Where(field.Attrs(timeByTaskFormat)).FirstOrCreate()
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			err := table.Create(timeByTask)
-			if err != nil {
-				return nil, err
-			}
-			return timeByTask, nil
-		}
+		return nil, problems.ServerError()
+	}
+	return timeByTask, nil
+}
+
+func getDefaultTimeByTask() (*models.TimeByTask, error) {
+	table := query.TimeByTask
+	timeByTask, err := table.Where(field.Attrs(formats.TimeByTaskDTOFormat(models.TimeByTaskDTO{}))).FirstOrCreate()
+	if err != nil {
 		return nil, problems.ServerError()
 	}
 	return timeByTask, nil

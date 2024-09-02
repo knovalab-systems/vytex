@@ -272,15 +272,8 @@ func getComposition(c *models.Composition) (*models.Composition, error) {
 		return nil, problems.CreateFabricBadRequest()
 	}
 
-	composition, err := table.Where(field.Attrs(compMap)).First()
+	composition, err := table.Where(field.Attrs(compMap)).FirstOrCreate()
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			err := table.Create(c)
-			if err != nil {
-				return nil, err
-			}
-			return c, nil
-		}
 		return nil, problems.ServerError()
 	}
 
