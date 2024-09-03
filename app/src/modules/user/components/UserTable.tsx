@@ -35,14 +35,20 @@ function UserTable(props: { users?: GetUsersType }) {
 								<RoleCell userId={user.id} roleValue={user.role as string} />
 								<DeletedAtCell deleted_at={user.deleted_at} userId={user.id} />
 								<ActionsCell
-									update={{
-										path: `${USER_UPDATE_PATH}/${user.id}`,
-										title: 'Actualizar usuario',
-									}}
-									details={{
-										path: `${USERS_PATH}/${user.id}`,
-										title: 'Detalles del usuario',
-									}}
+									actions={[
+										{
+											path: `${USER_UPDATE_PATH}/${user.id}`,
+											title: 'Actualizar usuario',
+											label: 'Actualizar',
+											icon: 'update',
+										},
+										{
+											path: `${USERS_PATH}/${user.id}`,
+											title: 'Detalles del usuario',
+											label: 'Detalles',
+											icon: 'details',
+										},
+									]}
 								/>
 							</TableRow>
 						)}

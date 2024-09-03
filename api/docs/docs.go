@@ -209,7 +209,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/colors/colorId": {
+        "/colors/{colorId}": {
             "get": {
                 "description": "Get an color by its ID",
                 "produces": [
@@ -242,9 +242,7 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            }
-        },
-        "/colors/{colorId}": {
+            },
             "post": {
                 "description": "Updates the fields from color",
                 "produces": [
@@ -288,7 +286,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/custom/customId": {
+        "/custom/{customId}": {
             "get": {
                 "description": "Get an custom by its ID",
                 "produces": [
@@ -515,7 +513,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/fabrics/fabricId": {
+        "/fabrics/{fabricId}": {
             "get": {
                 "description": "Get a fabric by id",
                 "produces": [
@@ -772,6 +770,50 @@ const docTemplate = `{
                             "items": {
                                 "$ref": "#/definitions/models.Reference"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/references/times-by-task/{referenceId}": {
+            "patch": {
+                "description": "Update times of reference by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "References"
+                ],
+                "summary": "Update times of reference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Reference ID",
+                        "name": "referenceId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Times update values",
+                        "name": "models.TimeByTaskReferenceUpdate",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Reference"
                         }
                     },
                     "400": {
@@ -1255,7 +1297,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/users/userId": {
+        "/users/{userId}": {
             "get": {
                 "description": "Get an user by its ID",
                 "produces": [
@@ -1288,9 +1330,7 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
-            }
-        },
-        "/users/{userId}": {
+            },
             "post": {
                 "description": "Updates the fields from user",
                 "produces": [
@@ -1404,7 +1444,7 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
-                "reference_": {
+                "reference": {
                     "$ref": "#/definitions/models.Reference"
                 },
                 "reference_id": {
@@ -1876,6 +1916,12 @@ const docTemplate = `{
                 "id": {
                     "type": "integer"
                 },
+                "time_by_task": {
+                    "$ref": "#/definitions/models.TimeByTask"
+                },
+                "time_by_task_ID": {
+                    "type": "integer"
+                },
                 "user": {
                     "$ref": "#/definitions/models.User"
                 }
@@ -2056,6 +2102,102 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "models.TimeByTask": {
+            "type": "object",
+            "properties": {
+                "acabados": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "armar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "bolsas": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "cerrar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "cortar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "empacar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "figurar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "filetear": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "gafetes": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "grabar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "marquilla": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "organizar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "paletizar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "paquetear": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "plantear": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "presillar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "pulir": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "revisar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "tapar": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "tender": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "tiquetear": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "trazar": {
+                    "type": "integer",
+                    "minimum": 0
                 }
             }
         },

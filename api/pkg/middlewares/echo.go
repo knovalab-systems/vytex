@@ -11,11 +11,12 @@ func EchoMiddlewares(e *echo.Echo) {
 	// Create route group
 	e.Use(
 		middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
-			LogStatus: true,
-			LogURI:    true,
-			LogMethod: true,
+			LogStatus:  true,
+			LogMethod:  true,
+			LogLatency: true,
+			LogURIPath: true,
 			LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-				log.Printf("%v %v, uri: %v \n", v.Method, v.Status, v.URI)
+				log.Printf("%v %v path: %v %v\n", v.Status, v.Method, v.URIPath, v.Latency)
 				return nil
 			}}),
 		middleware.Recover(),

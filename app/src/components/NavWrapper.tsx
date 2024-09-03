@@ -12,7 +12,7 @@ import MobileNav from '~/components/MobileNav';
 import SideBarNav from '~/components/SideBarNav';
 import * as PATHS from '~/constants/paths';
 import { roles } from '~/constants/roles';
-import { ADMIN_ROLE, DESIGNER_ROLE, NO_ROLE } from '~/envs/roles';
+import * as ROLES from '~/envs/roles';
 import { cn } from '~/lib/utils';
 import { getMyUserQuery } from '~/requests/getMe';
 import ErrorMessage from './ErrorMessage';
@@ -24,18 +24,22 @@ function NavWrapper(props: RouteSectionProps) {
 	const user = createQuery(getMyUserQuery);
 
 	const pages: Record<string, NavPages[]> = {
-		[ADMIN_ROLE]: [
+		[ROLES.ADMIN_ROLE]: [
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
 			{ name: 'Usuarios', icon: () => <RiUserFacesUserFill size={24} />, path: PATHS.USERS_PATH },
 			{ name: 'Roles', icon: () => <BsPersonWorkspace size={24} />, path: PATHS.ROLES_PATH },
 			{ name: 'Proveedores', icon: () => <HiSolidTruck size={24} />, path: PATHS.SUPPLIERS_PATH },
 		],
-		[DESIGNER_ROLE]: [
+		[ROLES.DESIGNER_ROLE]: [
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
 			{ name: 'Referencias', icon: () => <IoShirtSharp size={24} />, path: PATHS.REFS_PATH },
 			{ name: 'Colores', icon: () => <IoColorPaletteSharp size={24} />, path: PATHS.COLORS_PATH },
 			{ name: 'Telas', icon: () => <IoBandageSharp size={24} />, path: PATHS.FABRICS_PATH },
 			{ name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
+		],
+		[ROLES.PRO_SUPERVISOR_ROLE]: [
+			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
+			{ name: 'Referencias', icon: () => <IoShirtSharp size={24} />, path: PATHS.REFS_PRO_SUPERVISOR_PATH },
 		],
 	};
 
@@ -53,10 +57,10 @@ function NavWrapper(props: RouteSectionProps) {
 			<Match when={user.isPending}>
 				<Loading label='Cargando rol' />
 			</Match>
-			<Match when={user.isSuccess && user.data.role === ADMIN_ROLE}>
+			<Match when={user.isSuccess && user.data.role === ROLES.ADMIN_ROLE}>
 				<div class='flex flex-col w-full h-fit lg:h-full lg:flex-row'>
-					<SideBarNav pages={pages[ADMIN_ROLE]} />
-					<MobileNav pages={pages[ADMIN_ROLE]} />
+					<SideBarNav pages={pages[ROLES.ADMIN_ROLE]} />
+					<MobileNav pages={pages[ROLES.ADMIN_ROLE]} />
 					<main class={cn(baseClassMain)}>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}
@@ -64,7 +68,7 @@ function NavWrapper(props: RouteSectionProps) {
 					</main>
 				</div>
 			</Match>
-			<Match when={user.isSuccess && user.data.role === NO_ROLE}>{props.children}</Match>
+			<Match when={user.isSuccess && user.data.role === ROLES.NO_ROLE}>{props.children}</Match>
 			<Match when={user.isSuccess}>
 				<div class='flex flex-col w-full h-fit lg:h-full'>
 					<MenuNav pages={pages[user.data?.role as string]} />

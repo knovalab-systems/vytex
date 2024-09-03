@@ -5,6 +5,7 @@ import type {
 	VytexImage,
 	VytexResource,
 	VytexSize,
+	VytexTimeByTask,
 	VytexUser,
 } from '../index.js';
 
@@ -25,6 +26,8 @@ export type VytexReference<Schema = any> = MergeCoreCollection<
 		created_at: string | null;
 		created_by: string | null;
 		user: VytexUser<Schema> | null;
+		time_by_task_id: string | null;
+		time_by_task: VytexTimeByTask<Schema> | null;
 		colors: VytexColorByReference<Schema>[] | null;
 	}
 >;

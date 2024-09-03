@@ -118,6 +118,11 @@ func CreateReferenceBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create reference", ""))
 }
 
+func UpdateTimeReferenceBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to update time of reference", ""))
+}
+
 // supplier
 func SuppliersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest

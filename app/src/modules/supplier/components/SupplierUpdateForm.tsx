@@ -11,7 +11,7 @@ import { STATUS_CODE } from '~/constants/http';
 import { SUPPLIERS_PATH } from '~/constants/paths';
 import { STATUS_OPTIONS } from '~/constants/status';
 import { refetchSuppliers } from '~/hooks/useSuppliers';
-import type { Supplier } from '~/schemas/core';
+import type { Supplier } from '~/types/core';
 import type { GetSupplierType } from '../requests/supplierGet';
 import { updateSupplierRequest } from '../requests/supplierUpdate';
 import { SupplierUpdateSchema, type SupplierUpdateType } from '../schemas/supplierUpdate';

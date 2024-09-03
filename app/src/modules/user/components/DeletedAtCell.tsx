@@ -4,7 +4,7 @@ import toast from 'solid-toast';
 import StatusLabel from '~/components/StatusLabel';
 import { Switch } from '~/components/ui/Switch';
 import { TableCell } from '~/components/ui/Table';
-import type { User } from '~/schemas/core';
+import type { User } from '~/types/core';
 import { updateUserRequest } from '../requests/userUpdate';
 
 function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {

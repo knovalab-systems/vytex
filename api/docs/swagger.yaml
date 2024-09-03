@@ -47,7 +47,7 @@ definitions:
         type: array
       id:
         type: integer
-      reference_:
+      reference:
         $ref: '#/definitions/models.Reference'
       reference_id:
         type: integer
@@ -380,6 +380,10 @@ definitions:
         $ref: '#/definitions/models.Image'
       id:
         type: integer
+      time_by_task:
+        $ref: '#/definitions/models.TimeByTask'
+      time_by_task_ID:
+        type: integer
       user:
         $ref: '#/definitions/models.User'
     type: object
@@ -505,6 +509,77 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  models.TimeByTask:
+    properties:
+      acabados:
+        minimum: 0
+        type: integer
+      armar:
+        minimum: 0
+        type: integer
+      bolsas:
+        minimum: 0
+        type: integer
+      cerrar:
+        minimum: 0
+        type: integer
+      cortar:
+        minimum: 0
+        type: integer
+      empacar:
+        minimum: 0
+        type: integer
+      figurar:
+        minimum: 0
+        type: integer
+      filetear:
+        minimum: 0
+        type: integer
+      gafetes:
+        minimum: 0
+        type: integer
+      grabar:
+        minimum: 0
+        type: integer
+      id:
+        type: integer
+      marquilla:
+        minimum: 0
+        type: integer
+      organizar:
+        minimum: 0
+        type: integer
+      paletizar:
+        minimum: 0
+        type: integer
+      paquetear:
+        minimum: 0
+        type: integer
+      plantear:
+        minimum: 0
+        type: integer
+      presillar:
+        minimum: 0
+        type: integer
+      pulir:
+        minimum: 0
+        type: integer
+      revisar:
+        minimum: 0
+        type: integer
+      tapar:
+        minimum: 0
+        type: integer
+      tender:
+        minimum: 0
+        type: integer
+      tiquetear:
+        minimum: 0
+        type: integer
+      trazar:
+        minimum: 0
+        type: integer
     type: object
   models.User:
     properties:
@@ -637,6 +712,28 @@ paths:
       tags:
       - Colors
   /colors/{colorId}:
+    get:
+      description: Get an color by its ID
+      parameters:
+      - description: Color ID
+        in: path
+        name: colorId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Color'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a given color
+      tags:
+      - Colors
     post:
       description: Updates the fields from color
       parameters:
@@ -684,30 +781,7 @@ paths:
       summary: Get aggregate from colors
       tags:
       - Colors
-  /colors/colorId:
-    get:
-      description: Get an color by its ID
-      parameters:
-      - description: Color ID
-        in: path
-        name: colorId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.Color'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Get a given color
-      tags:
-      - Colors
-  /custom/customId:
+  /custom/{customId}:
     get:
       description: Get an custom by its ID
       parameters:
@@ -837,26 +911,7 @@ paths:
       summary: Create fabric
       tags:
       - Fabrics
-  /fabrics/aggregate:
-    get:
-      description: Get aggregate from fabrics
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.AggregateData'
-            type: array
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Get aggregate from fabrics
-      tags:
-      - Fabrics
-  /fabrics/fabricId:
+  /fabrics/{fabricId}:
     get:
       description: Get a fabric by id
       parameters:
@@ -905,6 +960,25 @@ paths:
         "500":
           description: Internal Server Error
       summary: Update a fabric
+      tags:
+      - Fabrics
+  /fabrics/aggregate:
+    get:
+      description: Get aggregate from fabrics
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from fabrics
       tags:
       - Fabrics
   /images:
@@ -1030,6 +1104,35 @@ paths:
         "500":
           description: Internal Server Error
       summary: Get references from db
+      tags:
+      - References
+  /references/times-by-task/{referenceId}:
+    patch:
+      description: Update times of reference by id
+      parameters:
+      - description: Reference ID
+        in: path
+        name: referenceId
+        required: true
+        type: string
+      - description: Times update values
+        in: body
+        name: models.TimeByTaskReferenceUpdate
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Reference'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update times of reference
       tags:
       - References
   /resources:
@@ -1307,6 +1410,28 @@ paths:
       tags:
       - Users
   /users/{userId}:
+    get:
+      description: Get an user by its ID
+      parameters:
+      - description: User ID
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a given user
+      tags:
+      - Users
     post:
       description: Updates the fields from user
       parameters:
@@ -1369,29 +1494,6 @@ paths:
         "500":
           description: Internal Server Error
       summary: Get the curren user loggged
-      tags:
-      - Users
-  /users/userId:
-    get:
-      description: Get an user by its ID
-      parameters:
-      - description: User ID
-        in: path
-        name: userId
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/models.User'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Get a given user
       tags:
       - Users
 swagger: "2.0"

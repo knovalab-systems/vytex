@@ -40,10 +40,14 @@ function ColorTable(props: { colors?: GetColorsType }) {
 									<StatusLabel status={!color.deleted_at} />
 								</TableCell>
 								<ActionsCell
-									update={{
-										path: `${COLORS_UPDATE_PATH}/${color.id}`,
-										title: 'Actualizar Color',
-									}}
+									actions={[
+										{
+											path: `${COLORS_UPDATE_PATH}/${color.id}`,
+											title: 'Actualizar Color',
+											label: 'Actualizar',
+											icon: 'update',
+										},
+									]}
 								/>
 							</TableRow>
 						)}

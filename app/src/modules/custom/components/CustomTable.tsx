@@ -35,10 +35,14 @@ function CustomTable(props: { customs?: GetCustomsType }) {
 								<TableCell>{parseDateTimeHuman(custom.finished_at)}</TableCell>
 								<Show when={!custom.finished_at && !custom.canceled_at} fallback={<TableCell />}>
 									<ActionsCell
-										create={{
-											path: `${CUSTOMS_PATH}${ORDERS_CREATE_PATH}/${custom.id}`,
-											title: 'Agregar Orden',
-										}}
+										actions={[
+											{
+												path: `${CUSTOMS_PATH}${ORDERS_CREATE_PATH}/${custom.id}`,
+												title: 'Agregar Orden',
+												label: 'Agregar',
+												icon: 'create',
+											},
+										]}
 									/>
 								</Show>
 							</TableRow>

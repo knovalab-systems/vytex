@@ -15,12 +15,12 @@ import {
 } from '~/components/ui/Combobox';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
+import { COMPOSITIONS } from '~/constants/compositions';
 import { STATUS_CODE } from '~/constants/http';
 import { FABRICS_PATH } from '~/constants/paths';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
-import { COMPOSITIONS } from '~/schemas/compositions';
-import type { Composition, Fabric } from '~/schemas/core';
+import type { Composition, Fabric } from '~/types/core';
 import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
 

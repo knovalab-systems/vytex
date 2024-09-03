@@ -19,9 +19,9 @@ import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { CUSTOMS_PATH } from '~/constants/paths';
+import { DEFAULT_SIZES, SIZES } from '~/constants/sizes';
 import { useColors } from '~/hooks/useColors';
-import type { Custom } from '~/schemas/core';
-import { SIZES, defaultSizeValues } from '~/schemas/sizes';
+import type { Custom } from '~/types/core';
 import { type RefByCustomCreate, createCustomRequest } from '../requests/CustomCreate';
 import { CustomCreateSchema, type CustomCreateType } from '../schemas/customCreate';
 
@@ -65,7 +65,7 @@ function CustomCreateForm(props: {
 		initialValues: {
 			orders: [
 				{
-					sizes: defaultSizeValues,
+					sizes: DEFAULT_SIZES,
 				},
 			],
 		},
@@ -227,7 +227,7 @@ function CustomCreateForm(props: {
 											insert(form, fieldOrders.name, {
 												value: {
 													colorByRef: 0,
-													sizes: defaultSizeValues,
+													sizes: DEFAULT_SIZES,
 												},
 											});
 										}}

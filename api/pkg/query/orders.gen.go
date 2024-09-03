@@ -81,6 +81,9 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 			BackImage struct {
 				field.RelationField
 			}
+			TimeByTask struct {
+				field.RelationField
+			}
 			Colors struct {
 				field.RelationField
 			}
@@ -100,6 +103,11 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("ColorByReference.Reference.BackImage", "models.Image"),
+			},
+			TimeByTask: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("ColorByReference.Reference.TimeByTask", "models.TimeByTask"),
 			},
 			Colors: struct {
 				field.RelationField
@@ -530,6 +538,9 @@ type orderBelongsToColorByReference struct {
 			field.RelationField
 		}
 		BackImage struct {
+			field.RelationField
+		}
+		TimeByTask struct {
 			field.RelationField
 		}
 		Colors struct {

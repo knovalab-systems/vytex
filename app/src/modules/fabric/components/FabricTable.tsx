@@ -51,10 +51,14 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 								<StatusLabel status={!fabric.deleted_at} />
 							</TableCell>
 							<ActionsCell
-								update={{
-									path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
-									title: 'Actualizar tela',
-								}}
+								actions={[
+									{
+										path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
+										title: 'Actualizar tela',
+										label: 'Actualizar',
+										icon: 'update',
+									},
+								]}
 							/>
 						</TableRow>
 					)}

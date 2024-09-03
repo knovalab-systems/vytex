@@ -30,6 +30,7 @@ import { LabelSpan } from '~/components/ui/Label';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { STATUS_CODE } from '~/constants/http';
 import { REFS_PATH } from '~/constants/paths';
+import { DEFAULT_SIZES, SIZES } from '~/constants/sizes';
 import { type Colors, useColors } from '~/hooks/useColors';
 import {
 	type FabricsByRefCreate,
@@ -37,8 +38,7 @@ import {
 	createReferenceRequest,
 } from '~/modules/reference/requests/referenceCreate';
 import { uploadImagesRequest } from '~/requests/imageUpload';
-import type { Reference } from '~/schemas/core';
-import { type ResourceFabric, SIZES, defaultSizeValues } from '~/schemas/sizes';
+import type { Reference, ResourceFabric } from '~/types/core';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreate';
 
 type Combined = {
@@ -72,7 +72,7 @@ function ReferenceCreateForm(props: {
 		initialValues: {
 			colors: [
 				{
-					resources: [{ resource: '', sizes: defaultSizeValues }],
+					resources: [{ resource: '', sizes: DEFAULT_SIZES }],
 				},
 			],
 		},
@@ -340,7 +340,7 @@ function ReferenceCreateForm(props: {
 																insert(form, fieldResources.name, {
 																	value: {
 																		resource: '',
-																		sizes: defaultSizeValues,
+																		sizes: DEFAULT_SIZES,
 																	},
 																});
 															}}
@@ -379,7 +379,7 @@ function ReferenceCreateForm(props: {
 									insert(form, fieldColors.name, {
 										value: {
 											color: 0,
-											resources: [{ resource: '', sizes: defaultSizeValues }],
+											resources: [{ resource: '', sizes: DEFAULT_SIZES }],
 										},
 									});
 								}}

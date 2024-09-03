@@ -1,7 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { createOrder, readReferences } from '@vytex/client';
 import { client } from '~/lib/client';
-import type { Order } from '~/schemas/core';
+import type { Order } from '~/types/core';
 
 export async function createOrderRequest(order: Order) {
 	return await client.request(createOrder(order));

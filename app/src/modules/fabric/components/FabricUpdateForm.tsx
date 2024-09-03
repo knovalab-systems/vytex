@@ -17,13 +17,13 @@ import {
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
+import { COMPOSITIONS } from '~/constants/compositions';
 import { STATUS_CODE } from '~/constants/http';
 import { FABRICS_PATH } from '~/constants/paths';
 import { STATUS_OPTIONS } from '~/constants/status';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
-import { COMPOSITIONS } from '~/schemas/compositions';
-import type { Composition, Fabric } from '~/schemas/core';
+import type { Composition, Fabric } from '~/types/core';
 import type { GetFabricType } from '../requests/fabricGet';
 import { updateFabricRequest } from '../requests/fabricUpdate';
 import { FabricUpdateSchema, type FabricUpdateType } from '../schemas/fabricUpdate';
