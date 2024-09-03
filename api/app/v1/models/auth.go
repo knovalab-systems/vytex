@@ -24,7 +24,8 @@ type Session struct {
 }
 
 type AllowRoles struct {
-	Admin    bool
-	NoRole   bool
-	Desinger bool
+	Admin         bool
+	NoRole        bool
+	Desinger      bool
+	ProSupervisor bool
 }

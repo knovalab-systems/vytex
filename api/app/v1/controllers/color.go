@@ -117,7 +117,7 @@ func (m *ColorController) CreateColor(c echo.Context) error {
 // @Success      200 {object} models.Color
 // @Failure      400
 // @Failure      500
-// @Router       /colors/colorId [get]
+// @Router       /colors/{colorId} [get]
 func (m *ColorController) ReadColor(c echo.Context) error {
 	// for query params
 	u := new(models.ReadColor)

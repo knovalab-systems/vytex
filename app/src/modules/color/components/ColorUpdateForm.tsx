@@ -11,7 +11,7 @@ import { STATUS_CODE } from '~/constants/http';
 import { COLORS_PATH } from '~/constants/paths';
 import { STATUS_OPTIONS } from '~/constants/status';
 import { refetchColors } from '~/hooks/useColors';
-import type { Color } from '~/schemas/core';
+import type { Color } from '~/types/core';
 import type { GetColorType } from '../requests/colorGet';
 import { updateColorRequest } from '../requests/colorUpdate';
 import { ColorUpdateSchema, type ColorUpdateType } from '../schemas/colorUpdate';

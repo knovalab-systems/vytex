@@ -32,8 +32,10 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 	_reference.CreatedAt = field.NewTime(tableName, "created_at")
 	_reference.DeletedAt = field.NewField(tableName, "deleted_at")
 	_reference.CreatedBy = field.NewString(tableName, "created_by")
+	_reference.Track = field.NewString(tableName, "track")
 	_reference.Front = field.NewString(tableName, "front")
 	_reference.Back = field.NewString(tableName, "back")
+	_reference.TimeByTaskID = field.NewUint(tableName, "time_by_task_id")
 	_reference.Colors = referenceHasManyColors{
 		db: db.Session(&gorm.Session{}),
 
@@ -52,6 +54,9 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 				field.RelationField
 			}
 			BackImage struct {
+				field.RelationField
+			}
+			TimeByTask struct {
 				field.RelationField
 			}
 			Colors struct {
@@ -73,6 +78,11 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("Colors.Reference.BackImage", "models.Image"),
+			},
+			TimeByTask: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.TimeByTask", "models.TimeByTask"),
 			},
 			Colors: struct {
 				field.RelationField
@@ -181,6 +191,12 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 		RelationField: field.NewRelation("BackImage", "models.Image"),
 	}
 
+	_reference.TimeByTask = referenceBelongsToTimeByTask{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("TimeByTask", "models.TimeByTask"),
+	}
+
 	_reference.fillFieldMap()
 
 	return _reference
@@ -189,21 +205,25 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 type reference struct {
 	referenceDo
 
-	ALL       field.Asterisk
-	ID        field.Uint
-	Code      field.String
-	CreatedAt field.Time
-	DeletedAt field.Field
-	CreatedBy field.String
-	Front     field.String
-	Back      field.String
-	Colors    referenceHasManyColors
+	ALL          field.Asterisk
+	ID           field.Uint
+	Code         field.String
+	CreatedAt    field.Time
+	DeletedAt    field.Field
+	CreatedBy    field.String
+	Track        field.String
+	Front        field.String
+	Back         field.String
+	TimeByTaskID field.Uint
+	Colors       referenceHasManyColors
 
 	User referenceBelongsToUser
 
 	FrontImage referenceBelongsToFrontImage
 
 	BackImage referenceBelongsToBackImage
+
+	TimeByTask referenceBelongsToTimeByTask
 
 	fieldMap map[string]field.Expr
 }
@@ -225,8 +245,10 @@ func (r *reference) updateTableName(table string) *reference {
 	r.CreatedAt = field.NewTime(table, "created_at")
 	r.DeletedAt = field.NewField(table, "deleted_at")
 	r.CreatedBy = field.NewString(table, "created_by")
+	r.Track = field.NewString(table, "track")
 	r.Front = field.NewString(table, "front")
 	r.Back = field.NewString(table, "back")
+	r.TimeByTaskID = field.NewUint(table, "time_by_task_id")
 
 	r.fillFieldMap()
 
@@ -243,14 +265,16 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 11)
+	r.fieldMap = make(map[string]field.Expr, 14)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["created_at"] = r.CreatedAt
 	r.fieldMap["deleted_at"] = r.DeletedAt
 	r.fieldMap["created_by"] = r.CreatedBy
+	r.fieldMap["track"] = r.Track
 	r.fieldMap["front"] = r.Front
 	r.fieldMap["back"] = r.Back
+	r.fieldMap["time_by_task_id"] = r.TimeByTaskID
 
 }
 
@@ -281,6 +305,9 @@ type referenceHasManyColors struct {
 			field.RelationField
 		}
 		BackImage struct {
+			field.RelationField
+		}
+		TimeByTask struct {
 			field.RelationField
 		}
 		Colors struct {
@@ -591,6 +618,77 @@ func (a referenceBelongsToBackImageTx) Clear() error {
 }
 
 func (a referenceBelongsToBackImageTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceBelongsToTimeByTask struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceBelongsToTimeByTask) Where(conds ...field.Expr) *referenceBelongsToTimeByTask {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceBelongsToTimeByTask) WithContext(ctx context.Context) *referenceBelongsToTimeByTask {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceBelongsToTimeByTask) Session(session *gorm.Session) *referenceBelongsToTimeByTask {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceBelongsToTimeByTask) Model(m *models.Reference) *referenceBelongsToTimeByTaskTx {
+	return &referenceBelongsToTimeByTaskTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceBelongsToTimeByTaskTx struct{ tx *gorm.Association }
+
+func (a referenceBelongsToTimeByTaskTx) Find() (result *models.TimeByTask, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceBelongsToTimeByTaskTx) Append(values ...*models.TimeByTask) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceBelongsToTimeByTaskTx) Replace(values ...*models.TimeByTask) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceBelongsToTimeByTaskTx) Delete(values ...*models.TimeByTask) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceBelongsToTimeByTaskTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceBelongsToTimeByTaskTx) Count() int64 {
 	return a.tx.Count()
 }
 

@@ -114,3 +114,68 @@ func (m *ReferenceController) CreateReference(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, reference)
 }
+
+// UpdateTimesReference Update the times of reference
+// @Summary      Update times of reference
+// @Description  Update times of reference by id
+// @Tags         References
+// @Param        referenceId path string true "Reference ID"
+// @Param        models.TimeByTaskReferenceUpdate body string true "Times update values"
+// @Produce      json
+// @Success      200 {object} models.Reference
+// @Failure      400
+// @Failure      500
+// @Router       /references/times-by-task/{referenceId} [patch]
+func (m *ReferenceController) UpdateTimesReference(c echo.Context) error {
+	u := new(models.TimeByTaskReferenceUpdate)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateTimeReferenceBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateTimeReferenceBadRequest()
+	}
+
+	// update
+	reference, err := m.ReferenceRepository.UpdateTimesReference(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, reference)
+}
+
+// ReadReference Get a reference
+// @Summary      Get a reference
+// @Description  Get a reference by id
+// @Tags         References
+// @Produce      json
+// @Param        refenceId path string true "References ID"
+// @Success      200 {object} models.Reference
+// @Failure      400
+// @Failure      500
+// @Router       /references/{refenceId} [get]
+func (m *ReferenceController) ReadReference(c echo.Context) error {
+	u := new(models.ReferenceRead)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.ReferencesBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.ReferencesBadRequest()
+	}
+
+	// get reference
+	reference, err := m.ReferenceRepository.SelectReference(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, reference)
+}

@@ -64,6 +64,9 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				BackImage struct {
 					field.RelationField
 				}
+				TimeByTask struct {
+					field.RelationField
+				}
 				Colors struct {
 					field.RelationField
 				}
@@ -113,6 +116,9 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				BackImage struct {
 					field.RelationField
 				}
+				TimeByTask struct {
+					field.RelationField
+				}
 				Colors struct {
 					field.RelationField
 				}
@@ -132,6 +138,11 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 					field.RelationField
 				}{
 					RelationField: field.NewRelation("Orders.ColorByReference.Reference.BackImage", "models.Image"),
+				},
+				TimeByTask: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.TimeByTask", "models.TimeByTask"),
 				},
 				Colors: struct {
 					field.RelationField
@@ -370,6 +381,9 @@ type customHasManyOrders struct {
 				field.RelationField
 			}
 			BackImage struct {
+				field.RelationField
+			}
+			TimeByTask struct {
 				field.RelationField
 			}
 			Colors struct {

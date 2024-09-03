@@ -76,6 +76,23 @@
     --nav: 239 84% 67%;
     --nav-foreground: 234 0% 98%;
   }
+
+  .prosupervisor,
+  [data-kb-theme="prosupervisor"] {
+    --new: 271 81% 62%;
+    --new-foreground: 271 0% 98%;
+
+
+    --action: 240 76% 62%;
+    --action-foreground: 232 0% 98%;
+
+
+    --header: 220 81% 62%;
+    --header-foreground: 291 0% 98%;
+
+    --nav: 239 84% 67%;
+    --nav-foreground: 234 0% 98%;
+  }
 }
 
 @layer base {

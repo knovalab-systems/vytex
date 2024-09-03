@@ -11,10 +11,11 @@ import (
 func privateReferenceRoutes(g *echo.Group) {
 	route := g.Group("/references")
 
-	resourceController := controllers.ReferenceController{ReferenceRepository: &services.ReferenceService{}}
+	referenceController := controllers.ReferenceController{ReferenceRepository: &services.ReferenceService{}}
 
-	route.GET("", resourceController.ReadReferences, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.GET("/aggregate", resourceController.AggregateReferences, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.POST("", resourceController.CreateReference, middlewares.Policies(models.AllowRoles{Desinger: true}))
-
+	route.GET("", referenceController.ReadReferences, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true, ProSupervisor: true}))
+	route.POST("", referenceController.CreateReference, middlewares.Policies(models.AllowRoles{Desinger: true}))
+	route.GET("/aggregate", referenceController.AggregateReferences, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true, ProSupervisor: true}))
+	route.GET("/:referenceId", referenceController.ReadReference, middlewares.Policies(models.AllowRoles{ProSupervisor: true, Admin: true, Desinger: true}))
+	route.PATCH("/time-by-task/:referenceId", referenceController.UpdateTimesReference, middlewares.Policies(models.AllowRoles{ProSupervisor: true}))
 }

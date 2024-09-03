@@ -8,7 +8,7 @@ describe('ErrorMessage', () => {
 
 		const title = screen.getByText('Error');
 		const subtitle = screen.getByText('Hubo un error durante la ejecución');
-		const tips = screen.getByText('Refresca la página ó contacta con el administrador');
+		const tips = screen.getByText('Refresca la página o contacta con el administrador');
 
 		expect(title).toBeInTheDocument();
 		expect(subtitle).toBeInTheDocument();

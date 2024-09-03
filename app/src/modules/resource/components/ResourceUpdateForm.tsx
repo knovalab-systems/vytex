@@ -22,7 +22,7 @@ import { RESOURCES_PATH } from '~/constants/paths';
 import { STATUS_OPTIONS } from '~/constants/status';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
-import type { Resource } from '~/schemas/core';
+import type { Resource } from '~/types/core';
 import type { GetResourceType } from '../requests/resourceGet';
 import { updateResourceRequest } from '../requests/resourceUpdate';
 import { ResourceUpdateSchema, type ResourceUpdateType } from '../schema/resourceUpdate';

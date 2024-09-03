@@ -123,7 +123,7 @@ func (m *CustomController) CreateCustom(c echo.Context) error {
 // @Success      200 {object} models.Custom
 // @Failure      400
 // @Failure      500
-// @Router       /custom/customId [get]
+// @Router       /custom/{customId} [get]
 func (m *CustomController) ReadCustom(c echo.Context) error {
 	// for query params
 	u := new(models.ReadCustom)

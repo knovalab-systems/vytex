@@ -56,7 +56,7 @@ func (m *UserController) ReadUsers(c echo.Context) error {
 // @Success      200 {object} models.User
 // @Failure      400
 // @Failure      500
-// @Router       /users/userId [get]
+// @Router       /users/{userId} [get]
 func (m *UserController) ReadUser(c echo.Context) error {
 	// for query params
 	u := new(models.UserRead)

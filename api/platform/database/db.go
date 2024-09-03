@@ -1,12 +1,14 @@
 package database
 
 import (
+	"log"
+	"os"
+
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/envs"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"os"
 )
 
 type Config struct {
@@ -23,7 +25,7 @@ func DB() *gorm.DB {
 	var db *gorm.DB
 
 	if os.Getenv("ENV") == "lab" {
-		db, err = gorm.Open(postgres.Open(envs.DSNTEST()), &gorm.Config{})
+		db, err = gorm.Open(postgres.Open(envs.DSNTEST()), &gorm.Config{SkipDefaultTransaction: true})
 	} else {
 		db, err = gorm.Open(postgres.Open(envs.DSN()), &gorm.Config{})
 	}
@@ -39,15 +41,22 @@ func DB() *gorm.DB {
 		WHEN duplicate_object THEN null;
 	END $$;`)
 
-	err = db.AutoMigrate(models.User{}, models.Session{},
-		models.Color{}, models.Resource{}, models.Fabric{},
-		models.Reference{}, models.ColorByReference{},
-		models.ResourceByReference{}, models.FabricByReference{},
-		models.Image{}, models.Supplier{}, models.Composition{},
-		models.Custom{}, models.Order{})
+	err = db.AutoMigrate(&models.User{}, &models.Session{},
+		&models.Color{}, &models.Resource{}, &models.Fabric{},
+		&models.Reference{}, &models.ColorByReference{},
+		&models.ResourceByReference{}, &models.FabricByReference{},
+		&models.Image{}, &models.Supplier{}, &models.Composition{},
+		&models.Custom{}, &models.Order{}, &models.TimeByTask{})
 
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
+	}
+
+	if db.Migrator().HasTable(&models.TimeByTask{}) {
+		err := db.FirstOrCreate(&models.TimeByTask{}, formats.TimeByTaskDTOFormat(models.TimeByTaskDTO{})).Error
+		if err != nil {
+			log.Fatalln("error, not migrated, %w", err)
+		}
 	}
 
 	return db
@@ -60,10 +69,13 @@ func DBGEN() *gorm.DB {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
 
-	err = db.AutoMigrate(models.User{}, models.Session{},
-		models.Color{}, models.Resource{}, models.Fabric{},
-		models.Reference{}, models.ColorByReference{},
-		models.ResourceByReference{}, models.FabricByReference{}, &models.Image{}, models.Supplier{})
+	err = db.AutoMigrate(&models.User{}, &models.Session{},
+		&models.Color{}, &models.Resource{}, &models.Fabric{},
+		&models.Reference{}, &models.ColorByReference{},
+		&models.ResourceByReference{}, &models.FabricByReference{},
+		&models.Image{}, &models.Supplier{}, &models.Composition{},
+		&models.Custom{}, &models.Order{}, &models.TimeByTask{})
+
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}

@@ -7,7 +7,7 @@ function ErrorMessage(props: { title?: string; subtitle?: string; tips?: string 
 				</p>
 				<p class='text-gray-500 text-xl text-center'>{props.subtitle || 'Hubo un error durante la ejecución'}</p>
 				<p class='text-gray-500 text-sm text-center'>
-					{props.tips || 'Refresca la página ó contacta con el administrador'}
+					{props.tips || 'Refresca la página o contacta con el administrador'}
 				</p>
 			</div>
 		</div>

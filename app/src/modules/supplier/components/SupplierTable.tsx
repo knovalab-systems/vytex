@@ -38,10 +38,14 @@ function SupplierTable(props: { suppliers?: GetSuppliersType }) {
 									<StatusLabel status={!supplier.deleted_at} />
 								</TableCell>
 								<ActionsCell
-									update={{
-										path: `${SUPPLIERS_UPDATE_PATH}/${supplier.id}`,
-										title: 'Actualizar Insumo',
-									}}
+									actions={[
+										{
+											path: `${SUPPLIERS_UPDATE_PATH}/${supplier.id}`,
+											title: 'Actualizar proveedor',
+											label: 'Actualizar',
+											icon: 'update',
+										},
+									]}
 								/>
 							</TableRow>
 						)}

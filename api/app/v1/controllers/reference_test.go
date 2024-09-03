@@ -13,6 +13,7 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/config"
 	"github.com/knovalab-systems/vytex/pkg/mocks"
+	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -58,6 +59,68 @@ func TestReadReferences(t *testing.T) {
 		// test
 		err := controller.ReadReferences(c)
 		assert.NoError(t, err)
+	})
+}
+
+func TestReadReference(t *testing.T) {
+	t.Run("Fail binding, id is not find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReference(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not found fabric", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReference").Return(errors.New("error"))
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReference(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get reference successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReference").Return(nil, nil)
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReference(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
 	})
 }
 
@@ -364,6 +427,84 @@ func TestCreateReference(t *testing.T) {
 		err := controller.CreateReference(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
+		}
+	})
+
+}
+
+func TestUpdateTimesReference(t *testing.T) {
+
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+
+		// controller
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.UpdateTimesReference(c)
+
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail update, server error", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"filetear": 200})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("UpdateTimesReference").Return(&models.Reference{}, problems.ServerError())
+		// controller
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.UpdateTimesReference(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusInternalServerError, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Update successfully", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"filetear": 200})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("UpdateTimesReference").Return(&models.Reference{}, nil)
+		// controller
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.UpdateTimesReference(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
 

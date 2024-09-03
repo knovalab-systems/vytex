@@ -54,10 +54,14 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>
 								<ActionsCell
-									update={{
-										path: `${RESOURCES_UPDATE_PATH}/${resource.id}`,
-										title: 'Actualizar insumo',
-									}}
+									actions={[
+										{
+											path: `${RESOURCES_UPDATE_PATH}/${resource.id}`,
+											title: 'Actualizar insumo',
+											label: 'Actualizar',
+											icon: 'update',
+										},
+									]}
 								/>
 							</TableRow>
 						)}

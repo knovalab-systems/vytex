@@ -1,11 +1,11 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readReferences } from '@vytex/client';
+import { aggregate, readReference, readReferences } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
 export function getReferencesQuery(page: number) {
 	return queryOptions({
-		queryKey: ['getReference', page],
+		queryKey: ['getReferences', page],
 		queryFn: () => getReferences(page),
 	});
 }
@@ -38,3 +38,20 @@ async function countReferences() {
 }
 
 export type GetReferenceType = Awaited<ReturnType<typeof getReferences>>;
+
+export function getReferenceForTimesQuery(key: number) {
+	return queryOptions({
+		queryKey: ['getReferenceForTimes', key],
+		queryFn: () => getReferenceForTimes(key),
+	});
+}
+
+async function getReferenceForTimes(key: number) {
+	return await client.request(
+		readReference(key, {
+			fields: ['id', { time_by_task: ['*'] }],
+		}),
+	);
+}
+
+export type GetReferenceForTimesType = Awaited<ReturnType<typeof getReferenceForTimes>>;

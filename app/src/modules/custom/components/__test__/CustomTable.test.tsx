@@ -3,19 +3,11 @@ import '@testing-library/jest-dom';
 import type { GetCustomsType } from '../../requests/CustomGet';
 import CustomTable from '../CustomTable';
 
-type Action = {
-	title: string;
-	path: string;
-};
-
 vi.mock('~/components/ActionsCell', () => ({
-	default: (props: { update?: Action; details?: Action; create?: Action }) => {
+	default: () => {
 		return (
 			<td>
-				{props.update && <span>Actualizar</span>}
-				{props.details && <span>Detalles</span>}
-				{props.create && <span>Agregar</span>}
-				{!props.update && !props.details && !props.create && <span>Acciones</span>}
+				<span>Agregar</span>
 			</td>
 		);
 	},

@@ -291,10 +291,12 @@ describe('ReferenceCreateForm', () => {
 			user: null,
 			colors: null,
 			'count(colors)': undefined,
+			time_by_task_id: null,
+			time_by_task: null,
 		});
 		const imageRequestMock = vi
 			.spyOn(imageRequest, 'uploadImagesRequest')
-			// biome-ignore lint/suspicious/noExplicitAny: type infer fail, dont knos if is a list o item
+			// biome-ignore lint/suspicious/noExplicitAny: type infer fail, dont know if is a list o item
 			.mockResolvedValue([{ id: 1 }, { id: 2 }] as any);
 
 		const file = fileMock('image.png', 1024 * 1024, 'image/png');
@@ -438,6 +440,8 @@ describe('ReferenceCreateForm', () => {
 			user: null,
 			colors: null,
 			'count(colors)': undefined,
+			time_by_task_id: null,
+			time_by_task: null,
 		});
 		const imageRequestMock = vi.spyOn(imageRequest, 'uploadImagesRequest').mockRejectedValue({});
 

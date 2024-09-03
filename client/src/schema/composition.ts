@@ -1,5 +1,4 @@
 import type { MergeCoreCollection } from '../index.js';
-import type { VytexColor } from './color.js';
 
 /**
  * vytex_compositions type
