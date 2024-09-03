@@ -5,7 +5,6 @@ export default defineConfig({
 		baseUrl: 'http://localhost:4040',
 		login: 'http://localhost:4040/login',
 		customs: 'http://localhost:4040/customs',
-		// ...process.env,
 	},
 	e2e: {
 		setupNodeEvents(on, config) {

@@ -4,7 +4,7 @@ import { fa, faker } from '@faker-js/faker';
 
 describe('UpdateSupplier test', () => {
 	beforeEach(() => {
-		cy.visit('http://localhost:4040/');
+		cy.visit(Cypress.env('login'));
 		cy.get('#username-field').clear();
 		cy.get('#username-field').type('admin');
 		cy.get('#pass-field').clear();

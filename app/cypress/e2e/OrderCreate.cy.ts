@@ -1,6 +1,5 @@
 // CustomCreate.cy.ts
 /// <reference types="cypress" />
-import { faker } from '@faker-js/faker';
 
 describe('CustomCreate test', () => {
 	beforeEach(() => {

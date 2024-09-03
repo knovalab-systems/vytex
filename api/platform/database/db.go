@@ -2,8 +2,6 @@ package database
 
 import (
 	"log"
-	"os"
-
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/envs"

@@ -155,7 +155,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			Role:     roles[i%len(roles)],
 		}
 
-		password := "password"
+		password := "Password123"
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatalf("No se pudo encriptar la contraseña: %v", err)
