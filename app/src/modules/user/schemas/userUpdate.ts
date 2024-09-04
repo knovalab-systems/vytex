@@ -20,7 +20,7 @@ export const UserUpdateSchema = object({
 		roleList.map(role => role.key),
 		'Selecciona un rol.',
 	),
-	deleted_at: picklist<string[]>(Object.keys(STATUS_OPTIONS)),
+	deleted_at: picklist<string[], string>(Object.keys(STATUS_OPTIONS), 'Selecciona un estado.'),
 });
 
 export type UserUpdateType = InferInput<typeof UserUpdateSchema>;

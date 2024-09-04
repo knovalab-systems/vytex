@@ -7,7 +7,7 @@ export const SupplierCreateSchema = object({
 	nit: pipe(
 		number('Ingresa el NIT.'),
 		minValue(1, 'Ingresa el NIT.'),
-		check(n => String(n).length === 9, 'El NIT debe ser de 9 dígitos'),
+		check(n => String(n).length === 9, 'El NIT debe ser de 9 dígitos.'),
 	),
 });
 

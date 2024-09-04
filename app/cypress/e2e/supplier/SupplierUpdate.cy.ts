@@ -6,9 +6,9 @@ describe('UpdateSupplier test', () => {
 	beforeEach(() => {
 		cy.visit(Cypress.env('login'));
 		cy.get('#username-field').clear();
-		cy.get('#username-field').type('admin');
+		cy.get('#username-field').type(Cypress.env('ADMIN_USER'));
 		cy.get('#pass-field').clear();
-		cy.get('#pass-field').type('password123');
+		cy.get('#pass-field').type(Cypress.env('ADMIN_PASSWORD'));
 		cy.get('.inline-flex').click();
 		cy.get('.w-1\\/8 > .space-y-2 > :nth-child(4) > .flex > .ml-3').click();
 		cy.get('.h-full > :nth-child(1) > .inactive > .inline-flex').click();

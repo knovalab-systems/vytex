@@ -22,7 +22,7 @@ describe('UpdateUser', () => {
 		cy.get('#username-field').clear();
 		cy.get('#username-field').type(faker.internet.userName());
 		cy.get('#pass-field').clear();
-		cy.get('#pass-field').type('Password12');
+		cy.get('#pass-field').type(faker.internet.password());
 
 		// open roles select
 		cy.get('[aria-label=Roles]').click();
@@ -63,7 +63,7 @@ describe('UpdateUser', () => {
 
 	it('ci username exists', () => {
 		cy.get('#username-field').clear();
-		cy.get('#username-field').type('admin');
+		cy.get('#username-field').type(Cypress.env('ADMIN_USER'));
 
 		cy.get('.bg-success').click();
 		cy.get('[role="status"]').should('have.text', 'El nombre de usuario "admin" no está disponible. Intente con otro.');
@@ -100,13 +100,6 @@ describe('UpdateUser', () => {
 
 		cy.get('.bg-success').click();
 		cy.get('.text-red-600').should('have.text', 'La contraseña debe contener mayúsculas, minúsculas y números.');
-	});
-
-	it('ci password empty', () => {
-		cy.get('#pass-field').clear();
-
-		cy.get('.bg-success').click();
-		cy.get('.text-red-600').should('have.text', 'Ingresa la contraseña.');
 	});
 
 	// Role

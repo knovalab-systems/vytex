@@ -8,7 +8,7 @@ export const SupplierUpdateSchema = object({
 	nit: pipe(
 		number('Ingresa el NIT.'),
 		minValue(1, 'Ingresa el NIT.'),
-		check(n => String(n).length === 9, 'El NIT debe ser de 9 dígitos'),
+		check(n => String(n).length === 9, 'El NIT debe ser de 9 dígitos.'),
 	),
 	deleted_at: picklist<string[], string>(Object.keys(STATUS_OPTIONS), 'Selecciona un estado.'),
 });
