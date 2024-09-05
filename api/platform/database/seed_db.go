@@ -3,6 +3,7 @@ package database
 import (
 	"log"
 	"math/rand"
+	"os"
 	"sync"
 	"time"
 
@@ -15,38 +16,73 @@ import (
 
 func SeedDB(db *gorm.DB) {
 	roles := []string{
-		"31b63ffb-15f5-48d7-9a24-587f437f07ec", // Admin Role
-		"739c8723-85c0-42d8-aef0-5de054890dee", // No Role
-		"b3c766e9-3d70-4f33-a816-b0cd6168da81", // Designer Role
+		os.Getenv("ADMIN_ROLE"),
+		os.Getenv("NO_ROLE"),
+		os.Getenv("DESIGNER_ROLE"),
 	}
-
-	generateUsers(db, roles)
+	var userCount int64
+	db.Model(&models.User{}).Count(&userCount)
+	if userCount == 0 {
+		generateUsers(db, roles)
+	}
 
 	var wg sync.WaitGroup
 
-	stage1Functions := []func(*gorm.DB){generateColors, generateSupplier, generateComposition}
-	for _, fn := range stage1Functions {
-		wg.Add(1)
-		go func(f func(*gorm.DB)) {
-			defer wg.Done()
-			f(db)
-		}(fn)
+	stage1Functions := []struct {
+		model interface{}
+		fn    func(*gorm.DB)
+	}{
+		{&models.Color{}, generateColors},
+		{&models.Supplier{}, generateSupplier},
+		{&models.Composition{}, generateComposition},
+	}
+
+	for _, item := range stage1Functions {
+		var count int64
+		db.Model(item.model).Count(&count)
+		if count == 0 {
+			wg.Add(1)
+			go func(f func(*gorm.DB)) {
+				defer wg.Done()
+				f(db)
+			}(item.fn)
+		}
 	}
 	wg.Wait()
 
-	stage2Functions := []func(*gorm.DB){generateResource, generateFabric, generateImage}
-	for _, fn := range stage2Functions {
-		wg.Add(1)
-		go func(f func(*gorm.DB)) {
-			defer wg.Done()
-			f(db)
-		}(fn)
+	stage2Functions := []struct {
+		model interface{}
+		fn    func(*gorm.DB)
+	}{
+		{&models.Resource{}, generateResource},
+		{&models.Fabric{}, generateFabric},
+		{&models.Image{}, generateImage},
+	}
+
+	for _, item := range stage2Functions {
+		var count int64
+		db.Model(item.model).Count(&count)
+		if count == 0 {
+			wg.Add(1)
+			go func(f func(*gorm.DB)) {
+				defer wg.Done()
+				f(db)
+			}(item.fn)
+		}
 	}
 	wg.Wait()
 
-	generateReference(db)
+	var referenceCount int64
+	db.Model(&models.Reference{}).Count(&referenceCount)
+	if referenceCount == 0 {
+		generateReference(db)
+	}
 
-	generateCustoms(db)
+	var customCount int64
+	db.Model(&models.Custom{}).Count(&customCount)
+	if customCount == 0 {
+		generateCustoms(db)
+	}
 }
 
 func reduceStringLength(input string, length int) string {
@@ -98,8 +134,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			Role:     u.Role,
 		}
 
-		password := "password123"
-		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatalf("No se pudo encriptar la contraseña: %v", err)
 		}
@@ -120,7 +155,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			Role:     roles[i%len(roles)],
 		}
 
-		password := "password"
+		password := "Password123"
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			log.Fatalf("No se pudo encriptar la contraseña: %v", err)
@@ -189,6 +224,16 @@ func generateSupplier(db *gorm.DB) {
 		suppliers = append(suppliers, supplier)
 	}
 
+	// add unique supplier
+	supplier := models.Supplier{
+		Name:  faker.Name(),
+		Brand: faker.LastName(),
+		Code:  "12345",
+		Nit:   "123456789",
+	}
+
+	suppliers = append(suppliers, supplier)
+
 	result := db.Create(&suppliers)
 	if result.Error != nil {
 		log.Fatalf("No se pudo crear los proveedores: %v", result.Error)
@@ -237,91 +282,27 @@ func generateComposition(db *gorm.DB) {
 
 	for i := 0; i < 10; i++ {
 		var algod, elast, lino, nylon, polye, rayon, rayvis, tencel, visco, hilom uint
-		total := 0
 
-		for total < 100 {
-			remaining := 100 - total
-			algod = uint(rand.Intn(remaining + 1))
-			total += int(algod)
-			if total >= 100 {
-				break
-			}
+		comp := []uint{algod, elast, lino, nylon, polye, rayon, rayvis, tencel, visco, hilom}
+		total := 10000
 
-			remaining = 100 - total
-			elast = uint(rand.Intn(remaining + 1))
-			total += int(elast)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			lino = uint(rand.Intn(remaining + 1))
-			total += int(lino)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			nylon = uint(rand.Intn(remaining + 1))
-			total += int(nylon)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			polye = uint(rand.Intn(remaining + 1))
-			total += int(polye)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			rayon = uint(rand.Intn(remaining + 1))
-			total += int(rayon)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			rayvis = uint(rand.Intn(remaining + 1))
-			total += int(rayvis)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			tencel = uint(rand.Intn(remaining + 1))
-			total += int(tencel)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			visco = uint(rand.Intn(remaining + 1))
-			total += int(visco)
-			if total >= 100 {
-				break
-			}
-
-			remaining = 100 - total
-			hilom = uint(rand.Intn(remaining + 1))
-			total += int(hilom)
-			if total >= 100 {
-				break
-			}
+		for j := 0; j < len(comp)-1; j++ {
+			comp[j] = uint(rand.Intn(total + 1))
+			total -= int(comp[j])
 		}
+		comp[len(comp)-1] = uint(total)
 
 		composition := models.Composition{
-			Algod:  algod,
-			Elast:  elast,
-			Lino:   lino,
-			Nylon:  nylon,
-			Polye:  polye,
-			Rayon:  rayon,
-			Rayvis: rayvis,
-			Tencel: tencel,
-			Visco:  visco,
-			Hilom:  hilom,
+			Algod:  comp[0],
+			Elast:  comp[1],
+			Lino:   comp[2],
+			Nylon:  comp[3],
+			Polye:  comp[4],
+			Rayon:  comp[5],
+			Rayvis: comp[6],
+			Tencel: comp[7],
+			Visco:  comp[8],
+			Hilom:  comp[9],
 		}
 
 		compositions = append(compositions, composition)

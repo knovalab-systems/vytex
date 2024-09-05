@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/knovalab-systems/vytex/config"
+	"github.com/knovalab-systems/vytex/pkg/envs"
 	"github.com/knovalab-systems/vytex/pkg/middlewares"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"github.com/knovalab-systems/vytex/pkg/routes"
@@ -26,6 +27,11 @@ func main() {
 	// database
 	db := database.DB()
 	query.SetDefault(db)
+
+	// seed test data
+	if envs.ENVIRONMENT() == "test" {
+		database.SeedDB(db)
+	}
 
 	// routes
 	routes.SwaggerRoutes(e)

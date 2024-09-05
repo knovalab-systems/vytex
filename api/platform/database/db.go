@@ -2,8 +2,6 @@ package database
 
 import (
 	"log"
-	"os"
-
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/envs"
@@ -24,7 +22,7 @@ func DB() *gorm.DB {
 	var err error
 	var db *gorm.DB
 
-	if os.Getenv("ENV") == "lab" {
+	if envs.ENVIRONMENT() == "test" {
 		db, err = gorm.Open(postgres.Open(envs.DSNTEST()), &gorm.Config{SkipDefaultTransaction: true})
 	} else {
 		db, err = gorm.Open(postgres.Open(envs.DSN()), &gorm.Config{})

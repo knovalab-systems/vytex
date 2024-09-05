@@ -3,12 +3,13 @@
 
 describe('Login test', () => {
 	beforeEach(() => {
-		cy.visit('/login');
+		cy.visit(Cypress.env('login'));
 	});
 
 	it('username-password-cv', () => {
-		cy.get('#username-field').type('awalker1');
-		cy.get('#pass-field').type('Muv2020-4-D*');
+		cy.get('#username-field').type(Cypress.env('ADMIN_USER'));
+		cy.get('#pass-field').clear();
+		cy.get('#pass-field').type(Cypress.env('ADMIN_PASSWORD'));
 		cy.get('.inline-flex').click();
 
 		// home should be in the page
@@ -18,7 +19,7 @@ describe('Login test', () => {
 	// username
 
 	it('username-ci-empty', () => {
-		cy.get('#pass-field').type('Muv2020-4-D*');
+		cy.get('#pass-field').type('password123');
 		cy.get('.inline-flex').click();
 
 		cy.get('.text-red-600').should('have.text', 'Ingresa el usuario.');
@@ -26,7 +27,7 @@ describe('Login test', () => {
 
 	it('username-ci-dont-exits', () => {
 		cy.get('#username-field').type('nouser');
-		cy.get('#pass-field').type('Muv2020-4-D*');
+		cy.get('#pass-field').type('password123');
 		cy.get('.inline-flex').click();
 
 		cy.get('[role="status"]').should('have.text', 'Revisa tu usuario y contraseña');
@@ -36,7 +37,7 @@ describe('Login test', () => {
 
 	it('password-ci-empty', () => {
 		cy.get('#username-field').clear();
-		cy.get('#username-field').type('awalker1');
+		cy.get('#username-field').type('admin');
 		cy.get('#pass-field').clear();
 		cy.get('.inline-flex').click();
 		cy.get('.text-red-600').should('have.text', 'Ingresa la contraseña.');
@@ -44,7 +45,7 @@ describe('Login test', () => {
 
 	it('password-ci-bad-password', () => {
 		cy.get('#username-field').clear();
-		cy.get('#username-field').type('awalker1');
+		cy.get('#username-field').type('admin');
 		cy.get('#pass-field').clear();
 		cy.get('#pass-field').type('123456789');
 		cy.get('.inline-flex').click();
