@@ -2,6 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import AllowRoles from '~/components/AllowRoles';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
@@ -54,7 +55,7 @@ function ReferencesPage() {
 					<Loading label='Cargando referencias' />
 				</Match>
 				<Match when={references.isSuccess && countReferences.isSuccess}>
-					<ReferenceTable references={references.data} />
+					<ReferenceTable references={references.data} actions={() => <ActionsCell actions={[]} />} />
 					<Pagination
 						class='[&>*]:justify-center'
 						count={pages()}

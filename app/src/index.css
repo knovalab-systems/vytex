@@ -79,18 +79,16 @@
 
   .prosupervisor,
   [data-kb-theme="prosupervisor"] {
-    --new: 271 81% 62%;
-    --new-foreground: 271 0% 98%;
+    --new: 215 54% 62;
+    --new-foreground: 152 0% 100%;
 
-
-    --action: 240 76% 62%;
+    --action: 36 86% 66%;
     --action-foreground: 232 0% 98%;
 
-
-    --header: 220 81% 62%;
+    --header: 0 59% 55%;
     --header-foreground: 291 0% 98%;
 
-    --nav: 239 84% 67%;
+    --nav: 352 64% 38%;
     --nav-foreground: 234 0% 98%;
   }
 }

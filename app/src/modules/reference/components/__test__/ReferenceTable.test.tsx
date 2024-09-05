@@ -3,13 +3,15 @@ import '@testing-library/jest-dom';
 import type { GetReferenceType } from '../../requests/referenceGet';
 import ReferenceTable from '../ReferenceTable';
 
+const actions = (reference: string | number) => <div title={reference.toString()}>actions</div>;
+
 describe('Reference Table', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly on empty references', () => {
-		render(() => <ReferenceTable references={undefined} />);
+		render(() => <ReferenceTable references={undefined} actions={actions} />);
 		const tableHeader = screen.getByText('No se han encontrado referencias.');
 
 		expect(tableHeader).toBeInTheDocument();
@@ -24,7 +26,7 @@ describe('Reference Table', () => {
 			},
 		];
 
-		render(() => <ReferenceTable references={references} />);
+		render(() => <ReferenceTable references={references} actions={actions} />);
 		const referenceId = screen.getByText('123');
 		const referenceCode = screen.getByText('REF001');
 		const referenceStatus = screen.getByText('Activo');

@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import { MIN_NUM_VALUE, REQ_NUM_VALUE_MSG } from '~/constants/commonErrMsgs';
-import { TASKS } from '~/constants/tasks';
+import { DEFAULT_TIME_BY_TASK } from '~/constants/tasks';
 import type { TimeByTask } from '~/types/core';
 import * as requests from '../../requests/referenceTimesUpdate';
 import ReferenceTimesUpdateForm from '../ReferenceTimesUpdateForm';
@@ -12,21 +12,13 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
-const defaultTimes = {
-	id: 1,
-	...TASKS.reduce((p: Record<string, number>, v) => {
-		p[v] = 0;
-		return p;
-	}, {}),
-};
-
 describe('ReferenceTimesUpdateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly', () => {
-		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: defaultTimes as TimeByTask }} />);
+		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />);
 		const title = screen.getByText('Actualizar tiempos de la referencia');
 		const stateField = screen.queryByText('segundos');
 		const submitButton = screen.getByText('Actualizar');
@@ -47,7 +39,9 @@ describe('ReferenceTimesUpdateForm', () => {
 
 	for (const testCases of testCasesErrors) {
 		it(testCases.title, async () => {
-			render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: defaultTimes as TimeByTask }} />);
+			render(() => (
+				<ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />
+			));
 			const submitButton = screen.getByText('Actualizar');
 			const inputs = screen.getAllByPlaceholderText('90');
 
@@ -77,7 +71,7 @@ describe('ReferenceTimesUpdateForm', () => {
 			colors: null,
 			colors_count: 0,
 		});
-		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: defaultTimes as TimeByTask }} />);
+		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />);
 
 		const submitButton = screen.getByText('Actualizar');
 		const inputs = screen.getAllByPlaceholderText('90');
@@ -95,7 +89,7 @@ describe('ReferenceTimesUpdateForm', () => {
 	it('calls submit with server error', async () => {
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 		const requestMock = vi.spyOn(requests, 'updateTimesRefenceRequest').mockRejectedValue({});
-		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: defaultTimes as TimeByTask }} />);
+		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />);
 
 		const submitButton = screen.getByText('Actualizar');
 		const inputs = screen.getAllByPlaceholderText('90');
@@ -110,7 +104,7 @@ describe('ReferenceTimesUpdateForm', () => {
 	});
 
 	it('calls cancel successfully', async () => {
-		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: defaultTimes as TimeByTask }} />);
+		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />);
 		const cancelButton = screen.getByText('Cancelar');
 		fireEvent.click(cancelButton);
 		await waitFor(() => {
