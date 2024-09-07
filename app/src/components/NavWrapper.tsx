@@ -45,7 +45,7 @@ function NavWrapper(props: RouteSectionProps) {
 
 	createEffect(() => {
 		if (user.isSuccess) {
-			document.documentElement.className = roles[user.data?.role as string].type || '';
+			document.documentElement.className = roles[user.data.role?.id as string].type || '';
 		}
 	});
 
@@ -57,7 +57,7 @@ function NavWrapper(props: RouteSectionProps) {
 			<Match when={user.isPending}>
 				<Loading label='Cargando rol' />
 			</Match>
-			<Match when={user.isSuccess && user.data.role === ROLES.ADMIN_ROLE}>
+			<Match when={user.isSuccess && user.data.role?.id === ROLES.ADMIN_ROLE}>
 				<div class='flex flex-col w-full h-fit lg:h-full lg:flex-row'>
 					<SideBarNav pages={pages[ROLES.ADMIN_ROLE]} />
 					<MobileNav pages={pages[ROLES.ADMIN_ROLE]} />
@@ -68,11 +68,11 @@ function NavWrapper(props: RouteSectionProps) {
 					</main>
 				</div>
 			</Match>
-			<Match when={user.isSuccess && user.data.role === ROLES.NO_ROLE}>{props.children}</Match>
+			<Match when={user.isSuccess && user.data.role?.id === ROLES.NO_ROLE}>{props.children}</Match>
 			<Match when={user.isSuccess}>
 				<div class='flex flex-col w-full h-fit lg:h-full'>
-					<MenuNav pages={pages[user.data?.role as string]} />
-					<MobileNav pages={pages[user.data?.role as string]} />
+					<MenuNav pages={pages[user.data?.role?.id as string]} />
+					<MobileNav pages={pages[user.data?.role?.id as string]} />
 					<main class={cn(baseClassMain)}>
 						<Suspense fallback={<Loading label='Cargando página' />}>
 							{<Show when={!isRouting()}>{props.children}</Show>}

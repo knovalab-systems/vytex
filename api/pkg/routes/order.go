@@ -13,7 +13,7 @@ func privateOrderRoutes(g *echo.Group) {
 
 	orderController := controllers.OrderController{OrderRepository: &services.OrderService{}}
 
-	route.GET("", orderController.ReadOrders, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.GET("/aggregate", orderController.AggregateOrders, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.POST("", orderController.CreateOrder, middlewares.Policies(models.AllowRoles{Admin: true}))
+	route.GET("", orderController.ReadOrders, middlewares.Policies([]models.Policie{models.ReadOrders}))
+	route.GET("/aggregate", orderController.AggregateOrders, middlewares.Policies([]models.Policie{models.ReadOrders}))
+	route.POST("", orderController.CreateOrder, middlewares.Policies([]models.Policie{models.CreateOrders}))
 }

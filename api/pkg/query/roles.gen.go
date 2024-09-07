@@ -30,7 +30,7 @@ func newRole(db *gorm.DB, opts ...gen.DOOption) role {
 	_role.ID = field.NewString(tableName, "id")
 	_role.Name = field.NewString(tableName, "name")
 	_role.IsAdmin = field.NewBool(tableName, "is_admin")
-	_role.Static = field.NewBool(tableName, "static")
+	_role.Code = field.NewString(tableName, "code")
 	_role.Policies = field.NewField(tableName, "policies")
 
 	_role.fillFieldMap()
@@ -45,7 +45,7 @@ type role struct {
 	ID       field.String
 	Name     field.String
 	IsAdmin  field.Bool
-	Static   field.Bool
+	Code     field.String
 	Policies field.Field
 
 	fieldMap map[string]field.Expr
@@ -66,7 +66,7 @@ func (r *role) updateTableName(table string) *role {
 	r.ID = field.NewString(table, "id")
 	r.Name = field.NewString(table, "name")
 	r.IsAdmin = field.NewBool(table, "is_admin")
-	r.Static = field.NewBool(table, "static")
+	r.Code = field.NewString(table, "code")
 	r.Policies = field.NewField(table, "policies")
 
 	r.fillFieldMap()
@@ -88,7 +88,7 @@ func (r *role) fillFieldMap() {
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["name"] = r.Name
 	r.fieldMap["is_admin"] = r.IsAdmin
-	r.fieldMap["static"] = r.Static
+	r.fieldMap["code"] = r.Code
 	r.fieldMap["policies"] = r.Policies
 }
 

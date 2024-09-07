@@ -16,7 +16,7 @@ export const UserUpdateSchema = object({
 		],
 		'La contraseña debe ser de mínimo 8 caracteres.',
 	),
-	role: picklist(
+	role_id: picklist(
 		roleList.map(role => role.key),
 		'Selecciona un rol.',
 	),

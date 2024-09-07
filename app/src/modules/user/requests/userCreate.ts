@@ -7,7 +7,7 @@ export async function createUserRequest(name: string, username: string, password
 			name: name,
 			username: username,
 			password: password,
-			role: roleId,
+			role_id: roleId,
 		}),
 	);
 }

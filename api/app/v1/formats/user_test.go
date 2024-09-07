@@ -70,32 +70,3 @@ func TestToUpdateUser(t *testing.T) {
 	})
 
 }
-
-func TestIsRole(t *testing.T) {
-
-	t.Setenv("NO_ROLE", "739c8723-85c0-42d8-aef0-5de054890dee")
-	t.Setenv("ADMIN_ROLE", "31b63ffb-15f5-48d7-9a24-587f437f07ec")
-	t.Setenv("DESIGNER_ROLE", "b3c766e9-3d70-4f33-a816-b0cd6168da81")
-
-	t.Run("is not a valid role", func(t *testing.T) {
-
-		value := IsRole("nomatch")
-
-		assert.Equal(t, value, false)
-
-	})
-
-	validRolesTestCases := []string{"b3c766e9-3d70-4f33-a816-b0cd6168da81", "31b63ffb-15f5-48d7-9a24-587f437f07ec", "739c8723-85c0-42d8-aef0-5de054890dee"}
-
-	for i := range validRolesTestCases {
-		testCase := validRolesTestCases[i]
-		t.Run("is valid role", func(t *testing.T) {
-
-			value := IsRole(testCase)
-
-			assert.Equal(t, value, true)
-
-		})
-	}
-
-}

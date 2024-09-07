@@ -64,7 +64,8 @@ func DB() *gorm.DB {
 
 	// basic roles
 	if db.Migrator().HasTable(&models.Role{}) {
-		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).Assign(models.ADMIN_ROLE()).FirstOrCreate(&models.Role{}).Error
+		admin := &models.Role{}
+		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
 		if err != nil {
 			log.Fatalln("error on create admin role, not migrated, %w", err)
 		}
@@ -76,32 +77,26 @@ func DB() *gorm.DB {
 		if err != nil {
 			log.Fatalln("error on create pro supervisor role, not migrated, %w", err)
 		}
-	}
 
-	if db.Migrator().HasTable(&models.User{}) {
-		if err := db.First(&models.User{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
-			role := models.Role{}
-			err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).First(&role).Error
-			if err != nil {
-				log.Fatalln("error on get admin role, not migrated, %w", err)
-			}
-
-			hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost) // pending: from env password
-			if err != nil {
-				log.Fatalf("No se pudo encriptar la contraseña: %v", err)
-			}
-			now := time.Now()
-			result := db.Create(&models.User{
-				ID:        uuid.New().String(),
-				Username:  "admin",
-				Name:      "Administrador",
-				Password:  string(hashedPassword),
-				CreatedAt: &now,
-				UpdatedAt: &now,
-				RoleId:    role.ID,
-			})
-			if result.Error != nil {
-				log.Fatalf("Error al crear administrador: %v", err)
+		if db.Migrator().HasTable(&models.User{}) {
+			if err := db.First(&models.User{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+				hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost) // pending: from env password
+				if err != nil {
+					log.Fatalf("No se pudo encriptar la contraseña: %v", err)
+				}
+				now := time.Now()
+				result := db.Create(&models.User{
+					ID:        uuid.New().String(),
+					Username:  "admin",
+					Name:      "Administrador",
+					Password:  string(hashedPassword),
+					CreatedAt: &now,
+					UpdatedAt: &now,
+					RoleId:    admin.ID,
+				})
+				if result.Error != nil {
+					log.Fatalf("Error al crear administrador: %v", err)
+				}
 			}
 		}
 	}

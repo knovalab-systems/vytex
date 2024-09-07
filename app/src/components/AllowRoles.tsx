@@ -11,7 +11,7 @@ function AllowRoles(props: { children: JSXElement; roles: Array<RoleType>; to?: 
 	createEffect(() => {
 		if (user?.role) {
 			for (const role of props.roles) {
-				if (role === roles[user.role as string].type) {
+				if (role === roles[user.role.id as string].type) {
 					setPermission('allow');
 					return;
 				}

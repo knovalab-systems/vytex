@@ -24,14 +24,14 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 		initialValues: {
 			name: props.user?.name || '',
 			username: props.user?.username || '',
-			role: props.user?.role || NO_ROLE,
+			role_id: props.user?.role_id || NO_ROLE,
 			deleted_at: !props.user?.deleted_at ? 'Activo' : 'Inactivo',
 		},
 	});
 
 	const handleSubmit: SubmitHandler<UserUpdateType> = async data => {
 		const { deleted_at, ...rest } = data;
-		const user: User = Object.keys(rest).reduce((p: User, v) => {
+		const user: User = Object.keys(rest).reduce((p: Omit<User, 'role'>, v) => {
 			const field = rest[v as keyof typeof rest];
 			const oldField = props.user?.[v as keyof typeof props.user];
 			if (field && field !== oldField) {
@@ -113,14 +113,14 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 						</div>
 					)}
 				</Field>
-				<Field name='role'>
+				<Field name='role_id'>
 					{field => (
 						<div>
 							<LabelSpan>Rol</LabelSpan>
 							<Select
 								value={field.value}
 								onChange={value => {
-									setValue(form, 'role', value);
+									setValue(form, 'role_id', value);
 								}}
 								options={roleList.map(e => e.key)}
 								placeholder='Selecciona un rol'

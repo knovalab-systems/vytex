@@ -5,7 +5,7 @@ import AllowRoles from '../AllowRoles';
 
 vi.mock('~/lib/queryClient', () => ({
 	queryClient: {
-		getQueryData: () => ({ role: ADMIN_ROLE }),
+		getQueryData: () => ({ role: { id: ADMIN_ROLE } }),
 	},
 }));
 

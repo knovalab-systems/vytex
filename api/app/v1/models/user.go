@@ -45,7 +45,7 @@ type UserUpdateBody struct {
 	Username  string              `json:"username" validate:"omitempty,gt=0"`
 	Name      string              `json:"name" validate:"omitempty,gt=0"`
 	Password  string              `json:"password" validate:"omitempty,lte=20,gte=8"`
-	Role      string              `json:"role" validate:"omitempty,uuid"`
+	Role      string              `json:"role_id" validate:"omitempty,uuid"`
 	DeletedAt Optional[time.Time] `json:"deleted_at"`
 }
 
@@ -53,7 +53,7 @@ type UserCreateBody struct {
 	Username string `json:"username" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Password string `json:"password" validate:"required,lte=20,gte=8"`
-	Role     string `json:"role" validate:"uuid"`
+	Role     string `json:"role_id" validate:"uuid"`
 }
 
 type UserFilter struct {

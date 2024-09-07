@@ -13,9 +13,9 @@ func privateResourceRoutes(g *echo.Group) {
 
 	resourceController := controllers.ResourceController{ResourceRepository: &services.ResourceService{}}
 
-	route.GET("", resourceController.ReadResources, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.GET("/aggregate", resourceController.AggregateResources, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.POST("", resourceController.CreateResource, middlewares.Policies(models.AllowRoles{Desinger: true}))
-	route.GET("/:resourceId", resourceController.ReadResource, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.PATCH("/:resourceId", resourceController.UpdateResource, middlewares.Policies(models.AllowRoles{Desinger: true}))
+	route.GET("", resourceController.ReadResources, middlewares.Policies([]models.Policie{models.ReadResources, models.CreateReferences, models.UpdateReferences}))
+	route.GET("/aggregate", resourceController.AggregateResources, middlewares.Policies([]models.Policie{models.ReadReferences}))
+	route.POST("", resourceController.CreateResource, middlewares.Policies([]models.Policie{models.CreateResources}))
+	route.GET("/:resourceId", resourceController.ReadResource, middlewares.Policies([]models.Policie{models.ReadResources, models.UpdateResources}))
+	route.PATCH("/:resourceId", resourceController.UpdateResource, middlewares.Policies([]models.Policie{models.UpdateResources}))
 }

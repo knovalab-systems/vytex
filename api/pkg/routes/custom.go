@@ -13,9 +13,8 @@ func privateCustomRoutes(g *echo.Group) {
 
 	customController := controllers.CustomController{CustomRepository: &services.CustomService{}}
 
-	route.GET("", customController.ReadCustoms, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.GET("/aggregate", customController.AggregateCustoms, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.POST("", customController.CreateCustom, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.GET("/:customId", customController.ReadCustom, middlewares.Policies(models.AllowRoles{Admin: true}))
-
+	route.GET("", customController.ReadCustoms, middlewares.Policies([]models.Policie{models.ReadCustoms}))
+	route.GET("/aggregate", customController.AggregateCustoms, middlewares.Policies([]models.Policie{models.ReadCustoms}))
+	route.POST("", customController.CreateCustom, middlewares.Policies([]models.Policie{models.CreateCustoms}))
+	route.GET("/:customId", customController.ReadCustom, middlewares.Policies([]models.Policie{models.ReadCustoms}))
 }

@@ -58,7 +58,7 @@ function ReferencesProSupervisorPage() {
 									},
 									{
 										icon: 'details',
-										label: 'Detwalles',
+										label: 'Detalles',
 										title: 'Detalles de la referencia',
 										path: `${REFS_PRO_SUPERVISOR_PATH}/${reference}`,
 									},

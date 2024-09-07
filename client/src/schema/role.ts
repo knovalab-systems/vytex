@@ -7,7 +7,7 @@ export type VytexRole<Schema = any> = MergeCoreCollection<
 		id: string;
 		name: string | null;
 		is_admin: boolean | null;
-		static: boolean | null;
+		code: string | null;
 		policies: number[] | null;
 	}
 >;

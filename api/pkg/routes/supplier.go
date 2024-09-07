@@ -13,10 +13,9 @@ func privateSupplierRoutes(g *echo.Group) {
 
 	supplierController := controllers.SupplierController{SupplierRepository: &services.SupplierService{}}
 
-	route.GET("", supplierController.ReadSuppliers, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.GET("/aggregate", supplierController.AggregateSuppliers, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.POST("", supplierController.CreateSupplier, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.GET("/:supplierId", supplierController.ReadSupplier, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.PATCH("/:supplierId", supplierController.UpdateSupplier, middlewares.Policies(models.AllowRoles{Admin: true}))
-
+	route.GET("", supplierController.ReadSuppliers, middlewares.Policies([]models.Policie{models.ReadSuppliers, models.CreateFabrics, models.UpdateFabrics, models.CreateResources, models.UpdateResources}))
+	route.GET("/aggregate", supplierController.AggregateSuppliers, middlewares.Policies([]models.Policie{models.ReadSuppliers}))
+	route.POST("", supplierController.CreateSupplier, middlewares.Policies([]models.Policie{models.CreateSuppliers}))
+	route.GET("/:supplierId", supplierController.ReadSupplier, middlewares.Policies([]models.Policie{models.ReadSuppliers, models.UpdateSuppliers}))
+	route.PATCH("/:supplierId", supplierController.UpdateSupplier, middlewares.Policies([]models.Policie{models.UpdateSuppliers}))
 }

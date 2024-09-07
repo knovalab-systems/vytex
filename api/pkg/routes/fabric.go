@@ -13,9 +13,9 @@ func privateFabricRoutes(g *echo.Group) {
 
 	fabricController := controllers.FabricController{FabricRepository: &services.FabricService{}}
 
-	route.GET("", fabricController.ReadFabrics, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.GET("/aggregate", fabricController.AggregateFabrics, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.POST("", fabricController.CreateFabric, middlewares.Policies(models.AllowRoles{Desinger: true}))
-	route.GET("/:fabricId", fabricController.ReadFabric, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.PATCH("/:fabricId", fabricController.UpdateFabric, middlewares.Policies(models.AllowRoles{Desinger: true}))
+	route.GET("", fabricController.ReadFabrics, middlewares.Policies([]models.Policie{models.ReadFabrics, models.CreateReferences, models.UpdateReferences}))
+	route.GET("/aggregate", fabricController.AggregateFabrics, middlewares.Policies([]models.Policie{models.ReadFabrics}))
+	route.POST("", fabricController.CreateFabric, middlewares.Policies([]models.Policie{models.UpdateFabrics}))
+	route.GET("/:fabricId", fabricController.ReadFabric, middlewares.Policies([]models.Policie{models.ReadFabrics}))
+	route.PATCH("/:fabricId", fabricController.UpdateFabric, middlewares.Policies([]models.Policie{models.UpdateFabrics}))
 }

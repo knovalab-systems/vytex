@@ -34,7 +34,7 @@ function RoleCell(props: {
 
 	const handleSubmit = () => {
 		if (value().key !== role().key) {
-			const user: User = { role: value().key };
+			const user: User = { role_id: value().key };
 			updateUserRequest(props.userId, user)
 				.then(() => {
 					setRole(value());

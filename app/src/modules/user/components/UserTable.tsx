@@ -32,7 +32,7 @@ function UserTable(props: { users?: GetUsersType }) {
 								<TableCell>{user.id}</TableCell>
 								<TableCell>{user.username}</TableCell>
 								<TableCell>{user.name}</TableCell>
-								<RoleCell userId={user.id} roleValue={user.role as string} />
+								<RoleCell userId={user.id} roleValue={user.role?.id as string} />
 								<DeletedAtCell deleted_at={user.deleted_at} userId={user.id} />
 								<ActionsCell
 									actions={[

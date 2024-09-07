@@ -1,14 +1,16 @@
 package middlewares
 
 import (
+	"slices"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/pkg/envs"
 	"github.com/knovalab-systems/vytex/pkg/problems"
+	"github.com/knovalab-systems/vytex/pkg/query"
 	"github.com/labstack/echo/v4"
 )
 
-func Policies(roles models.AllowRoles) echo.MiddlewareFunc {
+func Policies(policies []models.Policie) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 
@@ -16,30 +18,17 @@ func Policies(roles models.AllowRoles) echo.MiddlewareFunc {
 			userJWT := c.Get("user").(*jwt.Token)
 			claims := userJWT.Claims.(*models.JWTClaims)
 
-			if roles.Admin {
-				role := envs.ADMIN_ROLE()
-				if claims.Role == role {
-					return next(c)
-				}
+			// get role policies
+			table := query.Role
+			role, err := table.Where(table.ID.Eq(claims.Role)).First()
+			if err != nil {
+				return problems.ServerError()
 			}
 
-			if roles.Desinger {
-				role := envs.DESIGNER_ROLE()
-				if claims.Role == role {
-					return next(c)
-				}
-			}
-
-			if roles.ProSupervisor {
-				role := envs.PRO_SUPERVISOR_ROLE()
-				if claims.Role == role {
-					return next(c)
-				}
-			}
-
-			if roles.NoRole {
-				role := envs.NO_ROLE()
-				if claims.Role == role {
+			// valid policie exists in role
+			for _, v := range policies {
+				present := slices.Contains(role.Policies, (int64)(v))
+				if present {
 					return next(c)
 				}
 			}
