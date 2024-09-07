@@ -1,4 +1,4 @@
-import type { DirectusRole } from '../../../schema/role.js';
+import type { VytexRole } from '../../../schema/role.js';
 import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
 
@@ -9,7 +9,7 @@ import { throwIfEmpty } from '../../utils/index.js';
  * @throws Will throw if keys is empty
  */
 export const deleteRoles =
-	<Schema>(keys: DirectusRole<Schema>['id'][]): RestCommand<void, Schema> =>
+	<Schema>(keys: VytexRole<Schema>['id'][]): RestCommand<void, Schema> =>
 	() => {
 		throwIfEmpty(keys, 'Keys cannot be empty');
 
@@ -27,7 +27,7 @@ export const deleteRoles =
  * @throws Will throw if key is empty
  */
 export const deleteRole =
-	<Schema>(key: DirectusRole<Schema>['id']): RestCommand<void, Schema> =>
+	<Schema>(key: VytexRole<Schema>['id']): RestCommand<void, Schema> =>
 	() => {
 		throwIfEmpty(String(key), 'Key cannot be empty');
 

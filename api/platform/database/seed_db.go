@@ -131,7 +131,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			ID:       uuid.New().String(),
 			Username: u.Username,
 			Name:     u.Name,
-			Role:     u.Role,
+			RoleId:   u.Role,
 		}
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost)
@@ -152,7 +152,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			ID:       uuid.New().String(),
 			Username: faker.Username(),
 			Name:     faker.Name(),
-			Role:     roles[i%len(roles)],
+			RoleId:   roles[i%len(roles)],
 		}
 
 		password := "Password123"

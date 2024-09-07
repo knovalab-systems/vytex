@@ -35,6 +35,11 @@ func newSession(db *gorm.DB, opts ...gen.DOOption) session {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("User", "models.User"),
+		Role: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("User.Role", "models.Role"),
+		},
 	}
 
 	_session.fillFieldMap()
@@ -109,6 +114,10 @@ type sessionBelongsToUser struct {
 	db *gorm.DB
 
 	field.RelationField
+
+	Role struct {
+		field.RelationField
+	}
 }
 
 func (a sessionBelongsToUser) Where(conds ...field.Expr) *sessionBelongsToUser {

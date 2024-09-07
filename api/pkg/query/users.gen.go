@@ -31,10 +31,15 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.Username = field.NewString(tableName, "username")
 	_user.Name = field.NewString(tableName, "name")
 	_user.Password = field.NewString(tableName, "password")
-	_user.Role = field.NewString(tableName, "role")
+	_user.RoleId = field.NewString(tableName, "role_id")
 	_user.DeletedAt = field.NewField(tableName, "deleted_at")
 	_user.CreatedAt = field.NewTime(tableName, "created_at")
 	_user.UpdatedAt = field.NewTime(tableName, "updated_at")
+	_user.Role = userBelongsToRole{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Role", "models.Role"),
+	}
 
 	_user.fillFieldMap()
 
@@ -49,10 +54,11 @@ type user struct {
 	Username  field.String
 	Name      field.String
 	Password  field.String
-	Role      field.String
+	RoleId    field.String
 	DeletedAt field.Field
 	CreatedAt field.Time
 	UpdatedAt field.Time
+	Role      userBelongsToRole
 
 	fieldMap map[string]field.Expr
 }
@@ -73,7 +79,7 @@ func (u *user) updateTableName(table string) *user {
 	u.Username = field.NewString(table, "username")
 	u.Name = field.NewString(table, "name")
 	u.Password = field.NewString(table, "password")
-	u.Role = field.NewString(table, "role")
+	u.RoleId = field.NewString(table, "role_id")
 	u.DeletedAt = field.NewField(table, "deleted_at")
 	u.CreatedAt = field.NewTime(table, "created_at")
 	u.UpdatedAt = field.NewTime(table, "updated_at")
@@ -93,15 +99,16 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 8)
+	u.fieldMap = make(map[string]field.Expr, 9)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["username"] = u.Username
 	u.fieldMap["name"] = u.Name
 	u.fieldMap["password"] = u.Password
-	u.fieldMap["role"] = u.Role
+	u.fieldMap["role_id"] = u.RoleId
 	u.fieldMap["deleted_at"] = u.DeletedAt
 	u.fieldMap["created_at"] = u.CreatedAt
 	u.fieldMap["updated_at"] = u.UpdatedAt
+
 }
 
 func (u user) clone(db *gorm.DB) user {
@@ -112,6 +119,77 @@ func (u user) clone(db *gorm.DB) user {
 func (u user) replaceDB(db *gorm.DB) user {
 	u.userDo.ReplaceDB(db)
 	return u
+}
+
+type userBelongsToRole struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a userBelongsToRole) Where(conds ...field.Expr) *userBelongsToRole {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a userBelongsToRole) WithContext(ctx context.Context) *userBelongsToRole {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a userBelongsToRole) Session(session *gorm.Session) *userBelongsToRole {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a userBelongsToRole) Model(m *models.User) *userBelongsToRoleTx {
+	return &userBelongsToRoleTx{a.db.Model(m).Association(a.Name())}
+}
+
+type userBelongsToRoleTx struct{ tx *gorm.Association }
+
+func (a userBelongsToRoleTx) Find() (result *models.Role, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a userBelongsToRoleTx) Append(values ...*models.Role) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a userBelongsToRoleTx) Replace(values ...*models.Role) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a userBelongsToRoleTx) Delete(values ...*models.Role) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a userBelongsToRoleTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a userBelongsToRoleTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type userDo struct{ gen.DO }

@@ -53,6 +53,11 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("CancelUser", "models.User"),
+		Role: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("CancelUser.Role", "models.Role"),
+		},
 	}
 
 	_order.CreateUser = orderBelongsToCreateUser{
@@ -383,6 +388,10 @@ type orderBelongsToCancelUser struct {
 	db *gorm.DB
 
 	field.RelationField
+
+	Role struct {
+		field.RelationField
+	}
 }
 
 func (a orderBelongsToCancelUser) Where(conds ...field.Expr) *orderBelongsToCancelUser {

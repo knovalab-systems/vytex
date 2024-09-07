@@ -1,16 +1,13 @@
 import type { MergeCoreCollection } from '../index.js';
 
-export type DirectusRole<Schema = any> = MergeCoreCollection<
+export type VytexRole<Schema = any> = MergeCoreCollection<
 	Schema,
-	'directus_roles',
+	'vytex_roles',
 	{
 		id: string;
-		name: string;
-		icon: string;
-		description: string | null;
-		ip_access: string | null;
-		enforce_tfa: boolean;
-		admin_access: boolean;
-		app_access: boolean;
+		name: string | null;
+		is_admin: boolean | null;
+		static: boolean | null;
+		policies: number[] | null;
 	}
 >;
