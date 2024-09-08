@@ -13,5 +13,5 @@ func privateImageRoute(g *echo.Group) {
 
 	imageController := controllers.ImageController{ImageRepository: &services.ImageService{}}
 
-	route.POST("", imageController.CreateImage, middlewares.Policies([]models.Policie{models.CreateReferences}))
+	route.POST("", imageController.CreateImage, middlewares.Policies([]models.Policy{models.CreateReferences}))
 }

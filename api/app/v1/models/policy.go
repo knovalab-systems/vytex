@@ -1,9 +1,9 @@
 package models
 
-type Policie int64
+type Policy int64
 
 const (
-	ReadUsers Policie = iota
+	ReadUsers Policy = iota
 	CreateUsers
 	UpdateUsers
 	ReadColors

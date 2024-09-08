@@ -13,9 +13,9 @@ func privateResourceRoutes(g *echo.Group) {
 
 	resourceController := controllers.ResourceController{ResourceRepository: &services.ResourceService{}}
 
-	route.GET("", resourceController.ReadResources, middlewares.Policies([]models.Policie{models.ReadResources, models.CreateReferences, models.UpdateReferences}))
-	route.GET("/aggregate", resourceController.AggregateResources, middlewares.Policies([]models.Policie{models.ReadReferences}))
-	route.POST("", resourceController.CreateResource, middlewares.Policies([]models.Policie{models.CreateResources}))
-	route.GET("/:resourceId", resourceController.ReadResource, middlewares.Policies([]models.Policie{models.ReadResources, models.UpdateResources}))
-	route.PATCH("/:resourceId", resourceController.UpdateResource, middlewares.Policies([]models.Policie{models.UpdateResources}))
+	route.GET("", resourceController.ReadResources, middlewares.Policies([]models.Policy{models.ReadResources, models.CreateReferences, models.UpdateReferences}))
+	route.GET("/aggregate", resourceController.AggregateResources, middlewares.Policies([]models.Policy{models.ReadReferences}))
+	route.POST("", resourceController.CreateResource, middlewares.Policies([]models.Policy{models.CreateResources}))
+	route.GET("/:resourceId", resourceController.ReadResource, middlewares.Policies([]models.Policy{models.ReadResources, models.UpdateResources}))
+	route.PATCH("/:resourceId", resourceController.UpdateResource, middlewares.Policies([]models.Policy{models.UpdateResources}))
 }

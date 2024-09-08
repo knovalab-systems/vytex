@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func Policies(policies []models.Policie) echo.MiddlewareFunc {
+func Policies(policies []models.Policy) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 
@@ -25,7 +25,7 @@ func Policies(policies []models.Policie) echo.MiddlewareFunc {
 				return problems.ServerError()
 			}
 
-			// valid policie exists in role
+			// valid policy exists in role
 			for _, v := range policies {
 				present := slices.Contains(role.Policies, (int64)(v))
 				if present {
