@@ -13,9 +13,9 @@ func privateColorRoutes(g *echo.Group) {
 
 	colorController := controllers.ColorController{ColorRepository: &services.ColorService{}}
 
-	route.GET("", colorController.ReadColors, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.POST("", colorController.CreateColor, middlewares.Policies(models.AllowRoles{Desinger: true}))
-	route.GET("/aggregate", colorController.AggregateColors, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.GET("/:colorId", colorController.ReadColor, middlewares.Policies(models.AllowRoles{Desinger: true, Admin: true}))
-	route.PATCH("/:colorId", colorController.UpdateColor, middlewares.Policies(models.AllowRoles{Desinger: true}))
+	route.GET("", colorController.ReadColors, middlewares.Policies([]models.Policy{models.ReadColors, models.CreateFabrics, models.UpdateFabrics, models.CreateResources, models.UpdateResources, models.CreateReferences, models.UpdateReferences}))
+	route.POST("", colorController.CreateColor, middlewares.Policies([]models.Policy{models.CreateColors}))
+	route.GET("/aggregate", colorController.AggregateColors, middlewares.Policies([]models.Policy{models.ReadColors}))
+	route.GET("/:colorId", colorController.ReadColor, middlewares.Policies([]models.Policy{models.ReadColors, models.UpdateColors}))
+	route.PATCH("/:colorId", colorController.UpdateColor, middlewares.Policies([]models.Policy{models.UpdateColors}))
 }

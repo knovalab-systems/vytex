@@ -1,10 +1,15 @@
 package database
 
 import (
+	"errors"
 	"log"
+	"time"
+
+	"github.com/google/uuid"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/envs"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -44,16 +49,55 @@ func DB() *gorm.DB {
 		&models.Reference{}, &models.ColorByReference{},
 		&models.ResourceByReference{}, &models.FabricByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
-		&models.Custom{}, &models.Order{}, &models.TimeByTask{})
-
+		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{})
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}
 
+	// base timebytask record
 	if db.Migrator().HasTable(&models.TimeByTask{}) {
 		err := db.FirstOrCreate(&models.TimeByTask{}, formats.TimeByTaskDTOFormat(models.TimeByTaskDTO{})).Error
 		if err != nil {
-			log.Fatalln("error, not migrated, %w", err)
+			log.Fatalln("error on create timebytask record, not migrated, %w", err)
+		}
+	}
+
+	// basic roles
+	if db.Migrator().HasTable(&models.Role{}) {
+		admin := &models.Role{}
+		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
+		if err != nil {
+			log.Fatalln("error on create admin role, not migrated, %w", err)
+		}
+		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(&models.Role{}).Error
+		if err != nil {
+			log.Fatalln("error on create designer role, not migrated, %w", err)
+		}
+		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(&models.Role{}).Error
+		if err != nil {
+			log.Fatalln("error on create pro supervisor role, not migrated, %w", err)
+		}
+
+		if db.Migrator().HasTable(&models.User{}) {
+			if err := db.First(&models.User{}).Error; errors.Is(err, gorm.ErrRecordNotFound) {
+				hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost) // pending: from env password
+				if err != nil {
+					log.Fatalf("No se pudo encriptar la contraseña: %v", err)
+				}
+				now := time.Now()
+				result := db.Create(&models.User{
+					ID:        uuid.New().String(),
+					Username:  "admin",
+					Name:      "Administrador",
+					Password:  string(hashedPassword),
+					CreatedAt: &now,
+					UpdatedAt: &now,
+					RoleId:    admin.ID,
+				})
+				if result.Error != nil {
+					log.Fatalf("Error al crear administrador: %v", err)
+				}
+			}
 		}
 	}
 
@@ -72,7 +116,7 @@ func DBGEN() *gorm.DB {
 		&models.Reference{}, &models.ColorByReference{},
 		&models.ResourceByReference{}, &models.FabricByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
-		&models.Custom{}, &models.Order{}, &models.TimeByTask{})
+		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{})
 
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)

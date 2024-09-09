@@ -82,6 +82,7 @@ describe('UserCreateForm', () => {
 			deleted_at: null,
 			created_at: null,
 			updated_at: null,
+			role_id: null,
 		});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => <UserCreateForm />);

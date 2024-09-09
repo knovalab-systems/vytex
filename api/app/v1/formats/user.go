@@ -2,10 +2,8 @@ package formats
 
 import (
 	"errors"
-	"slices"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
-	"github.com/knovalab-systems/vytex/pkg/envs"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -13,10 +11,7 @@ func UserUpdateMap(m *models.UserUpdateBody) (map[string]interface{}, error) {
 	updateMap := map[string]interface{}{}
 
 	if m.Role != "" {
-		if !IsRole(m.Role) {
-			return nil, errors.New("INVALID ROLE")
-		}
-		updateMap["role"] = m.Role
+		updateMap["role_id"] = m.Role
 	}
 
 	if m.Username != "" {
@@ -45,12 +40,4 @@ func UserUpdateMap(m *models.UserUpdateBody) (map[string]interface{}, error) {
 	}
 
 	return updateMap, nil
-}
-
-func IsRole(role string) bool {
-	admin := envs.ADMIN_ROLE()
-	norole := envs.NO_ROLE()
-	designer := envs.DESIGNER_ROLE()
-	roles := []string{admin, norole, designer}
-	return slices.IndexFunc(roles, func(s string) bool { return s == role }) != -1
 }

@@ -6,6 +6,7 @@ import type { VytexImage } from './image.js';
 import type { VytexOrder } from './order.js';
 import type { VytexReference } from './reference.js';
 import type { VytexResource } from './resource.js';
+import type { VytexRole } from './role.js';
 import type { VytexSupplier } from './supplier.js';
 import type { VytexTimeByTask } from './timeByTask.js';
 import type { VytexUser } from './user.js';
@@ -21,5 +22,6 @@ export interface CoreSchema<Schema = any> {
 	vytex_images: VytexImage<Schema>[];
 	vytex_customs: VytexCustom<Schema>[];
 	vytex_orders: VytexOrder<Schema>[];
-	VytexTimeByTask: VytexTimeByTask<Schema>[];
+	vytex_time_by_task: VytexTimeByTask<Schema>[];
+	vytex_role: VytexRole<Schema>[];
 }

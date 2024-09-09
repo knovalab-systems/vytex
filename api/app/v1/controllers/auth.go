@@ -47,7 +47,7 @@ func (m *AuthController) Login(c echo.Context) error {
 	}
 
 	// generate tokens
-	tokens, err := m.Credentials(user.ID, user.Role)
+	tokens, err := m.Credentials(user.ID, user.RoleId)
 	if err != nil {
 		return problems.ServerError()
 	}
@@ -87,7 +87,7 @@ func (m *AuthController) Refresh(c echo.Context) error {
 	}
 
 	// generate tokens
-	tokens, err := m.Credentials(s.UserID, s.User.Role)
+	tokens, err := m.Credentials(s.UserID, s.User.RoleId)
 	if err != nil {
 		return problems.ServerError()
 	}

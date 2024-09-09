@@ -1,11 +1,11 @@
-import type { DirectusRole } from '../../../schema/role.js';
+import type { VytexRole } from '../../../schema/role.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 
 export type CreateRoleOutput<
 	Schema,
 	TQuery extends Query<Schema, Item>,
-	Item extends object = DirectusRole<Schema>,
+	Item extends object = VytexRole<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
 
 /**
@@ -17,8 +17,8 @@ export type CreateRoleOutput<
  * @returns Returns the role objects for the created roles.
  */
 export const createRoles =
-	<Schema, const TQuery extends Query<Schema, DirectusRole<Schema>>>(
-		items: Partial<DirectusRole<Schema>>[],
+	<Schema, const TQuery extends Query<Schema, VytexRole<Schema>>>(
+		items: Partial<VytexRole<Schema>>[],
 		query?: TQuery,
 	): RestCommand<CreateRoleOutput<Schema, TQuery>[], Schema> =>
 	() => ({
@@ -37,8 +37,8 @@ export const createRoles =
  * @returns Returns the role object for the created role.
  */
 export const createRole =
-	<Schema, const TQuery extends Query<Schema, DirectusRole<Schema>>>(
-		item: Partial<DirectusRole<Schema>>,
+	<Schema, const TQuery extends Query<Schema, VytexRole<Schema>>>(
+		item: Partial<VytexRole<Schema>>,
 		query?: TQuery,
 	): RestCommand<CreateRoleOutput<Schema, TQuery>, Schema> =>
 	() => ({

@@ -1,4 +1,4 @@
-import type { DirectusRole } from '../../../schema/role.js';
+import type { VytexRole } from '../../../schema/role.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
 import { throwIfEmpty } from '../../utils/index.js';
@@ -6,7 +6,7 @@ import { throwIfEmpty } from '../../utils/index.js';
 export type ReadRoleOutput<
 	Schema,
 	TQuery extends Query<Schema, Item>,
-	Item extends object = DirectusRole<Schema>,
+	Item extends object = VytexRole<Schema>,
 > = ApplyQueryFields<Schema, Item, TQuery['fields']>;
 
 /**
@@ -15,7 +15,7 @@ export type ReadRoleOutput<
  * @returns An array of up to limit Role objects. If no items are available, data will be an empty array.
  */
 export const readRoles =
-	<Schema, const TQuery extends Query<Schema, DirectusRole<Schema>>>(
+	<Schema, const TQuery extends Query<Schema, VytexRole<Schema>>>(
 		query?: TQuery,
 	): RestCommand<ReadRoleOutput<Schema, TQuery>[], Schema> =>
 	() => ({
@@ -32,8 +32,8 @@ export const readRoles =
  * @throws Will throw if key is empty
  */
 export const readRole =
-	<Schema, const TQuery extends Query<Schema, DirectusRole<Schema>>>(
-		key: DirectusRole<Schema>['id'],
+	<Schema, const TQuery extends Query<Schema, VytexRole<Schema>>>(
+		key: VytexRole<Schema>['id'],
 		query?: TQuery,
 	): RestCommand<ReadRoleOutput<Schema, TQuery>, Schema> =>
 	() => {

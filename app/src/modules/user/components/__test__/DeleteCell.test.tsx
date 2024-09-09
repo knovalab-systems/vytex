@@ -33,6 +33,7 @@ describe('DeleteCell', () => {
 			deleted_at: null,
 			created_at: null,
 			updated_at: null,
+			role_id: null,
 		});
 
 		const checkButton = screen.getByRole('switch');
@@ -53,6 +54,7 @@ describe('DeleteCell', () => {
 			deleted_at: null,
 			created_at: null,
 			updated_at: null,
+			role_id: null,
 		});
 
 		const checkButton = screen.getByRole('switch');

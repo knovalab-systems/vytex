@@ -28,6 +28,7 @@ var (
 	Reference           *reference
 	Resource            *resource
 	ResourceByReference *resourceByReference
+	Role                *role
 	Session             *session
 	Supplier            *supplier
 	TimeByTask          *timeByTask
@@ -47,6 +48,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Reference = &Q.Reference
 	Resource = &Q.Resource
 	ResourceByReference = &Q.ResourceByReference
+	Role = &Q.Role
 	Session = &Q.Session
 	Supplier = &Q.Supplier
 	TimeByTask = &Q.TimeByTask
@@ -67,6 +69,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		Reference:           newReference(db, opts...),
 		Resource:            newResource(db, opts...),
 		ResourceByReference: newResourceByReference(db, opts...),
+		Role:                newRole(db, opts...),
 		Session:             newSession(db, opts...),
 		Supplier:            newSupplier(db, opts...),
 		TimeByTask:          newTimeByTask(db, opts...),
@@ -88,6 +91,7 @@ type Query struct {
 	Reference           reference
 	Resource            resource
 	ResourceByReference resourceByReference
+	Role                role
 	Session             session
 	Supplier            supplier
 	TimeByTask          timeByTask
@@ -110,6 +114,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		Reference:           q.Reference.clone(db),
 		Resource:            q.Resource.clone(db),
 		ResourceByReference: q.ResourceByReference.clone(db),
+		Role:                q.Role.clone(db),
 		Session:             q.Session.clone(db),
 		Supplier:            q.Supplier.clone(db),
 		TimeByTask:          q.TimeByTask.clone(db),
@@ -139,6 +144,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		Reference:           q.Reference.replaceDB(db),
 		Resource:            q.Resource.replaceDB(db),
 		ResourceByReference: q.ResourceByReference.replaceDB(db),
+		Role:                q.Role.replaceDB(db),
 		Session:             q.Session.replaceDB(db),
 		Supplier:            q.Supplier.replaceDB(db),
 		TimeByTask:          q.TimeByTask.replaceDB(db),
@@ -158,6 +164,7 @@ type queryCtx struct {
 	Reference           IReferenceDo
 	Resource            IResourceDo
 	ResourceByReference IResourceByReferenceDo
+	Role                IRoleDo
 	Session             ISessionDo
 	Supplier            ISupplierDo
 	TimeByTask          ITimeByTaskDo
@@ -177,6 +184,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		Reference:           q.Reference.WithContext(ctx),
 		Resource:            q.Resource.WithContext(ctx),
 		ResourceByReference: q.ResourceByReference.WithContext(ctx),
+		Role:                q.Role.WithContext(ctx),
 		Session:             q.Session.WithContext(ctx),
 		Supplier:            q.Supplier.WithContext(ctx),
 		TimeByTask:          q.TimeByTask.WithContext(ctx),

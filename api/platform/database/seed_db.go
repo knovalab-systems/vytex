@@ -3,23 +3,38 @@ package database
 import (
 	"log"
 	"math/rand"
-	"os"
 	"sync"
 	"time"
 
 	"github.com/go-faker/faker/v4"
 	"github.com/google/uuid"
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
 func SeedDB(db *gorm.DB) {
-	roles := []string{
-		os.Getenv("ADMIN_ROLE"),
-		os.Getenv("NO_ROLE"),
-		os.Getenv("DESIGNER_ROLE"),
+	roles := []*models.Role{}
+	if db.Migrator().HasTable(&models.Role{}) {
+		admin := &models.Role{}
+		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
+		if err != nil {
+			log.Fatalln("error on create admin role, not migrated, %w", err)
+		}
+		designer := &models.Role{}
+		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(designer).Error
+		if err != nil {
+			log.Fatalln("error on create designer role, not migrated, %w", err)
+		}
+		prosuper := &models.Role{}
+		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(prosuper).Error
+		if err != nil {
+			log.Fatalln("error on create pro supervisor role, not migrated, %w", err)
+		}
+		roles = append(roles, admin, designer, prosuper)
 	}
+
 	var userCount int64
 	db.Model(&models.User{}).Count(&userCount)
 	if userCount == 0 {
@@ -113,15 +128,15 @@ func generateUniqueCode(existingCodes map[string]struct{}, length int) string {
 	return code
 }
 
-func generateUsers(db *gorm.DB, roles []string) {
+func generateUsers(db *gorm.DB, roles []*models.Role) {
 	predefinedUsers := []struct {
 		Username string
 		Name     string
 		Role     string
 	}{
-		{"admin", "Admin User", roles[0]},
-		{"norol", "No Role User", roles[1]},
-		{"diseno", "Designer User", roles[2]},
+		{"admin", "Admin User", roles[0].ID},
+		{"norol", "No Role User", roles[1].ID},
+		{"diseno", "Designer User", roles[2].ID},
 	}
 
 	var users []models.User
@@ -131,7 +146,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			ID:       uuid.New().String(),
 			Username: u.Username,
 			Name:     u.Name,
-			Role:     u.Role,
+			RoleId:   u.Role,
 		}
 
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte("Password123"), bcrypt.DefaultCost)
@@ -152,7 +167,7 @@ func generateUsers(db *gorm.DB, roles []string) {
 			ID:       uuid.New().String(),
 			Username: faker.Username(),
 			Name:     faker.Name(),
-			Role:     roles[i%len(roles)],
+			RoleId:   roles[i%len(roles)].ID,
 		}
 
 		password := "Password123"
@@ -460,17 +475,24 @@ func generateReference(db *gorm.DB) {
 	for i := 0; i < 3; i++ {
 		code := generateUniqueCode(uniqueCodes, 5)
 
+		tbt := &models.TimeByTask{}
+		err := db.FirstOrCreate(tbt, formats.TimeByTaskDTOFormat(models.TimeByTaskDTO{})).Error
+		if err != nil {
+			log.Fatalf("No se pudo crear la referencia: %v", err)
+		}
+
 		// Create a fake reference
 		reference := &models.Reference{
-			Code:      code,
-			CreatedBy: users[rand.Intn(len(users))].ID,
-			Front:     images[rand.Intn(len(images))].ID,
-			Back:      images[rand.Intn(len(images))].ID,
-			Colors:    generateFakeColorsByReference(db),
+			Code:         code,
+			CreatedBy:    users[rand.Intn(len(users))].ID,
+			Front:        images[rand.Intn(len(images))].ID,
+			Back:         images[rand.Intn(len(images))].ID,
+			Colors:       generateFakeColorsByReference(db),
+			TimeByTaskID: tbt.ID,
 		}
 
 		// Insert the reference into the database
-		err := db.Create(&reference).Error
+		err = db.Create(&reference).Error
 		if err != nil {
 			log.Fatalf("No se pudo crear la referencia: %v", err)
 		}

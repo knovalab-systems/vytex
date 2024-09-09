@@ -43,7 +43,7 @@ function UserCard(props: { user?: GetUserType }) {
 						<ValuesWithTitles support='Nombre' title={user()?.name} />
 						<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
 						<ValuesWithTitles support='Estado' title={!user()?.deleted_at ? 'Activo' : 'Inactivo'} />
-						<ValuesWithTitles support='Rol' title={roles[user()?.role || NO_ROLE].label} />
+						<ValuesWithTitles support='Rol' title={roles[user()?.role?.id || NO_ROLE].label} />
 					</div>
 					<div class='mx-auto'>
 						<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />

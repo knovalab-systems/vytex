@@ -163,7 +163,7 @@ describe('SupplierUpdateForm', () => {
 		fireEvent.input(nitField, { target: { value: '22222222' } });
 		fireEvent.click(submitButton);
 
-		const hexError = await screen.findByText('El NIT debe ser de 9 dígitos');
+		const hexError = await screen.findByText('El NIT debe ser de 9 dígitos.');
 
 		expect(hexError).toBeInTheDocument();
 	});

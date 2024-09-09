@@ -13,11 +13,10 @@ func privateUserRoutes(g *echo.Group) {
 
 	userController := controllers.UserController{UserRepository: &services.UserService{}}
 
-	route.GET("", userController.ReadUsers, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.POST("", userController.CreateUser, middlewares.Policies(models.AllowRoles{Admin: true}))
+	route.GET("", userController.ReadUsers, middlewares.Policies([]models.Policy{models.ReadUsers}))
+	route.POST("", userController.CreateUser, middlewares.Policies([]models.Policy{models.CreateUsers}))
 	route.GET("/me", userController.ReadMe)
-	route.GET("/aggregate", userController.AggregateUsers, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.GET("/:userId", userController.ReadUser, middlewares.Policies(models.AllowRoles{Admin: true}))
-	route.PATCH("/:userId", userController.UpdateUser, middlewares.Policies(models.AllowRoles{Admin: true}))
-
+	route.GET("/aggregate", userController.AggregateUsers, middlewares.Policies([]models.Policy{models.ReadUsers}))
+	route.GET("/:userId", userController.ReadUser, middlewares.Policies([]models.Policy{models.ReadUsers, models.UpdateUsers}))
+	route.PATCH("/:userId", userController.UpdateUser, middlewares.Policies([]models.Policy{models.UpdateUsers}))
 }

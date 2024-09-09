@@ -12,7 +12,8 @@ type User struct {
 	Username  string         `json:"username,omitempty"`
 	Name      string         `json:"name,omitempty"`
 	Password  string         `json:"password,omitempty"`
-	Role      string         `json:"role,omitempty" gorm:"type:uuid"`
+	RoleId    string         `json:"role_id,omitempty" gorm:"type:uuid"`
+	Role      *Role          `json:"role,omitempty"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 	CreatedAt *time.Time     `json:"created_at,omitempty"`
 	UpdatedAt *time.Time     `json:"updated_at,omitempty"`
@@ -44,7 +45,7 @@ type UserUpdateBody struct {
 	Username  string              `json:"username" validate:"omitempty,gt=0"`
 	Name      string              `json:"name" validate:"omitempty,gt=0"`
 	Password  string              `json:"password" validate:"omitempty,lte=20,gte=8"`
-	Role      string              `json:"role" validate:"omitempty,uuid"`
+	Role      string              `json:"role_id" validate:"omitempty,uuid"`
 	DeletedAt Optional[time.Time] `json:"deleted_at"`
 }
 
@@ -52,7 +53,7 @@ type UserCreateBody struct {
 	Username string `json:"username" validate:"required"`
 	Name     string `json:"name" validate:"required"`
 	Password string `json:"password" validate:"required,lte=20,gte=8"`
-	Role     string `json:"role" validate:"uuid"`
+	Role     string `json:"role_id" validate:"uuid"`
 }
 
 type UserFilter struct {

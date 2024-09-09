@@ -19,7 +19,7 @@ function Home() {
 				</div>
 			}
 		>
-			<Match when={user?.role === NO_ROLE || !user}>
+			<Match when={user?.role?.id === NO_ROLE || !user}>
 				<NotPermission />
 			</Match>
 		</Switch>

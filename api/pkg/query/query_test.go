@@ -88,6 +88,7 @@ func Test_WithContext(t *testing.T) {
 		qCtx.Reference.UnderlyingDB().Statement.Context,
 		qCtx.Resource.UnderlyingDB().Statement.Context,
 		qCtx.ResourceByReference.UnderlyingDB().Statement.Context,
+		qCtx.Role.UnderlyingDB().Statement.Context,
 		qCtx.Session.UnderlyingDB().Statement.Context,
 		qCtx.Supplier.UnderlyingDB().Statement.Context,
 		qCtx.TimeByTask.UnderlyingDB().Statement.Context,

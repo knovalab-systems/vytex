@@ -7,3 +7,12 @@ type Query struct {
 	Filter string `query:"filter"`
 	Fields string `query:"fields"`
 }
+
+type AggregateData struct {
+	Count any `json:"count,omitempty"`
+}
+
+type AggregateQuery struct {
+	Count  string `query:"count"`
+	Filter string `query:"filter"`
+}

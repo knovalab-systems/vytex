@@ -13,7 +13,7 @@ export function getMyUserQuery() {
 }
 
 async function getMe() {
-	return await client.request(readMe({ fields: ['role'] }));
+	return await client.request(readMe({ fields: [{ role: ['id', 'is_admin', 'policies'] }] }));
 }
 
 export type getMeType = Awaited<ReturnType<typeof getMe>>;
