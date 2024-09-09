@@ -3,17 +3,9 @@ import { AiFillEdit, AiOutlinePlus } from 'solid-icons/ai';
 import { CgNotes } from 'solid-icons/cg';
 import { For, type JSXElement, Show } from 'solid-js';
 import { cn } from '~/lib/utils';
+import type { Action, Icons } from '~/types/actionsCell';
 import { Button } from './ui/Button';
 import { TableCell } from './ui/Table';
-
-type Icons = 'update' | 'details' | 'create';
-
-type Action = {
-	title: string;
-	label: string;
-	path: string;
-	icon: Icons;
-};
 
 const baseClass = 'inline-flex gap-2 p-2 pr-3 min-w-16';
 

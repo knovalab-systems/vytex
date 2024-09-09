@@ -1,8 +1,8 @@
 import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
-import { Match, Switch, createMemo, createSignal } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
@@ -17,14 +17,15 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { FABRICS_CREATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
+import { usePolicies } from '~/hooks/usePolicies';
 import FabricTable from '../components/FabricTable';
 import { countFabricsQuery, getFabricsQuery } from '../requests/fabricGet';
 
 function Fabrics() {
 	return (
-		<AllowRoles roles={['designer']}>
+		<AllowPolicies policies={['ReadFabrics']}>
 			<FabricsPage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 
@@ -33,6 +34,7 @@ function FabricsPage() {
 	const fabrics = createQuery(() => getFabricsQuery(page()));
 	const countFabrics = createQuery(() => countFabricsQuery());
 	const { colorsQuery } = useColors();
+	const { hasPolicy } = usePolicies();
 	const pages = createMemo<number>(() => {
 		const count = countFabrics.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
@@ -45,13 +47,6 @@ function FabricsPage() {
 
 	return (
 		<div class='h-full w-full flex flex-col gap-2'>
-			<div>
-				<A href={FABRICS_CREATE_PATH}>
-					<Button variant='new'>
-						Nueva Tela <AiOutlinePlus class='ml-2' size={22} />
-					</Button>
-				</A>
-			</div>
 			<Switch>
 				<Match when={isError()}>
 					<ErrorMessage title='Error al cargar telas' />
@@ -60,6 +55,15 @@ function FabricsPage() {
 					<Loading label='Cargando telas' />
 				</Match>
 				<Match when={isSuccess()}>
+					<Show when={hasPolicy('CreateFabrics')}>
+						<div>
+							<A href={FABRICS_CREATE_PATH}>
+								<Button variant='new'>
+									Nueva Tela <AiOutlinePlus class='ml-2' size={22} />
+								</Button>
+							</A>
+						</div>
+					</Show>
 					<FabricTable fabrics={fabrics.data} />
 					<Pagination
 						class='[&>*]:justify-center'
