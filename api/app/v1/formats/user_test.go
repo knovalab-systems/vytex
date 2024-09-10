@@ -19,7 +19,7 @@ func TestToUpdateUser(t *testing.T) {
 
 		test, err := UserUpdateMap(&u)
 		if assert.NoError(t, err) {
-			v, ok := test["role"]
+			v, ok := test["role_id"]
 			assert.Equal(t, true, ok)
 			assert.Equal(t, role, v)
 		}
@@ -52,7 +52,7 @@ func TestToUpdateUser(t *testing.T) {
 		}
 	})
 
-	t.Run("nil body", func(t *testing.T) {
+	t.Run("check fields body", func(t *testing.T) {
 		detele_at, _ := time.Parse(time.RFC3339, "2020-12-09T16:09:53+00:00")
 		optional := models.Optional[time.Time]{Value: &detele_at, Defined: true}
 		role := "739c8723-85c0-42d8-aef0-5de054890dee"

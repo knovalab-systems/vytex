@@ -267,7 +267,7 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("Fail binding, role is a integer", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]int{"role": 32321})
+		json.NewEncoder(body).Encode(map[string]int{"role_id": 32321})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -291,7 +291,7 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("Fail validate, role is a not a uuid", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": "12321321"})
+		json.NewEncoder(body).Encode(map[string]string{"role_id": "12321321"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -318,7 +318,7 @@ func TestUpdateUser(t *testing.T) {
 	t.Run("Fail validate, userId is a not a uuid", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": "31b63ffb-15f5-48d7-9a24-587f437f07ec"})
+		json.NewEncoder(body).Encode(map[string]string{"role_id": "31b63ffb-15f5-48d7-9a24-587f437f07ec"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -400,7 +400,7 @@ func TestUpdateUser(t *testing.T) {
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": role})
+		json.NewEncoder(body).Encode(map[string]string{"role_id": role})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -543,7 +543,7 @@ func TestUpdateUser(t *testing.T) {
 		id := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		username := "username"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": role, "deleted_at": deleted_at, "username": username,
+		json.NewEncoder(body).Encode(map[string]string{"role_id": role, "deleted_at": deleted_at, "username": username,
 			"password": password, "name": name})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -574,7 +574,7 @@ func TestCreateUser(t *testing.T) {
 	t.Run("Fail binding", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]int{"role": 32321})
+		json.NewEncoder(body).Encode(map[string]int{"role_id": 32321})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -598,7 +598,7 @@ func TestCreateUser(t *testing.T) {
 	t.Run("Fail validate", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"role": "12321321"})
+		json.NewEncoder(body).Encode(map[string]string{"role_id": "12321321"})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -626,7 +626,7 @@ func TestCreateUser(t *testing.T) {
 		password := "test"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})
+		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role-id": role})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -655,7 +655,7 @@ func TestCreateUser(t *testing.T) {
 		password := "test123t"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})
+		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role_id": role})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -686,7 +686,7 @@ func TestCreateUser(t *testing.T) {
 		password := "test1231"
 		role := "31b63ffb-15f5-48d7-9a24-587f437f07ec"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role": role})
+		json.NewEncoder(body).Encode(map[string]string{"name": name, "username": username, "password": password, "role_id": role})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()

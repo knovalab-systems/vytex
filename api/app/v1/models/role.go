@@ -44,6 +44,7 @@ func ADMIN_ROLE() *Role {
 			int64(ReadCustoms),
 			int64(CreateCustoms),
 			int64(CreateOrders),
+			int64(ReadFabrics),
 		},
 	}
 }

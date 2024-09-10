@@ -4,10 +4,25 @@ import StatusLabel from '~/components/StatusLabel';
 import { Table, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { FABRICS_UPDATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
+import { usePolicies } from '~/hooks/usePolicies';
+import type { Action } from '~/types/actionsCell';
 import type { GetFabricsType } from '../requests/fabricGet';
 
 function FabricTable(props: { fabrics?: GetFabricsType }) {
 	const { colorsRecord: colorRecord } = useColors();
+	const { hasPolicy } = usePolicies();
+
+	const actions = (id: number) => {
+		const arr: Action[] = [];
+		if (hasPolicy('UpdateFabrics'))
+			arr.push({
+				path: `${FABRICS_UPDATE_PATH}/${id}`,
+				title: 'Actualizar tela',
+				label: 'Actualizar',
+				icon: 'update',
+			});
+		return arr;
+	};
 
 	return (
 		<TableContainer>
@@ -50,16 +65,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell>
 								<StatusLabel status={!fabric.deleted_at} />
 							</TableCell>
-							<ActionsCell
-								actions={[
-									{
-										path: `${FABRICS_UPDATE_PATH}/${fabric.id}`,
-										title: 'Actualizar tela',
-										label: 'Actualizar',
-										icon: 'update',
-									},
-								]}
-							/>
+							<ActionsCell actions={actions(fabric.id)} />
 						</TableRow>
 					)}
 				</For>
