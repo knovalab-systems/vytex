@@ -52,25 +52,6 @@ services:
       timeout: 3s
       retries: 5
   
-  db-test:
-    image: postgres:16
-    container_name: db-test
-    environment:
-      - POSTGRES_USER=vytex_test
-      - POSTGRES_PASSWORD=vytex_test
-      - POSTGRES_DB=vytex_test
-    volumes:
-      - /var/lib/postgresql/data
-    ports:
-      - 5433:5432
-    networks:
-      - api-net
-    attach: false
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready" ]
-      interval: 3s
-      timeout: 3s
-      retries: 5
 
   pg-admin:
     image: dpage/pgadmin4:8.5

@@ -1,8 +1,8 @@
 import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
-import { Match, Switch, createMemo, createSignal } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
@@ -17,14 +17,15 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { RESOURCES_CREATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
+import { usePolicies } from '~/hooks/usePolicies';
 import ResourceTable from '../components/ResourceTable';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourceGet';
 
 function Resources() {
 	return (
-		<AllowRoles roles={['designer']}>
+		<AllowPolicies policies={['ReadResources']}>
 			<ResourcesPage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 
@@ -33,6 +34,7 @@ function ResourcesPage() {
 	const resources = createQuery(() => getResourcesQuery(page()));
 	const countResources = createQuery(() => countResourcesQuery());
 	const { colorsQuery } = useColors();
+	const { hasPolicy } = usePolicies();
 	const pages = createMemo<number>(() => {
 		const count = countResources.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
@@ -45,13 +47,6 @@ function ResourcesPage() {
 
 	return (
 		<div class='h-full w-full flex flex-col gap-2'>
-			<div>
-				<A href={RESOURCES_CREATE_PATH}>
-					<Button variant='new'>
-						Nuevo Insumo <AiOutlinePlus class='ml-2' size={22} />
-					</Button>
-				</A>
-			</div>
 			<Switch>
 				<Match when={isError()}>
 					<ErrorMessage title='Error al cargar insumos' />
@@ -60,6 +55,15 @@ function ResourcesPage() {
 					<Loading label='Cargando insumos' />
 				</Match>
 				<Match when={isSuccess()}>
+					<Show when={hasPolicy('CreateResources')}>
+						<div>
+							<A href={RESOURCES_CREATE_PATH}>
+								<Button variant='new'>
+									Nuevo Insumo <AiOutlinePlus class='ml-2' size={22} />
+								</Button>
+							</A>
+						</div>
+					</Show>
 					<ResourceTable resources={resources.data} />
 					<Pagination
 						class='[&>*]:justify-center'

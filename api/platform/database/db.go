@@ -65,15 +65,15 @@ func DB() *gorm.DB {
 	// basic roles
 	if db.Migrator().HasTable(&models.Role{}) {
 		admin := &models.Role{}
-		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
+		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME, ID: envs.ADMIN_ROLE()}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
 		if err != nil {
 			log.Fatalln("error on create admin role, not migrated, %w", err)
 		}
-		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(&models.Role{}).Error
+		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME, ID: envs.DESIGNER_ROLE()}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(&models.Role{}).Error
 		if err != nil {
 			log.Fatalln("error on create designer role, not migrated, %w", err)
 		}
-		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(&models.Role{}).Error
+		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME, ID: envs.PRO_SUPERVISOR_ROLE()}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(&models.Role{}).Error
 		if err != nil {
 			log.Fatalln("error on create pro supervisor role, not migrated, %w", err)
 		}
