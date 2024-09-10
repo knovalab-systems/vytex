@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/knovalab-systems/vytex/pkg/envs"
 	"log"
 	"math/rand"
 	"sync"
@@ -18,17 +19,17 @@ func SeedDB(db *gorm.DB) {
 	roles := []*models.Role{}
 	if db.Migrator().HasTable(&models.Role{}) {
 		admin := &models.Role{}
-		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
+		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME, ID: envs.ADMIN_ROLE()}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
 		if err != nil {
 			log.Fatalln("error on create admin role, not migrated, %w", err)
 		}
 		designer := &models.Role{}
-		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(designer).Error
+		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME, ID: envs.DESIGNER_ROLE()}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(designer).Error
 		if err != nil {
 			log.Fatalln("error on create designer role, not migrated, %w", err)
 		}
 		prosuper := &models.Role{}
-		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(prosuper).Error
+		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME, ID: envs.PRO_SUPERVISOR_ROLE()}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(prosuper).Error
 		if err != nil {
 			log.Fatalln("error on create pro supervisor role, not migrated, %w", err)
 		}
@@ -37,7 +38,7 @@ func SeedDB(db *gorm.DB) {
 
 	var userCount int64
 	db.Model(&models.User{}).Count(&userCount)
-	if userCount == 0 {
+	if userCount == 1 {
 		generateUsers(db, roles)
 	}
 
@@ -134,9 +135,9 @@ func generateUsers(db *gorm.DB, roles []*models.Role) {
 		Name     string
 		Role     string
 	}{
-		{"admin", "Admin User", roles[0].ID},
-		{"norol", "No Role User", roles[1].ID},
-		{"diseno", "Designer User", roles[2].ID},
+		{"super_admin", "Admin User", roles[0].ID},
+		{"diseno", "Designer User", roles[1].ID},
+		{"supervisor", "Supervisor", roles[2].ID},
 	}
 
 	var users []models.User
@@ -162,7 +163,7 @@ func generateUsers(db *gorm.DB, roles []*models.Role) {
 		users = append(users, user)
 	}
 
-	for i := 0; i < 2; i++ {
+	for i := 0; i < 10; i++ {
 		user := models.User{
 			ID:       uuid.New().String(),
 			Username: faker.Username(),
