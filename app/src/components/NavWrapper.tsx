@@ -30,6 +30,7 @@ function NavWrapper(props: RouteSectionProps) {
 			{ name: 'Roles', icon: () => <BsPersonWorkspace size={24} />, path: PATHS.ROLES_PATH },
 			{ name: 'Proveedores', icon: () => <HiSolidTruck size={24} />, path: PATHS.SUPPLIERS_PATH },
 			{ name: 'Telas', icon: () => <IoBandageSharp size={24} />, path: PATHS.FABRICS_PATH },
+			{ name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
 		],
 		[ROLES.DESIGNER_ROLE]: [
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },

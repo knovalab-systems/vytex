@@ -4,12 +4,28 @@ import StatusLabel from '~/components/StatusLabel';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { RESOURCES_UPDATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
+import { usePolicies } from '~/hooks/usePolicies';
 import { useSuppliers } from '~/hooks/useSuppliers';
+import type { Action } from '~/types/actionsCell';
 import type { GetResourcesType } from '../requests/resourceGet';
 
 function ResourceTable(props: { resources?: GetResourcesType }) {
 	const { colorsRecord: colorRecord } = useColors();
 	const { suppliersRecord: supplierRecord } = useSuppliers();
+	const { hasPolicy } = usePolicies();
+
+	const actions = (id: number) => {
+		const arr: Action[] = [];
+		if (hasPolicy('UpdateResources')) {
+			arr.push({
+				path: `${RESOURCES_UPDATE_PATH}/${id}`,
+				title: 'Actualizar insumo',
+				label: 'Actualizar',
+				icon: 'update',
+			});
+		}
+		return arr;
+	}
 
 	return (
 		<TableContainer>
@@ -54,14 +70,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>
 								<ActionsCell
-									actions={[
-										{
-											path: `${RESOURCES_UPDATE_PATH}/${resource.id}`,
-											title: 'Actualizar insumo',
-											label: 'Actualizar',
-											icon: 'update',
-										},
-									]}
+									actions={actions(resource.id)}
 								/>
 							</TableRow>
 						)}
