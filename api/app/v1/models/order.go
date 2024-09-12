@@ -6,7 +6,7 @@ import (
 
 type Order struct {
 	ID                 uint              `json:"id,omitempty" gorm:"primary_key"`
-	Status             StatusOrder       `json:"status,omitempty" gorm:"type:status_order"`
+	OrderStatusID      uint              `json:"status_id,omitempty" gorm:"type:status_order"`
 	CreatedAt          *time.Time        `json:"created_at,omitempty"`
 	FinishedAt         *time.Time        `json:"finished_at,omitempty"`
 	CanceledAt         *time.Time        `json:"canceled_at,omitempty"`
@@ -18,6 +18,7 @@ type Order struct {
 	CreateUser         *User             `json:"create_user,omitempty" gorm:"foreignKey:CreatedBy"`
 	ColorByReference   *ColorByReference `json:"color_by_reference,omitempty"`
 	Custom             *Custom           `json:"custom,omitempty"`
+	OrderStatus        *OrderStatus      `json:"status,omitempty" gorm:"type:status_order"`
 	SizeInt
 }
 

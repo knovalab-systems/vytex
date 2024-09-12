@@ -34,7 +34,8 @@ func main() {
 		models.Reference{}, models.ColorByReference{},
 		models.ResourceByReference{}, models.FabricByReference{},
 		models.Image{}, models.Supplier{}, models.Composition{},
-		models.Custom{}, models.Order{}, models.TimeByTask{}, models.Role{})
+		models.Custom{}, models.Order{}, models.TimeByTask{}, models.Role{},
+		models.OrderStatus{})
 
 	// Generate the code
 	g.Execute()

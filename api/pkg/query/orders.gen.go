@@ -28,7 +28,7 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 	tableName := _order.orderDo.TableName()
 	_order.ALL = field.NewAsterisk(tableName)
 	_order.ID = field.NewUint(tableName, "id")
-	_order.Status = field.NewString(tableName, "status")
+	_order.OrderStatusID = field.NewUint(tableName, "order_status_id")
 	_order.CreatedAt = field.NewTime(tableName, "created_at")
 	_order.FinishedAt = field.NewTime(tableName, "finished_at")
 	_order.CanceledAt = field.NewTime(tableName, "canceled_at")
@@ -36,6 +36,7 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 	_order.CustomID = field.NewUint(tableName, "custom_id")
 	_order.CreatedBy = field.NewString(tableName, "created_by")
 	_order.CanceledBy = field.NewString(tableName, "canceled_by")
+	_order.OrderStatus = field.NewField(tableName, "order_status")
 	_order.XS2 = field.NewInt(tableName, "xs2")
 	_order.XS = field.NewInt(tableName, "xs")
 	_order.S = field.NewInt(tableName, "s")
@@ -266,7 +267,7 @@ type order struct {
 
 	ALL                field.Asterisk
 	ID                 field.Uint
-	Status             field.String
+	OrderStatusID      field.Uint
 	CreatedAt          field.Time
 	FinishedAt         field.Time
 	CanceledAt         field.Time
@@ -274,6 +275,7 @@ type order struct {
 	CustomID           field.Uint
 	CreatedBy          field.String
 	CanceledBy         field.String
+	OrderStatus        field.Field
 	XS2                field.Int
 	XS                 field.Int
 	S                  field.Int
@@ -311,7 +313,7 @@ func (o order) As(alias string) *order {
 func (o *order) updateTableName(table string) *order {
 	o.ALL = field.NewAsterisk(table)
 	o.ID = field.NewUint(table, "id")
-	o.Status = field.NewString(table, "status")
+	o.OrderStatusID = field.NewUint(table, "order_status_id")
 	o.CreatedAt = field.NewTime(table, "created_at")
 	o.FinishedAt = field.NewTime(table, "finished_at")
 	o.CanceledAt = field.NewTime(table, "canceled_at")
@@ -319,6 +321,7 @@ func (o *order) updateTableName(table string) *order {
 	o.CustomID = field.NewUint(table, "custom_id")
 	o.CreatedBy = field.NewString(table, "created_by")
 	o.CanceledBy = field.NewString(table, "canceled_by")
+	o.OrderStatus = field.NewField(table, "order_status")
 	o.XS2 = field.NewInt(table, "xs2")
 	o.XS = field.NewInt(table, "xs")
 	o.S = field.NewInt(table, "s")
@@ -348,9 +351,9 @@ func (o *order) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (o *order) fillFieldMap() {
-	o.fieldMap = make(map[string]field.Expr, 26)
+	o.fieldMap = make(map[string]field.Expr, 27)
 	o.fieldMap["id"] = o.ID
-	o.fieldMap["status"] = o.Status
+	o.fieldMap["order_status_id"] = o.OrderStatusID
 	o.fieldMap["created_at"] = o.CreatedAt
 	o.fieldMap["finished_at"] = o.FinishedAt
 	o.fieldMap["canceled_at"] = o.CanceledAt
@@ -358,6 +361,7 @@ func (o *order) fillFieldMap() {
 	o.fieldMap["custom_id"] = o.CustomID
 	o.fieldMap["created_by"] = o.CreatedBy
 	o.fieldMap["canceled_by"] = o.CanceledBy
+	o.fieldMap["order_status"] = o.OrderStatus
 	o.fieldMap["xs2"] = o.XS2
 	o.fieldMap["xs"] = o.XS
 	o.fieldMap["s"] = o.S

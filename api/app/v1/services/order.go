@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -105,8 +106,8 @@ func orderFields(s query.IOrderDo, fields string) query.IOrderDo {
 			switch v {
 			case "id":
 				f = append(f, table.ID)
-			case "status":
-				f = append(f, table.Status)
+			case "statusId":
+				f = append(f, table.OrderStatusID)
 			case "created_at":
 				f = append(f, table.CreatedAt)
 			case "finished_at":
@@ -151,8 +152,13 @@ func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, er
 		return nil, err
 	}
 
+	status, err := helpers.GetOrderStatusByValue(models.CreatedOrderStatusValue)
+	if err != nil {
+		return nil, err
+	}
+
 	order := &models.Order{
-		Status:             models.Created,
+		OrderStatusID:      status.ID,
 		SizeInt:            b.SizeInt,
 		CreatedBy:          b.CreatedBy,
 		ColorByReferenceID: b.ColorByReferenceID,
