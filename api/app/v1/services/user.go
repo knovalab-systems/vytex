@@ -262,7 +262,7 @@ func userFields(s query.IUserDo, fieldsStr string) query.IUserDo {
 				continue
 			}
 
-			switch v { // pending: make a function
+			switch v {
 			case "id":
 				fields = append(fields, userTable.ID)
 			case "username":
@@ -308,7 +308,6 @@ func userFields(s query.IUserDo, fieldsStr string) query.IUserDo {
 			}
 			s = s.Preload(userTable.Role.Select(roleFields...))
 		}
-
 		s = s.Select(fields...)
 	}
 	return s

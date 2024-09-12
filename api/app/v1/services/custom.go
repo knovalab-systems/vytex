@@ -76,7 +76,7 @@ func (m *CustomService) AggregationCustoms(q *models.AggregateQuery) ([]*models.
 
 func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom, error) {
 
-	status, err := helpers.GetOrderStatusByValue(models.CreatedOrderStatusValue)
+	status, err := helpers.GetOrderStatusByValue(models.CreatedOrderStateValue)
 	if err != nil {
 		return nil, err
 	}

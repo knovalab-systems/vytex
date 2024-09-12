@@ -22,4 +22,6 @@ func PrivateRoutes(e *echo.Echo) {
 	privateResourceRoutes(route)
 	privateSupplierRoutes(route)
 	privateReferenceRoutes(route)
+	privateOrderStateRoutes(route)
+
 }

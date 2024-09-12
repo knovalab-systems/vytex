@@ -8,17 +8,17 @@ import (
 )
 
 func CreateOrderStatus(db *gorm.DB) error {
-	if db.Migrator().HasTable(&models.OrderStatus{}) {
+	if db.Migrator().HasTable(&models.OrderState{}) {
 
-		statusOrder := []struct {
-			Status *models.OrderStatus
+		orderStatus := []struct {
+			Status *models.OrderState
 		}{
 			{Status: models.CreatedOrderStatus()},
 			{Status: models.StartedOrderStatus()},
 		}
 
-		for _, v := range statusOrder {
-			err := db.FirstOrCreate(&models.OrderStatus{}, v.Status).Error
+		for _, v := range orderStatus {
+			err := db.FirstOrCreate(&models.OrderState{}, v.Status).Error
 			if err != nil {
 				return err
 			}

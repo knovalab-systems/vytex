@@ -33,20 +33,13 @@ func DB() *gorm.DB {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
 
-	db.Exec(`
-	DO $$ BEGIN
-		CREATE TYPE status_order AS ENUM ('Created');
-	EXCEPTION
-		WHEN duplicate_object THEN null;
-	END $$;`)
-
 	err = db.AutoMigrate(&models.User{}, &models.Session{},
 		&models.Color{}, &models.Resource{}, &models.Fabric{},
 		&models.Reference{}, &models.ColorByReference{},
 		&models.ResourceByReference{}, &models.FabricByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
 		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{},
-		&models.OrderStatus{})
+		&models.OrderState{})
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}
@@ -87,7 +80,7 @@ func DBGEN() *gorm.DB {
 		&models.ResourceByReference{}, &models.FabricByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
 		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{},
-		&models.OrderStatus{})
+		&models.OrderState{})
 
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)

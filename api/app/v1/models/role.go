@@ -46,6 +46,7 @@ func ADMIN_ROLE() *Role {
 			int64(CreateOrders),
 			int64(ReadFabrics),
 			int64(ReadResources),
+			int64(ReadOrders),
 		},
 	}
 }
