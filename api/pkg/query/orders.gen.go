@@ -28,7 +28,7 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 	tableName := _order.orderDo.TableName()
 	_order.ALL = field.NewAsterisk(tableName)
 	_order.ID = field.NewUint(tableName, "id")
-	_order.OrderStatusID = field.NewUint(tableName, "order_status_id")
+	_order.OrderStateID = field.NewUint(tableName, "order_state_id")
 	_order.CreatedAt = field.NewTime(tableName, "created_at")
 	_order.FinishedAt = field.NewTime(tableName, "finished_at")
 	_order.CanceledAt = field.NewTime(tableName, "canceled_at")
@@ -232,7 +232,7 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 			Custom struct {
 				field.RelationField
 			}
-			OrderStatus struct {
+			OrderState struct {
 				field.RelationField
 			}
 		}{
@@ -257,18 +257,18 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 			}{
 				RelationField: field.NewRelation("Custom.Orders.Custom", "models.Custom"),
 			},
-			OrderStatus: struct {
+			OrderState: struct {
 				field.RelationField
 			}{
-				RelationField: field.NewRelation("Custom.Orders.OrderStatus", "models.OrderState"),
+				RelationField: field.NewRelation("Custom.Orders.OrderState", "models.OrderState"),
 			},
 		},
 	}
 
-	_order.OrderStatus = orderBelongsToOrderStatus{
+	_order.OrderState = orderBelongsToOrderState{
 		db: db.Session(&gorm.Session{}),
 
-		RelationField: field.NewRelation("OrderStatus", "models.OrderState"),
+		RelationField: field.NewRelation("OrderState", "models.OrderState"),
 	}
 
 	_order.fillFieldMap()
@@ -281,7 +281,7 @@ type order struct {
 
 	ALL                field.Asterisk
 	ID                 field.Uint
-	OrderStatusID      field.Uint
+	OrderStateID       field.Uint
 	CreatedAt          field.Time
 	FinishedAt         field.Time
 	CanceledAt         field.Time
@@ -311,7 +311,7 @@ type order struct {
 
 	Custom orderBelongsToCustom
 
-	OrderStatus orderBelongsToOrderStatus
+	OrderState orderBelongsToOrderState
 
 	fieldMap map[string]field.Expr
 }
@@ -329,7 +329,7 @@ func (o order) As(alias string) *order {
 func (o *order) updateTableName(table string) *order {
 	o.ALL = field.NewAsterisk(table)
 	o.ID = field.NewUint(table, "id")
-	o.OrderStatusID = field.NewUint(table, "order_status_id")
+	o.OrderStateID = field.NewUint(table, "order_state_id")
 	o.CreatedAt = field.NewTime(table, "created_at")
 	o.FinishedAt = field.NewTime(table, "finished_at")
 	o.CanceledAt = field.NewTime(table, "canceled_at")
@@ -369,7 +369,7 @@ func (o *order) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 func (o *order) fillFieldMap() {
 	o.fieldMap = make(map[string]field.Expr, 28)
 	o.fieldMap["id"] = o.ID
-	o.fieldMap["order_status_id"] = o.OrderStatusID
+	o.fieldMap["order_state_id"] = o.OrderStateID
 	o.fieldMap["created_at"] = o.CreatedAt
 	o.fieldMap["finished_at"] = o.FinishedAt
 	o.fieldMap["canceled_at"] = o.CanceledAt
@@ -695,7 +695,7 @@ type orderBelongsToCustom struct {
 		Custom struct {
 			field.RelationField
 		}
-		OrderStatus struct {
+		OrderState struct {
 			field.RelationField
 		}
 	}
@@ -766,13 +766,13 @@ func (a orderBelongsToCustomTx) Count() int64 {
 	return a.tx.Count()
 }
 
-type orderBelongsToOrderStatus struct {
+type orderBelongsToOrderState struct {
 	db *gorm.DB
 
 	field.RelationField
 }
 
-func (a orderBelongsToOrderStatus) Where(conds ...field.Expr) *orderBelongsToOrderStatus {
+func (a orderBelongsToOrderState) Where(conds ...field.Expr) *orderBelongsToOrderState {
 	if len(conds) == 0 {
 		return &a
 	}
@@ -785,27 +785,27 @@ func (a orderBelongsToOrderStatus) Where(conds ...field.Expr) *orderBelongsToOrd
 	return &a
 }
 
-func (a orderBelongsToOrderStatus) WithContext(ctx context.Context) *orderBelongsToOrderStatus {
+func (a orderBelongsToOrderState) WithContext(ctx context.Context) *orderBelongsToOrderState {
 	a.db = a.db.WithContext(ctx)
 	return &a
 }
 
-func (a orderBelongsToOrderStatus) Session(session *gorm.Session) *orderBelongsToOrderStatus {
+func (a orderBelongsToOrderState) Session(session *gorm.Session) *orderBelongsToOrderState {
 	a.db = a.db.Session(session)
 	return &a
 }
 
-func (a orderBelongsToOrderStatus) Model(m *models.Order) *orderBelongsToOrderStatusTx {
-	return &orderBelongsToOrderStatusTx{a.db.Model(m).Association(a.Name())}
+func (a orderBelongsToOrderState) Model(m *models.Order) *orderBelongsToOrderStateTx {
+	return &orderBelongsToOrderStateTx{a.db.Model(m).Association(a.Name())}
 }
 
-type orderBelongsToOrderStatusTx struct{ tx *gorm.Association }
+type orderBelongsToOrderStateTx struct{ tx *gorm.Association }
 
-func (a orderBelongsToOrderStatusTx) Find() (result *models.OrderState, err error) {
+func (a orderBelongsToOrderStateTx) Find() (result *models.OrderState, err error) {
 	return result, a.tx.Find(&result)
 }
 
-func (a orderBelongsToOrderStatusTx) Append(values ...*models.OrderState) (err error) {
+func (a orderBelongsToOrderStateTx) Append(values ...*models.OrderState) (err error) {
 	targetValues := make([]interface{}, len(values))
 	for i, v := range values {
 		targetValues[i] = v
@@ -813,7 +813,7 @@ func (a orderBelongsToOrderStatusTx) Append(values ...*models.OrderState) (err e
 	return a.tx.Append(targetValues...)
 }
 
-func (a orderBelongsToOrderStatusTx) Replace(values ...*models.OrderState) (err error) {
+func (a orderBelongsToOrderStateTx) Replace(values ...*models.OrderState) (err error) {
 	targetValues := make([]interface{}, len(values))
 	for i, v := range values {
 		targetValues[i] = v
@@ -821,7 +821,7 @@ func (a orderBelongsToOrderStatusTx) Replace(values ...*models.OrderState) (err 
 	return a.tx.Replace(targetValues...)
 }
 
-func (a orderBelongsToOrderStatusTx) Delete(values ...*models.OrderState) (err error) {
+func (a orderBelongsToOrderStateTx) Delete(values ...*models.OrderState) (err error) {
 	targetValues := make([]interface{}, len(values))
 	for i, v := range values {
 		targetValues[i] = v
@@ -829,11 +829,11 @@ func (a orderBelongsToOrderStatusTx) Delete(values ...*models.OrderState) (err e
 	return a.tx.Delete(targetValues...)
 }
 
-func (a orderBelongsToOrderStatusTx) Clear() error {
+func (a orderBelongsToOrderStateTx) Clear() error {
 	return a.tx.Clear()
 }
 
-func (a orderBelongsToOrderStatusTx) Count() int64 {
+func (a orderBelongsToOrderStateTx) Count() int64 {
 	return a.tx.Count()
 }
 

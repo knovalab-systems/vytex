@@ -40,17 +40,17 @@ func orderFields(s query.IOrderDo, fields []string) query.IOrderDo {
 			continue
 		}
 
-		if strings.HasPrefix(v, "status.") {
-			f = append(f, table.OrderStatusID)
-			s = s.Preload(table.OrderStatus)
+		if strings.HasPrefix(v, "order_state.") {
+			f = append(f, table.OrderStateID)
+			s = s.Preload(table.OrderState)
 			continue
 		}
 
 		switch v {
 		case "id":
 			f = append(f, table.ID)
-		case "status_id":
-			f = append(f, table.OrderStatusID)
+		case "order_state_id":
+			f = append(f, table.OrderStateID)
 		case "created_at":
 			f = append(f, table.CreatedAt)
 		case "finished_at":

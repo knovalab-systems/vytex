@@ -42,6 +42,6 @@ type OrderRead struct {
 }
 
 type OrderUpdateBody struct {
-	ID            uint `param:"orderId" validate:"required"`
-	OrderStatusID uint `json:"status_id,omitempty"`
+	ID           uint `param:"orderId" validate:"required"`
+	OrderStateID uint `json:"order_state_id,omitempty"`
 }

@@ -269,10 +269,10 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				RelationField: field.NewRelation("Orders.Custom.Orders", "models.Order"),
 			},
 		},
-		OrderStatus: struct {
+		OrderState: struct {
 			field.RelationField
 		}{
-			RelationField: field.NewRelation("Orders.OrderStatus", "models.OrderState"),
+			RelationField: field.NewRelation("Orders.OrderState", "models.OrderState"),
 		},
 	}
 
@@ -446,7 +446,7 @@ type customHasManyOrders struct {
 			field.RelationField
 		}
 	}
-	OrderStatus struct {
+	OrderState struct {
 		field.RelationField
 	}
 }

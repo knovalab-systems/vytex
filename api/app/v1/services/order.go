@@ -141,12 +141,12 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 
 	table := query.Order
 
-	order, err := table.Preload(table.OrderStatus).Unscoped().Where(table.ID.Eq(b.ID)).First()
+	order, err := table.Preload(table.OrderState).Unscoped().Where(table.ID.Eq(b.ID)).First()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
-	if b.OrderStatusID != 0 {
+	if b.OrderStateID != 0 {
 
 		if order.OrderState.Value == models.CreatedOrderStateValue {
 			stateStarted, err := helpers.GetOrderStatusByValue(models.StartedOrderStateValue)
@@ -154,10 +154,10 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 				return nil, problems.ServerError()
 			}
 
-			if b.OrderStatusID == stateStarted.ID {
+			if b.OrderStateID == stateStarted.ID {
 				now := time.Now()
 				order.StartedAt = &now
-				order.OrderStateID = b.OrderStatusID
+				order.OrderStateID = b.OrderStateID
 				order.OrderState = nil
 			} else {
 				return nil, problems.ReadAccess()

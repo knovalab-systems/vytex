@@ -29,7 +29,7 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 						if !ok {
 							return nil, errors.New("ERROR: INVALID TYPE")
 						}
-						s = s.Where(table.OrderStatusID.Eq(uint(id)))
+						s = s.Where(table.OrderStateID.Eq(uint(id)))
 					}
 				}
 			}
