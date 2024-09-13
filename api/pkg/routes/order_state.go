@@ -9,7 +9,7 @@ import (
 )
 
 func privateOrderStateRoutes(g *echo.Group) {
-	route := g.Group("/orders-status")
+	route := g.Group("/order-status")
 
 	orderStateController := controllers.OrderStateController{OrderStateRepository: &services.OrderStateService{}}
 

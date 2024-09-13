@@ -96,7 +96,7 @@ func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom
 			return nil, problems.CreateCustomBadRequest()
 		}
 
-		orders = append(orders, models.Order{OrderStatusID: status.ID, SizeInt: v.SizeInt, CreatedBy: b.CreatedBy, ColorByReferenceID: v.ColorByReferenceID})
+		orders = append(orders, models.Order{OrderStateID: status.ID, SizeInt: v.SizeInt, CreatedBy: b.CreatedBy, ColorByReferenceID: v.ColorByReferenceID})
 	}
 
 	custom := &models.Custom{CreatedBy: b.CreatedBy, Client: b.Client, Orders: orders}

@@ -65,6 +65,66 @@ func TestReadOrders(t *testing.T) {
 	})
 }
 
+func TestReadOrder(t *testing.T) {
+
+	t.Run("Fail binding, id is no find", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		err := orderController.ReadOrder(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Not found order", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("orderId")
+		c.SetParamValues("1")
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("SelectOrder").Return(errors.New("Error"))
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		err := orderController.ReadOrder(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get order successfully", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("orderId")
+		c.SetParamValues("1")
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("SelectOrder").Return(nil, nil)
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		// test
+		err := orderController.ReadOrder(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
 func TestAggregateOrder(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
@@ -251,6 +311,60 @@ func TestCreateOrder(t *testing.T) {
 		err := orderController.CreateOrder(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
+		}
+	})
+
+}
+
+func TestUpdateOrder(t *testing.T) {
+
+	t.Run("Fail binding, id is missing", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		_ = json.NewEncoder(body).Encode(map[string]interface{}{})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+		// test
+		err := orderController.UpdateOrder(c)
+		// test
+		assert.Error(t, err)
+	})
+
+	t.Run("Update order with status", func(t *testing.T) {
+		// context
+		id := "1"
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]interface{}{"status_id": 1})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("orderId")
+		c.SetParamValues(id)
+
+		// mocks
+		orderMock := mocks.OrderMock{}
+		orderMock.On("UpdateOrder").Return(&models.Order{}, nil)
+
+		// controller
+		orderController := OrderController{OrderRepository: &orderMock}
+
+		// test
+		err := orderController.UpdateOrder(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
 		}
 	})
 }

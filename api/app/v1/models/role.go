@@ -78,6 +78,8 @@ func PRO_SUPERVISOR_ROLE() *Role {
 		Policies: []int64{
 			int64(ReadReferences),
 			int64(UpdateTimesReferences),
+			int64(ReadOrders),
+			int64(StartOrder),
 		},
 	}
 }

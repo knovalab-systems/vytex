@@ -16,4 +16,7 @@ func privateOrderRoutes(g *echo.Group) {
 	route.GET("", orderController.ReadOrders, middlewares.Policies([]models.Policy{models.ReadOrders}))
 	route.GET("/aggregate", orderController.AggregateOrders, middlewares.Policies([]models.Policy{models.ReadOrders}))
 	route.POST("", orderController.CreateOrder, middlewares.Policies([]models.Policy{models.CreateOrders}))
+	route.GET("/:orderId", orderController.ReadOrder, middlewares.Policies([]models.Policy{models.ReadOrders, models.StartOrder}))
+	route.PATCH("/:orderId", orderController.UpdateOrder, middlewares.Policies([]models.Policy{models.StartOrder}))
+
 }

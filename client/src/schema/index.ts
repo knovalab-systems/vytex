@@ -15,6 +15,7 @@ export * from './image.js';
 export * from './notification.js';
 export * from './operation.js';
 export * from './order.js';
+export * from './orderState.js';
 export * from './panel.js';
 export * from './permission.js';
 export * from './preset.js';

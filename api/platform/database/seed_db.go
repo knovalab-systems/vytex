@@ -538,7 +538,7 @@ func generateOrders(createdBy string, colorByReferences []models.ColorByReferenc
 
 	for i := 0; i < 3; i++ {
 		order := models.Order{
-			OrderStatusID:      1,
+			OrderStateID:       1,
 			CreatedBy:          createdBy,
 			ColorByReferenceID: colorByReferences[rand.Intn(len(colorByReferences))].ID,
 			SizeInt:            generateSizeInt(),

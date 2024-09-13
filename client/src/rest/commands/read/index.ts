@@ -15,6 +15,7 @@ export * from './items.js';
 export * from './notifications.js';
 export * from './operations.js';
 export * from './orders.js';
+export * from './orderState.js';
 export * from './panels.js';
 export * from './permissions.js';
 export * from './presets.js';

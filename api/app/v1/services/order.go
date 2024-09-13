@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"strings"
+	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
@@ -41,6 +42,34 @@ func (m *OrderService) SelectOrders(q *models.Query) ([]*models.Order, error) {
 	}
 
 	return orders, nil
+}
+
+func (m *OrderService) SelectOrder(q *models.OrderRead) (*models.Order, error) {
+	// sanitize
+	formats.SanitizedQuery(&q.Query)
+
+	// def query
+	table := query.Order
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// fields
+	s = fields.Fields(s, q.Fields).(query.IOrderDo)
+
+	// filters
+	s, err := filters.OrderFilters(s, q.Filter)
+	if err != nil {
+		return nil, problems.UsersBadRequest()
+	}
+
+	order, err := s.Where(table.ID.Eq(q.ID)).First()
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	return order, nil
 }
 
 func (m *OrderService) AggregationOrders(q *models.AggregateQuery) ([]*models.AggregateData, error) {
@@ -92,7 +121,7 @@ func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, er
 	}
 
 	order := &models.Order{
-		OrderStatusID:      status.ID,
+		OrderStateID:       status.ID,
 		SizeInt:            b.SizeInt,
 		CreatedBy:          b.CreatedBy,
 		ColorByReferenceID: b.ColorByReferenceID,
@@ -103,6 +132,47 @@ func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, er
 	err = query.Order.Create(order)
 	if err != nil {
 		return nil, err
+	}
+
+	return order, nil
+}
+
+func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, error) {
+
+	table := query.Order
+
+	order, err := table.Preload(table.OrderStatus).Unscoped().Where(table.ID.Eq(b.ID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if b.OrderStatusID != 0 {
+
+		if order.OrderState.Value == models.CreatedOrderStateValue {
+			stateStarted, err := helpers.GetOrderStatusByValue(models.StartedOrderStateValue)
+			if err != nil {
+				return nil, problems.ServerError()
+			}
+
+			if b.OrderStatusID == stateStarted.ID {
+				now := time.Now()
+				order.StartedAt = &now
+				order.OrderStateID = b.OrderStatusID
+				order.OrderState = nil
+			} else {
+				return nil, problems.ReadAccess()
+			}
+		}
+
+	}
+
+	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(order)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	if rows.RowsAffected == 0 {
+		return nil, problems.ReadAccess()
 	}
 
 	return order, nil
