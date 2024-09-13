@@ -27,7 +27,6 @@ describe('Resources Table', () => {
 	});
 
 	it('renders correctly on resources without update policy', async () => {
-
 		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
 			policies: [],
 			hasPolicy: () => {
@@ -50,12 +49,11 @@ describe('Resources Table', () => {
 
 		render(() => <ResourceTable resources={resources} />);
 		const resourcesId = screen.getByText('123');
-		const resourceCode = screen.getByText('RESOURCE001')
+		const resourceCode = screen.getByText('RESOURCE001');
 		const resourceName = screen.getByText('Insumo 1');
-		const resourceCost = screen.getByText('$1000')
+		const resourceCost = screen.getByText('$1000');
 		const resourceStatus = screen.getByText('Activo');
 		const resourceActions = screen.getByText('WithOutActions');
-
 
 		expect(resourcesId).toBeInTheDocument();
 		expect(resourceCode).toBeInTheDocument();
@@ -92,9 +90,9 @@ describe('Resources Table', () => {
 
 		render(() => <ResourceTable resources={resources} />);
 		const resourcesId = screen.getByText('123');
-		const resourceCode = screen.getByText('RESOURCE001')
+		const resourceCode = screen.getByText('RESOURCE001');
 		const resourceName = screen.getByText('Insumo 1');
-		const resourceCost = screen.getByText('$1000')
+		const resourceCost = screen.getByText('$1000');
 		const resourceStatus = screen.getByText('Activo');
 		const resourceActions = screen.getByText('WithActions');
 

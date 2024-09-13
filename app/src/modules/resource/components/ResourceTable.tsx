@@ -25,7 +25,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 			});
 		}
 		return arr;
-	}
+	};
 
 	return (
 		<TableContainer>
@@ -69,9 +69,7 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell>
 									<StatusLabel status={!resource.deleted_at} />
 								</TableCell>
-								<ActionsCell
-									actions={actions(resource.id)}
-								/>
+								<ActionsCell actions={actions(resource.id)} />
 							</TableRow>
 						)}
 					</For>

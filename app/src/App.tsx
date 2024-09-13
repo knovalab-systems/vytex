@@ -5,6 +5,7 @@ import './App.css';
 import Routes from './Routes';
 import { AuthProvider } from './hooks/useAuth';
 import { ColorsProvider } from './hooks/useColors';
+import { OrderStatusProvider } from './hooks/useOrderStatus';
 import { SuppliersProvider } from './hooks/useSuppliers';
 import { queryClient } from './lib/queryClient';
 
@@ -14,9 +15,11 @@ function App() {
 			root={(props: RouteSectionProps) => (
 				<QueryClientProvider client={queryClient}>
 					<AuthProvider>
-						<SuppliersProvider>
-							<ColorsProvider>{props.children}</ColorsProvider>
-						</SuppliersProvider>
+						<OrderStatusProvider>
+							<SuppliersProvider>
+								<ColorsProvider>{props.children}</ColorsProvider>
+							</SuppliersProvider>
+						</OrderStatusProvider>
 						<Toaster />
 					</AuthProvider>
 				</QueryClientProvider>

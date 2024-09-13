@@ -24,6 +24,7 @@ export const POLICIES = [
 	'ReadSuppliers',
 	'CreateSuppliers',
 	'UpdateSuppliers',
+	'StartOrder',
 ] as const;
 
 export type Policy = (typeof POLICIES)[number];

@@ -1,6 +1,7 @@
 import { A } from '@solidjs/router';
 import { AiFillEdit, AiOutlinePlus } from 'solid-icons/ai';
 import { CgNotes } from 'solid-icons/cg';
+import { IoPlay } from 'solid-icons/io';
 import { For, type JSXElement, Show } from 'solid-js';
 import { cn } from '~/lib/utils';
 import type { Action, Icons } from '~/types/actionsCell';
@@ -14,6 +15,7 @@ function ActionsCell(props: { actions: Action[] }) {
 		update: () => <AiFillEdit size={20} />,
 		details: () => <CgNotes size={20} />,
 		create: () => <AiOutlinePlus size={20} />,
+		start: () => <IoPlay size={20} />,
 	};
 
 	return (

@@ -1,6 +1,7 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readOrders } from '@vytex/client';
+import { aggregate, readOrder, readOrders } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
+import { SIZES } from '~/constants/sizes';
 import { client } from '~/lib/client';
 
 export function getOrdersQuery(page: number) {
@@ -15,6 +16,7 @@ async function getOrders(page: number) {
 		readOrders({
 			page: page,
 			limit: QUERY_LIMIT,
+			fields: ['created_at', 'canceled_at', 'started_at', 'order_state_id', 'id', 'custom_id', 'finished_at'],
 		}),
 	);
 }
@@ -37,3 +39,31 @@ async function countOrders() {
 		}),
 	);
 }
+
+export function getOrderStartQuery(id: number) {
+	return queryOptions({
+		queryKey: ['getOrderStart', id],
+		queryFn: () => getOrderStart(id),
+	});
+}
+
+async function getOrderStart(id: number) {
+	return await client.request(
+		readOrder(id, {
+			fields: [
+				'order_state_id',
+				'id',
+				...SIZES,
+				{
+					color_by_reference: [
+						'id',
+						{ fabrics: [...SIZES, { fabric: ['color_id', 'name'] }] },
+						{ resources: [...SIZES, { resource: ['color_id', 'name'] }] },
+					],
+				},
+			],
+		}),
+	);
+}
+
+export type GetOrderStart = Awaited<ReturnType<typeof getOrderStart>>;

@@ -7,6 +7,7 @@ import type {
 	VytexCustom,
 	VytexFabric,
 	VytexOrder,
+	VytexOrderState,
 	VytexReference,
 	VytexResource,
 	VytexSupplier,
@@ -26,6 +27,7 @@ export type Order = Partial<VytexOrder<CoreSchema>>;
 export type Composition = VytexComposition<CoreSchema>;
 export type TimeByTask = VytexTimeByTask<CoreSchema>;
 export type VytexSize = VS;
+export type OrderState = VytexOrderState<CoreSchema>;
 export type ResourceFabric = {
 	fabrics: (VS & { fabric_id: number })[];
 	resources: (VS & { resource_id: number })[];

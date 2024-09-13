@@ -1,48 +1,50 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
-import * as requests from '../../request/OrderCreate';
-import OrderCreateForm from '../OrderCreateForm';
+import * as requests from '../../requests/CustomCreate';
+import CustomCreateForm from '../CustomCreateForm';
 
 const mockNavigate = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
-describe('OrderCreateForm', () => {
+describe('CustomCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly', () => {
-		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
+		render(() => <CustomCreateForm references={[]} />);
 
+		const clientField = screen.getByText('Cliente');
 		const refField = screen.getByText('Referencia');
 		const submitButton = screen.getByText('Crear');
 		const cancelButton = screen.getByText('Cancelar');
 
+		expect(clientField).toBeInTheDocument();
 		expect(refField).toBeInTheDocument();
 		expect(submitButton).toBeInTheDocument();
 		expect(cancelButton).toBeInTheDocument();
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
+		render(() => <CustomCreateForm references={[]} />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
 
-		await waitFor(() => {
-			const refFieldErr = screen.getByText(/Seleccione una referencia./);
-			expect(refFieldErr).toBeInTheDocument();
-		});
+		const clientFieldErr = await screen.findByText('Ingrese el cliente.');
+		const refFieldErr = screen.getByText('Seleccione una referencia.');
+
+		expect(clientFieldErr).toBeInTheDocument();
+		expect(refFieldErr).toBeInTheDocument();
 	});
 
 	it('calls cancel successfully', async () => {
-		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
+		render(() => <CustomCreateForm references={[]} />);
 		const cancelButton = screen.getByText('Cancelar');
 		fireEvent.click(cancelButton);
 		expect(mockNavigate).toHaveBeenCalled();
@@ -50,11 +52,11 @@ describe('OrderCreateForm', () => {
 
 	it('calls submit with pending values for sizes', async () => {
 		render(() => (
-			<OrderCreateForm
+			<CustomCreateForm
 				references={[
 					{
 						id: 1,
-						code: '3232',
+						code: null,
 						colors: [
 							{
 								id: 1,
@@ -63,11 +65,12 @@ describe('OrderCreateForm', () => {
 						],
 					},
 				]}
-				custom={[] as unknown as GetCustomType}
 			/>
 		));
-
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+
+		const clientField = screen.getByPlaceholderText('Nombre del cliente');
+		fireEvent.input(clientField, { target: { value: 'cliente' } });
 
 		const referenceSelect = screen.getByTitle('Ver referencias');
 
@@ -102,17 +105,17 @@ describe('OrderCreateForm', () => {
 		fireEvent.click(submitButton);
 
 		await waitFor(() =>
-			expect(toastMock).toHaveBeenCalledWith('Cada referencia debe tener al menos una talla con un valor mayor a 0.'),
+			expect(toastMock).toHaveBeenCalledWith('Cada referencia debe tener almenos una talla con un valor mayor a 0.'),
 		);
 	});
 
 	it('calls submit with error server', async () => {
 		render(() => (
-			<OrderCreateForm
+			<CustomCreateForm
 				references={[
 					{
 						id: 1,
-						code: '3232',
+						code: null,
 						colors: [
 							{
 								id: 1,
@@ -121,10 +124,12 @@ describe('OrderCreateForm', () => {
 						],
 					},
 				]}
-				custom={[] as unknown as GetCustomType}
 			/>
 		));
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+
+		const clientField = screen.getByPlaceholderText('Nombre del cliente');
+		fireEvent.input(clientField, { target: { value: 'cliente' } });
 
 		const referenceSelect = screen.getByTitle('Ver referencias');
 
@@ -161,16 +166,16 @@ describe('OrderCreateForm', () => {
 		const inputValuesSize = await screen.findAllByPlaceholderText('12');
 		fireEvent.input(inputValuesSize[0], { target: { value: 12 } });
 
-		await waitFor(() => expect(toastMock).toHaveBeenCalledWith('Error al crear la orden.'));
+		await waitFor(() => expect(toastMock).toHaveBeenCalledWith('Error al crear el pedido.'));
 	});
 
 	it('calls submit succesfully', async () => {
 		render(() => (
-			<OrderCreateForm
+			<CustomCreateForm
 				references={[
 					{
 						id: 1,
-						code: '3232',
+						code: null,
 						colors: [
 							{
 								id: 1,
@@ -179,41 +184,25 @@ describe('OrderCreateForm', () => {
 						],
 					},
 				]}
-				custom={[{ id: 1 }] as unknown as GetCustomType}
 			/>
 		));
-
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({
-			order_state: null,
-			custom: null,
+		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockResolvedValue({
 			id: 0,
+			created_at: null,
+			created_by: null,
+			client: null,
 			finished_at: null,
 			canceled_at: null,
 			canceled_by: null,
-			color_by_reference_id: null,
-			custom_id: null,
-			color_by_reference: null,
 			create_user: null,
 			cancel_user: null,
-			'2XS': null,
-			XS: null,
-			S: null,
-			M: null,
-			L: null,
-			XL: null,
-			'2XL': null,
-			'3XL': null,
-			'4XL': null,
-			'5XL': null,
-			'6XL': null,
-			'7XL': null,
-			'8XL': null,
-			created_at: '',
-			created_by: '',
-			order_state_id: 0,
-			started_at: null,
+			orders: null,
+			'count(orders)': undefined,
 		});
+
+		const clientField = screen.getByPlaceholderText('Nombre del cliente');
+		fireEvent.input(clientField, { target: { value: 'cliente' } });
 
 		const referenceSelect = screen.getByTitle('Ver referencias');
 
