@@ -14,6 +14,8 @@ vi.mock('~/hooks/useColors', () => ({
 	refetchColors: vi.fn().mockResolvedValue({}),
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('ColorUpdateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -315,11 +317,4 @@ describe('ColorUpdateForm', () => {
 			});
 		});
 	}
-
-	it('calls cancel successfully', async () => {
-		render(() => <ColorUpdateForm />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
-	});
 });

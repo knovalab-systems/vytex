@@ -16,6 +16,7 @@ import type { User } from '~/types/core';
 import type { GetUserType } from '../requests/userGet';
 import { updateUserRequest } from '../requests/userUpdate';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdate';
+import CancelButton from '~/components/CancelButton';
 
 function UserUpdateForm(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
@@ -59,8 +60,6 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(USERS_PATH);
 
 	return (
 		<Form class='w-full md:w-4/6 xl:w-2/5' onSubmit={handleSubmit}>
@@ -162,9 +161,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 					)}
 				</Field>
 				<div class='flex justify-between'>
-					<Button type='button' onclick={handleCancel} variant='destructive'>
-						Cancelar
-					</Button>
+					<CancelButton to={USERS_PATH} />
 					<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 						Actualizar
 					</Button>

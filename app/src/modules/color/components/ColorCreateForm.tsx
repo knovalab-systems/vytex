@@ -9,6 +9,7 @@ import { COLORS_PATH } from '~/constants/paths';
 import { refetchColors } from '~/hooks/useColors';
 import { createColorRequest } from '../requests/colorCreate';
 import { ColorCreateSchema, type ColorCreateType } from '../schemas/colorCreate';
+import CancelButton from '~/components/CancelButton';
 
 function ColorCreateForm() {
 	const navigate = useNavigate();
@@ -34,8 +35,6 @@ function ColorCreateForm() {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(COLORS_PATH);
 
 	return (
 		<Form class='w-full lg:w-2/5 2xl:w-1/4' onSubmit={handleSubmit}>
@@ -103,9 +102,7 @@ function ColorCreateForm() {
 				</Field>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={COLORS_PATH} />
 				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>

@@ -9,6 +9,7 @@ import { SUPPLIERS_PATH } from '~/constants/paths';
 import { refetchSuppliers } from '~/hooks/useSuppliers';
 import { createSupplierRequest } from '../requests/supplierCreate';
 import { SupplierCreateSchema, type SupplierCreateType } from '../schemas/supplierCreate';
+import CancelButton from '~/components/CancelButton';
 
 function SupplierCreateForm() {
 	const navigate = useNavigate();
@@ -45,7 +46,6 @@ function SupplierCreateForm() {
 			});
 	};
 
-	const handleCancel = () => navigate(SUPPLIERS_PATH);
 	return (
 		<Form class='w-full lg:w-2/5 2xl:w-1/4' onSubmit={handleSubmit}>
 			<div class='flex flex-col justify-center gap-4 p-8 m-4 bg-white rounded-md border border-gray-100 shadow-md'>
@@ -118,9 +118,7 @@ function SupplierCreateForm() {
 				</Field>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={SUPPLIERS_PATH} />
 				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>

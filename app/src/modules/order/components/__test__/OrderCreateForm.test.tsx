@@ -11,6 +11,8 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('OrderCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -39,13 +41,6 @@ describe('OrderCreateForm', () => {
 			const refFieldErr = screen.getByText(/Seleccione una referencia./);
 			expect(refFieldErr).toBeInTheDocument();
 		});
-	});
-
-	it('calls cancel successfully', async () => {
-		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
 	});
 
 	it('calls submit with pending values for sizes', async () => {

@@ -22,6 +22,7 @@ import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import type { Order } from '~/types/core';
 import { type RefByOrderCreate, createOrderRequest } from '../request/OrderCreate';
 import { OrderCreateSchema, type OrderCreateType } from '../schemas/orderCreate';
+import CancelButton from '~/components/CancelButton';
 
 type ColorReference = {
 	colorName: string;
@@ -86,8 +87,6 @@ function OrderCreateForm(props: { references: RefByOrderCreate; custom?: GetCust
 			})
 			.catch(() => toast.error('Error al crear la orden.'));
 	};
-
-	const handleCancel = () => navigate(CUSTOMS_PATH);
 
 	return (
 		<Form class='w-full lg:w-5/6 2xl:w-4/5' onSubmit={handleSubmit}>
@@ -180,9 +179,7 @@ function OrderCreateForm(props: { references: RefByOrderCreate; custom?: GetCust
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={CUSTOMS_PATH} />
 				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>

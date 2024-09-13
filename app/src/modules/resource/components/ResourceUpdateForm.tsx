@@ -26,6 +26,7 @@ import type { Resource } from '~/types/core';
 import type { GetResourceType } from '../requests/resourceGet';
 import { updateResourceRequest } from '../requests/resourceUpdate';
 import { ResourceUpdateSchema, type ResourceUpdateType } from '../schema/resourceUpdate';
+import CancelButton from '~/components/CancelButton';
 
 function ResourceUpdateForm(props: {
 	colors: Colors;
@@ -90,8 +91,6 @@ function ResourceUpdateForm(props: {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(RESOURCES_PATH);
 
 	return (
 		<Form class='w-full lg:w-3/5 xl:w-2/6' onSubmit={handleSubmit}>
@@ -262,9 +261,7 @@ function ResourceUpdateForm(props: {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={RESOURCES_PATH} />
 				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>

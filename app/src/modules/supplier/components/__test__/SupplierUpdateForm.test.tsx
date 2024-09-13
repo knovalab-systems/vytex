@@ -25,6 +25,8 @@ vi.mock('~/hooks/useSuppliers', () => ({
 	refetchSuppliers: vi.fn().mockResolvedValue({}),
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('SupplierUpdateForm', () => {
 	it('renders correctly', () => {
 		render(() => <SupplierUpdateForm supplier={supplier} />);
@@ -240,14 +242,6 @@ describe('SupplierUpdateForm', () => {
 			});
 		});
 	}
-
-	it('calls calcel successfully', async () => {
-		render(() => <SupplierUpdateForm supplier={supplier} />);
-
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
-	});
 
 	it('calls submit succesfully', async () => {
 		render(() => <SupplierUpdateForm supplier={supplier} />);

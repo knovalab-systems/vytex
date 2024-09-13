@@ -11,6 +11,7 @@ import { USERS_PATH } from '~/constants/paths';
 import { roleList, roles } from '~/constants/roles';
 import { createUserRequest } from '../requests/userCreate';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreate';
+import CancelButton from '~/components/CancelButton';
 
 function UserCreateForm() {
 	const navigate = useNavigate();
@@ -33,8 +34,6 @@ function UserCreateForm() {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(USERS_PATH);
 
 	return (
 		<Form class='w-full md:w-4/6 xl:w-2/5' onSubmit={handleSubmit}>
@@ -113,9 +112,7 @@ function UserCreateForm() {
 					)}
 				</Field>
 				<div class='flex justify-between'>
-					<Button type='button' variant='destructive' onclick={handleCancel}>
-						Cancelar
-					</Button>
+					<CancelButton to={USERS_PATH} />
 					<Button type='submit' variant='success' disabled={form.submitting}>
 						Crear
 					</Button>

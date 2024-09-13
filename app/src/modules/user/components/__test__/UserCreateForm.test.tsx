@@ -11,6 +11,8 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => navigateMock,
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('UserCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -204,11 +206,4 @@ describe('UserCreateForm', () => {
 			});
 		});
 	}
-
-	it('calls cancel successfully', async () => {
-		render(() => <UserCreateForm />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(navigateMock).toHaveBeenCalled();
-	});
 });

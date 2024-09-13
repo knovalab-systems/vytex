@@ -40,6 +40,7 @@ import {
 import { uploadImagesRequest } from '~/requests/imageUpload';
 import type { Reference, ResourceFabric } from '~/types/core';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreate';
+import CancelButton from '~/components/CancelButton';
 
 type Combined = {
 	id: string;
@@ -135,8 +136,6 @@ function ReferenceCreateForm(props: {
 			.catch(() => toast.error('Error al subir imagenes'));
 	};
 
-	const handleCancel = () => navigate(REFS_PATH);
-
 	return (
 		<Form
 			class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100'
@@ -165,9 +164,7 @@ function ReferenceCreateForm(props: {
 				</div>
 
 				<div class='xl:flex hidden justify-between'>
-					<Button type='button' onclick={handleCancel} variant='destructive'>
-						Cancelar
-					</Button>
+					<CancelButton to={REFS_PATH} />
 					<Button type='submit' disabled={form.submitting} variant='success'>
 						Crear
 					</Button>
@@ -392,9 +389,7 @@ function ReferenceCreateForm(props: {
 				)}
 			</FieldArray>
 			<div class='flex xl:hidden my-2 justify-between'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={REFS_PATH} />
 				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>

@@ -24,6 +24,7 @@ import { useColors } from '~/hooks/useColors';
 import type { Custom } from '~/types/core';
 import { type RefByCustomCreate, createCustomRequest } from '../requests/CustomCreate';
 import { CustomCreateSchema, type CustomCreateType } from '../schemas/customCreate';
+import CancelButton from '~/components/CancelButton';
 
 type ColorReference = {
 	colorName: string;
@@ -96,8 +97,6 @@ function CustomCreateForm(props: {
 				toast.error('Error al crear el pedido.');
 			});
 	};
-
-	const handleCancel = () => navigate(CUSTOMS_PATH);
 
 	return (
 		<Form class='w-full lg:w-5/6 2xl:w-4/5' onSubmit={handleSubmit}>
@@ -242,9 +241,7 @@ function CustomCreateForm(props: {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={CUSTOMS_PATH} />
 				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>

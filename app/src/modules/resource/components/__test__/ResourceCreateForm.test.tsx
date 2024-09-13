@@ -11,6 +11,8 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('ResourceCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -376,12 +378,5 @@ describe('ResourceCreateForm', () => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalledWith('Error al crear insumo');
 		});
-	});
-
-	it('calls cancel successfully', async () => {
-		render(() => <ResourceCreateForm colors={[]} suppliers={[]} />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
 	});
 });

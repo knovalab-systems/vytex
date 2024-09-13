@@ -13,6 +13,8 @@ vi.mock('~/hooks/useSuppliers', () => ({
 	refetchSuppliers: vi.fn().mockResolvedValue({}),
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('SupplierCreateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -168,11 +170,4 @@ describe('SupplierCreateForm', () => {
 			});
 		});
 	}
-
-	it('calls cancel successfully', async () => {
-		render(() => <SupplierCreateForm />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
-	});
 });
