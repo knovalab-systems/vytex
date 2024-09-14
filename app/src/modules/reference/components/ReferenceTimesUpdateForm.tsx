@@ -11,6 +11,7 @@ import type { TimeByTask } from '~/types/core';
 import type { GetReferenceForTimesType } from '../requests/referenceGet';
 import { updateTimesRefenceRequest } from '../requests/referenceTimesUpdate';
 import { ReferenceTimesUpdateSchema, type ReferenceTimesUpdateType } from '../schemas/referenceTimesUpdate';
+import CancelButton from '~/components/CancelButton';
 
 function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 	const navigate = useNavigate();
@@ -31,8 +32,6 @@ function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 				toast.error('Error al actualizar tiempos.');
 			});
 	};
-
-	const handleCancel = () => navigate(REFS_PRO_SUPERVISOR_PATH);
 
 	return (
 		<Form class='w-full md:w-4/6 xl:w-2/5' onSubmit={handleSubmit}>
@@ -69,9 +68,7 @@ function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={REFS_PRO_SUPERVISOR_PATH} />
 				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>

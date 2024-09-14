@@ -11,6 +11,8 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 const fileMock = (name: string, size: number, type: string) => {
 	const file = new File([new Blob(['a'.repeat(size)])], name, { type });
 	Object.defineProperty(file, 'size', { get: () => size });
@@ -561,13 +563,6 @@ describe('ReferenceCreateForm', () => {
 			expect(toastMock).toHaveBeenCalled();
 			expect(requestMock).not.toHaveBeenCalled();
 		});
-	});
-
-	it('calls cancel successfully', async () => {
-		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
-		const cancelButton = screen.getAllByText('Cancelar');
-		fireEvent.click(cancelButton[0]);
-		expect(mockNavigate).toHaveBeenCalled();
 	});
 
 	const requestsErrors = [

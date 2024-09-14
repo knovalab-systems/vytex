@@ -19,6 +19,8 @@ vi.mock('~/hooks/useSuppliers', () => ({
 	useSuppliers: () => ({ suppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }) }),
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('ResourceUpdateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -393,29 +395,6 @@ describe('ResourceUpdateForm', () => {
 			});
 		});
 	}
-
-	it('calls calcel successfully', async () => {
-		render(() => (
-			<ResourceUpdateForm
-				resource={
-					{
-						name: 'Resource 1',
-						code: '1',
-						cost: 100,
-						color_id: 1,
-						supplier_id: 1,
-						deleted_at: null,
-					} as GetResourceType
-				}
-				colors={[]}
-				suppliers={[]}
-			/>
-		));
-
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
-	});
 
 	it('calls submit successfully', async () => {
 		render(() => (

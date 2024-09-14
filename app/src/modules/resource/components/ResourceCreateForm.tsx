@@ -22,6 +22,7 @@ import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import type { Resource } from '~/types/core';
 import { createResourceRequest } from '../requests/resourceCreate';
 import { ResourceCreateSchema, type ResourceCreateType } from '../schema/resourceCreate';
+import CancelButton from '~/components/CancelButton';
 
 function ResourceCreateForm(props: {
 	colors: Colors;
@@ -59,8 +60,6 @@ function ResourceCreateForm(props: {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(RESOURCES_PATH);
 
 	return (
 		<Form class='w-full lg:w-3/5 xl:w-2/6' onSubmit={handleSubmit}>
@@ -208,9 +207,7 @@ function ResourceCreateForm(props: {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={RESOURCES_PATH} />
 				<Button type='submit' variant='success'>
 					Crear
 				</Button>

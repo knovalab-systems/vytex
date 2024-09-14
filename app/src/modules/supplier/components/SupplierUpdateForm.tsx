@@ -15,6 +15,7 @@ import type { Supplier } from '~/types/core';
 import type { GetSupplierType } from '../requests/supplierGet';
 import { updateSupplierRequest } from '../requests/supplierUpdate';
 import { SupplierUpdateSchema, type SupplierUpdateType } from '../schemas/supplierUpdate';
+import CancelButton from '~/components/CancelButton';
 
 function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 	const navigate = useNavigate();
@@ -77,8 +78,6 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(SUPPLIERS_PATH);
 
 	return (
 		<Form class='w-full lg:w-2/5 2xl:w-1/4' onSubmit={handleSubmit}>
@@ -176,9 +175,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 				</Field>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={SUPPLIERS_PATH} />
 				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>

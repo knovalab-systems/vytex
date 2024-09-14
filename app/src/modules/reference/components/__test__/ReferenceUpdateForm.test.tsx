@@ -12,6 +12,8 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('ReferenceTimesUpdateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -100,15 +102,6 @@ describe('ReferenceTimesUpdateForm', () => {
 		await waitFor(() => {
 			expect(toastMock).toHaveBeenCalledWith('Error al actualizar tiempos.');
 			expect(requestMock).toHaveBeenCalled();
-		});
-	});
-
-	it('calls cancel successfully', async () => {
-		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		await waitFor(() => {
-			expect(mockNavigate).toHaveBeenCalled();
 		});
 	});
 });

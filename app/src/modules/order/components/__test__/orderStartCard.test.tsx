@@ -27,6 +27,8 @@ vi.mock('~/hooks/useOrderStatus', () => ({
 	}),
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('OrderStartCard', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -148,33 +150,6 @@ describe('OrderStartCard', () => {
 		expect(nameResource).toBeInTheDocument();
 		expect(usageFabric).toBeInTheDocument();
 		expect(usageResource).toBeInTheDocument();
-	});
-
-	it('calls cancel button correctly', async () => {
-		const order: GetOrderStart = {
-			id: 1,
-			order_state_id: 1,
-			color_by_reference: null,
-			'2XS': 1,
-			XS: 1,
-			S: 1,
-			M: 1,
-			L: 1,
-			XL: 1,
-			'2XL': 1,
-			'3XL': 1,
-			'4XL': 1,
-			'5XL': 1,
-			'6XL': 1,
-			'7XL': 1,
-			'8XL': 1,
-		};
-		render(() => <OrderStartCard order={order} />);
-		const cancelButton = screen.getByText('Cancelar');
-
-		fireEvent.click(cancelButton);
-
-		await waitFor(() => expect(navigateMock).toBeCalled());
 	});
 
 	it('calls navigate order is already started', async () => {

@@ -10,6 +10,8 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => mockNavigate,
 }));
 
+vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
+
 describe('FabricCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -272,13 +274,6 @@ describe('FabricCreateForm', () => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
 		});
-	});
-
-	it('calls cancel successfully', async () => {
-		render(() => <FabricCreateForm colors={[]} suppliers={[]} />);
-		const cancelButton = screen.getByText('Cancelar');
-		fireEvent.click(cancelButton);
-		expect(mockNavigate).toHaveBeenCalled();
 	});
 
 	const requestsErrors = [

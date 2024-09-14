@@ -8,6 +8,7 @@ import { useColors } from '~/hooks/useColors';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
 import type { GetOrderStart } from '../request/OrderGet';
 import { updateOrderRequest } from '../request/OrderUpdate';
+import CancelButton from '~/components/CancelButton';
 
 type DataUsage = {
 	name: string;
@@ -69,8 +70,6 @@ function OrderStartCard(props: { order: GetOrderStart }) {
 		}
 	});
 
-	const handleCancel = () => navigate(ORDERS_PATH);
-
 	const handleStart = async () => {
 		setDisabled(true);
 		updateOrderRequest(props.order.id, { order_state_id: started()?.id })
@@ -99,9 +98,7 @@ function OrderStartCard(props: { order: GetOrderStart }) {
 			</div>
 			<div>
 				<div class='flex justify-between m-4'>
-					<Button type='button' onclick={handleCancel} variant='destructive'>
-						Cancelar
-					</Button>
+					<CancelButton to={ORDERS_PATH} />
 					<Button type='submit' onclick={handleStart} disabled={disabled()} variant='success'>
 						Iniciar
 					</Button>

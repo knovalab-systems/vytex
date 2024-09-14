@@ -23,6 +23,7 @@ import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import type { Composition, Fabric } from '~/types/core';
 import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
+import CancelButton from '~/components/CancelButton';
 
 function FabricCreateForm(props: {
 	colors: Colors;
@@ -76,8 +77,6 @@ function FabricCreateForm(props: {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(FABRICS_PATH);
 
 	return (
 		<Form class='w-full lg:w-3/5 2xl:w-2/4' onSubmit={handleSubmit}>
@@ -183,7 +182,6 @@ function FabricCreateForm(props: {
 								</div>
 							)}
 						</Field>
-
 						<Field name='supplier' type='number'>
 							{field => (
 								<div class='gap-4 w-full'>
@@ -251,9 +249,7 @@ function FabricCreateForm(props: {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={FABRICS_PATH} />
 				<Button type='submit' disabled={form.submitting} variant='success'>
 					Crear
 				</Button>

@@ -27,6 +27,7 @@ import type { Composition, Fabric } from '~/types/core';
 import type { GetFabricType } from '../requests/fabricGet';
 import { updateFabricRequest } from '../requests/fabricUpdate';
 import { FabricUpdateSchema, type FabricUpdateType } from '../schemas/fabricUpdate';
+import CancelButton from '~/components/CancelButton';
 
 function FabricUpdateForm(props: {
 	colors: Colors;
@@ -115,8 +116,6 @@ function FabricUpdateForm(props: {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(FABRICS_PATH);
 
 	return (
 		<Form class='w-full lg:w-3/5 2xl:w-2/4' onSubmit={handleSubmit}>
@@ -314,9 +313,7 @@ function FabricUpdateForm(props: {
 				</Field>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={FABRICS_PATH} />
 				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>

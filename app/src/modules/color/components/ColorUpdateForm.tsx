@@ -15,6 +15,7 @@ import type { Color } from '~/types/core';
 import type { GetColorType } from '../requests/colorGet';
 import { updateColorRequest } from '../requests/colorUpdate';
 import { ColorUpdateSchema, type ColorUpdateType } from '../schemas/colorUpdate';
+import CancelButton from '~/components/CancelButton';
 
 function ColorUpdateForm(props: { color?: GetColorType }) {
 	const navigate = useNavigate();
@@ -65,8 +66,6 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 				}
 			});
 	};
-
-	const handleCancel = () => navigate(COLORS_PATH);
 
 	return (
 		<Form class='w-full md:w-4/6 xl:w-2/5' onSubmit={handleSubmit}>
@@ -158,9 +157,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 				</Field>
 			</div>
 			<div class='flex justify-between m-4'>
-				<Button type='button' onclick={handleCancel} variant='destructive'>
-					Cancelar
-				</Button>
+				<CancelButton to={COLORS_PATH} />
 				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>
