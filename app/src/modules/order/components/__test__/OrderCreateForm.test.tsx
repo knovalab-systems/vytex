@@ -185,13 +185,11 @@ describe('OrderCreateForm', () => {
 
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({
-			status: null,
+			order_state: null,
 			custom: null,
 			id: 0,
-			created_at: null,
 			finished_at: null,
 			canceled_at: null,
-			created_by: null,
 			canceled_by: null,
 			color_by_reference_id: null,
 			custom_id: null,
@@ -211,6 +209,10 @@ describe('OrderCreateForm', () => {
 			'6XL': null,
 			'7XL': null,
 			'8XL': null,
+			created_at: '',
+			created_by: '',
+			order_state_id: 0,
+			started_at: null,
 		});
 
 		const referenceSelect = screen.getByTitle('Ver referencias');

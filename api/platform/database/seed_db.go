@@ -1,7 +1,6 @@
 package database
 
 import (
-	"github.com/knovalab-systems/vytex/pkg/envs"
 	"log"
 	"math/rand"
 	"sync"
@@ -18,27 +17,28 @@ import (
 func SeedDB(db *gorm.DB) {
 	roles := []*models.Role{}
 	if db.Migrator().HasTable(&models.Role{}) {
-		admin := &models.Role{}
-		err := db.Where(models.Role{Name: models.ADMIN_ROLE_NAME, ID: envs.ADMIN_ROLE()}).Assign(models.ADMIN_ROLE()).FirstOrCreate(admin).Error
-		if err != nil {
-			log.Fatalln("error on create admin role, not migrated, %w", err)
+		rolesData := []struct {
+			Role   *models.Role
+			Assign *models.Role
+			Code   string
+		}{
+			{Role: &models.Role{}, Assign: models.ADMIN_ROLE(), Code: models.ADMIN_ROLE_CODE},
+			{Role: &models.Role{}, Assign: models.DESIGNER_ROLE(), Code: models.DESIGNER_ROLE_CODE},
+			{Role: &models.Role{}, Assign: models.PRO_SUPERVISOR_ROLE(), Code: models.PRO_SUPERVISOR_ROLE_CODE},
 		}
-		designer := &models.Role{}
-		err = db.Where(models.Role{Name: models.DESIGNER_ROLE_NAME, ID: envs.DESIGNER_ROLE()}).Assign(models.DESIGNER_ROLE()).FirstOrCreate(designer).Error
-		if err != nil {
-			log.Fatalln("error on create designer role, not migrated, %w", err)
+
+		for _, v := range rolesData {
+			err := db.Where(models.Role{Code: v.Code}).Assign(v.Assign).FirstOrCreate(v.Role).Error
+			if err != nil {
+				log.Fatalln("error on create roles, %w", err)
+			}
+			roles = append(roles, v.Role)
 		}
-		prosuper := &models.Role{}
-		err = db.Where(models.Role{Name: models.PRO_SUPERVISOR_ROLE_NAME, ID: envs.PRO_SUPERVISOR_ROLE()}).Assign(models.PRO_SUPERVISOR_ROLE()).FirstOrCreate(prosuper).Error
-		if err != nil {
-			log.Fatalln("error on create pro supervisor role, not migrated, %w", err)
-		}
-		roles = append(roles, admin, designer, prosuper)
 	}
 
 	var userCount int64
 	db.Model(&models.User{}).Count(&userCount)
-	if userCount == 1 {
+	if userCount == 0 {
 		generateUsers(db, roles)
 	}
 
@@ -538,7 +538,7 @@ func generateOrders(createdBy string, colorByReferences []models.ColorByReferenc
 
 	for i := 0; i < 3; i++ {
 		order := models.Order{
-			Status:             models.Created,
+			OrderStateID:       1,
 			CreatedBy:          createdBy,
 			ColorByReferenceID: colorByReferences[rand.Intn(len(colorByReferences))].ID,
 			SizeInt:            generateSizeInt(),

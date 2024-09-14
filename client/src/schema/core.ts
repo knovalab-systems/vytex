@@ -4,7 +4,13 @@ import type { VytexCustom } from './custom.js';
 import type { VytexFabric } from './fabric.js';
 import type { VytexImage } from './image.js';
 import type { VytexOrder } from './order.js';
-import type { VytexReference } from './reference.js';
+import type { VytexOrderState } from './orderState.js';
+import type {
+	VytexColorByReference,
+	VytexFabricByReference,
+	VytexReference,
+	VytexResourceByReference,
+} from './reference.js';
 import type { VytexResource } from './resource.js';
 import type { VytexRole } from './role.js';
 import type { VytexSupplier } from './supplier.js';
@@ -22,6 +28,10 @@ export interface CoreSchema<Schema = any> {
 	vytex_images: VytexImage<Schema>[];
 	vytex_customs: VytexCustom<Schema>[];
 	vytex_orders: VytexOrder<Schema>[];
-	vytex_time_by_task: VytexTimeByTask<Schema>[];
+	'vytex_time-by-task': VytexTimeByTask<Schema>[];
 	vytex_role: VytexRole<Schema>[];
+	'vytex_order-status': VytexOrderState<Schema>[];
+	vytex_color_by_reference: VytexColorByReference<Schema>[];
+	vytex_fabric_by_reference: VytexFabricByReference<Schema>[];
+	vytex_reference_by_reference: VytexResourceByReference<Schema>[];
 }

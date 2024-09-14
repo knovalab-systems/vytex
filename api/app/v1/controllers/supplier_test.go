@@ -79,9 +79,9 @@ func TestReadSupplier(t *testing.T) {
 		supplierMock := mocks.SupplierMock{}
 
 		// controller
-		controller := SupplierController{SupplierRepository: &supplierMock}
+		supplierController := SupplierController{SupplierRepository: &supplierMock}
 
-		err := controller.ReadSupplier(c)
+		err := supplierController.ReadSupplier(c)
 		assert.Error(t, err)
 	})
 

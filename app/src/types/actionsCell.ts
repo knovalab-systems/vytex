@@ -1,4 +1,4 @@
-export type Icons = 'update' | 'details' | 'create';
+export type Icons = 'update' | 'details' | 'create' | 'start';
 
 export type Action = {
 	title: string;

@@ -181,3 +181,8 @@ func OrdersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get orders", ""))
 }
+
+func UpdateOrderBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to update order", ""))
+}

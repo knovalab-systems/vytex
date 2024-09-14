@@ -1,5 +1,6 @@
 import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
+import { AiOutlineApartment } from 'solid-icons/ai';
 import { BsPersonWorkspace } from 'solid-icons/bs';
 import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
@@ -42,6 +43,7 @@ function NavWrapper(props: RouteSectionProps) {
 		[ROLES.PRO_SUPERVISOR_ROLE]: [
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
 			{ name: 'Referencias', icon: () => <IoShirtSharp size={24} />, path: PATHS.REFS_PRO_SUPERVISOR_PATH },
+			{ name: 'Ordenes', icon: () => <AiOutlineApartment size={24} />, path: PATHS.ORDERS_PATH },
 		],
 	};
 

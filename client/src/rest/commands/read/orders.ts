@@ -1,6 +1,7 @@
 import type { VytexOrder } from '../../../schema/order.js';
 import type { ApplyQueryFields, Query } from '../../../types/index.js';
 import type { RestCommand } from '../../types.js';
+import { throwIfEmpty } from '../../utils/index.js';
 
 export type ReadOrderOutput<
 	Schema,
@@ -24,3 +25,27 @@ export const readOrders =
 		params: query ?? {},
 		method: 'GET',
 	});
+
+/**
+ * List an existing order by primary key.
+ *
+ * @param key The primary key of the order
+ * @param query The query parameters
+ *
+ * @returns Returns the requested order object.
+ * @throws Will throw if key is empty
+ */
+export const readOrder =
+	<Schema, const TQuery extends Query<Schema, VytexOrder<Schema>>>(
+		key: VytexOrder<Schema>['id'],
+		query?: TQuery,
+	): RestCommand<ReadOrderOutput<Schema, TQuery>, Schema> =>
+	() => {
+		throwIfEmpty(String(key), 'Key cannot be empty');
+
+		return {
+			path: `/orders/${key}`,
+			params: query ?? {},
+			method: 'GET',
+		};
+	};

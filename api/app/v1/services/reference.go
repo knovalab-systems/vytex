@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -128,7 +129,7 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
 	}
 
-	timeByTask, err := getDefaultTimeByTask()
+	timeByTask, err := helpers.GetDefaultTimeByTask()
 	if err != nil {
 		return nil, err
 	}
@@ -153,7 +154,7 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 		return nil, problems.ServerError()
 	}
 
-	defaultTimeByTask, err := getDefaultTimeByTask()
+	defaultTimeByTask, err := helpers.GetDefaultTimeByTask()
 	if err != nil {
 		return nil, err
 	}
@@ -266,15 +267,6 @@ func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
 	timeByTaskFormat := formats.TimeByTaskDTOFormat(*t)
 
 	timeByTask, err := table.Where(field.Attrs(timeByTaskFormat)).FirstOrCreate()
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-	return timeByTask, nil
-}
-
-func getDefaultTimeByTask() (*models.TimeByTask, error) {
-	table := query.TimeByTask
-	timeByTask, err := table.Where(field.Attrs(formats.TimeByTaskDTOFormat(models.TimeByTaskDTO{}))).FirstOrCreate()
 	if err != nil {
 		return nil, problems.ServerError()
 	}

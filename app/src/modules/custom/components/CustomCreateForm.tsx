@@ -233,7 +233,7 @@ function CustomCreateForm(props: {
 										}}
 									>
 										<FiPlus size={22} />
-										Nuevo insumo/tela
+										Agregar referencia
 									</Button>
 								</div>
 							</>

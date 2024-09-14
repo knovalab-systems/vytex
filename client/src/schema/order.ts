@@ -1,4 +1,11 @@
-import type { MergeCoreCollection, VytexColorByReference, VytexCustom, VytexSize, VytexUser } from '../index.js';
+import type {
+	MergeCoreCollection,
+	VytexColorByReference,
+	VytexCustom,
+	VytexOrderState,
+	VytexSize,
+	VytexUser,
+} from '../index.js';
 
 /**
  * vytex_customs type
@@ -8,11 +15,12 @@ export type VytexOrder<Schema = any> = MergeCoreCollection<
 	'vytex_orders',
 	{
 		id: number;
-		status: StatusOrder | null;
-		created_at: string | null;
+		order_state_id: number;
+		created_at: string;
 		finished_at: string | null;
+		started_at: string | null;
 		canceled_at: string | null;
-		created_by: string | null;
+		created_by: string;
 		canceled_by: string | null;
 		color_by_reference_id: number | null;
 		custom_id: number | null;
@@ -20,6 +28,7 @@ export type VytexOrder<Schema = any> = MergeCoreCollection<
 		custom: VytexCustom<Schema[]> | null;
 		create_user: VytexUser<Schema[]> | null;
 		cancel_user: VytexUser<Schema[]> | null;
+		order_state: VytexOrderState<Schema[]> | null;
 	} & VytexSize
 >;
 

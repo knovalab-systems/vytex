@@ -24,16 +24,16 @@ func (b *Role) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 const (
-	ADMIN_ROLE_NAME          = "Administrador"
-	DESIGNER_ROLE_NAME       = "Diseñadora"
-	PRO_SUPERVISOR_ROLE_NAME = "Supervisor producción"
+	ADMIN_ROLE_CODE          = "admin"
+	DESIGNER_ROLE_CODE       = "desginer"
+	PRO_SUPERVISOR_ROLE_CODE = "propsupervisor"
 )
 
 func ADMIN_ROLE() *Role {
 	return &Role{
-		Name:    ADMIN_ROLE_NAME,
+		Code:    ADMIN_ROLE_CODE,
+		Name:    "Administrador",
 		IsAdmin: true,
-		Code:    "admin",
 		Policies: []int64{
 			int64(ReadUsers),
 			int64(CreateUsers),
@@ -46,13 +46,14 @@ func ADMIN_ROLE() *Role {
 			int64(CreateOrders),
 			int64(ReadFabrics),
 			int64(ReadResources),
+			int64(ReadOrders),
 		},
 	}
 }
 
 func DESIGNER_ROLE() *Role {
 	return &Role{
-		Name: DESIGNER_ROLE_NAME,
+		Name: "Diseñadora",
 		Code: "desginer",
 		Policies: []int64{
 			int64(ReadColors),
@@ -72,11 +73,13 @@ func DESIGNER_ROLE() *Role {
 
 func PRO_SUPERVISOR_ROLE() *Role {
 	return &Role{
-		Name: PRO_SUPERVISOR_ROLE_NAME,
-		Code: "propsupervisor",
+		Name: "Supervisor producción",
+		Code: PRO_SUPERVISOR_ROLE_CODE,
 		Policies: []int64{
 			int64(ReadReferences),
 			int64(UpdateTimesReferences),
+			int64(ReadOrders),
+			int64(StartOrder),
 		},
 	}
 }

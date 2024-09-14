@@ -3,13 +3,9 @@ export const LOGIN_PATH = '/login';
 export const CREATE_PATH = '/new';
 export const UPDATE_PATH = '/update';
 
-// users
-
 export const USERS_PATH = '/users';
 export const USER_CREATE_PATH = USERS_PATH + CREATE_PATH;
 export const USER_UPDATE_PATH = USERS_PATH + UPDATE_PATH;
-
-// REFS
 
 export const REFS_PATH = '/references';
 export const REFS_CREATE_PATH = REFS_PATH + CREATE_PATH;
@@ -20,8 +16,6 @@ export const REFS_PRO_SUPERVISOR_PATH = REFS_PATH + REFS_PRO_SUPERVISOR_RELATIVE
 
 export const REFS_TIMES_RELATIVE_PATH = '/times';
 export const REFS_TIMES_PATH = REFS_PRO_SUPERVISOR_PATH + REFS_TIMES_RELATIVE_PATH;
-
-// colors
 
 export const COLORS_PATH = '/colors';
 export const COLORS_CREATE_PATH = COLORS_PATH + CREATE_PATH;
@@ -38,6 +32,8 @@ export const FABRICS_UPDATE_PATH = FABRICS_PATH + UPDATE_PATH;
 export const ORDERS_PATH = '/orders';
 export const ORDERS_CREATE_PATH = ORDERS_PATH + CREATE_PATH;
 export const ORDERS_UPDATE_PATH = ORDERS_PATH + UPDATE_PATH;
+export const ORDERS_START_RELATIVE_PATH = '/start';
+export const ORDERS_START_PATH = ORDERS_PATH + ORDERS_START_RELATIVE_PATH;
 
 export const SUPPLIERS_PATH = '/suppliers';
 export const SUPPLIERS_CREATE_PATH = SUPPLIERS_PATH + CREATE_PATH;

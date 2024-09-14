@@ -25,6 +25,7 @@ var (
 	FabricByReference   *fabricByReference
 	Image               *image
 	Order               *order
+	OrderState          *orderState
 	Reference           *reference
 	Resource            *resource
 	ResourceByReference *resourceByReference
@@ -45,6 +46,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	FabricByReference = &Q.FabricByReference
 	Image = &Q.Image
 	Order = &Q.Order
+	OrderState = &Q.OrderState
 	Reference = &Q.Reference
 	Resource = &Q.Resource
 	ResourceByReference = &Q.ResourceByReference
@@ -66,6 +68,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		FabricByReference:   newFabricByReference(db, opts...),
 		Image:               newImage(db, opts...),
 		Order:               newOrder(db, opts...),
+		OrderState:          newOrderState(db, opts...),
 		Reference:           newReference(db, opts...),
 		Resource:            newResource(db, opts...),
 		ResourceByReference: newResourceByReference(db, opts...),
@@ -88,6 +91,7 @@ type Query struct {
 	FabricByReference   fabricByReference
 	Image               image
 	Order               order
+	OrderState          orderState
 	Reference           reference
 	Resource            resource
 	ResourceByReference resourceByReference
@@ -111,6 +115,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		FabricByReference:   q.FabricByReference.clone(db),
 		Image:               q.Image.clone(db),
 		Order:               q.Order.clone(db),
+		OrderState:          q.OrderState.clone(db),
 		Reference:           q.Reference.clone(db),
 		Resource:            q.Resource.clone(db),
 		ResourceByReference: q.ResourceByReference.clone(db),
@@ -141,6 +146,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		FabricByReference:   q.FabricByReference.replaceDB(db),
 		Image:               q.Image.replaceDB(db),
 		Order:               q.Order.replaceDB(db),
+		OrderState:          q.OrderState.replaceDB(db),
 		Reference:           q.Reference.replaceDB(db),
 		Resource:            q.Resource.replaceDB(db),
 		ResourceByReference: q.ResourceByReference.replaceDB(db),
@@ -161,6 +167,7 @@ type queryCtx struct {
 	FabricByReference   IFabricByReferenceDo
 	Image               IImageDo
 	Order               IOrderDo
+	OrderState          IOrderStateDo
 	Reference           IReferenceDo
 	Resource            IResourceDo
 	ResourceByReference IResourceByReferenceDo
@@ -181,6 +188,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		FabricByReference:   q.FabricByReference.WithContext(ctx),
 		Image:               q.Image.WithContext(ctx),
 		Order:               q.Order.WithContext(ctx),
+		OrderState:          q.OrderState.WithContext(ctx),
 		Reference:           q.Reference.WithContext(ctx),
 		Resource:            q.Resource.WithContext(ctx),
 		ResourceByReference: q.ResourceByReference.WithContext(ctx),

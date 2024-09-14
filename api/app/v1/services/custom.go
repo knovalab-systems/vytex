@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -75,6 +76,11 @@ func (m *CustomService) AggregationCustoms(q *models.AggregateQuery) ([]*models.
 
 func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom, error) {
 
+	status, err := helpers.GetOrderStatusByValue(models.CreatedOrderStateValue)
+	if err != nil {
+		return nil, err
+	}
+
 	orders := []models.Order{}
 	for _, v := range b.Orders {
 
@@ -90,12 +96,12 @@ func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom
 			return nil, problems.CreateCustomBadRequest()
 		}
 
-		orders = append(orders, models.Order{Status: models.Created, SizeInt: v.SizeInt, CreatedBy: b.CreatedBy, ColorByReferenceID: v.ColorByReferenceID})
+		orders = append(orders, models.Order{OrderStateID: status.ID, SizeInt: v.SizeInt, CreatedBy: b.CreatedBy, ColorByReferenceID: v.ColorByReferenceID})
 	}
 
 	custom := &models.Custom{CreatedBy: b.CreatedBy, Client: b.Client, Orders: orders}
 
-	err := query.Custom.Create(custom)
+	err = query.Custom.Create(custom)
 	if err != nil {
 		return nil, problems.ServerError()
 	}

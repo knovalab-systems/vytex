@@ -1,12 +1,13 @@
 package controllers
 
 import (
+	"net/http"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/labstack/echo/v4"
-	"net/http"
 )
 
 type OrderController struct {
@@ -42,6 +43,40 @@ func (m *OrderController) ReadOrders(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, orders)
+}
+
+// Get an order
+// @Summary      Get a given order
+// @Description  Get an order by its ID
+// @Tags         Orders
+// @Param		 orderId path string true "Order ID"
+// @Produce      json
+// @Success      200 {object} models.Order
+// @Failure      400
+// @Failure      500
+// @Router       /orders/{orderId} [get]
+func (m *OrderController) ReadOrder(c echo.Context) error {
+	// for query params
+	u := new(models.OrderRead)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.OrdersBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.OrdersBadRequest()
+	}
+
+	// get order
+	order, err := m.OrderRepository.SelectOrder(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, order)
 }
 
 // Get aggregate from orders
@@ -110,4 +145,37 @@ func (m *OrderController) CreateOrder(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, order)
+}
+
+// Update order
+// @Summary      Update order
+// @Description  Updates the fields from order
+// @Tags         Orders
+// @Param		 orderId path string true "Order ID"
+// @Param		 models.OrderUpdateBody body string true "Order update values"
+// @Produce      json
+// @Success      200 {object} models.Order
+// @Failure      400
+// @Failure      500
+// @Router       /orders/{orderId} [PATCH]
+func (m *OrderController) UpdateOrder(c echo.Context) error {
+	u := new(models.OrderUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateOrderBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateOrderBadRequest()
+	}
+
+	// update
+	order, err := m.OrderRepository.UpdateOrder(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, order)
 }
