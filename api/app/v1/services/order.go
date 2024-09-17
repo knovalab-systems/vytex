@@ -27,12 +27,17 @@ func (m *OrderService) SelectOrders(q *models.Query) ([]*models.Order, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = fields.Fields(s, q.Fields).(query.IOrderDo)
+	if q.Fields != "" {
+		s = fields.OrderFields(s, q.Fields)
+	}
 
 	// filters
-	s, err := filters.OrderFilters(s, q.Filter)
-	if err != nil {
-		return nil, problems.UsersBadRequest()
+	if q.Filter != "" {
+		var err error
+		s, err = filters.OrderFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.OrdersBadRequest()
+		}
 	}
 
 	// run query
@@ -53,12 +58,17 @@ func (m *OrderService) SelectOrder(q *models.OrderRead) (*models.Order, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = fields.Fields(s, q.Fields).(query.IOrderDo)
+	if q.Fields != "" {
+		s = fields.OrderFields(s, q.Fields)
+	}
 
 	// filters
-	s, err := filters.OrderFilters(s, q.Filter)
-	if err != nil {
-		return nil, problems.UsersBadRequest()
+	if q.Filter != "" {
+		var err error
+		s, err = filters.OrderFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.OrdersBadRequest()
+		}
 	}
 
 	order, err := s.Where(table.ID.Eq(q.ID)).First()

@@ -10,9 +10,6 @@ import (
 
 func TestToUpdateUser(t *testing.T) {
 
-	t.Setenv("NO_ROLE", "739c8723-85c0-42d8-aef0-5de054890dee")
-	t.Setenv("ADMIN_ROLE", "31b63ffb-15f5-48d7-9a24-587f437f07ec")
-	t.Setenv("DESIGNER_ROLE", "b3c766e9-3d70-4f33-a816-b0cd6168da81")
 	t.Run("valid role", func(t *testing.T) {
 		role := "739c8723-85c0-42d8-aef0-5de054890dee"
 		u := models.UserUpdateBody{Role: role}

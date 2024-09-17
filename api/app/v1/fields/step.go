@@ -7,13 +7,18 @@ import (
 	"gorm.io/gen/field"
 )
 
-func OrderStateFields(s query.IOrderStateDo, fields string) query.IOrderStateDo {
+func StepFields(s query.IStepDo, fields string) query.IStepDo {
 
 	fieldsArr := strings.Split(fields, ",")
-	table := query.OrderState
+	table := query.Step
 	var f []field.Expr
 
 	for _, v := range fieldsArr {
+
+		if strings.HasPrefix(v, "tasks.") {
+			s = s.Preload(table.Tasks)
+			continue
+		}
 
 		switch v {
 		case "id":
@@ -22,11 +27,13 @@ func OrderStateFields(s query.IOrderStateDo, fields string) query.IOrderStateDo 
 			f = append(f, table.Name)
 		case "value":
 			f = append(f, table.Value)
+		case "tasks":
+			s = s.Preload(table.Tasks)
 		default:
 			f = append(f, table.ALL)
 		}
+
 	}
 
 	return s.Select(f...)
-
 }

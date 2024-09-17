@@ -8,29 +8,27 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/query"
 )
 
-type OrderStateService struct {
+type StepService struct {
 }
 
-func (m *OrderStateService) SelectOrderStatus(q *models.Query) ([]*models.OrderState, error) {
-
+func (m *StepService) SelectSteps(q *models.Query) ([]*models.Step, error) {
 	// sanitize
 	formats.SanitizedQuery(q)
 
 	// def query
-	table := query.OrderState
+	table := query.Step
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
 	if q.Fields != "" {
-		s = fields.OrderStateFields(s, q.Fields)
+		s = fields.StepFields(s, q.Fields)
 	}
 
 	// run query
-	orderStatus, err := s.Find()
+	steps, err := s.Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
-	return orderStatus, nil
-
+	return steps, nil
 }

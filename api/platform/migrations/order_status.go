@@ -10,15 +10,10 @@ import (
 func CreateOrderStatus(db *gorm.DB) error {
 	if db.Migrator().HasTable(&models.OrderState{}) {
 
-		orderStatus := []struct {
-			Status *models.OrderState
-		}{
-			{Status: models.CreatedOrderStatus()},
-			{Status: models.StartedOrderStatus()},
-		}
+		defaultOrderStatus := models.DefaultOrderStatus()
 
-		for _, v := range orderStatus {
-			err := db.FirstOrCreate(&models.OrderState{}, v.Status).Error
+		for _, v := range defaultOrderStatus {
+			err := db.Where(models.OrderState{Value: v.Value}).Assign(v).FirstOrCreate(&models.OrderState{}).Error
 			if err != nil {
 				return err
 			}

@@ -29,4 +29,5 @@ const (
 	CreateSuppliers
 	UpdateSuppliers
 	StartOrder
+	ReadCorte
 )
