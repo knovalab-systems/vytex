@@ -5,7 +5,7 @@ type Task struct {
 	Name   string    `json:"name,omitempty"`
 	Value  TaskValue `json:"value,omitempty" gorm:"type:text"`
 	StepID uint      `json:"step_id,omitempty"`
-	Step   Step      `json:"step,omitempty"`
+	Step   *Step     `json:"step,omitempty"`
 }
 
 type TaskValue string

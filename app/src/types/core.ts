@@ -11,6 +11,8 @@ import type {
 	VytexReference,
 	VytexResource,
 	VytexSupplier,
+	VytexTask,
+	VytexTaskControl,
 	VytexTimeByTask,
 	VytexUser,
 } from '@vytex/client';
@@ -28,6 +30,8 @@ export type Composition = VytexComposition<CoreSchema>;
 export type TimeByTask = VytexTimeByTask<CoreSchema>;
 export type VytexSize = VS;
 export type OrderState = VytexOrderState<CoreSchema>;
+export type Task = VytexTask<CoreSchema>;
+export type TaskControl = VytexTaskControl<CoreSchema>;
 export type ResourceFabric = {
 	fabrics: (VS & { fabric_id: number })[];
 	resources: (VS & { resource_id: number })[];

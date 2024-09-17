@@ -1,6 +1,6 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import type { GetOrdersType } from '../../request/OrderGet';
+import type { GetOrdersType } from '../../request/orderGet';
 import OrderTable from '../OrderTable';
 
 vi.mock('~/hooks/useOrderStatus', () => ({

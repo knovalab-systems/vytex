@@ -2,6 +2,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -22,7 +23,6 @@ import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import type { Resource } from '~/types/core';
 import { createResourceRequest } from '../requests/resourceCreate';
 import { ResourceCreateSchema, type ResourceCreateType } from '../schema/resourceCreate';
-import CancelButton from '~/components/CancelButton';
 
 function ResourceCreateForm(props: {
 	colors: Colors;

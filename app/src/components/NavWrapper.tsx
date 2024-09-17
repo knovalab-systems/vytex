@@ -3,7 +3,7 @@ import { createQuery } from '@tanstack/solid-query';
 import { AiOutlineApartment } from 'solid-icons/ai';
 import { BsPersonWorkspace } from 'solid-icons/bs';
 import { HiSolidTruck } from 'solid-icons/hi';
-import { IoBandageSharp, IoColorPaletteSharp, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
+import { IoBandageSharp, IoColorPaletteSharp, IoCut, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesUserFill } from 'solid-icons/ri';
 import { type JSXElement, Match, Show, Suspense, Switch, createEffect } from 'solid-js';
@@ -44,6 +44,7 @@ function NavWrapper(props: RouteSectionProps) {
 			{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true },
 			{ name: 'Referencias', icon: () => <IoShirtSharp size={24} />, path: PATHS.REFS_PRO_SUPERVISOR_PATH },
 			{ name: 'Ordenes', icon: () => <AiOutlineApartment size={24} />, path: PATHS.ORDERS_PATH },
+			{ name: 'Corte', icon: () => <IoCut size={24} />, path: PATHS.CORTE_PATH },
 		],
 	};
 

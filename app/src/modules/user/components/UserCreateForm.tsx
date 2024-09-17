@@ -2,6 +2,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
@@ -11,7 +12,6 @@ import { USERS_PATH } from '~/constants/paths';
 import { roleList, roles } from '~/constants/roles';
 import { createUserRequest } from '../requests/userCreate';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreate';
-import CancelButton from '~/components/CancelButton';
 
 function UserCreateForm() {
 	const navigate = useNavigate();

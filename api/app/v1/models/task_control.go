@@ -12,8 +12,8 @@ type TaskControl struct {
 	Task       *Task        `json:"task,omitempty"`
 	OrderID    uint         `json:"order_id,omitempty"`
 	Order      *Order       `json:"order,omitempty"`
-	NextID     uint         `json:"next_id,omitempty"`
-	Next       *TaskControl `json:"next,omitempty" gorm:"foreignKey:NextID"`
-	PreviousID uint         `json:"previous_id,omitempty"`
-	Previous   *TaskControl `json:"previous,omitempty" gorm:"foreignKey:PreviousID"`
+	NextID     *uint        `json:"next_id,omitempty"`
+	Next       *TaskControl `json:"next,omitempty"`
+	PreviousID *uint        `json:"previous_id,omitempty"`
+	Previous   *TaskControl `json:"previous,omitempty"`
 }

@@ -11,44 +11,45 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
-import { useOrderStatus } from '~/hooks/useOrderStatus';
-import OrderTable from '../components/OrderTable';
-import { countOrdersQuery, getOrdersQuery } from '../request/orderGet';
+import { useSteps } from '~/hooks/useSteps';
+import CorteTable from '../components/CorteTable';
+import { type GetTaskType, countTasksQuery, getTasksQuery } from '../request/taskControlGet';
 
-function Orders() {
+function Corte() {
 	return (
-		<AllowPolicies policies={['ReadOrders']}>
-			<OrdersPage />
+		<AllowPolicies policies={['ReadCorte']}>
+			<CortePage />
 		</AllowPolicies>
 	);
 }
 
-function OrdersPage() {
+function CortePage() {
 	const [page, setPage] = createSignal(1);
-	const orders = createQuery(() => getOrdersQuery(page()));
-	const { orderStatusQuery } = useOrderStatus();
-	const countOrders = createQuery(() => countOrdersQuery());
+	const { stepsQuery, getStepByValue } = useSteps();
+	const tasksIds = createMemo(() => getStepByValue('corte')?.tasks?.map(e => e.id) || []);
+	const tasks = createQuery(() => getTasksQuery(page(), tasksIds()));
+	const countTasks = createQuery(() => countTasksQuery(tasksIds()));
 	const pages = createMemo<number>(() => {
-		const count = countOrders.data?.at(0)?.count || 1;
+		const count = countTasks.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
 		return Math.ceil(safe / 10);
 	});
 
-	const isError = () => orders.isError || countOrders.isError || orderStatusQuery.isError;
-	const isLoading = () => orders.isLoading || countOrders.isLoading || orderStatusQuery.isLoading;
-	const isSuccess = () => orders.isSuccess && countOrders.isSuccess && orderStatusQuery.isSuccess;
+	const isError = () => tasks.isError || countTasks.isError || stepsQuery.isError;
+	const isLoading = () => tasks.isPending || countTasks.isPending || stepsQuery.isPending;
+	const isSuccess = () => tasks.isSuccess && countTasks.isSuccess && stepsQuery.isSuccess;
 
 	return (
 		<div class='h-full flex flex-col gap-2'>
 			<Switch>
 				<Match when={isError()}>
-					<ErrorMessage title='Error al cargar pedidos' />
+					<ErrorMessage title='Error al cargar tareas de corte' />
 				</Match>
 				<Match when={isLoading()}>
-					<Loading label='Cargando ordenes' />
+					<Loading label='Cargando tareas de corte' />
 				</Match>
 				<Match when={isSuccess()}>
-					<OrderTable orders={orders.data} />
+					<CorteTable taskControls={tasks.data as GetTaskType} />
 					<Pagination
 						class='[&>*]:justify-center'
 						count={pages()}
@@ -67,4 +68,4 @@ function OrdersPage() {
 	);
 }
 
-export default Orders;
+export default Corte;

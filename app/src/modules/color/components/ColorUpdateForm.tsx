@@ -3,6 +3,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
@@ -15,7 +16,6 @@ import type { Color } from '~/types/core';
 import type { GetColorType } from '../requests/colorGet';
 import { updateColorRequest } from '../requests/colorUpdate';
 import { ColorUpdateSchema, type ColorUpdateType } from '../schemas/colorUpdate';
-import CancelButton from '~/components/CancelButton';
 
 function ColorUpdateForm(props: { color?: GetColorType }) {
 	const navigate = useNavigate();

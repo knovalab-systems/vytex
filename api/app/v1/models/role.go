@@ -75,29 +75,8 @@ func DefaultRoles() []*Role {
 				int64(UpdateTimesReferences),
 				int64(ReadOrders),
 				int64(StartOrder),
+				int64(ReadCorte),
 			},
-		},
-	}
-}
-
-func ADMIN_ROLE() *Role {
-	return &Role{
-		Code:    ADMIN_ROLE_CODE,
-		Name:    "Administrador",
-		IsAdmin: true,
-		Policies: []int64{
-			int64(ReadUsers),
-			int64(CreateUsers),
-			int64(UpdateUsers),
-			int64(ReadSuppliers),
-			int64(CreateSuppliers),
-			int64(UpdateSuppliers),
-			int64(ReadCustoms),
-			int64(CreateCustoms),
-			int64(CreateOrders),
-			int64(ReadFabrics),
-			int64(ReadResources),
-			int64(ReadOrders),
 		},
 	}
 }

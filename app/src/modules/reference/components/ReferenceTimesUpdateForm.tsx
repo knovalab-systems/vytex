@@ -2,6 +2,7 @@ import { type SubmitHandler, createForm, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { For } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
@@ -11,7 +12,6 @@ import type { TimeByTask } from '~/types/core';
 import type { GetReferenceForTimesType } from '../requests/referenceGet';
 import { updateTimesRefenceRequest } from '../requests/referenceTimesUpdate';
 import { ReferenceTimesUpdateSchema, type ReferenceTimesUpdateType } from '../schemas/referenceTimesUpdate';
-import CancelButton from '~/components/CancelButton';
 
 function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 	const navigate = useNavigate();

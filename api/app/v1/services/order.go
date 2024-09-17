@@ -172,6 +172,14 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 			} else {
 				return nil, problems.ReadAccess()
 			}
+			task, err := helpers.GetTaskByValue(models.Trazar)
+			if err != nil {
+				return nil, problems.ServerError()
+			}
+			err = query.TaskControl.Create(&models.TaskControl{TaskID: task.ID, OrderID: order.ID})
+			if err != nil {
+				return nil, problems.ServerError()
+			}
 		}
 
 	}

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 
+	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen"
 )
@@ -31,14 +32,11 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 					}
 					conditions = append(conditions, table.TaskID.Eq(uint(id)))
 				case "_in":
-					idsFloat, ok := v.([]float64)
+					idsInterface, ok := v.([]interface{})
 					if !ok {
 						return nil, errors.New("ERROR: INVALID TYPE")
 					}
-					ids := []uint{}
-					for _, v := range idsFloat {
-						ids = append(ids, uint(v))
-					}
+					ids := formats.ConvertSliceUint(idsInterface)
 					conditions = append(conditions, table.TaskID.In(ids...))
 				}
 			}
