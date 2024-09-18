@@ -10,7 +10,7 @@ const TestElement = () => {
 describe('usePolicies', () => {
 	test('has policy is true', () => {
 		render(() => (
-			<PoliciesProvider policies={[0, 1, 2]}>
+			<PoliciesProvider policies={['CreateColors', 'ReadUsers']}>
 				<TestElement />
 			</PoliciesProvider>
 		));
@@ -21,7 +21,7 @@ describe('usePolicies', () => {
 
 	test('has policy is false', () => {
 		render(() => (
-			<PoliciesProvider policies={[10, 5, 4]}>
+			<PoliciesProvider policies={[]}>
 				<TestElement />
 			</PoliciesProvider>
 		));

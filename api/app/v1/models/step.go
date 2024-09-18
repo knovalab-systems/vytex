@@ -10,7 +10,7 @@ type Step struct {
 type StepValue string
 
 const (
-	Corte = "corte"
+	Corte StepValue = "corte"
 )
 
 func DefaultSteps() []*Step {

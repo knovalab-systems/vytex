@@ -27,7 +27,7 @@ func Policies(policies []models.Policy) echo.MiddlewareFunc {
 
 			// valid policy exists in role
 			for _, v := range policies {
-				present := slices.Contains(role.Policies, (int64)(v))
+				present := slices.Contains(role.Policies, string(v))
 				if present {
 					return next(c)
 				}

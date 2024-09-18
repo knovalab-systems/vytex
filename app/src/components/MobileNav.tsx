@@ -3,8 +3,8 @@ import { AiOutlineClose } from 'solid-icons/ai';
 import { FiMenu } from 'solid-icons/fi';
 import { For, createEffect, createSignal } from 'solid-js';
 import { Portal } from 'solid-js/web';
+import type { NavPages } from '~/types/navPages';
 import LogoutNavButton from './LogoutNavButton';
-import type { NavPages } from './NavWrapper';
 import { Button } from './ui/Button';
 
 function MobileNav(props: { pages: NavPages[] }) {

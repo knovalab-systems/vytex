@@ -1,8 +1,8 @@
 import { A } from '@solidjs/router';
 import { IoLogoIonitron } from 'solid-icons/io';
 import { For } from 'solid-js';
+import type { NavPages } from '~/types/navPages';
 import LogoutMenuButton from './LogoutMenuButton';
-import type { NavPages } from './NavWrapper';
 
 function MenuNav(props: { pages: NavPages[] }) {
 	return (

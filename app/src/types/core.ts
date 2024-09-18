@@ -8,6 +8,7 @@ import type {
 	VytexFabric,
 	VytexOrder,
 	VytexOrderState,
+	VytexPolicy,
 	VytexReference,
 	VytexResource,
 	VytexSupplier,
@@ -32,6 +33,7 @@ export type VytexSize = VS;
 export type OrderState = VytexOrderState<CoreSchema>;
 export type Task = VytexTask<CoreSchema>;
 export type TaskControl = VytexTaskControl<CoreSchema>;
+export type Policy = VytexPolicy;
 export type ResourceFabric = {
 	fabrics: (VS & { fabric_id: number })[];
 	resources: (VS & { resource_id: number })[];

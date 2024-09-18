@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
+import type { NavPages } from '~/types/navPages';
 import MobileNav from '../MobileNav';
-import type { NavPages } from '../NavWrapper';
 
 const AMock = vi.fn();
 vi.mock('@solidjs/router', () => ({

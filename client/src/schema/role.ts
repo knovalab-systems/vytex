@@ -6,8 +6,38 @@ export type VytexRole<Schema = any> = MergeCoreCollection<
 	{
 		id: string;
 		name: string | null;
-		is_admin: boolean | null;
-		code: string | null;
-		policies: number[] | null;
+		code: RoleCode;
+		policies: VytexPolicy[] | null;
 	}
 >;
+
+export type RoleCode = 'admin' | 'desginer' | 'propsupervisor' | null;
+
+export type VytexPolicy =
+	| 'ReadUsers'
+	| 'CreateUsers'
+	| 'UpdateUsers'
+	| 'ReadColors'
+	| 'CreateColors'
+	| 'UpdateColors'
+	| 'ReadCustoms'
+	| 'CreateCustoms'
+	| 'UpdateCustoms'
+	| 'ReadFabrics'
+	| 'CreateFabrics'
+	| 'UpdateFabrics'
+	| 'ReadOrders'
+	| 'CreateOrders'
+	| 'UpdateOrders'
+	| 'ReadReferences'
+	| 'CreateReferences'
+	| 'UpdateReferences'
+	| 'UpdateTimesReferences'
+	| 'ReadResources'
+	| 'CreateResources'
+	| 'UpdateResources'
+	| 'ReadSuppliers'
+	| 'CreateSuppliers'
+	| 'UpdateSuppliers'
+	| 'StartOrder'
+	| 'ReadCorte';

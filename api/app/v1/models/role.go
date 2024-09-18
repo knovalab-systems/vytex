@@ -8,11 +8,10 @@ import (
 
 // User roles
 type Role struct {
-	ID       string        `json:"id,omitempty" gorm:"type:uuid;primary_key;"`
-	Name     string        `json:"name,omitempty"`
-	IsAdmin  bool          `json:"is_admin,omitempty"`
-	Code     string        `json:"code,omitempty"`
-	Policies pq.Int64Array `json:"policies,omitempty" gorm:"type:integer[]"`
+	ID       string         `json:"id,omitempty" gorm:"type:uuid;primary_key;"`
+	Name     string         `json:"name,omitempty"`
+	Code     RoleCode       `json:"code,omitempty"`
+	Policies pq.StringArray `json:"policies,omitempty" gorm:"type:text[]"`
 }
 
 // BeforeCreate will set a UUID
@@ -23,59 +22,60 @@ func (b *Role) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
+type RoleCode string
+
 const (
-	ADMIN_ROLE_CODE          = "admin"
-	DESIGNER_ROLE_CODE       = "desginer"
-	PRO_SUPERVISOR_ROLE_CODE = "propsupervisor"
+	ADMIN_VALUE          RoleCode = "admin"
+	DESIGNER_VALUE       RoleCode = "designer"
+	PRO_SUPERVISOR_VALUE RoleCode = "propsupervisor"
 )
 
 func DefaultRoles() []*Role {
 	return []*Role{
 		{
-			Code:    ADMIN_ROLE_CODE,
-			Name:    "Administrador",
-			IsAdmin: true,
-			Policies: []int64{
-				int64(ReadUsers),
-				int64(CreateUsers),
-				int64(UpdateUsers),
-				int64(ReadSuppliers),
-				int64(CreateSuppliers),
-				int64(UpdateSuppliers),
-				int64(ReadCustoms),
-				int64(CreateCustoms),
-				int64(CreateOrders),
-				int64(ReadFabrics),
-				int64(ReadResources),
-				int64(ReadOrders),
+			Code: ADMIN_VALUE,
+			Name: "Administrador",
+			Policies: []string{
+				string(ReadUsers),
+				string(CreateUsers),
+				string(UpdateUsers),
+				string(ReadSuppliers),
+				string(CreateSuppliers),
+				string(UpdateSuppliers),
+				string(ReadCustoms),
+				string(CreateCustoms),
+				string(CreateOrders),
+				string(ReadFabrics),
+				string(ReadResources),
+				string(ReadOrders),
 			},
 		},
 		{
 			Name: "Diseñadora",
-			Code: "desginer",
-			Policies: []int64{
-				int64(ReadColors),
-				int64(CreateColors),
-				int64(UpdateColors),
-				int64(ReadFabrics),
-				int64(CreateFabrics),
-				int64(UpdateFabrics),
-				int64(ReadResources),
-				int64(CreateResources),
-				int64(UpdateResources),
-				int64(ReadReferences),
-				int64(CreateReferences),
+			Code: DESIGNER_VALUE,
+			Policies: []string{
+				string(ReadColors),
+				string(CreateColors),
+				string(UpdateColors),
+				string(ReadFabrics),
+				string(CreateFabrics),
+				string(UpdateFabrics),
+				string(ReadResources),
+				string(CreateResources),
+				string(UpdateResources),
+				string(ReadReferences),
+				string(CreateReferences),
 			},
 		},
 		{
 			Name: "Supervisor producción",
-			Code: PRO_SUPERVISOR_ROLE_CODE,
-			Policies: []int64{
-				int64(ReadReferences),
-				int64(UpdateTimesReferences),
-				int64(ReadOrders),
-				int64(StartOrder),
-				int64(ReadCorte),
+			Code: PRO_SUPERVISOR_VALUE,
+			Policies: []string{
+				string(ReadReferences),
+				string(UpdateTimesReferences),
+				string(ReadOrders),
+				string(StartOrder),
+				string(ReadCorte),
 			},
 		},
 	}

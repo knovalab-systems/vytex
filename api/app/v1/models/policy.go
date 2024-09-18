@@ -1,33 +1,33 @@
 package models
 
-type Policy int64
+type Policy string
 
 const (
-	ReadUsers Policy = iota
-	CreateUsers
-	UpdateUsers
-	ReadColors
-	CreateColors
-	UpdateColors
-	ReadCustoms
-	CreateCustoms
-	UpdateCustoms
-	ReadFabrics
-	CreateFabrics
-	UpdateFabrics
-	ReadOrders
-	CreateOrders
-	UpdateOrders
-	ReadReferences
-	CreateReferences
-	UpdateReferences
-	UpdateTimesReferences
-	ReadResources
-	CreateResources
-	UpdateResources
-	ReadSuppliers
-	CreateSuppliers
-	UpdateSuppliers
-	StartOrder
-	ReadCorte
+	ReadUsers             Policy = "ReadUsers"
+	CreateUsers           Policy = "CreateUsers"
+	UpdateUsers           Policy = "UpdateUsers"
+	ReadColors            Policy = "ReadColors"
+	CreateColors          Policy = "CreateColors"
+	UpdateColors          Policy = "UpdateColors"
+	ReadCustoms           Policy = "ReadCustoms"
+	CreateCustoms         Policy = "CreateCustoms"
+	UpdateCustoms         Policy = "UpdateCustoms"
+	ReadFabrics           Policy = "ReadFabrics"
+	CreateFabrics         Policy = "CreateFabrics"
+	UpdateFabrics         Policy = "UpdateFabrics"
+	ReadOrders            Policy = "ReadOrders"
+	CreateOrders          Policy = "CreateOrders"
+	UpdateOrders          Policy = "UpdateOrders"
+	ReadReferences        Policy = "ReadReferences"
+	CreateReferences      Policy = "CreateReferences"
+	UpdateReferences      Policy = "UpdateReferences"
+	UpdateTimesReferences Policy = "UpdateTimesReferences"
+	ReadResources         Policy = "ReadResources"
+	CreateResources       Policy = "CreateResources"
+	UpdateResources       Policy = "UpdateResources"
+	ReadSuppliers         Policy = "ReadSuppliers"
+	CreateSuppliers       Policy = "CreateSuppliers"
+	UpdateSuppliers       Policy = "UpdateSuppliers"
+	StartOrder            Policy = "StartOrder"
+	ReadCorte             Policy = "ReadCorte"
 )

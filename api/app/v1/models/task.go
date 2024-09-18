@@ -11,11 +11,11 @@ type Task struct {
 type TaskValue string
 
 const (
-	Trazar    = "trazar"
-	Plantear  = "plantear"
-	Tender    = "tender"
-	Cortar    = "cortar"
-	Paquetear = "paquetear"
+	Trazar    TaskValue = "trazar"
+	Plantear  TaskValue = "plantear"
+	Tender    TaskValue = "tender"
+	Cortar    TaskValue = "cortar"
+	Paquetear TaskValue = "paquetear"
 )
 
 func DefaultTasks(corte uint) []*Task {

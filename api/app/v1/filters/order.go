@@ -37,5 +37,4 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 	}
 
 	return s, nil
-
 }
