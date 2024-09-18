@@ -38,23 +38,10 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("Orders", "models.Order"),
-		CancelUser: struct {
-			field.RelationField
-			Role struct {
-				field.RelationField
-			}
-		}{
-			RelationField: field.NewRelation("Orders.CancelUser", "models.User"),
-			Role: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("Orders.CancelUser.Role", "models.Role"),
-			},
-		},
-		CreateUser: struct {
+		OrderState: struct {
 			field.RelationField
 		}{
-			RelationField: field.NewRelation("Orders.CreateUser", "models.User"),
+			RelationField: field.NewRelation("Orders.OrderState", "models.OrderState"),
 		},
 		ColorByReference: struct {
 			field.RelationField
@@ -65,6 +52,9 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				field.RelationField
 				User struct {
 					field.RelationField
+					Role struct {
+						field.RelationField
+					}
 				}
 				FrontImage struct {
 					field.RelationField
@@ -117,6 +107,9 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				field.RelationField
 				User struct {
 					field.RelationField
+					Role struct {
+						field.RelationField
+					}
 				}
 				FrontImage struct {
 					field.RelationField
@@ -134,8 +127,16 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				RelationField: field.NewRelation("Orders.ColorByReference.Reference", "models.Reference"),
 				User: struct {
 					field.RelationField
+					Role struct {
+						field.RelationField
+					}
 				}{
 					RelationField: field.NewRelation("Orders.ColorByReference.Reference.User", "models.User"),
+					Role: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Reference.User.Role", "models.Role"),
+					},
 				},
 				FrontImage: struct {
 					field.RelationField
@@ -269,10 +270,15 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				RelationField: field.NewRelation("Orders.Custom.Orders", "models.Order"),
 			},
 		},
-		OrderState: struct {
+		CreateUser: struct {
 			field.RelationField
 		}{
-			RelationField: field.NewRelation("Orders.OrderState", "models.OrderState"),
+			RelationField: field.NewRelation("Orders.CreateUser", "models.User"),
+		},
+		CancelUser: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Orders.CancelUser", "models.User"),
 		},
 	}
 
@@ -374,13 +380,7 @@ type customHasManyOrders struct {
 
 	field.RelationField
 
-	CancelUser struct {
-		field.RelationField
-		Role struct {
-			field.RelationField
-		}
-	}
-	CreateUser struct {
+	OrderState struct {
 		field.RelationField
 	}
 	ColorByReference struct {
@@ -392,6 +392,9 @@ type customHasManyOrders struct {
 			field.RelationField
 			User struct {
 				field.RelationField
+				Role struct {
+					field.RelationField
+				}
 			}
 			FrontImage struct {
 				field.RelationField
@@ -446,7 +449,10 @@ type customHasManyOrders struct {
 			field.RelationField
 		}
 	}
-	OrderState struct {
+	CreateUser struct {
+		field.RelationField
+	}
+	CancelUser struct {
 		field.RelationField
 	}
 }

@@ -6,7 +6,7 @@ import { useOrderStatus } from '~/hooks/useOrderStatus';
 import { parseDateTimeHuman } from '~/lib/parseTime';
 import type { Action } from '~/types/actionsCell';
 import type { OrderState } from '~/types/core';
-import type { GetOrdersType } from '../request/OrderGet';
+import type { GetOrdersType } from '../request/orderGet';
 
 function OrderTable(props: { orders?: GetOrdersType }) {
 	const { orderStatusRecord } = useOrderStatus();

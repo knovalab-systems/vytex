@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gen/field"
 	"gorm.io/gorm"
 
+	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -29,7 +29,9 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = userFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.UserFields(s, q.Fields)
+	}
 
 	// filters
 	filter, err := userFilters(q.Filter, s)
@@ -55,7 +57,9 @@ func (m *UserService) SelectUser(q *models.UserRead) (*models.User, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = userFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.UserFields(s, q.Fields)
+	}
 
 	// filters
 	filter, err := userFilters(q.Filter, s)
@@ -246,69 +250,4 @@ func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
 	}
 
 	return s, nil
-}
-
-func userFields(s query.IUserDo, fieldsStr string) query.IUserDo {
-	if fieldsStr != "" {
-		userTable := query.User
-		fieldsArr := strings.Split(fieldsStr, ",")
-		fields := []field.Expr{}
-		roleFieldsArr := []string{}
-
-		for _, v := range fieldsArr {
-
-			if strings.HasPrefix(v, "role.") {
-				roleFieldsArr = append(roleFieldsArr, strings.ReplaceAll(v, "role.", ""))
-				continue
-			}
-
-			switch v {
-			case "id":
-				fields = append(fields, userTable.ID)
-			case "username":
-				fields = append(fields, userTable.Username)
-			case "name":
-				fields = append(fields, userTable.Name)
-			case "password":
-				fields = append(fields, userTable.Password)
-			case "roleId":
-				fields = append(fields, userTable.RoleId)
-			case "role":
-				fields = append(fields, userTable.RoleId)
-				s = s.Preload(userTable.Role)
-			case "deleted_at":
-				fields = append(fields, userTable.DeletedAt)
-			case "created_at":
-				fields = append(fields, userTable.CreatedAt)
-			case "updated_at":
-				fields = append(fields, userTable.UpdatedAt)
-			default:
-				fields = append(fields, userTable.ALL)
-			}
-		}
-
-		if len(roleFieldsArr) != 0 {
-			fields = append(fields, userTable.RoleId)
-			roleTables := query.Role
-			roleFields := []field.Expr{}
-
-			for _, v := range roleFieldsArr {
-				switch v {
-				case "id":
-					roleFields = append(roleFields, roleTables.ID)
-				case "name":
-					roleFields = append(roleFields, roleTables.Name)
-				case "is_admin":
-					roleFields = append(roleFields, roleTables.IsAdmin)
-				case "policies":
-					roleFields = append(roleFields, roleTables.Policies)
-				default:
-					roleFields = append(roleFields, roleTables.ALL)
-				}
-			}
-			s = s.Preload(userTable.Role.Select(roleFields...))
-		}
-		s = s.Select(fields...)
-	}
-	return s
 }

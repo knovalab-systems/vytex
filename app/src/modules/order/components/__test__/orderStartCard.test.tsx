@@ -3,8 +3,8 @@ import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import { SIZES } from '~/constants/sizes';
 import type { OrderStatus } from '~/hooks/useOrderStatus';
-import type { GetOrderStart } from '../../request/OrderGet';
-import * as requests from '../../request/OrderUpdate';
+import type { GetOrderStart } from '../../request/orderGet';
+import * as requests from '../../request/orderUpdate';
 import OrderStartCard from '../OrderStartCard';
 
 const navigateMock = vi.fn();

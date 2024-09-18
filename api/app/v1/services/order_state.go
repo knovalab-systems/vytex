@@ -21,7 +21,9 @@ func (m *OrderStateService) SelectOrderStatus(q *models.Query) ([]*models.OrderS
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = fields.Fields(s, q.Fields).(query.IOrderStateDo)
+	if q.Fields != "" {
+		s = fields.OrderStateFields(s, q.Fields)
+	}
 
 	// run query
 	orderStatus, err := s.Find()

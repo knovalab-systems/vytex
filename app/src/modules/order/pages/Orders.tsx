@@ -13,7 +13,7 @@ import {
 } from '~/components/ui/Pagination';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
 import OrderTable from '../components/OrderTable';
-import { countOrdersQuery, getOrdersQuery } from '../request/OrderGet';
+import { countOrdersQuery, getOrdersQuery } from '../request/orderGet';
 
 function Orders() {
 	return (

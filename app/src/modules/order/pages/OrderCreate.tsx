@@ -7,7 +7,7 @@ import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
 import { getCustomQuery } from '~/modules/custom/requests/CustomGet';
 import OrderCreateForm from '../components/OrderCreateForm';
-import { type RefByOrderCreate, getRefByOrderCreateQuery } from '../request/OrderCreate';
+import { type RefByOrderCreate, getRefByOrderCreateQuery } from '../request/orderCreate';
 
 function OrderCreate() {
 	return (

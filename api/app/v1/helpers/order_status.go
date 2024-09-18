@@ -5,7 +5,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/query"
 )
 
-func GetOrderStatusByValue(value models.OrderStateValues) (*models.OrderState, error) {
+func GetOrderStatusByValue(value models.OrderStateValue) (*models.OrderState, error) {
 	table := query.OrderState
 	return table.Where(table.Value.Eq(string(value))).First()
 }

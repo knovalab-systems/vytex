@@ -3,6 +3,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { For, Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -27,7 +28,6 @@ import type { Composition, Fabric } from '~/types/core';
 import type { GetFabricType } from '../requests/fabricGet';
 import { updateFabricRequest } from '../requests/fabricUpdate';
 import { FabricUpdateSchema, type FabricUpdateType } from '../schemas/fabricUpdate';
-import CancelButton from '~/components/CancelButton';
 
 function FabricUpdateForm(props: {
 	colors: Colors;

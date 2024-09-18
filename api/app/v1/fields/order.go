@@ -7,15 +7,16 @@ import (
 	"gorm.io/gen/field"
 )
 
-func orderFields(s query.IOrderDo, fields []string) query.IOrderDo {
+func OrderFields(s query.IOrderDo, fields string) query.IOrderDo {
 
+	fieldsArr := strings.Split(fields, ",")
 	table := query.Order
 	var f []field.Expr
 	colorByReferenceFields := []string{}
 	//fabricByrefenceFields := []string{}
 	//resourceByReferenceFields := []string{}
 
-	for _, v := range fields {
+	for _, v := range fieldsArr {
 
 		if strings.HasPrefix(v, "create_user.") {
 			f = append(f, table.CreatedBy)

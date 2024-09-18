@@ -2,6 +2,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { For, Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -23,7 +24,6 @@ import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import type { Composition, Fabric } from '~/types/core';
 import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
-import CancelButton from '~/components/CancelButton';
 
 function FabricCreateForm(props: {
 	colors: Colors;

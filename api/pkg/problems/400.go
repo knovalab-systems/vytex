@@ -186,3 +186,15 @@ func UpdateOrderBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to update order", ""))
 }
+
+// TaskControl
+func TaskControlBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get task controls", ""))
+}
+
+// step
+func StepBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get steps", ""))
+}

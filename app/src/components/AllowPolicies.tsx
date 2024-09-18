@@ -1,9 +1,9 @@
 import { Navigate } from '@solidjs/router';
 import { type JSXElement, Match, Switch, createEffect, createSignal } from 'solid-js';
-import { POLICIES, type Policy } from '~/constants/policies';
 import { PoliciesProvider } from '~/hooks/usePolicies';
 import { queryClient } from '~/lib/queryClient';
 import { getMeQueryKey, type getMeType } from '~/requests/getMe';
+import type { Policy } from '~/types/core';
 
 function AllowPolicies(props: { children: JSXElement; policies: Array<Policy> }) {
 	const [permission, setPermission] = createSignal<'unresolved' | 'allow' | 'unallow'>('unresolved');
@@ -13,7 +13,7 @@ function AllowPolicies(props: { children: JSXElement; policies: Array<Policy> })
 		if (user?.role?.policies) {
 			for (const policy of props.policies) {
 				for (const userPolicy of user.role.policies) {
-					if (policy === POLICIES[userPolicy]) {
+					if (policy === userPolicy) {
 						setPermission('allow');
 						return;
 					}

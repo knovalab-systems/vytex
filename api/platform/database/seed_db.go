@@ -17,22 +17,15 @@ import (
 func SeedDB(db *gorm.DB) {
 	roles := []*models.Role{}
 	if db.Migrator().HasTable(&models.Role{}) {
-		rolesData := []struct {
-			Role   *models.Role
-			Assign *models.Role
-			Code   string
-		}{
-			{Role: &models.Role{}, Assign: models.ADMIN_ROLE(), Code: models.ADMIN_ROLE_CODE},
-			{Role: &models.Role{}, Assign: models.DESIGNER_ROLE(), Code: models.DESIGNER_ROLE_CODE},
-			{Role: &models.Role{}, Assign: models.PRO_SUPERVISOR_ROLE(), Code: models.PRO_SUPERVISOR_ROLE_CODE},
-		}
 
-		for _, v := range rolesData {
-			err := db.Where(models.Role{Code: v.Code}).Assign(v.Assign).FirstOrCreate(v.Role).Error
+		defaultRoles := models.DefaultRoles()
+		for _, v := range defaultRoles {
+			role := &models.Role{}
+			err := db.Where(models.Role{Code: v.Code}).Assign(v).FirstOrCreate(role).Error
 			if err != nil {
 				log.Fatalln("error on create roles, %w", err)
 			}
-			roles = append(roles, v.Role)
+			roles = append(roles, role)
 		}
 	}
 

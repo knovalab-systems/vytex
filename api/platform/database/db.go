@@ -39,29 +39,14 @@ func DB() *gorm.DB {
 		&models.ResourceByReference{}, &models.FabricByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
 		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{},
-		&models.OrderState{})
+		&models.OrderState{}, &models.Step{}, &models.Task{}, &models.TaskControl{})
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}
 
-	err = migrations.CreateTimeByTasksDefault(db)
+	err = migrations.Migrate(db)
 	if err != nil {
-		log.Fatalln("error on create timebytask record, not migrated, %w", err)
-	}
-
-	admin, err := migrations.CreateBasicRoles(db)
-	if err != nil {
-		log.Fatalln("error on create basic roles, not migrated, %w", err)
-	}
-
-	err = migrations.CreateFirstAdmin(admin, db)
-	if err != nil {
-		log.Fatalln("error on create admin user, not migrated, %w", err)
-	}
-
-	err = migrations.CreateOrderStatus(db)
-	if err != nil {
-		log.Fatalln("error on create order status, not migrated, %w", err)
+		log.Fatalln("error, not migrated, %w", err)
 	}
 
 	return db
@@ -80,20 +65,15 @@ func DBGEN() *gorm.DB {
 		&models.ResourceByReference{}, &models.FabricByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
 		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{},
-		&models.OrderState{})
+		&models.OrderState{}, &models.Step{}, &models.Task{}, &models.TaskControl{})
 
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
 	}
 
-	err = migrations.CreateTimeByTasksDefault(db)
+	err = migrations.Migrate(db)
 	if err != nil {
-		log.Fatalln("error on create timebytask record, not migrated, %w", err)
-	}
-
-	err = migrations.CreateOrderStatus(db)
-	if err != nil {
-		log.Fatalln("error on create order status, not migrated, %w", err)
+		log.Fatalln("error, not migrated, %w", err)
 	}
 
 	return db

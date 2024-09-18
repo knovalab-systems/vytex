@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import type { NavPages } from '../NavWrapper';
+import type { NavPages } from '~/types/navPages';
 import SideBarNav from '../SideBarNav';
 
 const AMock = vi.fn();

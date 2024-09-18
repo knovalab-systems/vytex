@@ -1,16 +1,19 @@
 package fields
 
 import (
+	"strings"
+
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
 )
 
-func orderStateFields(s query.IOrderStateDo, fields []string) query.IOrderStateDo {
+func OrderStateFields(s query.IOrderStateDo, fields string) query.IOrderStateDo {
 
+	fieldsArr := strings.Split(fields, ",")
 	table := query.OrderState
 	var f []field.Expr
 
-	for _, v := range fields {
+	for _, v := range fieldsArr {
 
 		switch v {
 		case "id":

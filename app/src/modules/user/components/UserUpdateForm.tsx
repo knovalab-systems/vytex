@@ -3,6 +3,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
@@ -16,7 +17,6 @@ import type { User } from '~/types/core';
 import type { GetUserType } from '../requests/userGet';
 import { updateUserRequest } from '../requests/userUpdate';
 import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdate';
-import CancelButton from '~/components/CancelButton';
 
 function UserUpdateForm(props: { user?: GetUserType }) {
 	const navigate = useNavigate();

@@ -4,7 +4,7 @@ import AllowPolicies from '../AllowPolicies';
 
 vi.mock('~/lib/queryClient', () => ({
 	queryClient: {
-		getQueryData: () => ({ role: { policies: [0, 1, 2] } }),
+		getQueryData: () => ({ role: { policies: ['ReadUsers'] } }),
 	},
 }));
 

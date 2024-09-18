@@ -13,6 +13,7 @@ import type { VytexSize } from '@vytex/client';
 import { FiCopy, FiPlus, FiTrash2 } from 'solid-icons/fi';
 import { For, Show } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import FileInput from '~/components/FileInput';
 import { Button } from '~/components/ui/Button';
 import {
@@ -40,7 +41,6 @@ import {
 import { uploadImagesRequest } from '~/requests/imageUpload';
 import type { Reference, ResourceFabric } from '~/types/core';
 import { ReferenceCreateSchema, type ReferenceCreateType } from '../schemas/referenceCreate';
-import CancelButton from '~/components/CancelButton';
 
 type Combined = {
 	id: string;

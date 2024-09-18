@@ -13,7 +13,10 @@ import type {
 } from './reference.js';
 import type { VytexResource } from './resource.js';
 import type { VytexRole } from './role.js';
+import type { VytexStep } from './step.js';
 import type { VytexSupplier } from './supplier.js';
+import type { VytexTask } from './task.js';
+import type { VytexTaskControl } from './taskControl.js';
 import type { VytexTimeByTask } from './timeByTask.js';
 import type { VytexUser } from './user.js';
 
@@ -34,4 +37,7 @@ export interface CoreSchema<Schema = any> {
 	vytex_color_by_reference: VytexColorByReference<Schema>[];
 	vytex_fabric_by_reference: VytexFabricByReference<Schema>[];
 	vytex_reference_by_reference: VytexResourceByReference<Schema>[];
+	vytex_steps: VytexStep<Schema>[];
+	vytex_tasks: VytexTask<Schema>[];
+	'vytex_task-controls': VytexTaskControl<Schema>[];
 }

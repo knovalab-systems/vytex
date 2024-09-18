@@ -31,7 +31,10 @@ var (
 	ResourceByReference *resourceByReference
 	Role                *role
 	Session             *session
+	Step                *step
 	Supplier            *supplier
+	Task                *task
+	TaskControl         *taskControl
 	TimeByTask          *timeByTask
 	User                *user
 )
@@ -52,7 +55,10 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	ResourceByReference = &Q.ResourceByReference
 	Role = &Q.Role
 	Session = &Q.Session
+	Step = &Q.Step
 	Supplier = &Q.Supplier
+	Task = &Q.Task
+	TaskControl = &Q.TaskControl
 	TimeByTask = &Q.TimeByTask
 	User = &Q.User
 }
@@ -74,7 +80,10 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		ResourceByReference: newResourceByReference(db, opts...),
 		Role:                newRole(db, opts...),
 		Session:             newSession(db, opts...),
+		Step:                newStep(db, opts...),
 		Supplier:            newSupplier(db, opts...),
+		Task:                newTask(db, opts...),
+		TaskControl:         newTaskControl(db, opts...),
 		TimeByTask:          newTimeByTask(db, opts...),
 		User:                newUser(db, opts...),
 	}
@@ -97,7 +106,10 @@ type Query struct {
 	ResourceByReference resourceByReference
 	Role                role
 	Session             session
+	Step                step
 	Supplier            supplier
+	Task                task
+	TaskControl         taskControl
 	TimeByTask          timeByTask
 	User                user
 }
@@ -121,7 +133,10 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		ResourceByReference: q.ResourceByReference.clone(db),
 		Role:                q.Role.clone(db),
 		Session:             q.Session.clone(db),
+		Step:                q.Step.clone(db),
 		Supplier:            q.Supplier.clone(db),
+		Task:                q.Task.clone(db),
+		TaskControl:         q.TaskControl.clone(db),
 		TimeByTask:          q.TimeByTask.clone(db),
 		User:                q.User.clone(db),
 	}
@@ -152,7 +167,10 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		ResourceByReference: q.ResourceByReference.replaceDB(db),
 		Role:                q.Role.replaceDB(db),
 		Session:             q.Session.replaceDB(db),
+		Step:                q.Step.replaceDB(db),
 		Supplier:            q.Supplier.replaceDB(db),
+		Task:                q.Task.replaceDB(db),
+		TaskControl:         q.TaskControl.replaceDB(db),
 		TimeByTask:          q.TimeByTask.replaceDB(db),
 		User:                q.User.replaceDB(db),
 	}
@@ -173,7 +191,10 @@ type queryCtx struct {
 	ResourceByReference IResourceByReferenceDo
 	Role                IRoleDo
 	Session             ISessionDo
+	Step                IStepDo
 	Supplier            ISupplierDo
+	Task                ITaskDo
+	TaskControl         ITaskControlDo
 	TimeByTask          ITimeByTaskDo
 	User                IUserDo
 }
@@ -194,7 +215,10 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		ResourceByReference: q.ResourceByReference.WithContext(ctx),
 		Role:                q.Role.WithContext(ctx),
 		Session:             q.Session.WithContext(ctx),
+		Step:                q.Step.WithContext(ctx),
 		Supplier:            q.Supplier.WithContext(ctx),
+		Task:                q.Task.WithContext(ctx),
+		TaskControl:         q.TaskControl.WithContext(ctx),
 		TimeByTask:          q.TimeByTask.WithContext(ctx),
 		User:                q.User.WithContext(ctx),
 	}

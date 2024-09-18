@@ -4,6 +4,7 @@ import type { VytexSize } from '@vytex/client';
 import { FiPlus, FiTrash2 } from 'solid-icons/fi';
 import { For, Show, createMemo } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -24,7 +25,6 @@ import { useColors } from '~/hooks/useColors';
 import type { Custom } from '~/types/core';
 import { type RefByCustomCreate, createCustomRequest } from '../requests/CustomCreate';
 import { CustomCreateSchema, type CustomCreateType } from '../schemas/customCreate';
-import CancelButton from '~/components/CancelButton';
 
 type ColorReference = {
 	colorName: string;

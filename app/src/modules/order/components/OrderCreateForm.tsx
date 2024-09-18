@@ -2,6 +2,7 @@ import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-for
 import { useNavigate } from '@solidjs/router';
 import { For, Show, createMemo } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import {
 	Combobox,
@@ -20,9 +21,8 @@ import { DEFAULT_SIZES, SIZES } from '~/constants/sizes';
 import { useColors } from '~/hooks/useColors';
 import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import type { Order } from '~/types/core';
-import { type RefByOrderCreate, createOrderRequest } from '../request/OrderCreate';
+import { type RefByOrderCreate, createOrderRequest } from '../request/orderCreate';
 import { OrderCreateSchema, type OrderCreateType } from '../schemas/orderCreate';
-import CancelButton from '~/components/CancelButton';
 
 type ColorReference = {
 	colorName: string;

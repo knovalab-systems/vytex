@@ -1,14 +1,14 @@
 import { useNavigate } from '@solidjs/router';
 import { For, createEffect, createMemo, createSignal } from 'solid-js';
 import toast from 'solid-toast';
+import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { ORDERS_PATH } from '~/constants/paths';
 import { SIZES } from '~/constants/sizes';
 import { useColors } from '~/hooks/useColors';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
-import type { GetOrderStart } from '../request/OrderGet';
-import { updateOrderRequest } from '../request/OrderUpdate';
-import CancelButton from '~/components/CancelButton';
+import type { GetOrderStart } from '../request/orderGet';
+import { updateOrderRequest } from '../request/orderUpdate';
 
 type DataUsage = {
 	name: string;

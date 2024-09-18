@@ -27,12 +27,17 @@ func (m *OrderService) SelectOrders(q *models.Query) ([]*models.Order, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = fields.Fields(s, q.Fields).(query.IOrderDo)
+	if q.Fields != "" {
+		s = fields.OrderFields(s, q.Fields)
+	}
 
 	// filters
-	s, err := filters.OrderFilters(s, q.Filter)
-	if err != nil {
-		return nil, problems.UsersBadRequest()
+	if q.Filter != "" {
+		var err error
+		s, err = filters.OrderFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.OrdersBadRequest()
+		}
 	}
 
 	// run query
@@ -53,12 +58,17 @@ func (m *OrderService) SelectOrder(q *models.OrderRead) (*models.Order, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = fields.Fields(s, q.Fields).(query.IOrderDo)
+	if q.Fields != "" {
+		s = fields.OrderFields(s, q.Fields)
+	}
 
 	// filters
-	s, err := filters.OrderFilters(s, q.Filter)
-	if err != nil {
-		return nil, problems.UsersBadRequest()
+	if q.Filter != "" {
+		var err error
+		s, err = filters.OrderFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.OrdersBadRequest()
+		}
 	}
 
 	order, err := s.Where(table.ID.Eq(q.ID)).First()
@@ -161,6 +171,14 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 				order.OrderState = nil
 			} else {
 				return nil, problems.ReadAccess()
+			}
+			task, err := helpers.GetTaskByValue(models.Trazar)
+			if err != nil {
+				return nil, problems.ServerError()
+			}
+			err = query.TaskControl.Create(&models.TaskControl{TaskID: task.ID, OrderID: order.ID})
+			if err != nil {
+				return nil, problems.ServerError()
 			}
 		}
 

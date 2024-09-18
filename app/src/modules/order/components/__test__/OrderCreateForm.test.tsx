@@ -3,7 +3,7 @@ import '@testing-library/jest-dom';
 import toast from 'solid-toast';
 import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
-import * as requests from '../../request/OrderCreate';
+import * as requests from '../../request/orderCreate';
 import OrderCreateForm from '../OrderCreateForm';
 
 const mockNavigate = vi.fn();

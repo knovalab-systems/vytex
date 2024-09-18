@@ -7,7 +7,7 @@ import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
 import OrderStartCard from '../components/OrderStartCard';
-import { type GetOrderStart, getOrderStartQuery } from '../request/OrderGet';
+import { type GetOrderStart, getOrderStartQuery } from '../request/orderGet';
 
 function OrderStart() {
 	return (
