@@ -1,30 +1,22 @@
-import { fireEvent, render, screen } from '@solidjs/testing-library';
+import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
+import * as usePolicies from '~/hooks/usePolicies';
 import RoleCell from '../RoleCell';
 
 window.scrollTo = vi.fn(() => {});
+const hasPolicyMock = vi.fn();
 
-vi.mock('~/constants/roles', () => ({
-	roles: {
-		admin: {
-			label: 'Administrador',
-			key: 'admin',
-		},
-		none: {
-			label: 'Sin rol',
-			key: 'none',
-		},
-	},
-	roleList: [
-		{
-			label: 'Administrador',
-			key: 'admin',
-		},
-		{
-			label: 'Sin rol',
-			key: 'none',
-		},
-	],
+vi.mock('~/hooks/usePolicies', () => ({
+	usePolicies: () => ({
+		hasPolicy: () => true,
+	}),
+}));
+
+vi.mock('~/hooks/useRoles', () => ({
+	useRoles: () => ({
+		roles: () => [{ id: 'admin', name: 'Administrador' }],
+		rolesRecord: () => ({ admin: { id: 'admin', name: 'Administrador' } }),
+	}),
 }));
 
 describe('RoleCell', () => {
@@ -32,18 +24,8 @@ describe('RoleCell', () => {
 		vi.resetAllMocks();
 	});
 
-	it('renders correctly', () => {
-		render(() => <RoleCell roleValue='admin' userId='1' />);
-
-		const roleName = screen.getByText('Administrador');
-		const triggerButton = screen.getByRole('button');
-
-		expect(triggerButton).toBeInTheDocument();
-		expect(roleName).toBeInTheDocument();
-	});
-
 	it('renders correctly dialog', () => {
-		render(() => <RoleCell roleValue='admin' userId='1' />);
+		render(() => <RoleCell roleId='admin' userId='1' />);
 
 		const triggerButton = screen.getByTitle('Actualizar rol');
 		fireEvent.click(triggerButton);
@@ -54,7 +36,7 @@ describe('RoleCell', () => {
 	});
 
 	it('renders correctly after close dialog', () => {
-		render(() => <RoleCell roleValue='admin' userId='1' />);
+		render(() => <RoleCell roleId='admin' userId='1' />);
 
 		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
 		expect(roleNameBefore).toBeInTheDocument();
@@ -73,7 +55,7 @@ describe('RoleCell', () => {
 	});
 
 	it('renders correctly after save', () => {
-		render(() => <RoleCell roleValue='admin' userId='1' />);
+		render(() => <RoleCell roleId='admin' userId='1' />);
 
 		const roleNameBefore = screen.getByText('Administrador'); //  there is only one
 		expect(roleNameBefore).toBeInTheDocument();
@@ -89,5 +71,44 @@ describe('RoleCell', () => {
 
 		const roleNameAfter = screen.getByText('Administrador');
 		expect(roleNameAfter).toBeInTheDocument(); // there is only one again
+	});
+
+	it('renders correctly without update users policy', async () => {
+		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
+			policies: [],
+			hasPolicy: () => {
+				hasPolicyMock();
+				return false;
+			},
+		});
+		render(() => <RoleCell roleId='admin' userId='1' />);
+
+		const triggerButton = screen.queryByTitle('Actualizar rol');
+
+		expect(triggerButton).not.toBeInTheDocument();
+
+		await waitFor(() => {
+			expect(hasPolicyMock).toBeCalled();
+		});
+	});
+
+	it('renders correctly with update users policy', async () => {
+		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
+			policies: [],
+			hasPolicy: () => {
+				hasPolicyMock();
+				return true;
+			},
+		});
+		render(() => <RoleCell roleId='admin' userId='1' />);
+
+		const roleName = screen.getByText('Administrador');
+		const triggerButton = screen.getByRole('button');
+
+		expect(triggerButton).toBeInTheDocument();
+		expect(roleName).toBeInTheDocument();
+		await waitFor(() => {
+			expect(hasPolicyMock).toBeCalled();
+		});
 	});
 });

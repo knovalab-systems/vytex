@@ -5,7 +5,7 @@ export type VytexRole<Schema = any> = MergeCoreCollection<
 	'vytex_roles',
 	{
 		id: string;
-		name: string | null;
+		name: string;
 		code: RoleCode;
 		policies: VytexPolicy[] | null;
 	}

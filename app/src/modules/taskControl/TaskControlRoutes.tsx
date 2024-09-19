@@ -2,7 +2,7 @@ import { Route } from '@solidjs/router';
 import { lazy } from 'solid-js';
 import * as PATHS from '~/constants/paths';
 
-const Corte = lazy(() => import('~/modules/taskControls/pages/Corte'));
+const Corte = lazy(() => import('./pages/Corte'));
 
 function TaskControlsRoutes() {
 	return (
