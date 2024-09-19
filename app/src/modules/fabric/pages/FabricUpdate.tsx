@@ -1,7 +1,7 @@
 import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { type Colors, useColors } from '~/hooks/useColors';
@@ -11,9 +11,9 @@ import { getFabricQuery } from '../requests/fabricGet';
 
 function FabricUpdate() {
 	return (
-		<AllowRoles roles={['designer']}>
+		<AllowPolicies policies={['UpdateFabrics']}>
 			<FabricUpdatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

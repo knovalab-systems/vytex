@@ -1,11 +1,11 @@
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import SupplierCreateForm from '../components/SupplierCreateForm';
 
 function SupplierCreate() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['CreateSuppliers']}>
 			<SupplierCreatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

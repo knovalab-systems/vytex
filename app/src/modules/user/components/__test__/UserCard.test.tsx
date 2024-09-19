@@ -34,7 +34,7 @@ describe('UserCard', () => {
 			deleted_at: '2024-05-10T22:36:52.140901Z',
 			updated_at: '2024-05-11T22:36:52.140901Z',
 			created_at: '2024-05-12T22:36:52.140901Z',
-			role: { id: 'admin' },
+			role: { name: 'admin' },
 		};
 
 		render(() => <UserCard user={user as GetUserType} />);
@@ -53,7 +53,7 @@ describe('UserCard', () => {
 			deleted_at: null,
 			updated_at: '2024-05-11T22:36:52.140901Z',
 			created_at: '2024-05-12T22:36:52.140901Z',
-			role: { id: 'admin' },
+			role: { name: 'admin' },
 		};
 
 		render(() => <UserCard user={user as GetUserType} />);
@@ -72,7 +72,7 @@ describe('UserCard', () => {
 			deleted_at: '2024-05-10T22:36:52.140901Z',
 			updated_at: '2024-05-11T22:36:52.140901Z',
 			created_at: '2024-05-12T22:36:52.140901Z',
-			role: { id: 'admin' },
+			role: { name: 'admin' },
 		};
 
 		render(() => <UserCard user={user as GetUserType} />);
@@ -91,7 +91,7 @@ describe('UserCard', () => {
 			deleted_at: '2024-05-10T22:36:52.140901Z',
 			updated_at: '2024-05-11T22:36:52.140901Z',
 			created_at: '2024-05-12T22:36:52.140901Z',
-			role: { id: 'admin' },
+			role: { name: 'admin' },
 		};
 
 		render(() => <UserCard user={user as GetUserType} />);

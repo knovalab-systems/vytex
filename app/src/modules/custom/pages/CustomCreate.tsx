@@ -1,6 +1,6 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
@@ -9,9 +9,9 @@ import { type RefByCustomCreate, getRefByCustomCreateQuery } from '../requests/C
 
 function CustomCreate() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['CreateCustoms']}>
 			<CustomCreatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

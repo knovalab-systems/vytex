@@ -1,12 +1,33 @@
-import { For, type JSX, Show } from 'solid-js';
+import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { REFS_PATH, REFS_TIMES_PATH } from '~/constants/paths';
+import { usePolicies } from '~/hooks/usePolicies';
+import type { Action } from '~/types/actionsCell';
 import type { GetReferenceType } from '../requests/referenceGet';
 
-function ReferenceTable(props: {
-	references?: GetReferenceType;
-	actions: (reference: string | number) => JSX.Element;
-}) {
+function ReferenceTable(props: { references?: GetReferenceType }) {
+	const { hasPolicy } = usePolicies();
+	const actions = (id: number) => {
+		const arr: Action[] = [
+			{
+				path: `${REFS_PATH}/${id}`,
+				icon: 'details',
+				label: 'Detalles',
+				title: 'Detalles de la referencia',
+			},
+		];
+		if (hasPolicy('UpdateTimesReferences'))
+			arr.push({
+				icon: 'update',
+				label: 'Tiempos',
+				title: 'Actualizar tiempos',
+				path: `${REFS_TIMES_PATH}/${id}`,
+			});
+		return arr;
+	};
+
 	return (
 		<TableContainer>
 			<Table class='md:table-fixed'>
@@ -31,7 +52,7 @@ function ReferenceTable(props: {
 							<TableCell>
 								<StatusLabel status={!reference.deleted_at} />
 							</TableCell>
-							{props.actions(reference.id)}
+							<ActionsCell actions={actions(reference.id)} />
 						</TableRow>
 					)}
 				</For>
