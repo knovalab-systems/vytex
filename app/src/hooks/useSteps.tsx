@@ -62,7 +62,6 @@ export function StepsProvider(props: { children: JSXElement }) {
 				}
 				return p;
 			}, []) ?? [],
-
 		[],
 	);
 

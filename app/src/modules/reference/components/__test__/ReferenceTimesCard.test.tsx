@@ -2,7 +2,7 @@ import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { DEFAULT_TIME_BY_TASK, TASKS_RECORD } from '~/constants/tasks';
 import type { TimeByTask } from '~/types/core';
-import ReferenceTimesCard from '../ReferenceTimesCard';
+import ReferenceCard from '../ReferenceCard';
 
 describe('UserCard', () => {
 	beforeEach(() => {
@@ -10,7 +10,7 @@ describe('UserCard', () => {
 	});
 
 	it('renders correctly ', () => {
-		render(() => <ReferenceTimesCard times={DEFAULT_TIME_BY_TASK as TimeByTask} />);
+		render(() => <ReferenceCard times={DEFAULT_TIME_BY_TASK as TimeByTask} />);
 		const title = screen.getByText('Tiempos por tarea');
 		const fields = screen.getAllByText('0 seg');
 

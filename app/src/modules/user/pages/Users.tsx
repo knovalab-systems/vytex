@@ -1,6 +1,6 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import {
@@ -12,19 +12,21 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
+import { useRoles } from '~/hooks/useRoles';
 import UserControls from '../components/UserControls';
 import UserTable from '../components/UserTable';
 import { countUsersQuery, getUsersQuery } from '../requests/userGet';
 
 function Users() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['ReadUsers']}>
 			<UsersPage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 
 function UsersPage() {
+	const { rolesQuery } = useRoles();
 	const [page, setPage] = createSignal(1);
 	const [nameFilter, setNameFilter] = createSignal('');
 	const [usernameFilter, setUsernameFilter] = createSignal('');
@@ -40,6 +42,10 @@ function UsersPage() {
 		return Math.ceil(safe / QUERY_LIMIT);
 	});
 
+	const isError = () => users.isError || usersCount.isError || rolesQuery.isError;
+	const isLoading = () => users.isLoading || usersCount.isLoading || rolesQuery.isLoading;
+	const isSuccess = () => users.isSuccess && usersCount.isSuccess && rolesQuery.isSuccess;
+
 	return (
 		<div class='h-full flex flex-col gap-2'>
 			<UserControls
@@ -54,13 +60,13 @@ function UsersPage() {
 				roleIdFilterValue={roleIdFilter()}
 			/>
 			<Switch>
-				<Match when={users.isError || users.isError}>
-					<ErrorMessage title='Error al cargar usuario' />
+				<Match when={isError()}>
+					<ErrorMessage title='Error al cargar usuarios' />
 				</Match>
-				<Match when={users.isLoading || usersCount.isLoading}>
+				<Match when={isLoading()}>
 					<Loading label='Cargando usuario' />
 				</Match>
-				<Match when={users.isSuccess && usersCount.isSuccess}>
+				<Match when={isSuccess()}>
 					<UserTable users={users.data} />
 					<Pagination
 						class='[&>*]:justify-center'

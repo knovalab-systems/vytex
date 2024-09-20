@@ -1,6 +1,6 @@
 import { createQueries } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { type Colors, useColors } from '~/hooks/useColors';
@@ -14,9 +14,9 @@ import {
 
 function ReferenceCreate() {
 	return (
-		<AllowRoles roles={['designer']}>
+		<AllowPolicies policies={['CreateReferences']}>
 			<ReferenceCreatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

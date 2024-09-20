@@ -1,7 +1,7 @@
 import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import ReferenceTimesUpdateForm from '../components/ReferenceTimesUpdateForm';
@@ -9,9 +9,9 @@ import { type GetReferenceForTimesType, getReferenceForTimesQuery } from '../req
 
 function ReferenceTimesUpdate() {
 	return (
-		<AllowRoles roles={['prosupervisor']}>
+		<AllowPolicies policies={['ReadReferences']}>
 			<ReferenceTimesUpdatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

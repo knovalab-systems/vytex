@@ -2,7 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
@@ -21,9 +21,9 @@ import { countCustomsQuery, getCustomsQuery } from '../requests/CustomGet';
 
 function Customs() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['ReadCustoms']}>
 			<CustomsPage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

@@ -10,7 +10,7 @@ import OrderRoutes from './modules/order/OrderRoutes';
 import ReferenceRoutes from './modules/reference/ReferenceRoutes';
 import ResourceRoutes from './modules/resource/ResourceRoutes';
 import SupplierRoutes from './modules/supplier/SupplierRoutes';
-import TaskControlsRoutes from './modules/taskControls/TaskControlsRoutes';
+import TaskControlRoutes from './modules/taskControl/TaskControlRoutes';
 import UserRoutes from './modules/user/UserRoutes';
 
 const Login = lazy(() => import('~/pages/Login'));
@@ -30,7 +30,7 @@ function Routes() {
 					<ReferenceRoutes />
 					<ResourceRoutes />
 					<SupplierRoutes />
-					<TaskControlsRoutes />
+					<TaskControlRoutes />
 					<UserRoutes />
 				</Route>
 			</Route>

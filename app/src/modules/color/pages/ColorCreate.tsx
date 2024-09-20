@@ -1,11 +1,11 @@
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ColorCreateForm from '../components/ColorCreateForm';
 
 function ColorCreate() {
 	return (
-		<AllowRoles roles={['designer']}>
+		<AllowPolicies policies={['CreateColors']}>
 			<ColorCreatepage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

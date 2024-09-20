@@ -15,7 +15,7 @@ async function getUsers(name: string, username: string, roleId: string, status: 
 		readUsers({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['id', 'name', 'username', 'deleted_at', 'role'],
+			fields: ['id', 'name', 'username', 'deleted_at', 'role_id'],
 			filter: {
 				name: {
 					_eq: name.toLowerCase(),
@@ -75,7 +75,11 @@ export function getUserQuery(id: string) {
 }
 
 async function getUser(id: string) {
-	return await client.request(readUser(id));
+	return await client.request(
+		readUser(id, {
+			fields: ['id', 'name', 'username', 'role_id', 'created_at', 'updated_at', 'deleted_at', { role: ['name'] }],
+		}),
+	);
 }
 
 export type GetUserType = Awaited<ReturnType<typeof getUser>>;

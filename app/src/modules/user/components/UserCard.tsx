@@ -2,8 +2,6 @@ import { useNavigate } from '@solidjs/router';
 import { Button } from '~/components/ui/Button';
 import { Timeline } from '~/components/ui/Timeline';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
-import { roles } from '~/constants/roles';
-import { NO_ROLE } from '~/envs/roles';
 import { parseDateTimeHuman } from '~/lib/parseTime';
 import type { GetUserType } from '../requests/userGet';
 
@@ -43,7 +41,7 @@ function UserCard(props: { user?: GetUserType }) {
 						<ValuesWithTitles support='Nombre' title={user()?.name} />
 						<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
 						<ValuesWithTitles support='Estado' title={!user()?.deleted_at ? 'Activo' : 'Inactivo'} />
-						<ValuesWithTitles support='Rol' title={roles[user()?.role?.id || NO_ROLE].label} />
+						<ValuesWithTitles support='Rol' title={user()?.role?.name} />
 					</div>
 					<div class='mx-auto'>
 						<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />

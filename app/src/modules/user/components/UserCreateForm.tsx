@@ -9,12 +9,13 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { USERS_PATH } from '~/constants/paths';
-import { roleList, roles } from '~/constants/roles';
+import { useRoles } from '~/hooks/useRoles';
 import { createUserRequest } from '../requests/userCreate';
 import { UserCreateSchema, type UserCreateType } from '../schemas/userCreate';
 
 function UserCreateForm() {
 	const navigate = useNavigate();
+	const { roles, rolesRecord } = useRoles();
 
 	const [form, { Form, Field }] = createForm<UserCreateType>({
 		validate: valiForm(UserCreateSchema),
@@ -96,12 +97,14 @@ function UserCreateForm() {
 								onChange={value => {
 									setValue(form, 'role', value);
 								}}
-								options={roleList.map(e => e.key)}
+								options={roles().map(e => e.id)}
 								placeholder='Selecciona un rol'
-								itemComponent={props => <SelectItem item={props.item}>{roles[props.item.rawValue].label}</SelectItem>}
+								itemComponent={props => (
+									<SelectItem item={props.item}>{rolesRecord()[props.item.rawValue].name}</SelectItem>
+								)}
 							>
 								<SelectTrigger title='Ver roles' aria-label='Roles' aria-errormessage={field.error}>
-									<SelectValue<string>>{state => roles[state.selectedOption()].label}</SelectValue>
+									<SelectValue<string>>{state => rolesRecord()[state.selectedOption()].name}</SelectValue>
 								</SelectTrigger>
 								<Show when={Boolean(field.error)}>
 									<div class={'text-sm my-auto text-red-600'}>{field.error}</div>

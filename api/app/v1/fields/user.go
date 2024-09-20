@@ -30,7 +30,7 @@ func UserFields(s query.IUserDo, fieldsStr string) query.IUserDo {
 			fields = append(fields, userTable.Name)
 		case "password":
 			fields = append(fields, userTable.Password)
-		case "roleId":
+		case "role_id":
 			fields = append(fields, userTable.RoleId)
 		case "role":
 			fields = append(fields, userTable.RoleId)
@@ -49,7 +49,7 @@ func UserFields(s query.IUserDo, fieldsStr string) query.IUserDo {
 	if len(roleFieldsArr) != 0 {
 		fields = append(fields, userTable.RoleId)
 		roleTables := query.Role
-		roleFields := []field.Expr{}
+		roleFields := []field.Expr{roleTables.ID}
 
 		for _, v := range roleFieldsArr {
 			switch v {

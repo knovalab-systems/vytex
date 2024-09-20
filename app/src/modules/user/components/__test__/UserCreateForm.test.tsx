@@ -13,6 +13,13 @@ vi.mock('@solidjs/router', () => ({
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
 
+vi.mock('~/hooks/useRoles', () => ({
+	useRoles: () => ({
+		roles: () => [{ id: 'admin', name: 'Administrador' }],
+		rolesRecord: () => ({ admin: { id: 'admin', name: 'Administrador' } }),
+	}),
+}));
+
 describe('UserCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {

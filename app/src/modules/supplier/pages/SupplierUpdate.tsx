@@ -1,7 +1,7 @@
 import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import SupplireUpdateForm from '../components/SupplierUpdateForm';
@@ -9,9 +9,9 @@ import { getSupplierQuery } from '../requests/supplierGet';
 
 function SupplierUpdate() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['UpdateSuppliers']}>
 			<SupplierUpdatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

@@ -1,15 +1,17 @@
 import { getLocalTimeZone, now } from '@internationalized/date';
-import { createSignal } from 'solid-js';
+import { Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import StatusLabel from '~/components/StatusLabel';
 import { Switch } from '~/components/ui/Switch';
 import { TableCell } from '~/components/ui/Table';
+import { usePolicies } from '~/hooks/usePolicies';
 import type { User } from '~/types/core';
 import { updateUserRequest } from '../requests/userUpdate';
 
 function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {
 	const [status, setStatus] = createSignal(!props.deleted_at);
 	const [loading, setLoading] = createSignal(false);
+	const { hasPolicy } = usePolicies();
 
 	const handleSubmit = (newStatus: boolean) => {
 		setStatus(newStatus);
@@ -36,9 +38,11 @@ function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {
 		<TableCell>
 			<div class='flex h-full gap-2 group-hover:*:flex'>
 				<StatusLabel status={status()} />
-				<div class='my-auto relative lg:hidden' title='Actualizar estado'>
-					<Switch checked={status()} onChange={handleSubmit} disabled={loading()} />
-				</div>
+				<Show when={hasPolicy('UpdateUsers')}>
+					<div class='my-auto relative lg:hidden' title='Actualizar estado'>
+						<Switch checked={status()} onChange={handleSubmit} disabled={loading()} />
+					</div>
+				</Show>
 			</div>
 		</TableCell>
 	);

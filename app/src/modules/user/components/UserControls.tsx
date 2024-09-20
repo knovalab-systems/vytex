@@ -5,8 +5,8 @@ import { Show, onCleanup } from 'solid-js';
 import SelectOptions from '~/components/SelectOptions';
 import { Button } from '~/components/ui/Button';
 import { USER_CREATE_PATH } from '~/constants/paths';
-import { roleList } from '~/constants/roles';
 import { USER_STATUS_OPTIONS } from '~/constants/status';
+import { useRoles } from '~/hooks/useRoles';
 import FilterInput from '~/modules/user/components/FilterInput';
 import { cleanupDebounce, debounce } from '~/utils/debounce';
 
@@ -23,6 +23,7 @@ type UserControlsProps = {
 };
 
 const UserControls = (props: UserControlsProps) => {
+	const { roles } = useRoles();
 	const navigate = useNavigate();
 
 	onCleanup(() => {
@@ -86,7 +87,7 @@ const UserControls = (props: UserControlsProps) => {
 				value={props.statusFilterValue}
 			/>
 			<SelectOptions
-				options={roleList.map(role => ({ label: role.label, value: role.key }))}
+				options={roles().map(role => ({ label: role.name, value: role.id }))}
 				placeholder='Rol de usuario'
 				setSelect={setRole}
 				value={props.roleIdFilterValue}

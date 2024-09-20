@@ -10,9 +10,8 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { USERS_PATH } from '~/constants/paths';
-import { roleList, roles } from '~/constants/roles';
 import { STATUS_OPTIONS } from '~/constants/status';
-import { NO_ROLE } from '~/envs/roles';
+import { useRoles } from '~/hooks/useRoles';
 import type { User } from '~/types/core';
 import type { GetUserType } from '../requests/userGet';
 import { updateUserRequest } from '../requests/userUpdate';
@@ -20,12 +19,13 @@ import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdate';
 
 function UserUpdateForm(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
+	const { roles, rolesRecord } = useRoles();
 	const [form, { Form, Field }] = createForm<UserUpdateType>({
 		validate: valiForm(UserUpdateSchema),
 		initialValues: {
 			name: props.user?.name || '',
 			username: props.user?.username || '',
-			role_id: props.user?.role_id || NO_ROLE,
+			role_id: props.user?.role_id ?? undefined,
 			deleted_at: !props.user?.deleted_at ? 'Activo' : 'Inactivo',
 		},
 	});
@@ -121,12 +121,14 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 								onChange={value => {
 									setValue(form, 'role_id', value);
 								}}
-								options={roleList.map(e => e.key)}
+								options={roles().map(e => e.id)}
 								placeholder='Selecciona un rol'
-								itemComponent={props => <SelectItem item={props.item}>{roles[props.item.rawValue].label}</SelectItem>}
+								itemComponent={props => (
+									<SelectItem item={props.item}>{rolesRecord()[props.item.rawValue].name}</SelectItem>
+								)}
 							>
-								<SelectTrigger aria-label='Roles' title='Ver roles' aria-errormessage={field.error}>
-									<SelectValue<string>>{state => roles[state.selectedOption()].label}</SelectValue>
+								<SelectTrigger title='Ver roles' aria-label='Roles' aria-errormessage={field.error}>
+									<SelectValue<string>>{state => rolesRecord()[state.selectedOption()]?.name || ''}</SelectValue>
 								</SelectTrigger>
 								<Show when={Boolean(field.error)}>
 									<div class={'text-sm my-auto text-red-600'}>{field.error}</div>

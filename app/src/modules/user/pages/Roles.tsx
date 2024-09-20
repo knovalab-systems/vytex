@@ -1,13 +1,13 @@
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import { permissions } from '~/constants/permissions';
 import { roleList, rolePermissions } from '~/constants/roles';
 import RoleTable from '../components/RoleTable';
 
 function Roles() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={[]}>
 			<RolesPage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

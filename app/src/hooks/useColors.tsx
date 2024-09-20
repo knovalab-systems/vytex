@@ -28,14 +28,14 @@ type Color = Colors[number];
 type ColorRecord = Record<string, Color>;
 
 type ColorsContext = {
-	colorsQuery: CreateQueryResult;
+	colorsQuery: CreateQueryResult<Colors>;
 	colorsRecord: Accessor<ColorRecord>;
 	setActive: () => void;
 };
 
 export function ColorsProvider(props: { children: JSXElement }) {
 	const [enabled, setEnabled] = createSignal(false);
-	const colors = createQuery(() => ({
+	const colorsQuery = createQuery(() => ({
 		queryFn: colorsContextReq,
 		queryKey: [queryKey],
 		staleTime: Number.POSITIVE_INFINITY,
@@ -43,7 +43,7 @@ export function ColorsProvider(props: { children: JSXElement }) {
 	}));
 
 	const colorsRecord = createMemo(() => {
-		const obj = colors.data?.reduce((p: ColorRecord, v) => {
+		const obj = colorsQuery.data?.reduce((p: ColorRecord, v) => {
 			p[v.id] = v;
 			return p;
 		}, {});
@@ -54,7 +54,7 @@ export function ColorsProvider(props: { children: JSXElement }) {
 		setEnabled(true);
 	};
 
-	const values: ColorsContext = { colorsQuery: colors, colorsRecord: colorsRecord, setActive: setActive };
+	const values: ColorsContext = { colorsQuery, colorsRecord, setActive };
 
 	return <ColorsContext.Provider value={values}>{props.children}</ColorsContext.Provider>;
 }

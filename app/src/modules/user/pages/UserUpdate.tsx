@@ -1,7 +1,7 @@
 import { useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import UserUpdateForm from '../components/UserUpdateForm';
@@ -9,9 +9,9 @@ import { getUserQuery } from '../requests/userGet';
 
 function UserUpdate() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['UpdateUsers']}>
 			<UserUpdatePage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 

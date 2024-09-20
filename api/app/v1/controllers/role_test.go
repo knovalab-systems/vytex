@@ -12,10 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestReadSteps(t *testing.T) {
+func TestReadRoles(t *testing.T) {
 	defaultError := errors.New("ERROR")
 
-	t.Run("Fail get steps", func(t *testing.T) {
+	t.Run("Fail get roles", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -24,19 +24,19 @@ func TestReadSteps(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		stepMock := mocks.StepMock{}
-		stepMock.On("SelectSteps").Return(defaultError)
+		roleMock := mocks.RoleMock{}
+		roleMock.On("SelectRoles").Return(defaultError)
 
 		// controller
-		stepController := StepController{StepRepository: &stepMock}
+		roleController := RoleController{RoleRepository: &roleMock}
 
 		// test
-		err := stepController.ReadSteps(c)
+		err := roleController.ReadRoles(c)
 		assert.Error(t, err)
 
 	})
 
-	t.Run("Select steps successfully", func(t *testing.T) {
+	t.Run("Select roles successfully", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -45,14 +45,14 @@ func TestReadSteps(t *testing.T) {
 		c := e.NewContext(req, rec)
 
 		// mocks
-		stepMock := mocks.StepMock{}
-		stepMock.On("SelectSteps").Return(nil)
+		roleMock := mocks.RoleMock{}
+		roleMock.On("SelectRoles").Return(nil)
 
 		// controller
-		stepController := StepController{StepRepository: &stepMock}
+		roleController := RoleController{RoleRepository: &roleMock}
 
 		// test
-		err := stepController.ReadSteps(c)
+		err := roleController.ReadRoles(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}

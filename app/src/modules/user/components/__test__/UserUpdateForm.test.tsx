@@ -13,6 +13,13 @@ vi.mock('@solidjs/router', () => ({
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
 
+vi.mock('~/hooks/useRoles', () => ({
+	useRoles: () => ({
+		roles: () => [{ id: 'admin', name: 'Administrador' }],
+		rolesRecord: () => ({ admin: { id: 'admin', name: 'Administrador' } }),
+	}),
+}));
+
 describe('UserUpdateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -217,7 +224,7 @@ describe('UserUpdateForm', () => {
 	];
 
 	for (const err of requestsErrors) {
-		it('calls submit succesfully', async () => {
+		it('calls submit with error', async () => {
 			const requestMock = vi.spyOn(requests, 'updateUserRequest').mockRejectedValue(err.error);
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 			const user = {

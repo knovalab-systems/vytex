@@ -6,7 +6,7 @@ import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { Input } from '~/components/ui/Input';
 import { Label } from '~/components/ui/Label';
-import { REFS_PRO_SUPERVISOR_PATH } from '~/constants/paths';
+import { REFS_PATH } from '~/constants/paths';
 import { TASKS, TASKS_RECORD } from '~/constants/tasks';
 import type { TimeByTask } from '~/types/core';
 import type { GetReferenceForTimesType } from '../requests/referenceGet';
@@ -26,7 +26,7 @@ function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 		return updateTimesRefenceRequest(props.reference.id, { time_by_task: times })
 			.then(() => {
 				toast.success('Tiempos actualizados correctamente');
-				navigate(REFS_PRO_SUPERVISOR_PATH);
+				navigate(REFS_PATH);
 			})
 			.catch(() => {
 				toast.error('Error al actualizar tiempos.');
@@ -68,7 +68,7 @@ function ReferenceTimesUpdate(props: { reference: GetReferenceForTimesType }) {
 				</div>
 			</div>
 			<div class='flex justify-between m-4'>
-				<CancelButton to={REFS_PRO_SUPERVISOR_PATH} />
+				<CancelButton to={REFS_PATH} />
 				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
 					Actualizar
 				</Button>

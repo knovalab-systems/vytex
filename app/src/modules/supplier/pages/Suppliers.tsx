@@ -2,7 +2,7 @@ import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
-import AllowRoles from '~/components/AllowRoles';
+import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
@@ -21,9 +21,9 @@ import { countSuppliersQuery, getSuppliersQuery } from '../requests/supplierGet'
 
 function Suppliers() {
 	return (
-		<AllowRoles roles={['admin']}>
+		<AllowPolicies policies={['ReadSuppliers']}>
 			<SuppliersPage />
-		</AllowRoles>
+		</AllowPolicies>
 	);
 }
 
