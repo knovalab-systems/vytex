@@ -193,6 +193,11 @@ func TaskControlBadRequest() *echo.HTTPError {
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get task controls", ""))
 }
 
+func UpdateTaskControlBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to update task Control", ""))
+}
+
 // step
 func StepBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest

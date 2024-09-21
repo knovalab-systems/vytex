@@ -25,9 +25,10 @@ func (b *Role) BeforeCreate(tx *gorm.DB) (err error) {
 type RoleCode string
 
 const (
-	ADMIN_VALUE          RoleCode = "admin"
-	DESIGNER_VALUE       RoleCode = "designer"
-	PRO_SUPERVISOR_VALUE RoleCode = "propsupervisor"
+	ADMIN_VALUE            RoleCode = "admin"
+	DESIGNER_VALUE         RoleCode = "designer"
+	PRO_SUPERVISOR_VALUE   RoleCode = "propsupervisor"
+	CORTE_SUPERVISOR_VALUE RoleCode = "cortepsupervisor"
 )
 
 func DefaultRoles() []*Role {
@@ -75,7 +76,15 @@ func DefaultRoles() []*Role {
 				string(UpdateTimesReferences),
 				string(ReadOrders),
 				string(StartOrder),
+			},
+		},
+		{
+			Name: "Supervisor corte",
+			Code: CORTE_SUPERVISOR_VALUE,
+			Policies: []string{
+				string(ReadReferences),
 				string(ReadCorte),
+				string(UpdateCorte),
 			},
 		},
 	}

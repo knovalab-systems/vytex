@@ -30,4 +30,5 @@ const (
 	UpdateSuppliers       Policy = "UpdateSuppliers"
 	StartOrder            Policy = "StartOrder"
 	ReadCorte             Policy = "ReadCorte"
+	UpdateCorte           Policy = "UpdateCorte"
 )

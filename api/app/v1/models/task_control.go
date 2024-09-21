@@ -17,3 +17,10 @@ type TaskControl struct {
 	PreviousID *uint        `json:"previous_id,omitempty"`
 	Previous   *TaskControl `json:"previous,omitempty"`
 }
+
+type TaskControlUpdateBody struct {
+	ID         uint       `param:"taskControlId" validate:"required"`
+	StartedAt  *time.Time `json:"started_at,omitempty"`
+	FinishedAt *time.Time `json:"finished_at,omitempty"`
+	RejectedAt *time.Time `json:"rejected_at,omitempty"`
+}
