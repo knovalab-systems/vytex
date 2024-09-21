@@ -172,6 +172,16 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 			} else {
 				return nil, problems.ReadAccess()
 			}
+
+			rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(order)
+			if err != nil {
+				return nil, problems.ServerError()
+			}
+
+			if rows.RowsAffected == 0 {
+				return nil, problems.ReadAccess()
+			}
+
 			task, err := helpers.GetTaskByValue(models.Trazar)
 			if err != nil {
 				return nil, problems.ServerError()
@@ -180,20 +190,13 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 			if err != nil {
 				return nil, problems.ServerError()
 			}
+
+			return order, nil
 		}
 
 	}
 
-	rows, err := table.Unscoped().Where(table.ID.Eq(b.ID)).Updates(order)
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
-	if rows.RowsAffected == 0 {
-		return nil, problems.ReadAccess()
-	}
-
-	return order, nil
+	return nil, problems.ReadAccess()
 }
 
 func checkValidCustom(customID uint) error {

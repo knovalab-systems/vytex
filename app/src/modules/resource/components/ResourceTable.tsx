@@ -10,7 +10,7 @@ import type { Action } from '~/types/actionsCell';
 import type { GetResourcesType } from '../requests/resourceGet';
 
 function ResourceTable(props: { resources?: GetResourcesType }) {
-	const { colorsRecord: colorRecord } = useColors();
+	const { colorsRecord } = useColors();
 	const { suppliersRecord: supplierRecord } = useSuppliers();
 	const { hasPolicy } = usePolicies();
 
@@ -56,12 +56,12 @@ function ResourceTable(props: { resources?: GetResourcesType }) {
 								<TableCell>{resource.code}</TableCell>
 								<TableCell>{resource.name}</TableCell>
 								<TableCell>
-									<div>{colorRecord()[resource.color_id as number]?.name || resource.color_id}</div>
+									<div>{colorsRecord()[resource.color_id as number]?.name || resource.color_id}</div>
 								</TableCell>
 								<TableCell>
 									<div
 										class='h-10 w-10 border-2'
-										style={{ background: colorRecord()[resource.color_id as number]?.hex || '' }}
+										style={{ background: colorsRecord()[resource.color_id as number]?.hex || '' }}
 									/>
 								</TableCell>
 								<TableCell>${resource.cost}</TableCell>

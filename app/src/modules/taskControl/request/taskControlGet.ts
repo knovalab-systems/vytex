@@ -3,15 +3,17 @@ import { readTaskControls } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
-export function getTasksQuery(page: number, tasks: number[]) {
+export const getTaskControlsQueryKey = 'getTaskControls';
+
+export function getTaskControlsQuery(page: number, tasks: number[]) {
 	return queryOptions({
-		queryKey: ['getOrders', page, tasks],
-		queryFn: () => getTasks(page, tasks),
+		queryKey: [getTaskControlsQueryKey, page, tasks],
+		queryFn: () => getTaskControls(page, tasks),
 		enabled: tasks.length > 0,
 	});
 }
 
-function getTasks(page: number, tasks: number[]) {
+function getTaskControls(page: number, tasks: number[]) {
 	return client.request(
 		readTaskControls({
 			limit: QUERY_LIMIT,
@@ -21,12 +23,21 @@ function getTasks(page: number, tasks: number[]) {
 					_in: tasks,
 				},
 			},
-			fields: ['id', 'order_id', 'finished_at', 'created_at', 'started_at', 'rejected_at', 'task_id'],
+			fields: [
+				'id',
+				'order_id',
+				'finished_at',
+				'created_at',
+				'started_at',
+				'rejected_at',
+				'task_id',
+				{ order: [{ color_by_reference: ['color_id', { reference: ['code'] }] }] },
+			],
 		}),
 	);
 }
 
-export type GetTaskType = Awaited<ReturnType<typeof getTasks>>;
+export type GetTaskType = Awaited<ReturnType<typeof getTaskControls>>;
 
 export function countTasksQuery(tasks: number[]) {
 	return queryOptions({

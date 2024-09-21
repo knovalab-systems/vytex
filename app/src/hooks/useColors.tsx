@@ -25,11 +25,11 @@ export type Colors = Awaited<ReturnType<typeof colorsContextReq>>;
 
 type Color = Colors[number];
 
-type ColorRecord = Record<string, Color>;
+type ColorsRecord = Record<string, Color>;
 
 type ColorsContext = {
 	colorsQuery: CreateQueryResult<Colors>;
-	colorsRecord: Accessor<ColorRecord>;
+	colorsRecord: Accessor<ColorsRecord>;
 	setActive: () => void;
 };
 
@@ -43,7 +43,7 @@ export function ColorsProvider(props: { children: JSXElement }) {
 	}));
 
 	const colorsRecord = createMemo(() => {
-		const obj = colorsQuery.data?.reduce((p: ColorRecord, v) => {
+		const obj = colorsQuery.data?.reduce((p: ColorsRecord, v) => {
 			p[v.id] = v;
 			return p;
 		}, {});

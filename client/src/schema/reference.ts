@@ -42,6 +42,7 @@ export type VytexColorByReference<Schema = any> = MergeCoreCollection<
 		created_at: string | null;
 		color_id: number | null;
 		color: VytexColor<Schema> | null;
+		reference: VytexReference<Schema> | null;
 		fabrics: VytexFabricByReference<Schema>[] | null;
 		resources: VytexResourceByReference<Schema>[] | null;
 	}

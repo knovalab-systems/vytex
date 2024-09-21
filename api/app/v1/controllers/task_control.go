@@ -7,6 +7,7 @@ import (
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/labstack/echo/v4"
+	"github.com/lib/pq"
 )
 
 type TaskControlController struct {
@@ -44,4 +45,42 @@ func (m *TaskControlController) ReadTaskControls(c echo.Context) error {
 
 	// return data
 	return c.JSON(http.StatusOK, taskControls)
+}
+
+// Update task control
+// @Summary      Update task control
+// @Description  Updates the fields from task control
+// @Tags         TaskControls
+// @Param		 taskControlId path string true "Task control ID"
+// @Param		 models.TaskControlUpdateBody body string true "Task control update values"
+// @Produce      json
+// @Success      200 {object} models.TaskControl
+// @Failure      400
+// @Failure      500
+// @Router       /task-controls/{taskControlId} [PATCH]
+func (m *TaskControlController) UpdateTaskControl(c echo.Context) error {
+	u := new(models.TaskControlUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateTaskControlBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateTaskControlBadRequest()
+	}
+
+	policies, ok := c.Get("policies").(pq.StringArray)
+	if !ok {
+		return problems.ServerError()
+	}
+
+	// update
+	taskControl, err := m.TaskControlRepository.UpdateTaskControl(u, policies)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, taskControl)
 }

@@ -29,6 +29,7 @@ func Policies(policies []models.Policy) echo.MiddlewareFunc {
 			for _, v := range policies {
 				present := slices.Contains(role.Policies, string(v))
 				if present {
+					c.Set("policies", role.Policies)
 					return next(c)
 				}
 			}

@@ -11,9 +11,10 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+import { useColors } from '~/hooks/useColors';
 import { useSteps } from '~/hooks/useSteps';
 import CorteTable from '../components/CorteTable';
-import { type GetTaskType, countTasksQuery, getTasksQuery } from '../request/taskControlGet';
+import { type GetTaskType, countTasksQuery, getTaskControlsQuery } from '../request/taskControlGet';
 
 function Corte() {
 	return (
@@ -25,19 +26,22 @@ function Corte() {
 
 function CortePage() {
 	const [page, setPage] = createSignal(1);
+	const { colorsQuery } = useColors();
 	const { stepsQuery, getStepByValue } = useSteps();
 	const tasksIds = createMemo(() => getStepByValue('corte')?.tasks?.map(e => e.id) || []);
-	const tasks = createQuery(() => getTasksQuery(page(), tasksIds()));
-	const countTasks = createQuery(() => countTasksQuery(tasksIds()));
+	const taskControls = createQuery(() => getTaskControlsQuery(page(), tasksIds()));
+	const counTaskControls = createQuery(() => countTasksQuery(tasksIds()));
 	const pages = createMemo<number>(() => {
-		const count = countTasks.data?.at(0)?.count || 1;
+		const count = counTaskControls.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
 		return Math.ceil(safe / 10);
 	});
 
-	const isError = () => tasks.isError || countTasks.isError || stepsQuery.isError;
-	const isLoading = () => tasks.isPending || countTasks.isPending || stepsQuery.isPending;
-	const isSuccess = () => tasks.isSuccess && countTasks.isSuccess && stepsQuery.isSuccess;
+	const isError = () => taskControls.isError || counTaskControls.isError || stepsQuery.isError || colorsQuery.isError;
+	const isLoading = () =>
+		taskControls.isFetching || counTaskControls.isPending || stepsQuery.isPending || colorsQuery.isPending;
+	const isSuccess = () =>
+		taskControls.isSuccess && counTaskControls.isSuccess && stepsQuery.isSuccess && colorsQuery.isSuccess;
 
 	return (
 		<div class='h-full flex flex-col gap-2'>
@@ -49,7 +53,7 @@ function CortePage() {
 					<Loading label='Cargando tareas de corte' />
 				</Match>
 				<Match when={isSuccess()}>
-					<CorteTable taskControls={tasks.data as GetTaskType} />
+					<CorteTable taskControls={taskControls.data as GetTaskType} />
 					<Pagination
 						class='[&>*]:justify-center'
 						count={pages()}
