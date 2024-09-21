@@ -30,6 +30,7 @@ describe('CorteTable', () => {
 						rejected_at: '',
 						task_id: 1,
 						order_id: 2,
+						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
 					},
 					{
 						id: 0,
@@ -39,6 +40,7 @@ describe('CorteTable', () => {
 						rejected_at: '',
 						task_id: 1,
 						order_id: 3,
+						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
 					},
 					{
 						id: 0,
@@ -48,6 +50,7 @@ describe('CorteTable', () => {
 						rejected_at: '',
 						task_id: 1,
 						order_id: 4,
+						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
 					},
 					{
 						id: 0,
@@ -57,10 +60,22 @@ describe('CorteTable', () => {
 						rejected_at: '2024-06-12T22:36:52.140901Z',
 						task_id: 1,
 						order_id: 5,
+						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
 					},
 				]}
 			/>
 		));
+
+		const refTitle = screen.getByText('Referencia');
+		const ordenTitle = screen.getByText('Orden');
+		const IDTitle = screen.getByText('ID');
+		const taskTitle = screen.getByText('Tarea');
+		const stateTitle = screen.getByText('Estado');
+		const createdTitle = screen.getByText('Fecha de creación');
+		const startedTitle = screen.getByText('Fecha de inicio');
+		const ejectedTitle = screen.getByText('Fecha de rechazo');
+		const finishedTitle = screen.getByText('Fecha de finalización');
+		const actionsTitle = screen.getByText('Acciones');
 
 		const taskControlid = screen.getByText('200');
 		const orderId = screen.getByText('5');
@@ -68,11 +83,23 @@ describe('CorteTable', () => {
 		const stateStarted = screen.getByText('Iniciada');
 		const stateRejected = screen.getByText('Rechazada');
 		const stateFinished = screen.getByText('Terminada');
+		const refValue = screen.getAllByText('1');
 
 		const finishedAt = screen.getByText('2024-06-13 5:36 PM');
 		const rejectedAt = screen.getByText('2024-06-12 5:36 PM');
 		const startedAt = screen.getByText('2024-06-14 5:36 PM');
 		const createdAt = screen.getByText('2024-06-11 5:36 PM');
+
+		expect(refTitle).toBeInTheDocument();
+		expect(ordenTitle).toBeInTheDocument();
+		expect(IDTitle).toBeInTheDocument();
+		expect(taskTitle).toBeInTheDocument();
+		expect(stateTitle).toBeInTheDocument();
+		expect(createdTitle).toBeInTheDocument();
+		expect(startedTitle).toBeInTheDocument();
+		expect(ejectedTitle).toBeInTheDocument();
+		expect(finishedTitle).toBeInTheDocument();
+		expect(actionsTitle).toBeInTheDocument();
 
 		expect(taskControlid).toBeInTheDocument();
 		expect(orderId).toBeInTheDocument();
@@ -80,6 +107,7 @@ describe('CorteTable', () => {
 		expect(stateStarted).toBeInTheDocument();
 		expect(stateRejected).toBeInTheDocument();
 		expect(stateFinished).toBeInTheDocument();
+		expect(refValue).length(4);
 
 		expect(finishedAt).toBeInTheDocument();
 		expect(rejectedAt).toBeInTheDocument();

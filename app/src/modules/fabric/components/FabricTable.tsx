@@ -9,7 +9,7 @@ import type { Action } from '~/types/actionsCell';
 import type { GetFabricsType } from '../requests/fabricGet';
 
 function FabricTable(props: { fabrics?: GetFabricsType }) {
-	const { colorsRecord: colorRecord } = useColors();
+	const { colorsRecord } = useColors();
 	const { hasPolicy } = usePolicies();
 
 	const actions = (id: number) => {
@@ -52,12 +52,12 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 							<TableCell>{fabric.code}</TableCell>
 							<TableCell>{fabric.name}</TableCell>
 							<TableCell>
-								<div>{colorRecord()[fabric.color_id as number]?.name || fabric.color_id}</div>
+								<div>{colorsRecord()[fabric.color_id as number]?.name || fabric.color_id}</div>
 							</TableCell>
 							<TableCell>
 								<div
 									class='h-10 w-10 border-2'
-									style={{ background: colorRecord()[fabric.color_id as number]?.hex || '' }}
+									style={{ background: colorsRecord()[fabric.color_id as number]?.hex || '' }}
 								/>
 							</TableCell>
 							<TableCell>${fabric.cost}</TableCell>

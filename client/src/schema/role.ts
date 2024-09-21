@@ -40,4 +40,5 @@ export type VytexPolicy =
 	| 'CreateSuppliers'
 	| 'UpdateSuppliers'
 	| 'StartOrder'
-	| 'ReadCorte';
+	| 'ReadCorte'
+	| 'UpdateCorte';

@@ -23,6 +23,7 @@ export * from './settings.js';
 export * from './shares.js';
 export * from './singleton.js';
 export * from './suppliers.js';
+export * from './taskControls.js';
 export * from './translations.js';
 export * from './users.js';
 export * from './versions.js';
