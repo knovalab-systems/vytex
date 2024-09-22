@@ -2,8 +2,8 @@ package services
 
 import (
 	"errors"
-	"log"
 	"slices"
+	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
@@ -74,9 +74,10 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 
 	for _, v := range stepsByPolicy {
 		if taskControl.Task.Step.Value == v.Step && slices.Contains(p, string(v.Policy)) {
+			now := time.Now()
 
 			if b.StartedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				taskControl.StartedAt = b.StartedAt
+				taskControl.StartedAt = &now
 				rows, err := table.Where(table.ID.Eq(taskControl.ID)).Updates(taskControl)
 				if err != nil {
 					return nil, problems.ServerError()
@@ -90,7 +91,7 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 			}
 
 			if b.RejectedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				taskControl.RejectedAt = b.RejectedAt
+				taskControl.RejectedAt = &now
 				rows, err := table.Where(table.ID.Eq(taskControl.ID)).Updates(taskControl)
 				if err != nil {
 					return nil, problems.ServerError()
@@ -126,24 +127,29 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 						return nil, problems.ServerError()
 					}
 					nextTaskControl.TaskID = task.ID
-					err = query.TaskControl.Create(nextTaskControl)
+				case models.Tender:
+					task, err := helpers.GetTaskByValue(models.Cortar)
 					if err != nil {
 						return nil, problems.ServerError()
 					}
-					taskControl.NextID = &nextTaskControl.ID
+					nextTaskControl.TaskID = task.ID
 				default:
-					log.Println("Here")
 					return nil, problems.ReadAccess()
 				}
 
-				taskControl.FinishedAt = b.FinishedAt
+				err = query.TaskControl.Create(nextTaskControl)
+				if err != nil {
+					return nil, problems.ServerError()
+				}
+
+				taskControl.NextID = &nextTaskControl.ID
+				taskControl.FinishedAt = &now
 				rows, err := table.Where(table.ID.Eq(taskControl.ID)).Updates(taskControl)
 				if err != nil {
 					return nil, problems.ServerError()
 				}
 
 				if rows.RowsAffected == 0 {
-					log.Println("Here 2")
 					return nil, problems.ReadAccess()
 				}
 

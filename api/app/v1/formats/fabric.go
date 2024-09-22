@@ -52,7 +52,7 @@ func FabricUpdateVersion(b *models.FabricUpdateBody, f *models.Fabric, gc getCom
 	}
 
 	if !b.DeletedAt.IsNil() {
-		var deleted_at = gorm.DeletedAt{}
+		var deleted_at = &gorm.DeletedAt{}
 		if b.DeletedAt.IsNullDefined() && f.DeletedAt.Valid {
 			f.DeletedAt = deleted_at
 			hasChanges = true
