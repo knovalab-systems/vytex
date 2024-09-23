@@ -7,14 +7,14 @@ import (
 )
 
 type Supplier struct {
-	ID        uint           `json:"id,omitempty" gorm:"primary_key"`
-	Name      string         `json:"name,omitempty"`
-	Brand     string         `json:"brand,omitempty"`
-	Nit       string         `json:"nit,omitempty"`
-	Code      string         `json:"code,omitempty"`
-	CreatedAt *time.Time     `json:"created_at,omitempty"`
-	UpdatedAt *time.Time     `json:"updated_at,omitempty"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
+	ID        uint            `json:"id,omitempty" gorm:"primary_key"`
+	Name      string          `json:"name,omitempty"`
+	Brand     string          `json:"brand,omitempty"`
+	Nit       string          `json:"nit,omitempty"`
+	Code      string          `json:"code,omitempty"`
+	CreatedAt *time.Time      `json:"created_at,omitempty"`
+	UpdatedAt *time.Time      `json:"updated_at,omitempty"`
+	DeletedAt *gorm.DeletedAt `json:"deleted_at,omitempty" gorm:"index"`
 }
 
 type ReadSupplier struct {

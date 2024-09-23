@@ -17,7 +17,6 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 	for _, v := range fieldsArr {
 
 		if strings.HasPrefix(v, "order.") {
-			f = append(f, table.OrderID)
 			orderFields = append(orderFields, strings.ReplaceAll(v, "order.", ""))
 			continue
 		}
@@ -59,6 +58,7 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 	}
 
 	if len(orderFields) != 0 {
+		f = append(f, table.OrderID)
 		colorByReferenceFields := []string{}
 
 		orderTable := query.Order
@@ -67,7 +67,6 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 		for _, v := range orderFields {
 
 			if strings.HasPrefix(v, "color_by_reference.") {
-				orderF = append(orderF, orderTable.ColorByReferenceID)
 				colorByReferenceFields = append(colorByReferenceFields, strings.ReplaceAll(v, "color_by_reference.", ""))
 				continue
 			}
@@ -81,31 +80,45 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 		}
 
 		if len(colorByReferenceFields) != 0 {
+			orderF = append(orderF, orderTable.ColorByReferenceID)
 			referenceFields := []string{}
+			colorFields := []string{}
 
 			colorByReferenceTable := query.ColorByReference
-			ColorByReferenceF := []field.Expr{colorByReferenceTable.ID}
+			colorByReferenceF := []field.Expr{colorByReferenceTable.ID}
 
 			for _, v := range colorByReferenceFields {
 
 				if strings.HasPrefix(v, "reference.") {
-					ColorByReferenceF = append(ColorByReferenceF, colorByReferenceTable.ReferenceID)
 					referenceFields = append(referenceFields, strings.ReplaceAll(v, "reference.", ""))
+					continue
+				}
+
+				if strings.HasPrefix(v, "color.") {
+					colorFields = append(colorFields, strings.ReplaceAll(v, "color.", ""))
 					continue
 				}
 
 				switch v {
 				case "id":
-					ColorByReferenceF = append(ColorByReferenceF, colorByReferenceTable.ID)
+					colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ID)
 				case "color_id":
-					ColorByReferenceF = append(ColorByReferenceF, colorByReferenceTable.ColorID)
+					colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ColorID)
 				default:
-					ColorByReferenceF = append(ColorByReferenceF, colorByReferenceTable.ALL)
+					colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ALL)
 				}
 			}
 
-			if len(referenceFields) != 0 {
+			if len(colorFields) != 0 {
+				colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ColorID)
 
+				colorF := colorSwitch([]func(string) bool{}, colorFields)
+				colorF = append(colorF, query.Color.ID)
+				s = s.Preload(table.Order.ColorByReference.Color.Select(colorF...))
+			}
+
+			if len(referenceFields) != 0 {
+				colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ReferenceID)
 				referenceTable := query.Reference
 				referenceF := []field.Expr{referenceTable.ID}
 
@@ -125,7 +138,7 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 
 			}
 
-			s = s.Preload(table.Order.ColorByReference.Select(ColorByReferenceF...))
+			s = s.Preload(table.Order.ColorByReference.Select(colorByReferenceF...))
 		}
 
 		s = s.Preload(table.Order.Select(orderF...))

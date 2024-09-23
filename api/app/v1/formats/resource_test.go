@@ -18,7 +18,7 @@ func TestToUpdateResource(t *testing.T) {
 		SupplierID: 1,
 		Code:       "1",
 		Cost:       10000,
-		DeletedAt: gorm.DeletedAt{
+		DeletedAt: &gorm.DeletedAt{
 			Time:  time.Now(),
 			Valid: true,
 		},

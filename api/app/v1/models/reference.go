@@ -35,7 +35,7 @@ func (b *Reference) BeforeCreate(tx *gorm.DB) (err error) {
 type ColorByReference struct {
 	ID          uint                  `json:"id,omitempty" gorm:"primary_key"`
 	CreatedAt   *time.Time            `json:"created_at,omitempty"`
-	DeletedAt   gorm.DeletedAt        `json:"deleted_at,omitempty" gorm:"index"`
+	DeletedAt   *gorm.DeletedAt       `json:"deleted_at,omitempty" gorm:"index"`
 	ColorID     uint                  `json:"color_id,omitempty"`
 	Color       *Color                `json:"color,omitempty"`
 	ReferenceID uint                  `json:"reference_id,omitempty"`

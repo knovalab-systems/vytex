@@ -40,7 +40,7 @@ func ResourceUpdateVersion(b *models.ResourceUpdateBody, r *models.Resource, cr 
 	}
 
 	if !b.DeletedAt.IsNil() {
-		var deleted_at = gorm.DeletedAt{}
+		var deleted_at = &gorm.DeletedAt{}
 		if b.DeletedAt.IsNullDefined() && r.DeletedAt.Valid {
 			r.DeletedAt = deleted_at
 			hasChanges = true

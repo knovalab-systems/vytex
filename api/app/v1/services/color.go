@@ -4,11 +4,11 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
-	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
 
@@ -24,7 +24,9 @@ func (m *ColorService) SelectColors(q *models.Query) ([]*models.Color, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = colorFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.ColorFields(s, q.Fields)
+	}
 
 	// run query
 	colors, err := s.Find()
@@ -102,7 +104,9 @@ func (m *ColorService) SelectColor(q *models.ReadColor) (*models.Color, error) {
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = colorFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.ColorFields(s, q.Fields)
+	}
 
 	// run query
 	color, err := s.Where(table.ID.Eq(q.ID)).First()
@@ -163,35 +167,4 @@ func checkColorExists(code string) error {
 		return problems.ServerError()
 	}
 	return problems.ColorExists()
-}
-
-func colorFields(s query.IColorDo, fields string) query.IColorDo {
-	if fields != "" {
-		table := query.Color
-		fieldsArr := strings.Split(fields, ",")
-		f := []field.Expr{}
-
-		for _, v := range fieldsArr {
-			switch v {
-			case "id":
-				f = append(f, table.ID)
-			case "code":
-				f = append(f, table.Code)
-			case "name":
-				f = append(f, table.Name)
-			case "hex":
-				f = append(f, table.Hex)
-			case "created_at":
-				f = append(f, table.CreatedAt)
-			case "deleted_at":
-				f = append(f, table.DeletedAt)
-			case "updated_at":
-				f = append(f, table.UpdatedAt)
-			default:
-				f = append(f, table.ALL)
-			}
-		}
-		s = s.Select(f...)
-	}
-	return s
 }

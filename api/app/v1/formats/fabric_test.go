@@ -18,7 +18,7 @@ func TestToUpdateFabric(t *testing.T) {
 		Code:          "1",
 		Cost:          10000,
 		CompositionID: 1,
-		DeletedAt: gorm.DeletedAt{
+		DeletedAt: &gorm.DeletedAt{
 			Time:  time.Now(),
 			Valid: true,
 		},
