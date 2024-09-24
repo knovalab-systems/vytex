@@ -1,5 +1,4 @@
 import { Match, Switch, lazy } from 'solid-js';
-import { NO_ROLE } from '~/envs/roles';
 import { queryClient } from '~/lib/queryClient';
 import { getMeQueryKey, type getMeType } from '~/requests/getMe';
 
@@ -19,7 +18,7 @@ function Home() {
 				</div>
 			}
 		>
-			<Match when={user?.role?.id === NO_ROLE || !user}>
+			<Match when={!user?.role}>
 				<NotPermission />
 			</Match>
 		</Switch>

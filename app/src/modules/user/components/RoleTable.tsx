@@ -1,54 +1,39 @@
-import { For, Match, Switch } from 'solid-js';
+import { For, Show } from 'solid-js';
+import ActionsCell from '~/components/ActionsCell';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import type { RoleItem } from '~/constants/roles';
+import type { GetRolesType } from '../requests/roleGet';
 
 function RoleTable(props: {
-	roles: RoleItem[];
-	permissions: Record<'key' | 'label', string>[];
-	rolePermmissions: Record<string, Record<string, string | boolean>>;
+	roles: GetRolesType;
 }) {
 	return (
 		<TableContainer>
 			<Table class='table-auto font-medium'>
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow class='*:whitespace-nowrap'>
-						<TableHead>Función</TableHead>
-						<For each={props.roles}>{role => <TableHead>{role.label}</TableHead>}</For>
+						<TableHead>Rol</TableHead>
+						<TableHead>Nombre</TableHead>
+						<TableHead>Origen</TableHead>
+						<TableHead>Acciones</TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					<For each={props.permissions}>
-						{permission => (
+					<Show when={(props.roles?.length ?? 0) === 0}>
+						<TableRow class='bg-white'>
+							<TableCell colspan={4}>No se han encontrado roles.</TableCell>
+						</TableRow>
+					</Show>
+					<For each={props.roles}>
+						{role => (
 							<TableRow class='bg-white *:w-1/6 group'>
-								<TableCell>{permission.label}</TableCell>
-								<For each={props.roles}>
-									{role => (
-										<Switch
-											fallback={
-												<TableCell>
-													<div class='inline-flex items-center px-3 py-1 rounded-full text-red-500 gap-x-2 bg-red-100/60'>
-														No
-													</div>
-												</TableCell>
-											}
-										>
-											<Match when={typeof props.rolePermmissions[role.key][permission.key] === 'string'}>
-												<TableCell>
-													<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
-														{props.rolePermmissions[role.key][permission.key]}
-													</div>
-												</TableCell>
-											</Match>
-											<Match when={Boolean(props.rolePermmissions[role.key][permission.key])}>
-												<TableCell>
-													<div class='inline-flex items-center px-3 py-1 rounded-full text-emerald-500 gap-x- bg-emerald-100/60'>
-														Sí
-													</div>
-												</TableCell>
-											</Match>
-										</Switch>
-									)}
-								</For>
+								<TableCell>{role.id}</TableCell>
+								<TableCell>{role.name}</TableCell>
+								<TableCell>
+									<Show when={role.code} fallback='Personalizado'>
+										Sistema
+									</Show>
+								</TableCell>
+								<ActionsCell actions={[]} />
 							</TableRow>
 						)}
 					</For>

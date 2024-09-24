@@ -45,3 +45,31 @@ func (m *RoleController) ReadRoles(c echo.Context) error {
 	// return data
 	return c.JSON(http.StatusOK, roles)
 }
+
+// Get aggregate from roles
+// @Summary      Get aggregate from roles
+// @Description  Get result of aggregate function from roles
+// @Tags         Roles
+// @Produce      json
+// @Success      200 {array} models.AggregateData
+// @Failure      400
+// @Failure      500
+// @Router       /roles/aggregate [get]
+func (m *RoleController) AggregateRoles(c echo.Context) error {
+	// for query params
+	u := new(models.AggregateQuery)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.AggregateRolesBadRequest()
+	}
+
+	// aggegation
+	aggregate, err := m.RoleRepository.AggregationRoles(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, aggregate)
+}

@@ -64,7 +64,7 @@ function UsersPage() {
 					<ErrorMessage title='Error al cargar usuarios' />
 				</Match>
 				<Match when={isLoading()}>
-					<Loading label='Cargando usuario' />
+					<Loading label='Cargando usuarios' />
 				</Match>
 				<Match when={isSuccess()}>
 					<UserTable users={users.data} />

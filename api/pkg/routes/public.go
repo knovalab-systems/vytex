@@ -5,10 +5,8 @@ import (
 )
 
 // Routes without authentication
-func PublicRoutes(e *echo.Echo) {
-	route := e.Group("/api/v1")
+func publicRoutes(group *echo.Group) {
 
 	// add routes
-	publicAuthRoutes(route)
-
+	publicAuthRoutes(group)
 }

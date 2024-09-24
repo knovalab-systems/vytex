@@ -6,8 +6,17 @@ import (
 )
 
 // Route for describe 404 Error not found route.
-func NotFoundRoute(e *echo.Echo) {
-	e.RouteNotFound("*", func(c echo.Context) error {
-		return problems.RouteNotFound()
-	})
+func notFoundRoute(e interface{}) {
+
+	switch e := e.(type) {
+	case *echo.Echo:
+		e.RouteNotFound("*", func(c echo.Context) error {
+			return problems.RouteNotFound()
+		})
+	case *echo.Group:
+		e.RouteNotFound("*", func(c echo.Context) error {
+			return problems.RouteNotFound()
+		})
+	}
+
 }

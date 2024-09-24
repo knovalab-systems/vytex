@@ -1,11 +1,10 @@
 import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlineApartment } from 'solid-icons/ai';
-//import { BsPersonWorkspace } from 'solid-icons/bs'; to-do: add roles
 import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoCut, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
-import { RiUserFacesUserFill } from 'solid-icons/ri';
+import { RiUserFacesTeamFill, RiUserFacesUserFill } from 'solid-icons/ri';
 import { type Accessor, Match, Show, Suspense, Switch, createEffect, createMemo } from 'solid-js';
 import Loading from '~/components/Loading';
 import MenuNav from '~/components/MenuNav';
@@ -32,6 +31,7 @@ function NavWrapper(props: RouteSectionProps) {
 		ReadResources: { name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
 		ReadSuppliers: { name: 'Proveedores', icon: () => <HiSolidTruck size={24} />, path: PATHS.SUPPLIERS_PATH },
 		ReadCorte: { name: 'Corte', icon: () => <IoCut size={24} />, path: PATHS.CORTE_PATH },
+		ReadRoles: { name: 'Roles', icon: () => <RiUserFacesTeamFill size={24} />, path: PATHS.ROLES_PATH },
 	};
 
 	const getPages: Accessor<NavPages[]> = createMemo(() => {

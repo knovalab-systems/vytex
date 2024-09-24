@@ -7,7 +7,7 @@ import (
 )
 
 // Routes for swagger
-func SwaggerRoutes(e *echo.Echo) {
+func swaggerRoutes(e *echo.Echo) {
 	route := e.Group("/swagger")
 
 	route.GET("*", echoSwagger.WrapHandler)

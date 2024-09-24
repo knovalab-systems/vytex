@@ -131,7 +131,7 @@ func SuppliersBadRequest() *echo.HTTPError {
 
 func AggregateSuppliersBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
-	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get users suppliers", ""))
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get suppliers aggregation", ""))
 }
 
 func CreateSupplierBadRequest() *echo.HTTPError {
@@ -208,4 +208,9 @@ func StepBadRequest() *echo.HTTPError {
 func RoleBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get roles", ""))
+}
+
+func AggregateRolesBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get roles aggregation", ""))
 }
