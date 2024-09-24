@@ -14,4 +14,6 @@ func privateRoleRoutes(g *echo.Group) {
 	roleController := controllers.RoleController{RoleRepository: &services.RoleService{}}
 
 	route.GET("", roleController.ReadRoles, middlewares.Policies([]models.Policy{models.ReadUsers, models.UpdateUsers, models.CreateUsers}))
+	route.GET("/aggregate", roleController.AggregateRoles, middlewares.Policies([]models.Policy{models.ReadRoles}))
+
 }

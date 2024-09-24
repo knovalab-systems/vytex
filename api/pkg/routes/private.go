@@ -6,24 +6,23 @@ import (
 )
 
 // Routes with authentication
-func PrivateRoutes(e *echo.Echo) {
-	route := e.Group("/api/v1")
+func privateRoutes(group *echo.Group) {
 
 	// add jwt middleware
-	middlewares.JwtMiddleware(route)
+	middlewares.JwtMiddleware(group)
 
 	// add routes
-	privateImageRoute(route)
-	privateUserRoutes(route)
-	privateColorRoutes(route)
-	privateCustomRoutes(route)
-	privateFabricRoutes(route)
-	privateOrderRoutes(route)
-	privateResourceRoutes(route)
-	privateSupplierRoutes(route)
-	privateReferenceRoutes(route)
-	privateOrderStateRoutes(route)
-	privateStepRoutes(route)
-	privateTaskControlRoutes(route)
-	privateRoleRoutes(route)
+	privateImageRoute(group)
+	privateUserRoutes(group)
+	privateColorRoutes(group)
+	privateCustomRoutes(group)
+	privateFabricRoutes(group)
+	privateOrderRoutes(group)
+	privateResourceRoutes(group)
+	privateSupplierRoutes(group)
+	privateReferenceRoutes(group)
+	privateOrderStateRoutes(group)
+	privateStepRoutes(group)
+	privateTaskControlRoutes(group)
+	privateRoleRoutes(group)
 }

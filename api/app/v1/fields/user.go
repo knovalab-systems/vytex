@@ -7,65 +7,71 @@ import (
 	"gorm.io/gen/field"
 )
 
-func UserFields(s query.IUserDo, fieldsStr string) query.IUserDo {
-
+func UserFields(s query.IUserDo, fields string) query.IUserDo {
 	userTable := query.User
-	fieldsArr := strings.Split(fieldsStr, ",")
-	fields := []field.Expr{}
+	fieldsArr := strings.Split(fields, ",")
+	var exprs []field.Expr
 	roleFieldsArr := []string{}
 
-	for _, v := range fieldsArr {
-
+	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "role.") {
 			roleFieldsArr = append(roleFieldsArr, strings.ReplaceAll(v, "role.", ""))
+			return true
+		}
+
+		if v == "role" {
+			exprs = append(exprs, userTable.RoleId)
+			s = s.Preload(userTable.Role)
+			return true
+		}
+
+		return false
+	}
+
+	exprs = append(exprs, userSwitch(fieldsArr, switchFunc)...)
+
+	if len(roleFieldsArr) != 0 {
+		exprs = append(exprs, userTable.RoleId)
+		roleExprs := append(roleSwitch(roleFieldsArr, func(s string) bool { return false }), query.Role.ID)
+
+		s = s.Preload(userTable.Role.Select(roleExprs...))
+	}
+
+	return s.Select(exprs...)
+}
+
+func userSwitch(fields []string, function func(string) bool) []field.Expr {
+	table := query.User
+	exprs := []field.Expr{}
+
+	for _, v := range fields {
+
+		if function(v) {
 			continue
 		}
 
 		switch v {
 		case "id":
-			fields = append(fields, userTable.ID)
+			exprs = append(exprs, table.ID)
 		case "username":
-			fields = append(fields, userTable.Username)
+			exprs = append(exprs, table.Username)
 		case "name":
-			fields = append(fields, userTable.Name)
+			exprs = append(exprs, table.Name)
 		case "password":
-			fields = append(fields, userTable.Password)
+			exprs = append(exprs, table.Password)
 		case "role_id":
-			fields = append(fields, userTable.RoleId)
-		case "role":
-			fields = append(fields, userTable.RoleId)
-			s = s.Preload(userTable.Role)
+			exprs = append(exprs, table.RoleId)
 		case "deleted_at":
-			fields = append(fields, userTable.DeletedAt)
+			exprs = append(exprs, table.DeletedAt)
 		case "created_at":
-			fields = append(fields, userTable.CreatedAt)
+			exprs = append(exprs, table.CreatedAt)
 		case "updated_at":
-			fields = append(fields, userTable.UpdatedAt)
+			exprs = append(exprs, table.UpdatedAt)
 		default:
-			fields = append(fields, userTable.ALL)
+			exprs = append(exprs, table.ALL)
 		}
+
 	}
 
-	if len(roleFieldsArr) != 0 {
-		fields = append(fields, userTable.RoleId)
-		roleTables := query.Role
-		roleFields := []field.Expr{roleTables.ID}
-
-		for _, v := range roleFieldsArr {
-			switch v {
-			case "id":
-				roleFields = append(roleFields, roleTables.ID)
-			case "name":
-				roleFields = append(roleFields, roleTables.Name)
-			case "code":
-				roleFields = append(roleFields, roleTables.Code)
-			case "policies":
-				roleFields = append(roleFields, roleTables.Policies)
-			default:
-				roleFields = append(roleFields, roleTables.ALL)
-			}
-		}
-		s = s.Preload(userTable.Role.Select(roleFields...))
-	}
-	return s.Select(fields...)
+	return exprs
 }

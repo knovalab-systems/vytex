@@ -8,27 +8,20 @@ import (
 )
 
 func ColorFields(s query.IColorDo, fields string) query.IColorDo {
-
 	fieldsArr := strings.Split(fields, ",")
-	var f []field.Expr
+	exprs := colorSwitch(fieldsArr, func(s string) bool { return false })
 
-	funcs := []func(string) bool{}
-
-	f = append(f, colorSwitch(funcs, fieldsArr)...)
-
-	return s.Select(f...)
+	return s.Select(exprs...)
 }
 
-func colorSwitch(funcs []func(string) bool, fields []string) []field.Expr {
+func colorSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.Color
 	exprs := []field.Expr{}
 
 	for _, v := range fields {
 
-		for _, f := range funcs {
-			if f(v) {
-				continue
-			}
+		if function(v) {
+			continue
 		}
 
 		switch v {

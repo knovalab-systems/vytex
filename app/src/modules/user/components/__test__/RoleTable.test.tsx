@@ -1,73 +1,49 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import type { RoleItem } from '~/constants/roles';
+import type { Action } from '~/types/actionsCell';
+import type { GetRolesType } from '../../requests/roleGet';
 import RoleTable from '../RoleTable';
 
+vi.mock('~/components/ActionsCell', () => ({
+	default: (props: { actions: Action[] }) => {
+		return <td>{props.actions.length}</td>;
+	},
+}));
+
 describe('Role Table', () => {
+	beforeEach(() => {
+		vi.resetAllMocks();
+	});
+
 	it('renders correctly on empty roles', () => {
-		render(() => <RoleTable roles={[]} rolePermmissions={{}} permissions={[]} />);
-		const tableHeader = screen.getByText('Función');
+		render(() => <RoleTable roles={[]} />);
+		const tableHeader = screen.getByText('No se han encontrado roles.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});
 
-	it('renders correctly on roles', () => {
-		const roles: RoleItem[] = [
+	it('renders correctly on roles', async () => {
+		const roles: GetRolesType = [
 			{
-				label: 'Administrador',
-				key: 'admin',
-				type: 'admin',
+				id: '123',
+				name: 'role1',
+				code: null,
 			},
 			{
-				label: 'Sin rol',
-				key: 'no',
-				type: 'norole',
-			},
-		];
-
-		const handlerProxyPermissions = {
-			get: (target: Record<string, string | boolean>, name: string) =>
-				Object.hasOwn(target, name) ? target[name] : false,
-		};
-
-		const adminPermissions = new Proxy(
-			{
-				read: true,
-				create: true,
-				update: true,
-			},
-			handlerProxyPermissions,
-		);
-
-		const noRolePermissions = new Proxy({ read: 'Solo el mismo usuario' }, handlerProxyPermissions);
-
-		const rolePermissions: Record<string, Record<string, string | boolean>> = {
-			admin: adminPermissions,
-			no: noRolePermissions,
-		};
-
-		const permissions = [
-			{
-				key: 'read',
-				label: 'Ver usuarios',
-			},
-			{
-				key: 'create',
-				label: 'Crear usuarios',
-			},
-			{
-				key: 'update',
-				label: 'Actualizar usuarios',
+				name: 'admin',
+				id: 'adminid',
+				code: 'admin',
 			},
 		];
+		render(() => <RoleTable roles={roles} />);
+		const roleId = screen.getByText('adminid');
+		const roleName = screen.getByText('role1');
+		const roleSystem = screen.getByText('Sistema');
+		const roleCustom = screen.getByText('Personalizado');
 
-		render(() => <RoleTable roles={roles} rolePermmissions={rolePermissions} permissions={permissions} />);
-		const textPermission = screen.getByText('Solo el mismo usuario');
-		const truePermission = screen.getAllByText('Sí');
-		const falsePermission = screen.getAllByText('No');
-
-		expect(textPermission).toBeInTheDocument();
-		expect(truePermission).not.toBeNull();
-		expect(falsePermission).not.toBeNull();
+		expect(roleId).toBeInTheDocument();
+		expect(roleName).toBeInTheDocument();
+		expect(roleSystem).toBeInTheDocument();
+		expect(roleCustom).toBeInTheDocument();
 	});
 });

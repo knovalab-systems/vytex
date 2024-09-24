@@ -34,10 +34,7 @@ func main() {
 	}
 
 	// routes
-	routes.SwaggerRoutes(e)
-	routes.PublicRoutes(e)
-	routes.PrivateRoutes(e)
-	routes.NotFoundRoute(e)
+	routes.Routes(e)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

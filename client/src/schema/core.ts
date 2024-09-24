@@ -32,7 +32,7 @@ export interface CoreSchema<Schema = any> {
 	vytex_customs: VytexCustom<Schema>[];
 	vytex_orders: VytexOrder<Schema>[];
 	'vytex_time-by-task': VytexTimeByTask<Schema>[];
-	vytex_role: VytexRole<Schema>[];
+	vytex_roles: VytexRole<Schema>[];
 	'vytex_order-status': VytexOrderState<Schema>[];
 	vytex_color_by_reference: VytexColorByReference<Schema>[];
 	vytex_fabric_by_reference: VytexFabricByReference<Schema>[];

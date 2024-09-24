@@ -40,6 +40,7 @@ func DefaultRoles() []*Role {
 				string(ReadUsers),
 				string(CreateUsers),
 				string(UpdateUsers),
+				string(ReadRoles),
 				string(ReadSuppliers),
 				string(CreateSuppliers),
 				string(UpdateSuppliers),
