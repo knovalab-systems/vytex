@@ -8,9 +8,9 @@ const queryKey = 'rolContext';
 
 const RolesContext = createContext<RolesContext>({
 	rolesQuery: {} as CreateQueryResult<Roles>,
-	rolesRecord: () => ({}),
+	getRolesRecord: () => ({}),
 	setActive: () => {},
-	roles: () => [],
+	getRoles: () => [],
 });
 
 async function rolesContextReq() {
@@ -30,8 +30,8 @@ type RolesRecord = Record<string, Role>;
 
 type RolesContext = {
 	rolesQuery: CreateQueryResult<Roles>;
-	roles: Accessor<Roles>;
-	rolesRecord: Accessor<RolesRecord>;
+	getRoles: Accessor<Roles>;
+	getRolesRecord: Accessor<RolesRecord>;
 	setActive: () => void;
 };
 
@@ -44,21 +44,21 @@ export function RolesProvider(props: { children: JSXElement }) {
 		enabled: enabled(),
 	}));
 
-	const rolesRecord = createMemo(() => {
+	const getRolesRecord = createMemo(() => {
 		const obj = rolesQuery.data?.reduce((p: RolesRecord, v) => {
 			p[v.id] = v;
 			return p;
 		}, {});
-		return obj || {};
+		return obj ?? {};
 	});
 
-	const roles = createMemo(() => rolesQuery.data ?? []);
+	const getRoles = createMemo(() => rolesQuery.data ?? []);
 
 	const setActive = () => {
 		setEnabled(true);
 	};
 
-	const values: RolesContext = { rolesQuery, rolesRecord, setActive, roles };
+	const values: RolesContext = { rolesQuery, getRolesRecord, setActive, getRoles };
 
 	return <RolesContext.Provider value={values}>{props.children}</RolesContext.Provider>;
 }

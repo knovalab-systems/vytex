@@ -38,7 +38,7 @@ describe('User Table', () => {
 	]) {
 		it('renders correctly on users', async () => {
 			vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-				policies: [],
+				policies: () => [],
 				hasPolicy: () => {
 					hasPolicyMock();
 					return testCase.value;

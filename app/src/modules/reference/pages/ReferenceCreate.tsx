@@ -3,7 +3,7 @@ import { Match, Switch } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { type Colors, useColors } from '~/hooks/useColors';
+import { useColors } from '~/hooks/useColors';
 import ReferenceCreateForm from '../components/ReferenceCreateForm';
 import {
 	type FabricsByRefCreate,
@@ -41,7 +41,6 @@ function ReferenceCreatePage() {
 				</Match>
 				<Match when={isSuccess()}>
 					<ReferenceCreateForm
-						colors={colorsQuery.data as Colors}
 						fabrics={data[0].data as FabricsByRefCreate}
 						resources={data[1].data as ResourcesByRefCreate}
 					/>

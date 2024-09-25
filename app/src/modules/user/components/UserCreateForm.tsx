@@ -15,7 +15,7 @@ import { UserCreateSchema, type UserCreateType } from '../schemas/userCreate';
 
 function UserCreateForm() {
 	const navigate = useNavigate();
-	const { roles, rolesRecord } = useRoles();
+	const { getRoles, getRolesRecord } = useRoles();
 
 	const [form, { Form, Field }] = createForm<UserCreateType>({
 		validate: valiForm(UserCreateSchema),
@@ -97,14 +97,14 @@ function UserCreateForm() {
 								onChange={value => {
 									setValue(form, 'role', value);
 								}}
-								options={roles().map(e => e.id)}
+								options={getRoles().map(e => e.id)}
 								placeholder='Selecciona un rol'
 								itemComponent={props => (
-									<SelectItem item={props.item}>{rolesRecord()[props.item.rawValue].name}</SelectItem>
+									<SelectItem item={props.item}>{getRolesRecord()[props.item.rawValue].name}</SelectItem>
 								)}
 							>
 								<SelectTrigger title='Ver roles' aria-label='Roles' aria-errormessage={field.error}>
-									<SelectValue<string>>{state => rolesRecord()[state.selectedOption()].name}</SelectValue>
+									<SelectValue<string>>{state => getRolesRecord()[state.selectedOption()].name}</SelectValue>
 								</SelectTrigger>
 								<Show when={Boolean(field.error)}>
 									<div class={'text-sm my-auto text-red-600'}>{field.error}</div>

@@ -13,6 +13,13 @@ vi.mock('@solidjs/router', () => ({
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
 
+vi.mock('~/hooks/useColors', () => ({
+	useColors: () => ({
+		getColors: () => [{ id: 1, name: 'Blanco', hex: '', deleted_at: null }],
+		getColorsRecord: () => ({ 1: {} }),
+	}),
+}));
+
 describe('ResourceCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -20,7 +27,7 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <ResourceCreateForm colors={[]} suppliers={[]} />);
+		render(() => <ResourceCreateForm suppliers={[]} />);
 		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
@@ -39,7 +46,7 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <ResourceCreateForm colors={[]} suppliers={[]} />);
+		render(() => <ResourceCreateForm suppliers={[]} />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -60,7 +67,6 @@ describe('ResourceCreateForm', () => {
 	it('calls submit successfully', async () => {
 		render(() => (
 			<ResourceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[
 					{
 						id: 1,
@@ -183,7 +189,6 @@ describe('ResourceCreateForm', () => {
 	it('calls submit error, code exists', async () => {
 		render(() => (
 			<ResourceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[
 					{
 						id: 1,
@@ -283,7 +288,6 @@ describe('ResourceCreateForm', () => {
 	it('calls submit error, server error', async () => {
 		render(() => (
 			<ResourceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[
 					{
 						id: 1,

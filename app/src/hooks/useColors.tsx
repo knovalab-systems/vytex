@@ -8,7 +8,8 @@ const queryKey = 'colorContext';
 
 const ColorsContext = createContext<ColorsContext>({
 	colorsQuery: {} as CreateQueryResult<Colors>,
-	colorsRecord: () => ({}),
+	getColorsRecord: () => ({}),
+	getColors: () => [],
 	setActive: () => {},
 });
 
@@ -29,7 +30,8 @@ type ColorsRecord = Record<string, Color>;
 
 type ColorsContext = {
 	colorsQuery: CreateQueryResult<Colors>;
-	colorsRecord: Accessor<ColorsRecord>;
+	getColorsRecord: Accessor<ColorsRecord>;
+	getColors: Accessor<Colors>;
 	setActive: () => void;
 };
 
@@ -42,7 +44,7 @@ export function ColorsProvider(props: { children: JSXElement }) {
 		enabled: enabled(),
 	}));
 
-	const colorsRecord = createMemo(() => {
+	const getColorsRecord = createMemo(() => {
 		const obj = colorsQuery.data?.reduce((p: ColorsRecord, v) => {
 			p[v.id] = v;
 			return p;
@@ -50,11 +52,13 @@ export function ColorsProvider(props: { children: JSXElement }) {
 		return obj || {};
 	});
 
+	const getColors = createMemo(() => colorsQuery.data ?? []);
+
 	const setActive = () => {
 		setEnabled(true);
 	};
 
-	const values: ColorsContext = { colorsQuery, colorsRecord, setActive };
+	const values: ColorsContext = { colorsQuery, getColorsRecord, setActive, getColors };
 
 	return <ColorsContext.Provider value={values}>{props.children}</ColorsContext.Provider>;
 }

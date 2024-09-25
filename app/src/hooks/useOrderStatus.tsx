@@ -7,7 +7,7 @@ const queryKey = 'orderStatusContext';
 
 const OrderStatusContext = createContext<OrderStatusContext>({
 	orderStatusQuery: {} as CreateQueryResult<OrderStatus>,
-	orderStatusRecord: () => ({}),
+	getOrderStatusRecord: () => ({}),
 	setActive: () => {},
 	getStatuByValue: () => undefined,
 });
@@ -28,7 +28,7 @@ type OrderStatusRecord = Record<number, OrderState>;
 
 type OrderStatusContext = {
 	orderStatusQuery: CreateQueryResult;
-	orderStatusRecord: Accessor<OrderStatusRecord>;
+	getOrderStatusRecord: Accessor<OrderStatusRecord>;
 	setActive: () => void;
 	getStatuByValue: (value: OrderState['value']) => OrderState | undefined;
 };
@@ -42,7 +42,7 @@ export function OrderStatusProvider(props: { children: JSXElement }) {
 		enabled: enabled(),
 	}));
 
-	const orderStatusRecord = createMemo(() => {
+	const getOrderStatusRecord = createMemo(() => {
 		const obj = orderStatusQuery.data?.reduce((p: OrderStatusRecord, v) => {
 			p[v.id] = v;
 			return p;
@@ -56,7 +56,12 @@ export function OrderStatusProvider(props: { children: JSXElement }) {
 		setEnabled(true);
 	};
 
-	const values: OrderStatusContext = { orderStatusQuery, orderStatusRecord, setActive, getStatuByValue };
+	const values: OrderStatusContext = {
+		orderStatusQuery,
+		getOrderStatusRecord,
+		setActive,
+		getStatuByValue,
+	};
 
 	return <OrderStatusContext.Provider value={values}>{props.children}</OrderStatusContext.Provider>;
 }

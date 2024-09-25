@@ -28,7 +28,7 @@ describe('Resources Table', () => {
 
 	it('renders correctly on resources without update policy', async () => {
 		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-			policies: [],
+			policies: () => [],
 			hasPolicy: () => {
 				hasPolicyMock();
 				return false;
@@ -69,7 +69,7 @@ describe('Resources Table', () => {
 
 	it('renders correctly on resources with update policy', async () => {
 		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-			policies: [],
+			policies: () => [],
 			hasPolicy: () => {
 				hasPolicyMock();
 				return true;

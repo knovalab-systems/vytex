@@ -12,11 +12,20 @@ vi.mock('@solidjs/router', () => ({
 }));
 
 vi.mock('~/hooks/useColors', () => ({
-	useColors: () => ({ colorsRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }) }),
+	useColors: () => ({
+		getColors: () => [
+			{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
+			{ id: 2, name: 'Negro', hex: '', delete_at: null },
+		],
+		getColorsRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }),
+	}),
 }));
 
 vi.mock('~/hooks/useSuppliers', () => ({
-	useSuppliers: () => ({ suppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }) }),
+	useSuppliers: () => ({
+		getSuppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }),
+		getSuppliers: () => [{ id: 1 }, { id: 2 }],
+	}),
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -40,14 +49,6 @@ describe('ResourceUpdateForm', () => {
 						deleted_at: null,
 					} as GetResourceType
 				}
-				colors={[
-					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
-					{ id: 2, name: 'Rojo', hex: '', deleted_at: null },
-				]}
-				suppliers={[
-					{ id: 1, name: 'Supplier 1', deleted_at: null },
-					{ id: 2, name: 'Supplier 2', deleted_at: null },
-				]}
 			/>
 		));
 
@@ -83,8 +84,6 @@ describe('ResourceUpdateForm', () => {
 						deleted_at: null,
 					} as GetResourceType
 				}
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
-				suppliers={[{ id: 1, name: 'Supplier 1', deleted_at: null }]}
 			/>
 		));
 
@@ -253,14 +252,6 @@ describe('ResourceUpdateForm', () => {
 							deleted_at: null,
 						} as GetResourceType
 					}
-					colors={[
-						{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
-						{ id: 2, name: 'Blanco 2', hex: '', deleted_at: null },
-					]}
-					suppliers={[
-						{ id: 1, name: 'Supplier 1', deleted_at: null },
-						{ id: 2, name: 'Supplier 2', deleted_at: null },
-					]}
 				/>
 			));
 
@@ -409,14 +400,6 @@ describe('ResourceUpdateForm', () => {
 						deleted_at: null,
 					} as GetResourceType
 				}
-				colors={[
-					{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
-					{ id: 2, name: 'Blanco 2', hex: '', deleted_at: null },
-				]}
-				suppliers={[
-					{ id: 1, name: 'Supplier 1', deleted_at: null },
-					{ id: 1, name: 'Supplier 2', deleted_at: null },
-				]}
 			/>
 		));
 

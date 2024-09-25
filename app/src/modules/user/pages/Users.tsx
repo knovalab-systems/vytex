@@ -48,17 +48,6 @@ function UsersPage() {
 
 	return (
 		<div class='h-full flex flex-col gap-2'>
-			<UserControls
-				setPage={() => setPage(1)}
-				setNameFilter={setNameFilter}
-				nameFilterValue={nameFilter()}
-				setUsernameFilter={setUsernameFilter}
-				usernameFilterValue={usernameFilter()}
-				setStatusFilter={setStatusFilter}
-				statusFilterValue={statusFilter()}
-				setRoleIdFilter={setRoleIdFilter}
-				roleIdFilterValue={roleIdFilter()}
-			/>
 			<Switch>
 				<Match when={isError()}>
 					<ErrorMessage title='Error al cargar usuarios' />
@@ -67,6 +56,17 @@ function UsersPage() {
 					<Loading label='Cargando usuarios' />
 				</Match>
 				<Match when={isSuccess()}>
+					<UserControls
+						setPage={() => setPage(1)}
+						setNameFilter={setNameFilter}
+						nameFilterValue={nameFilter()}
+						setUsernameFilter={setUsernameFilter}
+						usernameFilterValue={usernameFilter()}
+						setStatusFilter={setStatusFilter}
+						statusFilterValue={statusFilter()}
+						setRoleIdFilter={setRoleIdFilter}
+						roleIdFilterValue={roleIdFilter()}
+					/>
 					<UserTable users={users.data} />
 					<Pagination
 						class='[&>*]:justify-center'

@@ -14,7 +14,7 @@ vi.mock('@solidjs/router', () => ({
 
 vi.mock('~/hooks/useColors', () => ({
 	refetchColors: vi.fn().mockResolvedValue({}),
-	useColors: () => ({ colorsRecord: () => ({ 1: { hex: 'FFFFFF' } }) }),
+	useColors: () => ({ getColorsRecord: () => ({ 1: { hex: 'FFFFFF' } }) }),
 }));
 
 const recordById = { 1: { name: 'Creada' }, 2: { name: 'Iniciada' } };
@@ -22,7 +22,7 @@ const recordByValue = { created: { name: 'Creada', id: 1 }, started: { name: 'In
 
 vi.mock('~/hooks/useOrderStatus', () => ({
 	useOrderStatus: () => ({
-		orderStatusRecord: () => recordById,
+		getOrderStatusRecord: () => recordById,
 		getStatuByValue: (value: OrderStatus[number]['value']) => recordByValue[value],
 	}),
 }));

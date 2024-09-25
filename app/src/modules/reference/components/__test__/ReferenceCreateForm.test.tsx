@@ -13,6 +13,16 @@ vi.mock('@solidjs/router', () => ({
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
 
+vi.mock('~/hooks/useColors', () => ({
+	useColors: () => ({
+		getColors: () => [
+			{ id: 1, name: 'Blanco', hex: '', deleted_at: null },
+			{ id: 2, name: 'Negro', hex: '', delete_at: null },
+		],
+		getColorsRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }),
+	}),
+}));
+
 const fileMock = (name: string, size: number, type: string) => {
 	const file = new File([new Blob(['a'.repeat(size)])], name, { type });
 	Object.defineProperty(file, 'size', { get: () => size });
@@ -28,7 +38,7 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
+		render(() => <ReferenceCreateForm fabrics={[]} resources={[]} />);
 
 		const refField = screen.getByText('Código de la referencia');
 		const colorField = screen.getByText('Color de la referencia');
@@ -46,7 +56,7 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
+		render(() => <ReferenceCreateForm fabrics={[]} resources={[]} />);
 
 		const submitButton = screen.getAllByText('Crear');
 		fireEvent.click(submitButton[0]);
@@ -63,7 +73,7 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('shows bad type image error', async () => {
-		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
+		render(() => <ReferenceCreateForm fabrics={[]} resources={[]} />);
 
 		const file = fileMock('image.png', 1024 * 1024, 'image/avi');
 		const frontField = screen.getByTitle('Foto frontal');
@@ -81,7 +91,7 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('shows bad length image error', async () => {
-		render(() => <ReferenceCreateForm colors={[]} fabrics={[]} resources={[]} />);
+		render(() => <ReferenceCreateForm fabrics={[]} resources={[]} />);
 
 		const file = fileMock('image.png', 1024 * 1024 * 24, 'image/png');
 		const frontField = screen.getByTitle('Foto frontal');
@@ -99,13 +109,7 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('calls submit with pending fabric', async () => {
-		render(() => (
-			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
-				fabrics={[]}
-				resources={[{ id: 1, name: 'Insumo 1' }]}
-			/>
-		));
+		render(() => <ReferenceCreateForm fabrics={[]} resources={[{ id: 1, name: 'Insumo 1' }]} />);
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
@@ -183,13 +187,7 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('calls submit with pending resource', async () => {
-		render(() => (
-			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
-				fabrics={[{ id: 1, name: 'Tela 1' }]}
-				resources={[]}
-			/>
-		));
+		render(() => <ReferenceCreateForm fabrics={[{ id: 1, name: 'Tela 1' }]} resources={[]} />);
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
@@ -272,11 +270,7 @@ describe('ReferenceCreateForm', () => {
 
 	it('calls submit succesfully', async () => {
 		render(() => (
-			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
-				fabrics={[{ id: 1, name: 'Tela 1' }]}
-				resources={[{ id: 1, name: 'Insumo 1' }]}
-			/>
+			<ReferenceCreateForm fabrics={[{ id: 1, name: 'Tela 1' }]} resources={[{ id: 1, name: 'Insumo 1' }]} />
 		));
 
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
@@ -421,11 +415,7 @@ describe('ReferenceCreateForm', () => {
 
 	it('calls submit with image request error', async () => {
 		render(() => (
-			<ReferenceCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
-				fabrics={[{ id: 1, name: 'Tela 1' }]}
-				resources={[{ id: 1, name: 'Insumo 1' }]}
-			/>
+			<ReferenceCreateForm fabrics={[{ id: 1, name: 'Tela 1' }]} resources={[{ id: 1, name: 'Insumo 1' }]} />
 		));
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
@@ -589,11 +579,7 @@ describe('ReferenceCreateForm', () => {
 	for (const err of requestsErrors) {
 		it(err.title, async () => {
 			render(() => (
-				<ReferenceCreateForm
-					colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: '' }]}
-					fabrics={[{ id: 1, name: 'Tela 1' }]}
-					resources={[{ id: 1, name: 'Insumo 1' }]}
-				/>
+				<ReferenceCreateForm fabrics={[{ id: 1, name: 'Tela 1' }]} resources={[{ id: 1, name: 'Insumo 1' }]} />
 			));
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 			const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockRejectedValue(err.error);

@@ -14,8 +14,8 @@ vi.mock('~/hooks/usePolicies', () => ({
 
 vi.mock('~/hooks/useRoles', () => ({
 	useRoles: () => ({
-		roles: () => [{ id: 'admin', name: 'Administrador' }],
-		rolesRecord: () => ({ admin: { id: 'admin', name: 'Administrador' } }),
+		getRoles: () => [{ id: 'admin', name: 'Administrador' }],
+		getRolesRecord: () => ({ admin: { id: 'admin', name: 'Administrador' } }),
 	}),
 }));
 
@@ -75,7 +75,7 @@ describe('RoleCell', () => {
 
 	it('renders correctly without update users policy', async () => {
 		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-			policies: [],
+			policies: () => [],
 			hasPolicy: () => {
 				hasPolicyMock();
 				return false;
@@ -94,7 +94,7 @@ describe('RoleCell', () => {
 
 	it('renders correctly with update users policy', async () => {
 		vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-			policies: [],
+			policies: () => [],
 			hasPolicy: () => {
 				hasPolicyMock();
 				return true;

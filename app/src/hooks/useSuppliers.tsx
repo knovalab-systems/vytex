@@ -8,7 +8,8 @@ const queryKey = 'supplierContext';
 
 const SuppliersContext = createContext<SuppliersContext>({
 	suppliersQuery: {} as CreateQueryResult<Suppliers>,
-	suppliersRecord: () => ({}),
+	getSuppliersRecord: () => ({}),
+	getSuppliers: () => [],
 	setActive: () => {},
 });
 
@@ -28,36 +29,40 @@ type Supplier = Suppliers[number];
 type SupplierRecord = Record<string, Supplier>;
 
 type SuppliersContext = {
-	suppliersQuery: CreateQueryResult;
-	suppliersRecord: Accessor<SupplierRecord>;
+	suppliersQuery: CreateQueryResult<Suppliers>;
+	getSuppliersRecord: Accessor<SupplierRecord>;
+	getSuppliers: Accessor<Suppliers>;
 	setActive: () => void;
 };
 
 export function SuppliersProvider(props: { children: JSXElement }) {
 	const [enabled, setEnabled] = createSignal(false);
-	const suppliers = createQuery(() => ({
+	const suppliersQuery = createQuery(() => ({
 		queryFn: suppliersContextReq,
 		queryKey: [queryKey],
 		staleTime: Number.POSITIVE_INFINITY,
 		enabled: enabled(),
 	}));
 
-	const suppliersRecord = createMemo(() => {
-		const obj = suppliers.data?.reduce((p: SupplierRecord, v) => {
+	const getSuppliersRecord = createMemo(() => {
+		const obj = suppliersQuery.data?.reduce((p: SupplierRecord, v) => {
 			p[v.id] = v;
 			return p;
 		}, {});
 		return obj || {};
 	});
 
+	const getSuppliers = createMemo(() => suppliersQuery.data ?? []);
+
 	const setActive = () => {
 		setEnabled(true);
 	};
 
 	const values: SuppliersContext = {
-		suppliersQuery: suppliers,
-		suppliersRecord: suppliersRecord,
-		setActive: setActive,
+		suppliersQuery,
+		getSuppliersRecord,
+		setActive,
+		getSuppliers,
 	};
 
 	return <SuppliersContext.Provider value={values}>{props.children}</SuppliersContext.Provider>;

@@ -46,12 +46,8 @@ type Combined = {
 	id: string;
 	name: string;
 };
-function ReferenceCreateForm(props: {
-	colors: Colors;
-	fabrics: FabricsByRefCreate;
-	resources: ResourcesByRefCreate;
-}) {
-	const { colorsRecord } = useColors();
+function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: ResourcesByRefCreate }) {
+	const { getColorsRecord, getColors } = useColors();
 	const navigate = useNavigate();
 
 	const resources: () => Combined[] = () => [
@@ -184,7 +180,7 @@ function ReferenceCreateForm(props: {
 
 													<Combobox<Colors[0]>
 														class='whitespace-nowrap min-w-48'
-														value={colorsRecord()[field.value || 0] || null}
+														value={getColorsRecord()[field.value || 0] || null}
 														onChange={value => {
 															setValue(form, `${fieldColors.name}.${iColor()}.color`, value ? value.id : 0);
 														}}
@@ -209,12 +205,12 @@ function ReferenceCreateForm(props: {
 																<ComboboxItemIndicator />
 															</ComboboxItem>
 														)}
-														options={props.colors.filter(e => !e.deleted_at)}
+														options={getColors().filter(e => !e.deleted_at)}
 													>
 														<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
 															<div
 																class='h-5 w-5 mr-2 m-auto border'
-																style={{ background: colorsRecord()[field.value || 0]?.hex || 'transparent' }}
+																style={{ background: getColorsRecord()[field.value || 0]?.hex || 'transparent' }}
 															/>
 															<ComboboxInput />
 															<ComboboxTrigger title='Ver colores' aria-label='Colores' />

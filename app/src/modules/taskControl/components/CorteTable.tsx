@@ -10,7 +10,7 @@ import TaskControlActionsCell from './TaskControlActionsCell';
 
 function CorteTable(props: { taskControls: GetTaskType }) {
 	const { getTasksRecord } = useSteps();
-	const { colorsRecord } = useColors();
+	const { getColorsRecord } = useColors();
 	const { hasPolicy } = usePolicies();
 	return (
 		<TableContainer>
@@ -46,9 +46,10 @@ function CorteTable(props: { taskControls: GetTaskType }) {
 								<TableCell class='inline-flex gap-2'>
 									<div
 										class='h-10 w-10 border-2'
-										title={colorsRecord()[taskControl?.order?.color_by_reference?.color_id as number]?.name || ''}
+										title={getColorsRecord()[taskControl?.order?.color_by_reference?.color_id as number]?.name || ''}
 										style={{
-											background: colorsRecord()[taskControl?.order?.color_by_reference?.color_id as number]?.hex || '',
+											background:
+												getColorsRecord()[taskControl?.order?.color_by_reference?.color_id as number]?.hex || '',
 										}}
 									/>
 									<div class='my-auto'>{taskControl.order.color_by_reference?.reference?.code}</div>

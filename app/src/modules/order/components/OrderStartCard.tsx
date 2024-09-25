@@ -17,7 +17,7 @@ type DataUsage = {
 };
 
 function OrderStartCard(props: { order: GetOrderStart }) {
-	const { colorsRecord } = useColors();
+	const { getColorsRecord } = useColors();
 	const [disabled, setDisabled] = createSignal(false);
 	const navigate = useNavigate();
 	const { getStatuByValue } = useOrderStatus();
@@ -29,7 +29,7 @@ function OrderStartCard(props: { order: GetOrderStart }) {
 		for (const resource of props.order.color_by_reference?.resources || []) {
 			const r = {
 				name: resource.resource?.name as string,
-				color: colorsRecord()[resource.resource?.color_id as number]?.hex || '',
+				color: getColorsRecord()[resource.resource?.color_id as number]?.hex || '',
 				usage: 0,
 			};
 			let total = 0;
@@ -49,7 +49,7 @@ function OrderStartCard(props: { order: GetOrderStart }) {
 		for (const fabric of props.order.color_by_reference?.fabrics || []) {
 			const r = {
 				name: fabric.fabric?.name as string,
-				color: colorsRecord()[fabric.fabric?.color_id as number]?.hex || '',
+				color: getColorsRecord()[fabric.fabric?.color_id as number]?.hex || '',
 				usage: 0,
 			};
 			let total = 0;
