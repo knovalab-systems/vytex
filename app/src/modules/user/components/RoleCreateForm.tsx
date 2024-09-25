@@ -1,18 +1,18 @@
 import { type SubmitHandler, createForm, getError, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
+import type { VytexRole } from '@vytex/client';
 import { For, Show } from 'solid-js';
+import { toast } from 'solid-toast';
 import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
 import { Checkbox } from '~/components/ui/Checkbox';
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
 import { ROLES_PATH } from '~/constants/paths';
-import { RoleCreateSchema, type RoleCreateType } from '../schemas/roleCreate';
 import { POLICIES } from '~/constants/policies';
-import { createRoleRequest } from '../requests/roleCreate';
-import type { VytexRole } from '@vytex/client';
-import { toast } from 'solid-toast';
 import { refetchRoles } from '~/hooks/useRoles';
+import { createRoleRequest } from '../requests/roleCreate';
+import { RoleCreateSchema, type RoleCreateType } from '../schemas/roleCreate';
 
 function RoleCreateForm() {
 	const navigate = useNavigate();

@@ -9,9 +9,9 @@ const setUsernameFilter = vi.fn();
 const setStatusFilter = vi.fn();
 const setRoleIdFilter = vi.fn();
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 describe('UserControls', () => {

@@ -4,9 +4,9 @@ import toast from 'solid-toast';
 import * as auth from '~/hooks/useAuth';
 import LoginForm from '../LoginForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 describe('LoginForm', () => {
@@ -49,7 +49,7 @@ describe('LoginForm', () => {
 	});
 
 	it('logins succesfully', async () => {
-		const loginMock = vi.fn().mockResolvedValueOnce({});
+		const loginMock = vi.fn().mockResolvedValue({});
 		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({
 			login: loginMock,
 			authStatus: () => 'unauthenticated',
@@ -64,7 +64,7 @@ describe('LoginForm', () => {
 		fireEvent.input(passwordField, { target: { value: '12345678' } });
 		fireEvent.click(submitButton);
 		await waitFor(() => expect(loginMock).toHaveBeenCalledWith('pperez', '12345678'));
-		await waitFor(() => expect(mockNavigate).toHaveBeenCalledWith('/', { replace: true }));
+		await waitFor(() => expect(navigateMock).toHaveBeenCalledWith('/', { replace: true }));
 	});
 
 	it('shows empty fields error', async () => {

@@ -12,6 +12,11 @@ vi.mock('@solidjs/router', () => ({
 	useNavigate: () => navigateMock,
 }));
 
+const refetchMock = vi.fn();
+vi.mock('~/hooks/useRoles', () => ({
+	refetchRoles: () => refetchMock(),
+}));
+
 describe('UserCreateForm', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -43,7 +48,7 @@ describe('UserCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		// @ts-ignore: no need return value
+		// @ts-ignore: return value does not matter
 		const requestMock = vi.spyOn(requests, 'createRoleRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success');
 		render(() => <RoleCreateForm />);
@@ -61,6 +66,7 @@ describe('UserCreateForm', () => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
 			expect(navigateMock).toHaveBeenCalled();
+			expect(refetchMock).toHaveBeenCalled();
 		});
 	});
 
@@ -83,6 +89,7 @@ describe('UserCreateForm', () => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
 			expect(navigateMock).not.toHaveBeenCalled();
+			expect(refetchMock).not.toHaveBeenCalled();
 		});
 	});
 });

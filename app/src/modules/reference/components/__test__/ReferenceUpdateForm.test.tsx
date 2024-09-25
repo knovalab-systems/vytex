@@ -1,15 +1,14 @@
 import { fireEvent, render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import { MIN_NUM_VALUE, REQ_NUM_VALUE_MSG } from '~/constants/commonErrMsgs';
 import { DEFAULT_TIME_BY_TASK } from '~/constants/tasks';
 import type { TimeByTask } from '~/types/core';
 import * as requests from '../../requests/referenceTimesUpdate';
 import ReferenceTimesUpdateForm from '../ReferenceTimesUpdateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -33,10 +32,10 @@ describe('ReferenceTimesUpdateForm', () => {
 	});
 
 	const testCasesErrors = [
-		{ value: '', error: REQ_NUM_VALUE_MSG, title: 'shows errors on empty' },
-		{ value: 'fwerwe', error: REQ_NUM_VALUE_MSG, title: 'shows errors on bad type' },
+		{ value: '', error: 'Ingresa un valor.', title: 'shows errors on empty' },
+		{ value: 'fwerwe', error: 'Ingresa un valor.', title: 'shows errors on bad type' },
 		{ value: 1.232, error: 'Ingresa un número entero.', title: 'shows errors on decimal' },
-		{ value: '-23', error: MIN_NUM_VALUE, title: 'shows errors on negative number' },
+		{ value: '-23', error: 'Ingresa un valor igual o mayor a 0.', title: 'shows errors on negative number' },
 	];
 
 	for (const testCases of testCasesErrors) {
@@ -56,23 +55,9 @@ describe('ReferenceTimesUpdateForm', () => {
 	}
 
 	it('calls submit successfully', async () => {
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'updateTimesRefenceRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'updateTimesRefenceRequest').mockResolvedValue({
-			code: null,
-			id: 0,
-			deleted_at: null,
-			created_at: null,
-			front: null,
-			front_image: null,
-			back: null,
-			back_image: null,
-			created_by: null,
-			user: null,
-			time_by_task_id: null,
-			time_by_task: null,
-			colors: null,
-			colors_count: 0,
-		});
 		render(() => <ReferenceTimesUpdateForm reference={{ id: 1, time_by_task: DEFAULT_TIME_BY_TASK as TimeByTask }} />);
 
 		const submitButton = screen.getByText('Actualizar');
@@ -84,7 +69,7 @@ describe('ReferenceTimesUpdateForm', () => {
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalledWith('Tiempos actualizados correctamente');
-			expect(mockNavigate).toHaveBeenCalled();
+			expect(navigateMock).toHaveBeenCalled();
 		});
 	});
 

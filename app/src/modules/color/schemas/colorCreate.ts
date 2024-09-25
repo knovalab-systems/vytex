@@ -1,7 +1,8 @@
 import { type InferInput, check, hexadecimal, minLength, minValue, number, object, pipe, string } from 'valibot';
+import { REQ_NAME } from '~/constants/commonErrMsgs';
 
 export const ColorCreateSchema = object({
-	name: pipe(string('Ingresa el nombre.'), minLength(1, 'Ingresa el nombre.')),
+	name: pipe(string(REQ_NAME), minLength(1, REQ_NAME)),
 	code: pipe(number('Ingresa el código.'), minValue(1, 'Ingresa el código.')),
 	hex: pipe(
 		string('Ingresa el HEX.'),

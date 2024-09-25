@@ -6,9 +6,9 @@ import type { GetFabricType } from '../../requests/fabricGet';
 import * as requests from '../../requests/fabricUpdate';
 import FabricUpdateForm from '../FabricUpdateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/hooks/useColors', () => ({
@@ -424,6 +424,9 @@ describe('FabricUpdateForm', () => {
 	}
 
 	it('calls submit successfully', async () => {
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'updateFabricRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (
 			<FabricUpdateForm
 				fabric={
@@ -438,22 +441,6 @@ describe('FabricUpdateForm', () => {
 				}
 			/>
 		));
-
-		const requestMock = vi.spyOn(requests, 'updateFabricRequest').mockResolvedValue({
-			code: null,
-			id: 0,
-			cost: null,
-			name: null,
-			color_id: null,
-			color: null,
-			supplier_id: null,
-			supplier: null,
-			deleted_at: null,
-			created_at: null,
-			composition_id: null,
-			composition: null,
-		});
-		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 
 		const nameField = screen.getByPlaceholderText('Tela');
 		const codeField = screen.getByPlaceholderText('23231');

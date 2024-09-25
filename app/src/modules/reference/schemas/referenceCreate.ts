@@ -12,7 +12,7 @@ import {
 	pipe,
 	string,
 } from 'valibot';
-import { MIN_NUM_VALUE, REQ_NUM_VALUE_MSG } from '~/constants/commonErrMsgs';
+import { MIN_NUM_VALUE, REQ_NUM_VALUE } from '~/constants/commonErrMsgs';
 import { SIZES } from '~/constants/sizes';
 
 export const ReferenceCreateSchema = object({
@@ -23,7 +23,7 @@ export const ReferenceCreateSchema = object({
 			resources: array(
 				object({
 					resource: pipe(string('Selecciona un insumo/tela.'), minLength(1, 'Selecciona un insumo/tela.')),
-					sizes: object(entriesFromList(SIZES, pipe(number(REQ_NUM_VALUE_MSG), minValue(0, MIN_NUM_VALUE)))),
+					sizes: object(entriesFromList(SIZES, pipe(number(REQ_NUM_VALUE), minValue(0, MIN_NUM_VALUE)))),
 				}),
 			),
 		}),

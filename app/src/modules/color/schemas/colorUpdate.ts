@@ -10,10 +10,11 @@ import {
 	pipe,
 	string,
 } from 'valibot';
+import { REQ_NAME } from '~/constants/commonErrMsgs';
 import { STATUS_OPTIONS } from '~/constants/status';
 
 export const ColorUpdateSchema = object({
-	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),
+	name: pipe(string(), minLength(1, REQ_NAME)),
 	code: pipe(number('Ingresa el código.'), minValue(1, 'Ingresa el código.')),
 	hex: pipe(
 		string('Ingresa el HEX.'),

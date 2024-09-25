@@ -6,9 +6,9 @@ import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../request/orderCreate';
 import OrderCreateForm from '../OrderCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -165,7 +165,7 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		// @ts-ignore: dont care return values
+		// @ts-ignore: return value does not matter
 		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (

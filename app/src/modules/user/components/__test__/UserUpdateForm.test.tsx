@@ -6,9 +6,9 @@ import type { GetUserType } from '../../requests/userGet';
 import * as requests from '../../requests/userUpdate';
 import UserUpdateForm from '../UserUpdateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -106,17 +106,8 @@ describe('UserUpdateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		const requestMock = vi.spyOn(requests, 'updateUserRequest').mockResolvedValue({
-			id: '',
-			name: null,
-			username: null,
-			password: null,
-			role: null,
-			deleted_at: null,
-			created_at: null,
-			updated_at: null,
-			role_id: null,
-		});
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'updateUserRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		const user = {
 			name: 'Jose',
