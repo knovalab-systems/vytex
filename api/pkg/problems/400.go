@@ -214,3 +214,8 @@ func AggregateRolesBadRequest() *echo.HTTPError {
 	code := http.StatusBadRequest
 	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to get roles aggregation", ""))
 }
+
+func CreateRoleBadRequest() *echo.HTTPError {
+	code := http.StatusBadRequest
+	return echo.NewHTTPError(code, NewPD(code, "", "", "Invalid values to create role", ""))
+}

@@ -301,8 +301,12 @@ definitions:
         type: string
       id:
         type: integer
-      status:
-        $ref: '#/definitions/models.StatusOrder'
+      order_state:
+        $ref: '#/definitions/models.OrderState'
+      order_state_id:
+        type: integer
+      started_at:
+        type: string
     type: object
   models.OrderCreateBody:
     properties:
@@ -356,6 +360,15 @@ definitions:
     - created_by
     - custom_id
     type: object
+  models.OrderState:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      value:
+        type: string
+    type: object
   models.Reference:
     properties:
       back:
@@ -382,8 +395,10 @@ definitions:
         type: integer
       time_by_task:
         $ref: '#/definitions/models.TimeByTask'
-      time_by_task_ID:
+      time_by_task_id:
         type: integer
+      track:
+        type: string
       user:
         $ref: '#/definitions/models.User'
     type: object
@@ -485,12 +500,50 @@ definitions:
     - name
     - supplier_id
     type: object
-  models.StatusOrder:
+  models.Role:
+    properties:
+      code:
+        $ref: '#/definitions/models.RoleCode'
+      id:
+        type: string
+      name:
+        type: string
+      policies:
+        items:
+          type: string
+        type: array
+    type: object
+  models.RoleCode:
     enum:
-    - Created
+    - admin
+    - designer
+    - propsupervisor
+    - cortepsupervisor
     type: string
     x-enum-varnames:
-    - Created
+    - ADMIN_VALUE
+    - DESIGNER_VALUE
+    - PRO_SUPERVISOR_VALUE
+    - CORTE_SUPERVISOR_VALUE
+  models.Step:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      tasks:
+        items:
+          $ref: '#/definitions/models.Task'
+        type: array
+      value:
+        $ref: '#/definitions/models.StepValue'
+    type: object
+  models.StepValue:
+    enum:
+    - corte
+    type: string
+    x-enum-varnames:
+    - Corte
   models.Supplier:
     properties:
       brand:
@@ -510,75 +563,109 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.Task:
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      step:
+        $ref: '#/definitions/models.Step'
+      step_id:
+        type: integer
+      value:
+        $ref: '#/definitions/models.TaskValue'
+    type: object
+  models.TaskControl:
+    properties:
+      created_at:
+        type: string
+      finished_at:
+        type: string
+      id:
+        type: integer
+      next:
+        $ref: '#/definitions/models.TaskControl'
+      next_id:
+        type: integer
+      order:
+        $ref: '#/definitions/models.Order'
+      order_id:
+        type: integer
+      previous:
+        $ref: '#/definitions/models.TaskControl'
+      previous_id:
+        type: integer
+      rejected_at:
+        type: string
+      started_at:
+        type: string
+      task:
+        $ref: '#/definitions/models.Task'
+      task_id:
+        type: integer
+    type: object
+  models.TaskValue:
+    enum:
+    - trazar
+    - plantear
+    - tender
+    - cortar
+    - paquetear
+    type: string
+    x-enum-varnames:
+    - Trazar
+    - Plantear
+    - Tender
+    - Cortar
+    - Paquetear
   models.TimeByTask:
     properties:
       acabados:
-        minimum: 0
         type: integer
       armar:
-        minimum: 0
         type: integer
       bolsas:
-        minimum: 0
         type: integer
       cerrar:
-        minimum: 0
         type: integer
       cortar:
-        minimum: 0
         type: integer
       empacar:
-        minimum: 0
         type: integer
       figurar:
-        minimum: 0
         type: integer
       filetear:
-        minimum: 0
         type: integer
       gafetes:
-        minimum: 0
         type: integer
       grabar:
-        minimum: 0
         type: integer
       id:
         type: integer
       marquilla:
-        minimum: 0
         type: integer
       organizar:
-        minimum: 0
         type: integer
       paletizar:
-        minimum: 0
         type: integer
       paquetear:
-        minimum: 0
         type: integer
       plantear:
-        minimum: 0
         type: integer
       presillar:
-        minimum: 0
         type: integer
       pulir:
-        minimum: 0
         type: integer
       revisar:
-        minimum: 0
         type: integer
       tapar:
-        minimum: 0
         type: integer
       tender:
-        minimum: 0
         type: integer
       tiquetear:
-        minimum: 0
         type: integer
       trazar:
-        minimum: 0
         type: integer
     type: object
   models.User:
@@ -594,6 +681,8 @@ definitions:
       password:
         type: string
       role:
+        $ref: '#/definitions/models.Role'
+      role_id:
         type: string
       updated_at:
         type: string
@@ -1000,6 +1089,25 @@ paths:
       summary: Create image
       tags:
       - Files
+  /order-status:
+    get:
+      description: Get all the order status, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.OrderState'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get order status from db
+      tags:
+      - Orders
   /orders:
     get:
       description: Get all the orders, limit for query o default limit
@@ -1040,6 +1148,57 @@ paths:
         "500":
           description: Internal Server Error
       summary: Create an order
+      tags:
+      - Orders
+  /orders/{orderId}:
+    get:
+      description: Get an order by its ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: orderId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a given order
+      tags:
+      - Orders
+    patch:
+      description: Updates the fields from order
+      parameters:
+      - description: Order ID
+        in: path
+        name: orderId
+        required: true
+        type: string
+      - description: Order update values
+        in: body
+        name: models.OrderUpdateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Order'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update order
       tags:
       - Orders
   /orders/aggregate:
@@ -1104,6 +1263,29 @@ paths:
         "500":
           description: Internal Server Error
       summary: Get references from db
+      tags:
+      - References
+  /references/{refenceId}:
+    get:
+      description: Get a reference by id
+      parameters:
+      - description: References ID
+        in: path
+        name: refenceId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Reference'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get a reference
       tags:
       - References
   /references/times-by-task/{referenceId}:
@@ -1250,6 +1432,88 @@ paths:
       summary: Get aggregate from resources
       tags:
       - Resources
+  /roles:
+    get:
+      description: Get all the roles, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Role'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get roles from db
+      tags:
+      - Roles
+    post:
+      description: Create a new role
+      parameters:
+      - description: Role create values
+        in: body
+        name: models.RoleCreateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Role'
+        "400":
+          description: Bad Request
+        "409":
+          description: Conflict
+        "500":
+          description: Internal Server Error
+      summary: Create role
+      tags:
+      - Roles
+  /roles/aggregate:
+    get:
+      description: Get result of aggregate function from roles
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.AggregateData'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get aggregate from roles
+      tags:
+      - Roles
+  /steps:
+    get:
+      description: Get all the steps, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Step'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get steps from db
+      tags:
+      - Steps
   /suppliers:
     get:
       description: Get all the suppliers, limit for query o default limit
@@ -1367,6 +1631,54 @@ paths:
       summary: Get aggregate from suppliers
       tags:
       - Suppliers
+  /task-controls:
+    get:
+      description: Get all the task controls, limit for query o default limit
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.TaskControl'
+            type: array
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Get task controls from db
+      tags:
+      - TaskControls
+  /task-controls/{taskControlId}:
+    patch:
+      description: Updates the fields from task control
+      parameters:
+      - description: Task control ID
+        in: path
+        name: taskControlId
+        required: true
+        type: string
+      - description: Task control update values
+        in: body
+        name: models.TaskControlUpdateBody
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TaskControl'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Update task control
+      tags:
+      - TaskControls
   /users:
     get:
       description: Get all the users, limit for query o default limit

@@ -7,6 +7,7 @@ const Users = lazy(() => import('~/modules/user/pages/Users'));
 const UserCreate = lazy(() => import('~/modules/user/pages/UserCreate'));
 const UserUpdate = lazy(() => import('~/modules/user/pages/UserUpdate'));
 const Roles = lazy(() => import('~/modules/user/pages/Roles'));
+const RoleCreate = lazy(() => import('~/modules/user/pages/RoleCreate'));
 
 function UserRoutes() {
 	return (
@@ -17,7 +18,10 @@ function UserRoutes() {
 				<Route path={PATHS.CREATE_PATH} component={UserCreate} />
 				<Route path={`${PATHS.UPDATE_PATH}/:id`} component={UserUpdate} />
 			</Route>
-			<Route path={PATHS.ROLES_PATH} component={Roles} />
+			<Route path={PATHS.ROLES_PATH}>
+				<Route path={'/'} component={Roles} />
+				<Route path={PATHS.CREATE_PATH} component={RoleCreate} />
+			</Route>
 		</>
 	);
 }

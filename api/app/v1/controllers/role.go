@@ -73,3 +73,36 @@ func (m *RoleController) AggregateRoles(c echo.Context) error {
 	// return data
 	return c.JSON(http.StatusOK, aggregate)
 }
+
+// Create role
+// @Summary      Create role
+// @Description  Create a new role
+// @Tags         Roles
+// @Produce      json
+// @Param		 models.RoleCreateBody body string true "Role create values"
+// @Success      201 {object} models.Role
+// @Failure      400
+// @Failure      409
+// @Failure      500
+// @Router       /roles [post]
+func (m *RoleController) CreateRole(c echo.Context) error {
+	u := new(models.RoleCreateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.ServerError()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.CreateRoleBadRequest()
+	}
+
+	// create role
+	role, err := m.RoleRepository.CreateRole(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusCreated, role)
+}

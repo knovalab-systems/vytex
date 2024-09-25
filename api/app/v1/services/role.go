@@ -70,3 +70,25 @@ func (m *RoleService) AggregationRoles(q *models.AggregateQuery) ([]*models.Aggr
 
 	return []*models.AggregateData{&aggregateElem}, nil
 }
+
+func (m *RoleService) CreateRole(b *models.RoleCreateBody) (*models.Role, error) {
+
+	for _, v := range b.Policies {
+		policy := models.Policy(v)
+		if !policy.Valid() {
+			return nil, problems.CreateRoleBadRequest()
+		}
+	}
+
+	role := &models.Role{
+		Name:     b.Name,
+		Policies: b.Policies,
+	}
+
+	err := query.Role.Create(role)
+	if err != nil {
+		return nil, err
+	}
+
+	return role, nil
+}

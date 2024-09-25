@@ -42,4 +42,5 @@ export type VytexPolicy =
 	| 'StartOrder'
 	| 'ReadCorte'
 	| 'UpdateCorte'
-	| 'ReadRoles';
+	| 'ReadRoles'
+	| 'CreateRoles';
