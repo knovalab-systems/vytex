@@ -25,12 +25,9 @@ import type { Composition, Fabric } from '~/types/core';
 import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
 
-function FabricCreateForm(props: {
-	colors: Colors;
-	suppliers: Suppliers;
-}) {
-	const { colorsRecord } = useColors();
-	const { suppliersRecord } = useSuppliers();
+function FabricCreateForm(props: { suppliers: Suppliers }) {
+	const { getColorsRecord, getColors } = useColors();
+	const { getSuppliersRecord: suppliersRecord } = useSuppliers();
 
 	const navigate = useNavigate();
 	const [form, { Form, Field }] = createForm<FabricCreateType>({
@@ -142,7 +139,7 @@ function FabricCreateForm(props: {
 
 									<Combobox<Colors[0]>
 										class='whitespace-nowrap min-w-48'
-										value={colorsRecord()[field.value || 0] || null}
+										value={getColorsRecord()[field.value || 0] || null}
 										onChange={value => {
 											setValue(form, 'color', value ? value.id : 0);
 										}}
@@ -164,12 +161,12 @@ function FabricCreateForm(props: {
 												<ComboboxItemIndicator />
 											</ComboboxItem>
 										)}
-										options={props.colors.filter(e => !e.deleted_at)}
+										options={getColors().filter(e => !e.deleted_at)}
 									>
 										<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
 											<div
 												class='h-5 w-5 mr-2 m-auto border'
-												style={{ background: colorsRecord()[field.value || 0]?.hex || 'transparent' }}
+												style={{ background: getColorsRecord()[field.value || 0]?.hex || 'transparent' }}
 											/>
 											<ComboboxInput />
 											<ComboboxTrigger title='Ver colores' aria-label='Colores' />

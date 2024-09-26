@@ -22,6 +22,11 @@ func (b *Role) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
+type RoleCreateBody struct {
+	Name     string   `json:"name" validate:"required"`
+	Policies []string `json:"policies" validate:"required,min=1"`
+}
+
 type RoleCode string
 
 const (
@@ -50,6 +55,7 @@ func DefaultRoles() []*Role {
 				string(ReadFabrics),
 				string(ReadResources),
 				string(ReadOrders),
+				string(CreateRoles),
 			},
 		},
 		{

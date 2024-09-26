@@ -89,7 +89,7 @@ describe('DeleteCell', () => {
 	for (const testCase of statusTestCases) {
 		it('renders correctly without policy ', async () => {
 			vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-				policies: [],
+				policies: () => [],
 				hasPolicy: () => {
 					hasPolicyMock();
 					return false;
@@ -111,7 +111,7 @@ describe('DeleteCell', () => {
 	for (const testCase of statusTestCases) {
 		it('renders correctly with policy ', async () => {
 			vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-				policies: [],
+				policies: () => [],
 				hasPolicy: () => {
 					hasPolicyMock();
 					return true;

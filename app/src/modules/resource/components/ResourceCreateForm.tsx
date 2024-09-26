@@ -24,12 +24,9 @@ import type { Resource } from '~/types/core';
 import { createResourceRequest } from '../requests/resourceCreate';
 import { ResourceCreateSchema, type ResourceCreateType } from '../schema/resourceCreate';
 
-function ResourceCreateForm(props: {
-	colors: Colors;
-	suppliers: Suppliers;
-}) {
-	const { colorsRecord } = useColors();
-	const { suppliersRecord } = useSuppliers();
+function ResourceCreateForm(props: { suppliers: Suppliers }) {
+	const { getColorsRecord, getColors } = useColors();
+	const { getSuppliersRecord: suppliersRecord } = useSuppliers();
 
 	const navigate = useNavigate();
 
@@ -122,7 +119,7 @@ function ResourceCreateForm(props: {
 								<LabelSpan class='my-auto whitespace-nowrap'>Color del insumo</LabelSpan>
 								<Combobox<Colors[0]>
 									class='whitespace-nowrap min-w-48'
-									value={colorsRecord()[field.value || 0] || null}
+									value={getColorsRecord()[field.value || 0] || null}
 									onChange={value => {
 										setValue(form, 'color', value ? value.id : 0);
 									}}
@@ -144,13 +141,13 @@ function ResourceCreateForm(props: {
 											<ComboboxItemIndicator />
 										</ComboboxItem>
 									)}
-									options={props.colors.filter(color => !color.deleted_at)}
+									options={getColors().filter(color => !color.deleted_at)}
 								>
 									<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
-										<Show when={Boolean(colorsRecord()[field.value || 0])}>
+										<Show when={Boolean(getColorsRecord()[field.value || 0])}>
 											<div
 												class='h-5 w-5 mr-2 m-auto border'
-												style={{ background: colorsRecord()[field.value || 0]?.hex || '' }}
+												style={{ background: getColorsRecord()[field.value || 0]?.hex || '' }}
 											/>
 										</Show>
 										<ComboboxInput />

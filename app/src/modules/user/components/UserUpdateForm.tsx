@@ -19,7 +19,7 @@ import { UserUpdateSchema, type UserUpdateType } from '../schemas/userUpdate';
 
 function UserUpdateForm(props: { user?: GetUserType }) {
 	const navigate = useNavigate();
-	const { roles, rolesRecord } = useRoles();
+	const { getRoles, getRolesRecord: rolesRecord } = useRoles();
 	const [form, { Form, Field }] = createForm<UserUpdateType>({
 		validate: valiForm(UserUpdateSchema),
 		initialValues: {
@@ -121,7 +121,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 								onChange={value => {
 									setValue(form, 'role_id', value);
 								}}
-								options={roles().map(e => e.id)}
+								options={getRoles().map(e => e.id)}
 								placeholder='Selecciona un rol'
 								itemComponent={props => (
 									<SelectItem item={props.item}>{rolesRecord()[props.item.rawValue].name}</SelectItem>

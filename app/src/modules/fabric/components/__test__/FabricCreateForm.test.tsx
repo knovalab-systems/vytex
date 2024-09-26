@@ -12,6 +12,13 @@ vi.mock('@solidjs/router', () => ({
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
 
+vi.mock('~/hooks/useColors', () => ({
+	useColors: () => ({
+		getColors: () => [{ id: 1, name: 'Blanco', hex: '', deleted_at: null }],
+		getColorsRecord: () => ({ 1: {} }),
+	}),
+}));
+
 describe('FabricCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -19,7 +26,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <FabricCreateForm colors={[]} suppliers={[]} />);
+		render(() => <FabricCreateForm suppliers={[]} />);
 		const nameField = screen.getByPlaceholderText('Tela');
 		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
@@ -38,7 +45,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <FabricCreateForm colors={[]} suppliers={[]} />);
+		render(() => <FabricCreateForm suppliers={[]} />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -57,7 +64,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('shows overflow error on compositions fields', async () => {
-		render(() => <FabricCreateForm colors={[]} suppliers={[]} />);
+		render(() => <FabricCreateForm suppliers={[]} />);
 
 		const compositionFields = screen.getAllByPlaceholderText('10');
 		fireEvent.input(compositionFields[0], { target: { value: 101 } });
@@ -73,7 +80,6 @@ describe('FabricCreateForm', () => {
 	it('calls submit with compositions errow, different to 100', async () => {
 		render(() => (
 			<FabricCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[
 					{
 						id: 1,
@@ -167,7 +173,6 @@ describe('FabricCreateForm', () => {
 	it('calls submit succesfully', async () => {
 		render(() => (
 			<FabricCreateForm
-				colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 				suppliers={[
 					{
 						id: 1,
@@ -301,7 +306,6 @@ describe('FabricCreateForm', () => {
 		it(err.title, async () => {
 			render(() => (
 				<FabricCreateForm
-					colors={[{ id: 1, name: 'Blanco', hex: '', deleted_at: null }]}
 					suppliers={[
 						{
 							id: 1,

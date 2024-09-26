@@ -1,13 +1,13 @@
-import { type JSXElement, createContext, useContext } from 'solid-js';
+import { type Accessor, type JSXElement, createContext, useContext } from 'solid-js';
 import type { Policy } from '~/types/core';
 
 const PoliciesContext = createContext<PoliciesContext>({
-	policies: [],
+	policies: () => [],
 	hasPolicy: () => false,
 });
 
 type PoliciesContext = {
-	policies: Policy[];
+	policies: Accessor<Policy[]>;
 	hasPolicy: (policy: Policy) => boolean;
 };
 
@@ -22,7 +22,7 @@ export function PoliciesProvider(props: { children: JSXElement; policies: Policy
 	};
 
 	return (
-		<PoliciesContext.Provider value={{ policies: props.policies, hasPolicy }}>
+		<PoliciesContext.Provider value={{ policies: () => props.policies, hasPolicy }}>
 			{props.children}
 		</PoliciesContext.Provider>
 	);

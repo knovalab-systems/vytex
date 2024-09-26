@@ -23,7 +23,7 @@ type UserControlsProps = {
 };
 
 const UserControls = (props: UserControlsProps) => {
-	const { roles } = useRoles();
+	const { getRoles } = useRoles();
 	const navigate = useNavigate();
 
 	onCleanup(() => {
@@ -87,7 +87,7 @@ const UserControls = (props: UserControlsProps) => {
 				value={props.statusFilterValue}
 			/>
 			<SelectOptions
-				options={roles().map(role => ({ label: role.name, value: role.id }))}
+				options={getRoles().map(role => ({ label: role.name, value: role.id }))}
 				placeholder='Rol de usuario'
 				setSelect={setRole}
 				value={props.roleIdFilterValue}

@@ -4,7 +4,7 @@ import type { GetOrdersType } from '../../request/orderGet';
 import OrderTable from '../OrderTable';
 
 vi.mock('~/hooks/useOrderStatus', () => ({
-	useOrderStatus: () => ({ orderStatusRecord: () => ({ 0: { name: 'Creada' }, 1: { name: 'Iniciada' } }) }),
+	useOrderStatus: () => ({ getOrderStatusRecord: () => ({ 0: { name: 'Creada' }, 1: { name: 'Iniciada' } }) }),
 }));
 
 describe('Order Table', () => {

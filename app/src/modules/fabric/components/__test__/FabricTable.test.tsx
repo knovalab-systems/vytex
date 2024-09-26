@@ -30,7 +30,7 @@ describe('Fabric Table', () => {
 	]) {
 		it('renders correctly on fabrics', async () => {
 			vi.spyOn(usePolicies, 'usePolicies').mockReturnValue({
-				policies: [],
+				policies: () => [],
 				hasPolicy: () => {
 					hasPolicyMock();
 					return testCase.value;

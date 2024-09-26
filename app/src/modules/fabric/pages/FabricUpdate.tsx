@@ -4,8 +4,8 @@ import { Match, Switch } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { type Colors, useColors } from '~/hooks/useColors';
-import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
+import { useColors } from '~/hooks/useColors';
+import { useSuppliers } from '~/hooks/useSuppliers';
 import FabricUpdateForm from '../components/FabricUpdateForm';
 import { getFabricQuery } from '../requests/fabricGet';
 
@@ -36,11 +36,7 @@ function FabricUpdatePage() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<FabricUpdateForm
-						colors={colorsQuery.data as Colors}
-						suppliers={suppliersQuery.data as Suppliers}
-						fabric={fabric.data}
-					/>
+					<FabricUpdateForm fabric={fabric.data} />
 				</Match>
 			</Switch>
 		</div>

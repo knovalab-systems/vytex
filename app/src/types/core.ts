@@ -11,6 +11,7 @@ import type {
 	VytexPolicy,
 	VytexReference,
 	VytexResource,
+	VytexRole,
 	VytexSupplier,
 	VytexTask,
 	VytexTaskControl,
@@ -32,8 +33,10 @@ export type TimeByTask = VytexTimeByTask<CoreSchema>;
 export type VytexSize = VS;
 export type OrderState = VytexOrderState<CoreSchema>;
 export type Task = VytexTask<CoreSchema>;
-export type TaskControl = VytexTaskControl<CoreSchema>;
+export type TaskControl = VytexTaskControl;
 export type Policy = VytexPolicy;
+export type Role = VytexRole;
+
 export type ResourceFabric = {
 	fabrics: (VS & { fabric_id: number })[];
 	resources: (VS & { resource_id: number })[];

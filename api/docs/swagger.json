@@ -611,6 +611,35 @@
                 }
             }
         },
+        "/order-status": {
+            "get": {
+                "description": "Get all the order status, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get order status from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.OrderState"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/orders": {
             "get": {
                 "description": "Get all the orders, limit for query o default limit",
@@ -693,6 +722,83 @@
                             "items": {
                                 "$ref": "#/definitions/models.AggregateData"
                             }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/orders/{orderId}": {
+            "get": {
+                "description": "Get an order by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Get a given order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Order"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "patch": {
+                "description": "Updates the fields from order",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Orders"
+                ],
+                "summary": "Update order",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Order ID",
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Order update values",
+                        "name": "models.OrderUpdateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Order"
                         }
                     },
                     "400": {
@@ -799,6 +905,41 @@
                         "schema": {
                             "type": "string"
                         }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Reference"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/references/{refenceId}": {
+            "get": {
+                "description": "Get a reference by id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "References"
+                ],
+                "summary": "Get a reference",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "References ID",
+                        "name": "refenceId",
+                        "in": "path",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -992,6 +1133,131 @@
                 }
             }
         },
+        "/roles": {
+            "get": {
+                "description": "Get all the roles, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get roles from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Role"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new role",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Create role",
+                "parameters": [
+                    {
+                        "description": "Role create values",
+                        "name": "models.RoleCreateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Role"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "409": {
+                        "description": "Conflict"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/roles/aggregate": {
+            "get": {
+                "description": "Get result of aggregate function from roles",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Get aggregate from roles",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.AggregateData"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/steps": {
+            "get": {
+                "description": "Get all the steps, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Steps"
+                ],
+                "summary": "Get steps from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Step"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
         "/suppliers": {
             "get": {
                 "description": "Get all the suppliers, limit for query o default limit",
@@ -1159,6 +1425,79 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/models.Supplier"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/task-controls": {
+            "get": {
+                "description": "Get all the task controls, limit for query o default limit",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TaskControls"
+                ],
+                "summary": "Get task controls from db",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.TaskControl"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/task-controls/{taskControlId}": {
+            "patch": {
+                "description": "Updates the fields from task control",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "TaskControls"
+                ],
+                "summary": "Update task control",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task control ID",
+                        "name": "taskControlId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Task control update values",
+                        "name": "models.TaskControlUpdateBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.TaskControl"
                         }
                     },
                     "400": {
@@ -1796,8 +2135,14 @@
                 "id": {
                     "type": "integer"
                 },
-                "status": {
-                    "$ref": "#/definitions/models.StatusOrder"
+                "order_state": {
+                    "$ref": "#/definitions/models.OrderState"
+                },
+                "order_state_id": {
+                    "type": "integer"
+                },
+                "started_at": {
+                    "type": "string"
                 }
             }
         },
@@ -1872,6 +2217,20 @@
                 }
             }
         },
+        "models.OrderState": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Reference": {
             "type": "object",
             "properties": {
@@ -1911,8 +2270,11 @@
                 "time_by_task": {
                     "$ref": "#/definitions/models.TimeByTask"
                 },
-                "time_by_task_ID": {
+                "time_by_task_id": {
                     "type": "integer"
+                },
+                "track": {
+                    "type": "string"
                 },
                 "user": {
                     "$ref": "#/definitions/models.User"
@@ -2059,13 +2421,68 @@
                 }
             }
         },
-        "models.StatusOrder": {
+        "models.Role": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "$ref": "#/definitions/models.RoleCode"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "policies": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "models.RoleCode": {
             "type": "string",
             "enum": [
-                "Created"
+                "admin",
+                "designer",
+                "propsupervisor",
+                "cortepsupervisor"
             ],
             "x-enum-varnames": [
-                "Created"
+                "ADMIN_VALUE",
+                "DESIGNER_VALUE",
+                "PRO_SUPERVISOR_VALUE",
+                "CORTE_SUPERVISOR_VALUE"
+            ]
+        },
+        "models.Step": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Task"
+                    }
+                },
+                "value": {
+                    "$ref": "#/definitions/models.StepValue"
+                }
+            }
+        },
+        "models.StepValue": {
+            "type": "string",
+            "enum": [
+                "corte"
+            ],
+            "x-enum-varnames": [
+                "Corte"
             ]
         },
         "models.Supplier": {
@@ -2097,99 +2514,158 @@
                 }
             }
         },
+        "models.Task": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "step": {
+                    "$ref": "#/definitions/models.Step"
+                },
+                "step_id": {
+                    "type": "integer"
+                },
+                "value": {
+                    "$ref": "#/definitions/models.TaskValue"
+                }
+            }
+        },
+        "models.TaskControl": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "finished_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "next": {
+                    "$ref": "#/definitions/models.TaskControl"
+                },
+                "next_id": {
+                    "type": "integer"
+                },
+                "order": {
+                    "$ref": "#/definitions/models.Order"
+                },
+                "order_id": {
+                    "type": "integer"
+                },
+                "previous": {
+                    "$ref": "#/definitions/models.TaskControl"
+                },
+                "previous_id": {
+                    "type": "integer"
+                },
+                "rejected_at": {
+                    "type": "string"
+                },
+                "started_at": {
+                    "type": "string"
+                },
+                "task": {
+                    "$ref": "#/definitions/models.Task"
+                },
+                "task_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.TaskValue": {
+            "type": "string",
+            "enum": [
+                "trazar",
+                "plantear",
+                "tender",
+                "cortar",
+                "paquetear"
+            ],
+            "x-enum-varnames": [
+                "Trazar",
+                "Plantear",
+                "Tender",
+                "Cortar",
+                "Paquetear"
+            ]
+        },
         "models.TimeByTask": {
             "type": "object",
             "properties": {
                 "acabados": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "armar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "bolsas": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "cerrar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "cortar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "empacar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "figurar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "filetear": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "gafetes": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "grabar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "id": {
                     "type": "integer"
                 },
                 "marquilla": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "organizar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "paletizar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "paquetear": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "plantear": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "presillar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "pulir": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "revisar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "tapar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "tender": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "tiquetear": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 },
                 "trazar": {
-                    "type": "integer",
-                    "minimum": 0
+                    "type": "integer"
                 }
             }
         },
@@ -2212,6 +2688,9 @@
                     "type": "string"
                 },
                 "role": {
+                    "$ref": "#/definitions/models.Role"
+                },
+                "role_id": {
                     "type": "string"
                 },
                 "updated_at": {

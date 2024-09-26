@@ -105,6 +105,9 @@ describe('CustomCreateForm', () => {
 	});
 
 	it('calls submit with error server', async () => {
+		// @ts-ignore: dont care return values
+		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockRejectedValue({});
+		const toastMock = vi.spyOn(toast, 'error');
 		render(() => (
 			<CustomCreateForm
 				references={[
@@ -121,7 +124,6 @@ describe('CustomCreateForm', () => {
 				]}
 			/>
 		));
-		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
 		fireEvent.input(clientField, { target: { value: 'cliente' } });
@@ -161,10 +163,16 @@ describe('CustomCreateForm', () => {
 		const inputValuesSize = await screen.findAllByPlaceholderText('12');
 		fireEvent.input(inputValuesSize[0], { target: { value: 12 } });
 
-		await waitFor(() => expect(toastMock).toHaveBeenCalledWith('Error al crear el pedido.'));
+		await waitFor(() => {
+			expect(toastMock).toHaveBeenCalledWith('Error al crear el pedido.');
+			expect(requestMock).toHaveBeenCalled();
+		});
 	});
 
 	it('calls submit succesfully', async () => {
+		// @ts-ignore: dont care return values
+		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (
 			<CustomCreateForm
 				references={[
@@ -181,20 +189,6 @@ describe('CustomCreateForm', () => {
 				]}
 			/>
 		));
-		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createCustomRequest').mockResolvedValue({
-			id: 0,
-			created_at: null,
-			created_by: null,
-			client: null,
-			finished_at: null,
-			canceled_at: null,
-			canceled_by: null,
-			create_user: null,
-			cancel_user: null,
-			orders: null,
-			'count(orders)': undefined,
-		});
 
 		const clientField = screen.getByPlaceholderText('Nombre del cliente');
 		fireEvent.input(clientField, { target: { value: 'cliente' } });

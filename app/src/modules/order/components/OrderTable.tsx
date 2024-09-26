@@ -9,7 +9,7 @@ import type { OrderState } from '~/types/core';
 import type { GetOrdersType } from '../request/orderGet';
 
 function OrderTable(props: { orders?: GetOrdersType }) {
-	const { orderStatusRecord } = useOrderStatus();
+	const { getOrderStatusRecord } = useOrderStatus();
 
 	const actions = (id: number, value: OrderState['value']) => {
 		const arr: Action[] = [];
@@ -49,12 +49,12 @@ function OrderTable(props: { orders?: GetOrdersType }) {
 							<TableRow class='bg-white group'>
 								<TableCell>{order.id}</TableCell>
 								<TableCell>{order.custom_id}</TableCell>
-								<TableCell>{orderStatusRecord()[order.order_state_id].name}</TableCell>
+								<TableCell>{getOrderStatusRecord()[order.order_state_id].name}</TableCell>
 								<TableCell>{parseDateTimeHuman(order.created_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(order.started_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(order.canceled_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(order.finished_at)}</TableCell>
-								<ActionsCell actions={actions(order.id, orderStatusRecord()[order.order_state_id].value)} />
+								<ActionsCell actions={actions(order.id, getOrderStatusRecord()[order.order_state_id].value)} />
 							</TableRow>
 						)}
 					</For>

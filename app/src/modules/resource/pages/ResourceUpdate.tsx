@@ -4,8 +4,8 @@ import { Match, Switch } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { type Colors, useColors } from '~/hooks/useColors';
-import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
+import { useColors } from '~/hooks/useColors';
+import { useSuppliers } from '~/hooks/useSuppliers';
 import ResourceUpdateForm from '../components/ResourceUpdateForm';
 import { getResourceQuery } from '../requests/resourceGet';
 
@@ -38,11 +38,7 @@ function ResourceUpdatePage() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<ResourceUpdateForm
-						colors={colorsQuery.data as Colors}
-						suppliers={suppliersQuery.data as Suppliers}
-						resource={resource.data}
-					/>
+					<ResourceUpdateForm resource={resource.data} />
 				</Match>
 			</Switch>
 		</div>

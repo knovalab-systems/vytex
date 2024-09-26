@@ -7,6 +7,11 @@ const TestElement = () => {
 	return <div>{hasPolicy('ReadUsers') ? 'Has policy' : 'No has policy'}</div>;
 };
 
+const TestElementArray = () => {
+	const { policies } = usePolicies();
+	return <div>{policies().join(',')}</div>;
+};
+
 describe('usePolicies', () => {
 	test('has policy is true', () => {
 		render(() => (
@@ -27,6 +32,17 @@ describe('usePolicies', () => {
 		));
 
 		const result = screen.getByText('No has policy');
+		expect(result).toBeInTheDocument();
+	});
+
+	test('show list correclty', () => {
+		render(() => (
+			<PoliciesProvider policies={['CreateColors', 'ReadUsers']}>
+				<TestElementArray />
+			</PoliciesProvider>
+		));
+
+		const result = screen.getByText('CreateColors,ReadUsers');
 		expect(result).toBeInTheDocument();
 	});
 });

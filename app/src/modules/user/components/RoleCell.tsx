@@ -22,10 +22,10 @@ function RoleCell(props: {
 	roleId: string;
 	userId: string;
 }) {
-	const { rolesRecord, roles } = useRoles();
+	const { getRolesRecord, getRoles } = useRoles();
 	const { hasPolicy } = usePolicies();
-	const [role, setRole] = createSignal(rolesRecord()[props.roleId]);
-	const [value, setValue] = createSignal(rolesRecord()[props.roleId]);
+	const [role, setRole] = createSignal(getRolesRecord()[props.roleId]);
+	const [value, setValue] = createSignal(getRolesRecord()[props.roleId]);
 	const [edit, setEdit] = createSignal(false);
 
 	createEffect(() => {
@@ -74,7 +74,7 @@ function RoleCell(props: {
 							<Select
 								value={value()}
 								onChange={setValue}
-								options={roles()}
+								options={getRoles()}
 								optionValue='id'
 								optionTextValue='name'
 								placeholder='Selecciona un rol'

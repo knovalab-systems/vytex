@@ -18,3 +18,8 @@ func (m *RoleMock) AggregationRoles(req *models.AggregateQuery) ([]*models.Aggre
 	args := m.Called(req)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
 }
+
+func (m *RoleMock) CreateRole(u *models.RoleCreateBody) (*models.Role, error) {
+	args := m.Called(u)
+	return args.Get(0).(*models.Role), args.Error(1)
+}

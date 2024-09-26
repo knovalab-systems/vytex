@@ -102,6 +102,9 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('calls submit with error server', async () => {
+		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
+		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockRejectedValue({});
+
 		render(() => (
 			<OrderCreateForm
 				references={[
@@ -119,7 +122,6 @@ describe('OrderCreateForm', () => {
 				custom={[] as unknown as GetCustomType}
 			/>
 		));
-		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
 		const referenceSelect = screen.getByTitle('Ver referencias');
 
@@ -156,10 +158,16 @@ describe('OrderCreateForm', () => {
 		const inputValuesSize = await screen.findAllByPlaceholderText('12');
 		fireEvent.input(inputValuesSize[0], { target: { value: 12 } });
 
-		await waitFor(() => expect(toastMock).toHaveBeenCalledWith('Error al crear la orden.'));
+		await waitFor(() => {
+			expect(toastMock).toHaveBeenCalledWith('Error al crear la orden.');
+			expect(requestMock).toHaveBeenCalled();
+		});
 	});
 
 	it('calls submit succesfully', async () => {
+		// @ts-ignore: dont care return values
+		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (
 			<OrderCreateForm
 				references={[
@@ -177,38 +185,6 @@ describe('OrderCreateForm', () => {
 				custom={[{ id: 1 }] as unknown as GetCustomType}
 			/>
 		));
-
-		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createOrderRequest').mockResolvedValue({
-			order_state: null,
-			custom: null,
-			id: 0,
-			finished_at: null,
-			canceled_at: null,
-			canceled_by: null,
-			color_by_reference_id: null,
-			custom_id: null,
-			color_by_reference: null,
-			create_user: null,
-			cancel_user: null,
-			'2XS': null,
-			XS: null,
-			S: null,
-			M: null,
-			L: null,
-			XL: null,
-			'2XL': null,
-			'3XL': null,
-			'4XL': null,
-			'5XL': null,
-			'6XL': null,
-			'7XL': null,
-			'8XL': null,
-			created_at: '',
-			created_by: '',
-			order_state_id: 0,
-			started_at: null,
-		});
 
 		const referenceSelect = screen.getByTitle('Ver referencias');
 

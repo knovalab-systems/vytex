@@ -36,12 +36,12 @@ type ColorReference = {
 function CustomCreateForm(props: {
 	references: RefByCustomCreate;
 }) {
-	const { colorsRecord } = useColors();
+	const { getColorsRecord } = useColors();
 	const colorRerences = createMemo(() => {
 		const arr: ColorReference[] = props.references.reduce((p: ColorReference[], v) => {
 			const colors: ColorReference[] =
 				v.colors?.map(c => {
-					const color = () => colorsRecord()[c.color_id as number] || {};
+					const color = () => getColorsRecord()[c.color_id as number] || {};
 					return {
 						colorName: color().name || '',
 						hex: color().hex || '',
@@ -172,7 +172,9 @@ function CustomCreateForm(props: {
 																		<ComboboxControl aria-errormessage={field.error} aria-label='Referencias'>
 																			<div
 																				class='h-5 w-5 mr-2 m-auto border'
-																				style={{ background: colorsRecord()[field.value || 0]?.hex || 'transparent' }}
+																				style={{
+																					background: getColorsRecord()[field.value || 0]?.hex || 'transparent',
+																				}}
 																			/>
 																			<ComboboxInput />
 																			<ComboboxTrigger title='Ver referencias' aria-label='Referencias' />
