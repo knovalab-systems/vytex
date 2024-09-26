@@ -22,9 +22,20 @@ func (b *Role) BeforeCreate(tx *gorm.DB) (err error) {
 	return nil
 }
 
+type RoleRead struct {
+	ID string `param:"roleId" validate:"required,uuid"`
+	Query
+}
+
 type RoleCreateBody struct {
 	Name     string   `json:"name" validate:"required"`
 	Policies []string `json:"policies" validate:"required,min=1"`
+}
+
+type RoleUpdateBody struct {
+	ID       string   `param:"roleId" validate:"required,uuid"`
+	Name     string   `json:"name"`
+	Policies []string `json:"policies" validate:"omitempty,min=1"`
 }
 
 type RoleCode string
@@ -56,6 +67,7 @@ func DefaultRoles() []*Role {
 				string(ReadResources),
 				string(ReadOrders),
 				string(CreateRoles),
+				string(UpdateRoles),
 			},
 		},
 		{

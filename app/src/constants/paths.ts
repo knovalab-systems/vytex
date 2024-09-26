@@ -41,7 +41,8 @@ export const CUSTOMS_CREATE_PATH = CUSTOMS_PATH + CREATE_PATH;
 export const CUSTOMS_UPDATE_PATH = CUSTOMS_PATH + UPDATE_PATH;
 
 export const ROLES_PATH = '/roles';
-export const ROLE_CREATE_PATH = ROLES_PATH + CREATE_PATH;
+export const ROLES_CREATE_PATH = ROLES_PATH + CREATE_PATH;
+export const ROLES_UPDATE_PATH = ROLES_PATH + UPDATE_PATH;
 
 export const TASKS_PATH = '/tasks';
 export const CORTE_RELATIVE_PATH = '/corte';

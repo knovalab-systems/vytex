@@ -1,11 +1,26 @@
 import { For, Show } from 'solid-js';
 import ActionsCell from '~/components/ActionsCell';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
+import { ROLES_UPDATE_PATH } from '~/constants/paths';
+import { usePolicies } from '~/hooks/usePolicies';
+import type { Action } from '~/types/actionsCell';
 import type { GetRolesType } from '../requests/roleGet';
 
-function RoleTable(props: {
-	roles: GetRolesType;
-}) {
+function RoleTable(props: { roles: GetRolesType }) {
+	const { hasPolicy } = usePolicies();
+
+	const actions = (id: string, code: string | null) => {
+		const arr: Action[] = [];
+		if (hasPolicy('UpdateRoles') && !code)
+			arr.push({
+				path: `${ROLES_UPDATE_PATH}/${id}`,
+				title: 'Actualizar rol',
+				label: 'Actualizar',
+				icon: 'update',
+			});
+		return arr;
+	};
+
 	return (
 		<TableContainer>
 			<Table class='table-auto font-medium'>
@@ -33,7 +48,7 @@ function RoleTable(props: {
 										Sistema
 									</Show>
 								</TableCell>
-								<ActionsCell actions={[]} />
+								<ActionsCell actions={actions(role.id, role.code)} />
 							</TableRow>
 						)}
 					</For>

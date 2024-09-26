@@ -109,6 +109,10 @@ export const POLICIES: Record<Policy, { name: string; value: Policy }> = {
 		name: 'Crear roles',
 		value: 'CreateRoles',
 	},
+	UpdateRoles: {
+		name: 'Editar roles',
+		value: 'UpdateRoles',
+	},
 	StartOrder: {
 		name: 'Empezar orden',
 		value: 'StartOrder',

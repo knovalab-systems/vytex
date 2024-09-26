@@ -343,7 +343,6 @@ func TestUpdateSupplier(t *testing.T) {
 		supplierController := SupplierController{SupplierRepository: &supplierMock}
 		// test
 		err := supplierController.UpdateSupplier(c)
-		// test
 		assert.Error(t, err)
 	})
 

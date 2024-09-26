@@ -8,7 +8,7 @@ func (m *Policy) Valid() bool {
 		return true
 	case CreateUsers, CreateColors, CreateCustoms, CreateFabrics, CreateOrders, CreateReferences, CreateResources, CreateSuppliers, CreateRoles:
 		return true
-	case UpdateUsers, UpdateColors, UpdateCustoms, UpdateFabrics, UpdateOrders, UpdateReferences, UpdateTimesReferences, UpdateResources, UpdateSuppliers, UpdateCorte:
+	case UpdateUsers, UpdateColors, UpdateCustoms, UpdateFabrics, UpdateOrders, UpdateReferences, UpdateTimesReferences, UpdateResources, UpdateSuppliers, UpdateCorte, UpdateRoles:
 		return true
 	}
 
@@ -46,4 +46,5 @@ const (
 	UpdateCorte           Policy = "UpdateCorte"
 	ReadRoles             Policy = "ReadRoles"
 	CreateRoles           Policy = "CreateRoles"
+	UpdateRoles           Policy = "UpdateRoles"
 )

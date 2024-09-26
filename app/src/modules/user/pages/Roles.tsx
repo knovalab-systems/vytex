@@ -13,7 +13,7 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
-import { ROLE_CREATE_PATH } from '~/constants/paths';
+import { ROLES_CREATE_PATH } from '~/constants/paths';
 import RoleTable from '../components/RoleTable';
 import { type GetRolesType, countRolesQuery, getRolesQuery } from '../requests/roleGet';
 
@@ -50,7 +50,7 @@ function RolesPage() {
 				</Match>
 				<Match when={isSuccess()}>
 					<div>
-						<CreateButton to={ROLE_CREATE_PATH} policy='CreateRoles' label='Nuevo rol' />
+						<CreateButton to={ROLES_CREATE_PATH} policy='CreateRoles' label='Nuevo rol' />
 					</div>
 					<RoleTable roles={roles.data as GetRolesType} />
 					<Pagination

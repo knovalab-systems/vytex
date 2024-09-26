@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readRoles } from '@vytex/client';
+import { aggregate, readRole, readRoles } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -38,3 +38,16 @@ async function countRoles() {
 		}),
 	);
 }
+
+export function getRoleQuery(id: string) {
+	return queryOptions({
+		queryFn: () => getRole(id),
+		queryKey: ['getRole', id],
+	});
+}
+
+async function getRole(id: string) {
+	return await client.request(readRole(id, { fields: ['id', 'name', 'policies', 'code'] }));
+}
+
+export type GetRoleType = Awaited<ReturnType<typeof getRole>>;
