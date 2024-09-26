@@ -1,4 +1,4 @@
-import { updateRole, type VytexRole } from '@vytex/client';
+import { type VytexRole, updateRole } from '@vytex/client';
 import { client } from '~/lib/client';
 
 export async function updateRoleRequest(id: string, role: Partial<VytexRole>) {

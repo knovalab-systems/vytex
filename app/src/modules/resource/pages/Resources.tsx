@@ -1,11 +1,9 @@
-import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { AiOutlinePlus } from 'solid-icons/ai';
-import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
+import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
+import CreateButton from '~/components/CreateButton';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -17,7 +15,6 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { RESOURCES_CREATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
-import { usePolicies } from '~/hooks/usePolicies';
 import ResourceTable from '../components/ResourceTable';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourceGet';
 
@@ -34,7 +31,6 @@ function ResourcesPage() {
 	const resources = createQuery(() => getResourcesQuery(page()));
 	const countResources = createQuery(() => countResourcesQuery());
 	const { colorsQuery } = useColors();
-	const { hasPolicy } = usePolicies();
 	const pages = createMemo<number>(() => {
 		const count = countResources.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
@@ -55,15 +51,9 @@ function ResourcesPage() {
 					<Loading label='Cargando insumos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<Show when={hasPolicy('CreateResources')}>
-						<div>
-							<A href={RESOURCES_CREATE_PATH}>
-								<Button variant='new'>
-									Nuevo Insumo <AiOutlinePlus class='ml-2' size={22} />
-								</Button>
-							</A>
-						</div>
-					</Show>
+					<div>
+						<CreateButton to={RESOURCES_CREATE_PATH} policy='CreateResources' label='Nuevo Insumo' />
+					</div>
 					<ResourceTable resources={resources.data} />
 					<Pagination
 						class='[&>*]:justify-center'

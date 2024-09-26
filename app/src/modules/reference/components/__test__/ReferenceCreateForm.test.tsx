@@ -6,9 +6,9 @@ import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/referenceCreate';
 import ReferenceCreateForm from '../ReferenceCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -269,27 +269,13 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (
 			<ReferenceCreateForm fabrics={[{ id: 1, name: 'Tela 1' }]} resources={[{ id: 1, name: 'Insumo 1' }]} />
 		));
 
-		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({
-			code: null,
-			id: 0,
-			deleted_at: null,
-			created_at: null,
-			front: null,
-			front_image: null,
-			back: null,
-			back_image: null,
-			created_by: null,
-			user: null,
-			colors: null,
-			'count(colors)': undefined,
-			time_by_task_id: null,
-			time_by_task: null,
-		});
 		const imageRequestMock = vi
 			.spyOn(imageRequest, 'uploadImagesRequest')
 			// biome-ignore lint/suspicious/noExplicitAny: type infer fail, dont know if is a list o item
@@ -414,28 +400,13 @@ describe('ReferenceCreateForm', () => {
 	});
 
 	it('calls submit with image request error', async () => {
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({});
+		const imageRequestMock = vi.spyOn(imageRequest, 'uploadImagesRequest').mockRejectedValue({});
+		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 		render(() => (
 			<ReferenceCreateForm fabrics={[{ id: 1, name: 'Tela 1' }]} resources={[{ id: 1, name: 'Insumo 1' }]} />
 		));
-
-		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
-		const requestMock = vi.spyOn(requests, 'createReferenceRequest').mockResolvedValue({
-			code: null,
-			id: 0,
-			deleted_at: null,
-			created_at: null,
-			front: null,
-			front_image: null,
-			back: null,
-			back_image: null,
-			created_by: null,
-			user: null,
-			colors: null,
-			'count(colors)': undefined,
-			time_by_task_id: null,
-			time_by_task: null,
-		});
-		const imageRequestMock = vi.spyOn(imageRequest, 'uploadImagesRequest').mockRejectedValue({});
 
 		const file = fileMock('image.png', 1024 * 1024, 'image/png');
 		const referenceField = screen.getByPlaceholderText('3453');

@@ -4,13 +4,14 @@ import toast from 'solid-toast';
 import * as requests from '../../requests/supplierCreate';
 import SupplierCreateForm from '../SupplierCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
+const refetchMock = vi.fn();
 vi.mock('~/hooks/useSuppliers', () => ({
-	refetchSuppliers: vi.fn().mockResolvedValue({}),
+	refetchSuppliers: () => refetchMock(),
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -67,18 +68,10 @@ describe('SupplierCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
-		render(() => <SupplierCreateForm />);
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createSupplierRequest').mockResolvedValue({
-			id: 0,
-			name: null,
-			deleted_at: null,
-			created_at: null,
-			updated_at: null,
-			code: null,
-			nit: null,
-			brand: null,
-		});
+		render(() => <SupplierCreateForm />);
 
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
 		const brandField = screen.getByPlaceholderText('Marca del proveedor');
@@ -95,6 +88,8 @@ describe('SupplierCreateForm', () => {
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
+			expect(refetchMock).toHaveBeenCalled();
+			expect(navigateMock).toHaveBeenCalled();
 		});
 	});
 
@@ -167,6 +162,8 @@ describe('SupplierCreateForm', () => {
 			await waitFor(() => {
 				expect(requestMock).toHaveBeenCalled();
 				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+				expect(refetchMock).not.toHaveBeenCalled();
+				expect(navigateMock).not.toHaveBeenCalled();
 			});
 		});
 	}

@@ -23,7 +23,7 @@ describe('Logout nav button', () => {
 	});
 
 	it('logs out succesfully', async () => {
-		const logoutMock = vi.fn().mockResolvedValueOnce({});
+		const logoutMock = vi.fn().mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('Success');
 
 		vi.spyOn(auth, 'useAuth').mockImplementation(() => ({

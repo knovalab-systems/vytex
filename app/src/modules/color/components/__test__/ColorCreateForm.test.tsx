@@ -4,13 +4,14 @@ import toast from 'solid-toast';
 import * as requests from '../../requests/colorCreate';
 import ColorCreateForm from '../ColorCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
+const refetchMock = vi.fn();
 vi.mock('~/hooks/useColors', () => ({
-	refetchColors: vi.fn().mockResolvedValue({}),
+	refetchColors: () => refetchMock(),
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -77,15 +78,8 @@ describe('ColorCreateForm', () => {
 
 	it('calls submit succesfully', async () => {
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({
-			id: 0,
-			name: null,
-			code: null,
-			hex: null,
-			deleted_at: null,
-			created_at: null,
-			updated_at: null,
-		});
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'createColorRequest').mockResolvedValue({});
 		render(() => <ColorCreateForm />);
 
 		const nameField = screen.getByPlaceholderText('Blanco');
@@ -101,6 +95,8 @@ describe('ColorCreateForm', () => {
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalled();
+			expect(refetchMock).toHaveBeenCalled();
+			expect(navigateMock).toHaveBeenCalled();
 		});
 	});
 
@@ -144,6 +140,8 @@ describe('ColorCreateForm', () => {
 			await waitFor(() => {
 				expect(requestMock).toHaveBeenCalled();
 				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+				expect(refetchMock).not.toHaveBeenCalled();
+				expect(navigateMock).not.toHaveBeenCalled();
 			});
 		});
 	}

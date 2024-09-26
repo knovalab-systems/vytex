@@ -1,4 +1,4 @@
-import { createRole, type VytexRole } from '@vytex/client';
+import { type VytexRole, createRole } from '@vytex/client';
 import { client } from '~/lib/client';
 
 export async function createRoleRequest(role: Partial<VytexRole>) {

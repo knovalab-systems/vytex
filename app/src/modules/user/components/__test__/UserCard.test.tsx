@@ -4,9 +4,9 @@ import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
 import type { GetUserType } from '../../requests/userGet';
 import UserCard from '../UserCard';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/constants/roles', () => ({
@@ -80,7 +80,7 @@ describe('UserCard', () => {
 		const back = screen.getByText('Volver');
 		fireEvent.click(back);
 
-		await waitFor(() => expect(mockNavigate).toBeCalledWith(USERS_PATH));
+		await waitFor(() => expect(navigateMock).toBeCalledWith(USERS_PATH));
 	});
 
 	it('calls edit correctly', async () => {
@@ -99,6 +99,6 @@ describe('UserCard', () => {
 		const edit = screen.getByText('Actualizar');
 		fireEvent.click(edit);
 
-		await waitFor(() => expect(mockNavigate).toBeCalledWith(`${USER_UPDATE_PATH}/1`));
+		await waitFor(() => expect(navigateMock).toBeCalledWith(`${USER_UPDATE_PATH}/1`));
 	});
 });

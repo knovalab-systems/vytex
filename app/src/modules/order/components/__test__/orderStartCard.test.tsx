@@ -176,7 +176,7 @@ describe('OrderStartCard', () => {
 	});
 
 	it('calls submit button succesfully', async () => {
-		// @ts-ignore: dont care the return value
+		// @ts-ignore: return value does not matter
 		const requestMock = vi.spyOn(requests, 'updateOrderRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success');
 		const order: GetOrderStart = {

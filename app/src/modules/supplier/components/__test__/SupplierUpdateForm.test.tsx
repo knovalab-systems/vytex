@@ -5,9 +5,9 @@ import { createPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/supplierUpdate';
 import SupplierUpdateForm from '../SupplierUpdateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 const supplier = {
@@ -21,8 +21,9 @@ const supplier = {
 	created_at: null,
 };
 
+const refetchMock = vi.fn();
 vi.mock('~/hooks/useSuppliers', () => ({
-	refetchSuppliers: vi.fn().mockResolvedValue({}),
+	refetchSuppliers: () => refetchMock(),
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -187,24 +188,17 @@ describe('SupplierUpdateForm', () => {
 			await waitFor(() => {
 				expect(requestMock).toHaveBeenCalled();
 				expect(toastMock).toHaveBeenCalledWith(err.textExp);
+				expect(refetchMock).not.toHaveBeenCalled();
+				expect(navigateMock).not.toHaveBeenCalled();
 			});
 		});
 	}
 
 	it('calls submit succesfully', async () => {
-		render(() => <SupplierUpdateForm supplier={supplier} />);
-
-		const requestMock = vi.spyOn(requests, 'updateSupplierRequest').mockResolvedValue({
-			brand: null,
-			code: null,
-			id: 0,
-			nit: null,
-			name: null,
-			deleted_at: null,
-			updated_at: null,
-			created_at: null,
-		});
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'updateSupplierRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
+		render(() => <SupplierUpdateForm supplier={supplier} />);
 
 		const nameField = screen.getByPlaceholderText('Nombre del proveedor');
 		const brandField = screen.getByPlaceholderText('Marca del proveedor');
@@ -250,6 +244,8 @@ describe('SupplierUpdateForm', () => {
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();
 			expect(toastMock).toHaveBeenCalledWith('Proveedor actualizado correctamente.');
+			expect(refetchMock).toHaveBeenCalled();
+			expect(navigateMock).toHaveBeenCalled();
 		});
 	});
 });

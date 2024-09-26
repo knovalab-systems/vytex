@@ -10,12 +10,12 @@ import {
 	pipe,
 	string,
 } from 'valibot';
-import { MIN_NUM_VALUE, REQ_NUM_VALUE_MSG } from '~/constants/commonErrMsgs';
+import { MIN_NUM_VALUE, REQ_NAME, REQ_NUM_VALUE } from '~/constants/commonErrMsgs';
 import { COMPOSITIONS } from '~/constants/compositions';
 import { STATUS_OPTIONS } from '~/constants/status';
 
 export const FabricUpdateSchema = object({
-	name: pipe(string('Ingresa el nombre.'), minLength(1, 'Ingresa el nombre.')),
+	name: pipe(string(REQ_NAME), minLength(1, REQ_NAME)),
 	code: pipe(number('Ingresa el código.'), minValue(1, 'Ingresa el código.')),
 	cost: pipe(number('Ingresa el costo.'), minValue(1, 'Ingresa un costo mayor a 0.')),
 	color: pipe(number('Selecciona un color.'), minValue(1, 'Selecciona un color.')),
@@ -24,7 +24,7 @@ export const FabricUpdateSchema = object({
 	composition: object(
 		entriesFromList(
 			COMPOSITIONS,
-			pipe(number(REQ_NUM_VALUE_MSG), minValue(0, MIN_NUM_VALUE), maxValue(100, 'Ingresa un valor igual o menor 100.')),
+			pipe(number(REQ_NUM_VALUE), minValue(0, MIN_NUM_VALUE), maxValue(100, 'Ingresa un valor igual o menor 100.')),
 		),
 	),
 });

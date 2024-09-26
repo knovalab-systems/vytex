@@ -6,9 +6,9 @@ import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/resourceCreate';
 import ResourceCreateForm from '../ResourceCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -65,6 +65,9 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('calls submit successfully', async () => {
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'createResourceRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (
 			<ResourceCreateForm
 				suppliers={[
@@ -76,37 +79,6 @@ describe('ResourceCreateForm', () => {
 				]}
 			/>
 		));
-
-		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createResourceRequest').mockResolvedValue({
-			code: null,
-			id: 0,
-			name: null,
-			deleted_at: null,
-			created_at: null,
-			cost: null,
-			color_id: null,
-			color: {
-				id: 0,
-				name: null,
-				code: null,
-				hex: null,
-				deleted_at: null,
-				created_at: null,
-				updated_at: null,
-			},
-			supplier_id: null,
-			supplier: {
-				id: 0,
-				nit: null,
-				name: null,
-				brand: null,
-				code: null,
-				deleted_at: null,
-				updated_at: null,
-				created_at: null,
-			},
-		});
 
 		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('23231');

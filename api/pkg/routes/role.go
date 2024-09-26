@@ -16,5 +16,7 @@ func privateRoleRoutes(g *echo.Group) {
 	route.GET("", roleController.ReadRoles, middlewares.Policies([]models.Policy{models.ReadUsers, models.UpdateUsers, models.CreateUsers}))
 	route.GET("/aggregate", roleController.AggregateRoles, middlewares.Policies([]models.Policy{models.ReadRoles}))
 	route.POST("", roleController.CreateRole, middlewares.Policies([]models.Policy{models.CreateRoles}))
+	route.GET("/:roleId", roleController.ReadRole, middlewares.Policies([]models.Policy{models.ReadRoles, models.UpdateRoles}))
+	route.PATCH("/:roleId", roleController.UpdateRole, middlewares.Policies([]models.Policy{models.UpdateRoles}))
 
 }

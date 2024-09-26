@@ -46,6 +46,40 @@ func (m *RoleController) ReadRoles(c echo.Context) error {
 	return c.JSON(http.StatusOK, roles)
 }
 
+// Get role
+// @Summary      Get role from db
+// @Description  Get role by id
+// @Tags         Roles
+// @Produce      json
+// @Param        roleId path string true "Role ID"
+// @Success      200 {object} models.Role
+// @Failure      400
+// @Failure      403
+// @Failure      500
+// @Router       /roles/{roleId} [get]
+func (m *RoleController) ReadRole(c echo.Context) error {
+	u := new(models.RoleRead)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.RoleBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.RoleBadRequest()
+	}
+
+	// get role
+	role, err := m.RoleRepository.SelectRole(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, role)
+}
+
 // Get aggregate from roles
 // @Summary      Get aggregate from roles
 // @Description  Get result of aggregate function from roles
@@ -105,4 +139,38 @@ func (m *RoleController) CreateRole(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusCreated, role)
+}
+
+// Update role
+// @Summary      Update role
+// @Description  Updates the fields from role
+// @Tags         Role
+// @Param		 roleId path string true "Role ID"
+// @Param		 models.RoleUpdateBody body string true "Role update values"
+// @Produce      json
+// @Success      200 {object} models.Role
+// @Failure      400
+// @Failure      403
+// @Failure      500
+// @Router       /roles/{roleId} [PATCH]
+func (m *RoleController) UpdateRole(c echo.Context) error {
+	u := new(models.RoleUpdateBody)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.UpdateRoleBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.UpdateRoleBadRequest()
+	}
+
+	// update role
+	role, err := m.RoleRepository.UpdateRole(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, role)
 }

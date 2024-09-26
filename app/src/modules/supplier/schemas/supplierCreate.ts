@@ -1,7 +1,8 @@
 import { type InferInput, check, minLength, minValue, number, object, pipe, string } from 'valibot';
+import { REQ_NAME } from '~/constants/commonErrMsgs';
 
 export const SupplierCreateSchema = object({
-	name: pipe(string('Ingresa el nombre.'), minLength(1, 'Ingresa el nombre.')),
+	name: pipe(string(REQ_NAME), minLength(1, REQ_NAME)),
 	code: pipe(number('Ingresa el código.'), minValue(1, 'Ingresa el código.')),
 	brand: pipe(string('Ingresa la marca.'), minLength(1, 'Ingresa la marca.')),
 	nit: pipe(

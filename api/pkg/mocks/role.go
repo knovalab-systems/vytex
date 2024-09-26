@@ -14,6 +14,11 @@ func (m *RoleMock) SelectRoles(req *models.Query) ([]*models.Role, error) {
 	return []*models.Role{}, args.Error(0)
 }
 
+func (m *RoleMock) SelectRole(req *models.RoleRead) (*models.Role, error) {
+	args := m.Called()
+	return &models.Role{}, args.Error(0)
+}
+
 func (m *RoleMock) AggregationRoles(req *models.AggregateQuery) ([]*models.AggregateData, error) {
 	args := m.Called(req)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
@@ -21,5 +26,10 @@ func (m *RoleMock) AggregationRoles(req *models.AggregateQuery) ([]*models.Aggre
 
 func (m *RoleMock) CreateRole(u *models.RoleCreateBody) (*models.Role, error) {
 	args := m.Called(u)
+	return args.Get(0).(*models.Role), args.Error(1)
+}
+
+func (m *RoleMock) UpdateRole(u *models.RoleUpdateBody) (*models.Role, error) {
+	args := m.Called()
 	return args.Get(0).(*models.Role), args.Error(1)
 }

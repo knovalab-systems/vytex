@@ -151,6 +151,7 @@ func (m *SupplierController) CreateSupplier(c echo.Context) error {
 // @Produce      json
 // @Success      200 {object} models.Supplier
 // @Failure      400
+// @Failure      403
 // @Failure      500
 // @Router       /suppliers/{supplierId} [PATCH]
 func (m *SupplierController) UpdateSupplier(c echo.Context) error {

@@ -5,9 +5,9 @@ import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../requests/fabricCreate';
 import FabricCreateForm from '../FabricCreateForm';
 
-const mockNavigate = vi.fn();
+const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
-	useNavigate: () => mockNavigate,
+	useNavigate: () => navigateMock,
 }));
 
 vi.mock('~/components/CancelButton', () => ({ default: () => <div>Cancelar</div> }));
@@ -171,6 +171,9 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('calls submit succesfully', async () => {
+		// @ts-ignore: return value does not matter
+		const requestMock = vi.spyOn(requests, 'createFabricRequest').mockResolvedValue({});
+		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
 		render(() => (
 			<FabricCreateForm
 				suppliers={[
@@ -182,22 +185,6 @@ describe('FabricCreateForm', () => {
 				]}
 			/>
 		));
-
-		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		const requestMock = vi.spyOn(requests, 'createFabricRequest').mockResolvedValue({
-			id: 0,
-			code: null,
-			deleted_at: null,
-			created_at: null,
-			name: null,
-			cost: null,
-			color_id: null,
-			color: null,
-			supplier_id: null,
-			supplier: null,
-			composition_id: null,
-			composition: null,
-		});
 
 		const nameField = screen.getByPlaceholderText('Tela');
 		const codeField = screen.getByPlaceholderText('23231');

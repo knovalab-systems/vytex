@@ -1,7 +1,6 @@
 import { type SubmitHandler, createForm, getError, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
-import type { VytexRole } from '@vytex/client';
-import { For, Show } from 'solid-js';
+import { For, Show, createEffect } from 'solid-js';
 import { toast } from 'solid-toast';
 import CancelButton from '~/components/CancelButton';
 import { Button } from '~/components/ui/Button';
@@ -11,27 +10,56 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { ROLES_PATH } from '~/constants/paths';
 import { POLICIES } from '~/constants/policies';
 import { refetchRoles } from '~/hooks/useRoles';
-import { createRoleRequest } from '../requests/roleCreate';
-import { RoleCreateSchema, type RoleCreateType } from '../schemas/roleCreate';
+import type { Policy, Role } from '~/types/core';
+import { areArraysEqualSets } from '~/utils/array';
+import type { GetRoleType } from '../requests/roleGet';
+import { updateRoleRequest } from '../requests/roleUpdate';
+import { RoleUpdateSchema, type RoleUpdateType } from '../schemas/roleUpdate';
 
-function RoleCreateForm() {
+function RoleUpdateForm(props: { role: GetRoleType }) {
 	const navigate = useNavigate();
-
-	const [form, { Form, Field }] = createForm<RoleCreateType>({
-		validate: valiForm(RoleCreateSchema),
+	const [form, { Form, Field }] = createForm<RoleUpdateType>({
+		validate: valiForm(RoleUpdateSchema),
+		initialValues: {
+			name: props.role.name,
+			policies: props.role.policies as Policy[],
+		},
 	});
 
-	const handleSubmit: SubmitHandler<RoleCreateType> = async data => {
-		return createRoleRequest(data as VytexRole)
-			.then(() => {
-				refetchRoles();
-				toast.success('Role creado correctamente.');
-				navigate(ROLES_PATH);
-			})
-			.catch(() => toast.error('Error al crear rol.'));
+	const handleSubmit: SubmitHandler<RoleUpdateType> = async data => {
+		const role: Partial<Role> = {};
+		let hasChange = false;
+
+		if (data.name !== props.role.name) {
+			role.name = data.name;
+			hasChange = true;
+		}
+
+		if (!areArraysEqualSets(data.policies, props.role.policies ?? [])) {
+			role.policies = data.policies as Policy[];
+			hasChange = true;
+		}
+
+		if (hasChange) {
+			return updateRoleRequest(props.role.id, role)
+				.then(() => {
+					refetchRoles();
+					toast.success('Role actualizado correctamente.');
+					navigate(ROLES_PATH);
+				})
+				.catch(() => toast.error('Error al actualizar role.'));
+		}
+
+		return toast.error('Las funciones no han sido editadas.');
 	};
 
 	const checkedError = () => getError(form, 'policies');
+
+	createEffect(() => {
+		if (props.role.code) {
+			navigate(ROLES_PATH);
+		}
+	});
 
 	return (
 		<Form class='w-full md:w-5/6 xl:w-3/5' onSubmit={handleSubmit}>
@@ -82,12 +110,12 @@ function RoleCreateForm() {
 
 			<div class='flex justify-between m-4'>
 				<CancelButton to={ROLES_PATH} />
-				<Button type='submit' disabled={form.submitting} variant='success'>
-					Crear
+				<Button type='submit' disabled={form.submitting || !form.dirty} variant='success'>
+					Actualizar
 				</Button>
 			</div>
 		</Form>
 	);
 }
 
-export default RoleCreateForm;
+export default RoleUpdateForm;

@@ -1,11 +1,9 @@
-import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { AiOutlinePlus } from 'solid-icons/ai';
-import { Match, Show, Switch, createMemo, createSignal } from 'solid-js';
+import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
+import CreateButton from '~/components/CreateButton';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -16,7 +14,6 @@ import {
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
 import { REFS_CREATE_PATH } from '~/constants/paths';
-import { usePolicies } from '~/hooks/usePolicies';
 import ReferenceTable from '../components/ReferenceTable';
 import { countReferencesQuery, getReferencesQuery } from '../requests/referenceGet';
 
@@ -29,7 +26,6 @@ function References() {
 }
 
 function ReferencesPage() {
-	const { hasPolicy } = usePolicies();
 	const [page, setPage] = createSignal(1);
 	const references = createQuery(() => getReferencesQuery(page()));
 	const countReferences = createQuery(() => countReferencesQuery());
@@ -49,15 +45,9 @@ function ReferencesPage() {
 					<Loading label='Cargando referencias' />
 				</Match>
 				<Match when={references.isSuccess && countReferences.isSuccess}>
-					<Show when={hasPolicy('CreateReferences')}>
-						<div>
-							<A href={REFS_CREATE_PATH}>
-								<Button variant='new'>
-									Nueva Referencia <AiOutlinePlus class='ml-2' size={22} />
-								</Button>
-							</A>
-						</div>
-					</Show>
+					<div>
+						<CreateButton to={REFS_CREATE_PATH} policy='CreateReferences' label='Nueva Referencia' />
+					</div>
 					<ReferenceTable references={references.data} />
 					<Pagination
 						class='[&>*]:justify-center'

@@ -66,7 +66,7 @@ describe('TaskControlActionsCell', () => {
 
 	for (const button of buttons) {
 		it('calls update request', async () => {
-			// @ts-ignore: the result doesnt care
+			// @ts-ignore: return value does not matter
 			const requestMock = vi.spyOn(request, 'updateTaskControlRequest').mockResolvedValue({});
 			const toastMock = vi.spyOn(toast, 'success');
 			render(() => <TaskControlActionsCell id={1} started={false} finished={false} rejected={false} />);
@@ -83,7 +83,7 @@ describe('TaskControlActionsCell', () => {
 	}
 
 	it('calls update request', async () => {
-		// @ts-ignore: the result doesnt care
+		// @ts-ignore: return value does not matter
 		const requestMock = vi.spyOn(request, 'updateTaskControlRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success');
 		render(() => <TaskControlActionsCell id={1} started={true} finished={false} rejected={false} />);

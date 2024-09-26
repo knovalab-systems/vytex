@@ -1,7 +1,8 @@
 import { type InferInput, minLength, object, pipe, regex, string } from 'valibot';
+import { REQ_NAME } from '~/constants/commonErrMsgs';
 
 export const UserCreateSchema = object({
-	name: pipe(string(), minLength(1, 'Ingresa el nombre.')),
+	name: pipe(string(), minLength(1, REQ_NAME)),
 	username: pipe(string(), minLength(1, 'Ingresa el usuario.')),
 	password: pipe(
 		string(),
