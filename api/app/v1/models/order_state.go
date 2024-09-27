@@ -9,10 +9,10 @@ type OrderState struct {
 type OrderStateValue string
 
 const (
-	CreatedOrderStateValue   = "created"
-	StartedOrderStateValue   = "started"
-	CanceledOrderStateValue  = "canceled"
-	FinalizedOrderStateValue = "finalized"
+	CreatedOrderStateValue  = "created"
+	StartedOrderStateValue  = "started"
+	CanceledOrderStateValue = "canceled"
+	FinishedOrderStateValue = "finished"
 )
 
 func DefaultOrderStatus() []*OrderState {
@@ -20,6 +20,6 @@ func DefaultOrderStatus() []*OrderState {
 		{Name: "Creada", Value: CreatedOrderStateValue},
 		{Name: "Iniciada", Value: StartedOrderStateValue},
 		{Name: "Cancelada", Value: CanceledOrderStateValue},
-		{Name: "Finalizada", Value: FinalizedOrderStateValue},
+		{Name: "Finalizada", Value: FinishedOrderStateValue},
 	}
 }

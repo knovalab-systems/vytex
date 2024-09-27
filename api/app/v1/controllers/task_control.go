@@ -47,6 +47,15 @@ func (m *TaskControlController) ReadTaskControls(c echo.Context) error {
 	return c.JSON(http.StatusOK, taskControls)
 }
 
+// Get aggregate from taskControls
+// @Summary      Get aggregate from taskControls
+// @Description  Get result of aggregate function from taskControls
+// @Tags         TaskControlers
+// @Produce      json
+// @Success      200 {array} models.AggregateData
+// @Failure      400
+// @Failure      500
+// @Router       /task-controls/aggregate [get]
 func (m *TaskControlController) AggregateTaskControls(c echo.Context) error {
 	u := new(models.AggregateQuery)
 

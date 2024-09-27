@@ -207,7 +207,7 @@ func (m *TaskControlService) finishTaskControl(taskControl *models.TaskControl, 
 			return nil, problems.ServerError()
 		}
 
-		finishedState, err := query.OrderState.Where(query.OrderState.Value.Eq(models.FinalizedOrderStateValue)).First()
+		finishedState, err := query.OrderState.Where(query.OrderState.Value.Eq(models.FinishedOrderStateValue)).First()
 		if err != nil {
 			return nil, problems.ServerError()
 		}
