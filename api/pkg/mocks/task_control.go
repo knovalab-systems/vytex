@@ -10,6 +10,11 @@ type TaskControlMock struct {
 	mock.Mock
 }
 
+func (m *TaskControlMock) AggregationTaskControls(req *models.AggregateQuery) ([]*models.AggregateData, error) {
+	args := m.Called(req)
+	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
+}
+
 func (m *TaskControlMock) SelectTaskControls(req *models.Query) ([]*models.TaskControl, error) {
 	args := m.Called()
 	return []*models.TaskControl{}, args.Error(0)

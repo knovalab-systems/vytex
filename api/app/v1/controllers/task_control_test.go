@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -58,6 +59,55 @@ func TestReadTaskControls(t *testing.T) {
 
 		// test
 		err := taskControlController.ReadTaskControls(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
+func TestAggregateTaskControls(t *testing.T) {
+
+	t.Run("Fail on get aggregate taskcontrols", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		taskControlMock := mocks.TaskControlMock{}
+		taskControlMock.On("AggregationTaskControls", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("ERROR"))
+
+		// controller
+		controller := TaskControlController{TaskControlRepository: &taskControlMock}
+
+		// test
+		err := controller.AggregateTaskControls(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get aggregate taskcontrols succesfully ", func(t *testing.T) {
+		// context
+		q := make(url.Values)
+		q.Set("count", "*")
+		req := httptest.NewRequest(http.MethodGet, "/?"+q.Encode(), nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		taskControlMock := mocks.TaskControlMock{}
+		taskControlMock.On("AggregationTaskControls", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+
+		// controller
+		controller := TaskControlController{TaskControlRepository: &taskControlMock}
+
+		// test
+		err := controller.AggregateTaskControls(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
