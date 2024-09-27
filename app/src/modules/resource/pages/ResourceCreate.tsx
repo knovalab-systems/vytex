@@ -2,7 +2,7 @@ import { Match, Switch } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
 import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
-import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
+import { useSuppliers } from '~/hooks/useSuppliers';
 import ResourceCreateForm from '../components/ResourceCreateForm';
 
 function ResourceCreate() {
@@ -28,7 +28,7 @@ function ResourceCreatePage() {
 					<Loading label='Cargando datos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<ResourceCreateForm suppliers={suppliersQuery.data as Suppliers} />
+					<ResourceCreateForm />
 				</Match>
 			</Switch>
 		</div>

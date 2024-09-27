@@ -173,15 +173,17 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 									)}
 									options={getColors().filter(color => !color.deleted_at)}
 								>
-									<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
-										<Show when={Boolean(getColorsRecord()[field.value || 0])}>
-											<div
-												class='h-5 w-5 mr-2 m-auto border'
-												style={{ background: getColorsRecord()[field.value || 0]?.hex || '' }}
-											/>
-										</Show>
-										<ComboboxInput />
-										<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+									<ComboboxControl<Colors[0]> aria-errormessage={field.error} aria-label='Colores'>
+										{state => (
+											<>
+												<div
+													class='h-5 w-5 mr-2 m-auto border'
+													style={{ background: state.selectedOptions().at(0)?.hex || '' }}
+												/>
+												<ComboboxInput />
+												<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+											</>
+										)}
 									</ComboboxControl>
 									<Show when={Boolean(field.error)}>
 										<div class={'text-sm my-auto text-red-600'}>{field.error}</div>

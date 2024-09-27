@@ -2,20 +2,45 @@ import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readResource, readResources } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
+import type { ResourceFilter } from '~/types/filter';
 
-export function getResourcesQuery(page: number) {
+export function getResourcesQuery(page: number, filters: ResourceFilter) {
 	return queryOptions({
-		queryKey: ['getResources', page],
-		queryFn: () => getResources(page),
+		queryKey: ['getResources', page, filters],
+		queryFn: () => getResources(page, filters),
 	});
 }
 
-async function getResources(page: number) {
+async function getResources(page: number, filters: ResourceFilter) {
 	return await client.request(
 		readResources({
 			page: page,
 			limit: QUERY_LIMIT,
 			fields: ['id', 'name', 'cost', 'color_id', 'supplier_id', 'code', 'deleted_at'],
+			filter: {
+				...(filters.code && {
+					code: {
+						_contains: filters.code,
+					},
+				}),
+				...(filters.name && {
+					name: {
+						_contains: filters.name,
+					},
+				}),
+				...(filters.colors &&
+					filters.colors.length > 0 && {
+						color_id: {
+							_in: filters.colors,
+						},
+					}),
+				...(filters.suppliers &&
+					filters.suppliers.length > 0 && {
+						supplier_id: {
+							_in: filters.suppliers,
+						},
+					}),
+			},
 		}),
 	);
 }

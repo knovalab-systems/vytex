@@ -15,6 +15,8 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { RESOURCES_CREATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
+import type { ResourceFilter } from '~/types/filter';
+import ResourceFilters from '../components/ResourceFilters';
 import ResourceTable from '../components/ResourceTable';
 import { countResourcesQuery, getResourcesQuery } from '../requests/resourceGet';
 
@@ -27,8 +29,9 @@ function Resources() {
 }
 
 function ResourcesPage() {
+	const [filters, setFilters] = createSignal<ResourceFilter>({});
 	const [page, setPage] = createSignal(1);
-	const resources = createQuery(() => getResourcesQuery(page()));
+	const resources = createQuery(() => getResourcesQuery(page(), filters()));
 	const countResources = createQuery(() => countResourcesQuery());
 	const { colorsQuery } = useColors();
 	const pages = createMemo<number>(() => {
@@ -51,8 +54,9 @@ function ResourcesPage() {
 					<Loading label='Cargando insumos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<div>
+					<div class='flex flex-wrap gap-2 p-1'>
 						<CreateButton to={RESOURCES_CREATE_PATH} policy='CreateResources' label='Nuevo Insumo' />
+						<ResourceFilters setFilters={setFilters} filters={filters} />
 					</div>
 					<ResourceTable resources={resources.data} />
 					<Pagination

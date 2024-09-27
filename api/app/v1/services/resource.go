@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -34,6 +35,15 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 
 	// fields
 	s = resourceFields(s, q.Fields)
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.ResourceFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ResourceBadRequest()
+		}
+	}
 
 	// run query
 	resources, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
