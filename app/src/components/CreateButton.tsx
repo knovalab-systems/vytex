@@ -12,7 +12,7 @@ function CreateButton(props: { policy: Policy; to: string; label?: string; class
 		<Show when={hasPolicy(props.policy)}>
 			<A href={props.to}>
 				<Button variant='new' class={props.class}>
-					{props.label ?? 'Nuevo'}
+					<p class='text-nowrap'>{props.label ?? 'Nuevo'}</p>
 					<AiOutlinePlus class={cn('ml-2', props.class)} size={22} />
 				</Button>
 			</A>

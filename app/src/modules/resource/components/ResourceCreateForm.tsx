@@ -24,9 +24,9 @@ import type { Resource } from '~/types/core';
 import { createResourceRequest } from '../requests/resourceCreate';
 import { ResourceCreateSchema, type ResourceCreateType } from '../schema/resourceCreate';
 
-function ResourceCreateForm(props: { suppliers: Suppliers }) {
+function ResourceCreateForm() {
 	const { getColorsRecord, getColors } = useColors();
-	const { getSuppliersRecord: suppliersRecord } = useSuppliers();
+	const { getSuppliersRecord, getSuppliers } = useSuppliers();
 
 	const navigate = useNavigate();
 
@@ -143,29 +143,30 @@ function ResourceCreateForm(props: { suppliers: Suppliers }) {
 									)}
 									options={getColors().filter(color => !color.deleted_at)}
 								>
-									<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
-										<Show when={Boolean(getColorsRecord()[field.value || 0])}>
-											<div
-												class='h-5 w-5 mr-2 m-auto border'
-												style={{ background: getColorsRecord()[field.value || 0]?.hex || '' }}
-											/>
-										</Show>
-										<ComboboxInput />
-										<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+									<ComboboxControl<Colors[0]> aria-errormessage={field.error} aria-label='Colores'>
+										{state => (
+											<>
+												<div
+													class='h-5 w-5 mr-2 m-auto border'
+													style={{ background: state.selectedOptions().at(0)?.hex || '' }}
+												/>
+												<ComboboxInput />
+												<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+											</>
+										)}
 									</ComboboxControl>
 									<Show when={Boolean(field.error)}>
 										<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
 									</Show>
 									<ComboboxContent />
 								</Combobox>
-
 								<Field name='supplier' type='number'>
 									{field => (
 										<div class='gap-4 w-full'>
 											<LabelSpan class='my-auto whitespace-nowrap'>Proveedor del insumo</LabelSpan>
 											<Combobox<Suppliers[0]>
 												class='whitespace-nowrap min-w-48'
-												value={suppliersRecord()[field.value || 0]}
+												value={getSuppliersRecord()[field.value || 0]}
 												onChange={value => {
 													setValue(form, 'supplier', value ? value.id : 0);
 												}}
@@ -184,7 +185,7 @@ function ResourceCreateForm(props: { suppliers: Suppliers }) {
 														<ComboboxItemIndicator />
 													</ComboboxItem>
 												)}
-												options={props.suppliers}
+												options={getSuppliers().filter(e => !e.deleted_at)}
 											>
 												<ComboboxControl aria-errormessage={field.error} aria-label='Proveedores'>
 													<ComboboxInput />

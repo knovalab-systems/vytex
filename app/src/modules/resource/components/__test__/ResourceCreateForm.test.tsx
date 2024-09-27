@@ -20,6 +20,13 @@ vi.mock('~/hooks/useColors', () => ({
 	}),
 }));
 
+vi.mock('~/hooks/useSuppliers', () => ({
+	useSuppliers: () => ({
+		getSuppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }),
+		getSuppliers: () => [{ id: 1 }, { id: 2 }],
+	}),
+}));
+
 describe('ResourceCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -27,7 +34,7 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <ResourceCreateForm suppliers={[]} />);
+		render(() => <ResourceCreateForm />);
 		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
@@ -46,7 +53,7 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <ResourceCreateForm suppliers={[]} />);
+		render(() => <ResourceCreateForm />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -68,17 +75,7 @@ describe('ResourceCreateForm', () => {
 		// @ts-ignore: return value does not matter
 		const requestMock = vi.spyOn(requests, 'createResourceRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		render(() => (
-			<ResourceCreateForm
-				suppliers={[
-					{
-						id: 1,
-						name: 'Proveedor',
-						deleted_at: null,
-					},
-				]}
-			/>
-		));
+		render(() => <ResourceCreateForm />);
 
 		const nameField = screen.getByPlaceholderText('Insumo');
 		const codeField = screen.getByPlaceholderText('23231');
@@ -159,17 +156,7 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('calls submit error, code exists', async () => {
-		render(() => (
-			<ResourceCreateForm
-				suppliers={[
-					{
-						id: 1,
-						name: 'Proveedor',
-						deleted_at: null,
-					},
-				]}
-			/>
-		));
+		render(() => <ResourceCreateForm />);
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 		const requestMock = vi.spyOn(requests, 'createResourceRequest').mockRejectedValue({
@@ -258,17 +245,7 @@ describe('ResourceCreateForm', () => {
 	});
 
 	it('calls submit error, server error', async () => {
-		render(() => (
-			<ResourceCreateForm
-				suppliers={[
-					{
-						id: 1,
-						name: 'Proveedor',
-						deleted_at: null,
-					},
-				]}
-			/>
-		));
+		render(() => <ResourceCreateForm />);
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 		const requestMock = vi.spyOn(requests, 'createResourceRequest').mockRejectedValue({

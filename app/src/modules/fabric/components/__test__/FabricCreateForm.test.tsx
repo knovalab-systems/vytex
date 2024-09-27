@@ -19,6 +19,13 @@ vi.mock('~/hooks/useColors', () => ({
 	}),
 }));
 
+vi.mock('~/hooks/useSuppliers', () => ({
+	useSuppliers: () => ({
+		getSuppliersRecord: () => ({ 1: { id: 1 }, 2: { id: 2 } }),
+		getSuppliers: () => [{ id: 1 }, { id: 2 }],
+	}),
+}));
+
 describe('FabricCreateForm', () => {
 	installPointerEvent();
 	beforeEach(() => {
@@ -26,7 +33,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <FabricCreateForm suppliers={[]} />);
+		render(() => <FabricCreateForm />);
 		const nameField = screen.getByPlaceholderText('Tela');
 		const codeField = screen.getByPlaceholderText('23231');
 		const costField = screen.getByPlaceholderText('12000');
@@ -45,7 +52,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <FabricCreateForm suppliers={[]} />);
+		render(() => <FabricCreateForm />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -64,7 +71,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('shows overflow error on compositions fields', async () => {
-		render(() => <FabricCreateForm suppliers={[]} />);
+		render(() => <FabricCreateForm />);
 
 		const compositionFields = screen.getAllByPlaceholderText('10');
 		fireEvent.input(compositionFields[0], { target: { value: 101 } });
@@ -78,17 +85,7 @@ describe('FabricCreateForm', () => {
 	});
 
 	it('calls submit with compositions errow, different to 100', async () => {
-		render(() => (
-			<FabricCreateForm
-				suppliers={[
-					{
-						id: 1,
-						name: 'Proveedor',
-						deleted_at: null,
-					},
-				]}
-			/>
-		));
+		render(() => <FabricCreateForm />);
 
 		const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 
@@ -174,17 +171,7 @@ describe('FabricCreateForm', () => {
 		// @ts-ignore: return value does not matter
 		const requestMock = vi.spyOn(requests, 'createFabricRequest').mockResolvedValue({});
 		const toastMock = vi.spyOn(toast, 'success').mockReturnValue('success');
-		render(() => (
-			<FabricCreateForm
-				suppliers={[
-					{
-						id: 1,
-						name: 'Proveedor',
-						deleted_at: null,
-					},
-				]}
-			/>
-		));
+		render(() => <FabricCreateForm />);
 
 		const nameField = screen.getByPlaceholderText('Tela');
 		const codeField = screen.getByPlaceholderText('23231');
@@ -291,17 +278,7 @@ describe('FabricCreateForm', () => {
 
 	for (const err of requestsErrors) {
 		it(err.title, async () => {
-			render(() => (
-				<FabricCreateForm
-					suppliers={[
-						{
-							id: 1,
-							name: 'Proveedor',
-							deleted_at: null,
-						},
-					]}
-				/>
-			));
+			render(() => <FabricCreateForm />);
 
 			const toastMock = vi.spyOn(toast, 'error').mockReturnValue('error');
 			const requestMock = vi.spyOn(requests, 'createFabricRequest').mockRejectedValue(err.error);

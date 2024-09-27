@@ -25,9 +25,9 @@ import type { Composition, Fabric } from '~/types/core';
 import { createFabricRequest } from '../requests/fabricCreate';
 import { FabricCreateSchema, type FabricCreateType } from '../schemas/fabricCreate';
 
-function FabricCreateForm(props: { suppliers: Suppliers }) {
+function FabricCreateForm() {
 	const { getColorsRecord, getColors } = useColors();
-	const { getSuppliersRecord: suppliersRecord } = useSuppliers();
+	const { getSuppliersRecord, getSuppliers } = useSuppliers();
 
 	const navigate = useNavigate();
 	const [form, { Form, Field }] = createForm<FabricCreateType>({
@@ -163,13 +163,17 @@ function FabricCreateForm(props: { suppliers: Suppliers }) {
 										)}
 										options={getColors().filter(e => !e.deleted_at)}
 									>
-										<ComboboxControl aria-errormessage={field.error} aria-label='Colores'>
-											<div
-												class='h-5 w-5 mr-2 m-auto border'
-												style={{ background: getColorsRecord()[field.value || 0]?.hex || 'transparent' }}
-											/>
-											<ComboboxInput />
-											<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+										<ComboboxControl<Colors[0]> aria-errormessage={field.error} aria-label='Colores'>
+											{state => (
+												<>
+													<div
+														class='h-5 w-5 mr-2 m-auto border'
+														style={{ background: state.selectedOptions().at(0)?.hex || '' }}
+													/>
+													<ComboboxInput />
+													<ComboboxTrigger title='Ver colores' aria-label='Colores' />
+												</>
+											)}
 										</ComboboxControl>
 										<Show when={Boolean(field.error)}>
 											<div class={'text-sm my-auto text-red-600'}>{field.error}</div>
@@ -185,7 +189,7 @@ function FabricCreateForm(props: { suppliers: Suppliers }) {
 									<LabelSpan class='my-auto whitespace-nowrap'>Proveedor de la tela</LabelSpan>
 									<Combobox<Suppliers[0]>
 										class='whitespace-nowrap min-w-48'
-										value={suppliersRecord()[field.value || 0] || null}
+										value={getSuppliersRecord()[field.value || 0] || null}
 										onChange={value => {
 											setValue(form, 'supplier', value ? value.id : 0);
 										}}
@@ -204,7 +208,7 @@ function FabricCreateForm(props: { suppliers: Suppliers }) {
 												<ComboboxItemIndicator />
 											</ComboboxItem>
 										)}
-										options={props.suppliers}
+										options={getSuppliers().filter(e => !e.deleted_at)}
 									>
 										<ComboboxControl aria-errormessage={field.error} aria-label='Proveedores'>
 											<ComboboxInput />
