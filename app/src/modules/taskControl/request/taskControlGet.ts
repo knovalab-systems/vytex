@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { readTaskControls } from '@vytex/client';
+import { aggregate, readTaskControls } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 
@@ -18,6 +18,7 @@ function getTaskControls(page: number, tasks: number[]) {
 		readTaskControls({
 			limit: QUERY_LIMIT,
 			page: page,
+			sort: ['-created_at', '-started_at', '-finished_at'],
 			filter: {
 				task_id: {
 					_in: tasks,
@@ -48,5 +49,11 @@ export function countTasksQuery(tasks: number[]) {
 }
 
 async function countTasks() {
-	return await Promise.resolve([{ count: 2 }]);
+	return await client.request(
+		aggregate('vytex_task-controls', {
+			aggregate: {
+				count: '*',
+			},
+		}),
+	);
 }
