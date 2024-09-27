@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -34,6 +35,15 @@ func (m *FabricService) SelectFabrics(q *models.Query) ([]*models.Fabric, error)
 
 	// fields
 	s = fabricFields(s, q.Fields)
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.FabricFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ResourceBadRequest()
+		}
+	}
 
 	// run query
 	fabrics, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
@@ -73,6 +83,15 @@ func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.
 	table := query.Fabric
 	s := table.Unscoped().Group(table.Code)
 	aggregateElem := models.AggregateData{Count: nil}
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.FabricFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ResourceBadRequest()
+		}
+	}
 
 	if q.Count != "" {
 		re := regexp.MustCompile(`[\[\]]`)

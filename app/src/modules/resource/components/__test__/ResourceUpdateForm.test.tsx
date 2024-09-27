@@ -445,9 +445,6 @@ describe('ResourceUpdateForm', () => {
 		fireEvent(status[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
 
-		const submitButton = screen.getByText('Actualizar');
-		fireEvent.click(submitButton);
-
 		fireEvent(
 			colorSelect,
 			createPointerEvent('pointerdown', {
@@ -503,6 +500,9 @@ describe('ResourceUpdateForm', () => {
 
 		fireEvent(suppliers[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
+
+		const submitButton = screen.getByText('Actualizar');
+		fireEvent.click(submitButton);
 
 		await waitFor(() => {
 			expect(requestMock).toHaveBeenCalled();

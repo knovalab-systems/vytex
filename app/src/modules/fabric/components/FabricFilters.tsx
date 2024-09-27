@@ -18,10 +18,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~
 import { STATUS_OPTIONS } from '~/constants/status';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
-import type { ResourceFilter } from '~/types/filter';
+import type { FabricFilter } from '~/types/filter';
 import { debounce } from '~/utils/debounce';
 
-function ResourceFilters(props: { filters: Accessor<ResourceFilter>; setFilters: Setter<ResourceFilter> }) {
+function FabricFilters(props: { filters: Accessor<FabricFilter>; setFilters: Setter<FabricFilter> }) {
 	const { getColors, getColorsRecord } = useColors();
 	const { getSuppliers } = useSuppliers();
 
@@ -36,7 +36,7 @@ function ResourceFilters(props: { filters: Accessor<ResourceFilter>; setFilters:
 					onInput={debounce(e => props.setFilters(p => ({ ...p, name: e.target.value })), 400)}
 					class='h-full'
 					type='text'
-					placeholder='Nombre del insumo'
+					placeholder='Nombre de la tela'
 					autocomplete='off'
 					id='name-filter'
 					required
@@ -48,7 +48,7 @@ function ResourceFilters(props: { filters: Accessor<ResourceFilter>; setFilters:
 					onInput={debounce(e => props.setFilters(p => ({ ...p, code: e.target.value })), 400)}
 					class='h-full'
 					type='number'
-					placeholder='Código del insumo'
+					placeholder='Código de la tela'
 					autocomplete='off'
 					id='code-filter'
 					required
@@ -178,4 +178,4 @@ function ResourceFilters(props: { filters: Accessor<ResourceFilter>; setFilters:
 	);
 }
 
-export default ResourceFilters;
+export default FabricFilters;

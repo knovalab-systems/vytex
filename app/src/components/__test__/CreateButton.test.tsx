@@ -13,7 +13,7 @@ vi.mock('@solidjs/router', () => ({
 	},
 }));
 
-describe('CancelButton', () => {
+describe('CreateButton', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});

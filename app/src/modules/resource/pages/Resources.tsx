@@ -32,7 +32,7 @@ function ResourcesPage() {
 	const [filters, setFilters] = createSignal<ResourceFilter>({});
 	const [page, setPage] = createSignal(1);
 	const resources = createQuery(() => getResourcesQuery(page(), filters()));
-	const countResources = createQuery(() => countResourcesQuery());
+	const countResources = createQuery(() => countResourcesQuery(filters()));
 	const { colorsQuery } = useColors();
 	const pages = createMemo<number>(() => {
 		const count = countResources.data?.at(0)?.count || 1;

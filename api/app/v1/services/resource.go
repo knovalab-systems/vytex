@@ -84,6 +84,15 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 	s := table.Unscoped().Group(table.Code)
 	aggregateElem := models.AggregateData{Count: nil}
 
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.ResourceFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ResourceBadRequest()
+		}
+	}
+
 	if q.Count != "" {
 		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
