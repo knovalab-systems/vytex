@@ -47,6 +47,29 @@ func (m *TaskControlController) ReadTaskControls(c echo.Context) error {
 	return c.JSON(http.StatusOK, taskControls)
 }
 
+func (m *TaskControlController) AggregateTaskControls(c echo.Context) error {
+	u := new(models.AggregateQuery)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.TaskControlBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.TaskControlBadRequest()
+	}
+
+	// get taskControls
+	taskControls, err := m.TaskControlRepository.AggregationTaskControls(u)
+	if err != nil {
+		return err
+	}
+
+	// return data
+	return c.JSON(http.StatusOK, taskControls)
+}
+
 // Update task control
 // @Summary      Update task control
 // @Description  Updates the fields from task control

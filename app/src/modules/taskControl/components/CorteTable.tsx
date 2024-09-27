@@ -32,7 +32,7 @@ function CorteTable(props: { taskControls: GetTaskType }) {
 				<TableBody>
 					<Show when={(props.taskControls?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={8}>No se han encontrado tareas.</TableCell>
+							<TableCell colspan={10}>No se han encontrado tareas.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.taskControls}>

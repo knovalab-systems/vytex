@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"slices"
+	"strings"
 	"time"
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
@@ -48,6 +49,41 @@ func (m *TaskControlService) SelectTaskControls(q *models.Query) ([]*models.Task
 	}
 
 	return taskControls, nil
+}
+
+func (m *TaskControlService) AggregationTaskControls(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+	table := query.TaskControl
+	s := table.Unscoped()
+	aggregateElem := models.AggregateData{Count: nil}
+
+	if q.Count != "" {
+		countArr := strings.Split(q.Count, ",")
+		countObj := make(map[string]int64)
+
+		for _, v := range countArr {
+			switch v {
+			case "id":
+				count, err := s.Select(table.ID).Count()
+				if err != nil {
+					return nil, problems.ServerError()
+				}
+				countObj["id"] = count
+			default:
+				if aggregateElem.Count == nil {
+					count, err := s.Count()
+					if err != nil {
+						return nil, problems.ServerError()
+					}
+					aggregateElem.Count = &count
+				}
+			}
+		}
+		if len(countObj) > 0 {
+			aggregateElem.Count = countObj
+		}
+	}
+
+	return []*models.AggregateData{&aggregateElem}, nil
 }
 
 func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, p pq.StringArray) (*models.TaskControl, error) {
