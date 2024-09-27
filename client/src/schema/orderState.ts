@@ -9,6 +9,6 @@ export type VytexOrderState<Schema = any> = MergeCoreCollection<
 	{
 		id: number;
 		name: string;
-		value: 'created' | 'started';
+		value: 'created' | 'started' | 'finished' | 'canceled';
 	}
 >;

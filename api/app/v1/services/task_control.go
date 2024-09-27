@@ -51,7 +51,6 @@ func (m *TaskControlService) SelectTaskControls(q *models.Query) ([]*models.Task
 }
 
 func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, p pq.StringArray) (*models.TaskControl, error) {
-
 	table := query.TaskControl
 	taskTable := query.Task
 	stepTable := query.Step
@@ -77,84 +76,15 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 			now := time.Now()
 
 			if b.StartedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				taskControl.StartedAt = &now
-				rows, err := table.Where(table.ID.Eq(taskControl.ID)).Updates(taskControl)
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-
-				if rows.RowsAffected == 0 {
-					return nil, problems.ReadAccess()
-				}
-
-				return taskControl, nil
+				return m.startTaskControl(taskControl, &now)
 			}
 
 			if b.RejectedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				taskControl.RejectedAt = &now
-				rows, err := table.Where(table.ID.Eq(taskControl.ID)).Updates(taskControl)
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-
-				if rows.RowsAffected == 0 {
-					return nil, problems.ReadAccess()
-				}
-
-				if taskControl.PreviousID != nil {
-					rows, err = table.Where(table.ID.Eq(*taskControl.PreviousID)).Updates(map[string]interface{}{"finished_at": nil, "next_id": nil})
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-
-					if rows.RowsAffected == 0 {
-						return nil, problems.ReadAccess()
-					}
-
-				}
-
-				return taskControl, nil
-
+				return m.rejectTaskControl(taskControl, &now)
 			}
 
 			if b.FinishedAt != nil && taskControl.StartedAt != nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				nextTaskControl := &models.TaskControl{PreviousID: &taskControl.ID, OrderID: taskControl.OrderID}
-
-				switch taskControl.Task.Value {
-				case models.Plantear:
-					task, err := helpers.GetTaskByValue(models.Tender)
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-					nextTaskControl.TaskID = task.ID
-				case models.Tender:
-					task, err := helpers.GetTaskByValue(models.Cortar)
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-					nextTaskControl.TaskID = task.ID
-				default:
-					return nil, problems.ReadAccess()
-				}
-
-				err = query.TaskControl.Create(nextTaskControl)
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-
-				taskControl.NextID = &nextTaskControl.ID
-				taskControl.FinishedAt = &now
-				rows, err := table.Where(table.ID.Eq(taskControl.ID)).Updates(taskControl)
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-
-				if rows.RowsAffected == 0 {
-					return nil, problems.ReadAccess()
-				}
-
-				return taskControl, nil
-
+				return m.finishTaskControl(taskControl, &now)
 			}
 
 			return nil, problems.ReadAccess()
@@ -162,4 +92,116 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 	}
 
 	return nil, problems.ReadAccess()
+}
+
+func (m *TaskControlService) startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+	taskControl.StartedAt = now
+	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
+	if err != nil || rows.RowsAffected == 0 {
+		return nil, problems.ServerError()
+	}
+	return taskControl, nil
+}
+
+func (m *TaskControlService) rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+	taskControl.RejectedAt = now
+	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
+	if err != nil || rows.RowsAffected == 0 {
+		return nil, problems.ServerError()
+	}
+
+	if taskControl.PreviousID == nil {
+		order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		order.CanceledAt = now
+
+		canceledState, err := query.OrderState.Where(query.OrderState.Value.Eq(models.CanceledOrderStateValue)).First()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		order.OrderStateID = canceledState.ID
+
+		rows, err = query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
+		if err != nil || rows.RowsAffected == 0 {
+			return nil, problems.ServerError()
+		}
+	} else {
+		rows, err = query.TaskControl.Where(query.TaskControl.ID.Eq(*taskControl.PreviousID)).Updates(map[string]interface{}{"finished_at": nil, "next_id": nil})
+		if err != nil || rows.RowsAffected == 0 {
+			return nil, problems.ServerError()
+		}
+	}
+
+	return taskControl, nil
+}
+
+func (m *TaskControlService) finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+	nextTaskControl := &models.TaskControl{PreviousID: &taskControl.ID, OrderID: taskControl.OrderID}
+
+	switch taskControl.Task.Value {
+	case models.Trazar:
+		task, err := helpers.GetTaskByValue(models.Plantear)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Plantear:
+		task, err := helpers.GetTaskByValue(models.Tender)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Tender:
+		task, err := helpers.GetTaskByValue(models.Cortar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Cortar:
+		task, err := helpers.GetTaskByValue(models.Paquetear)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Paquetear:
+		order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+
+		finishedState, err := query.OrderState.Where(query.OrderState.Value.Eq(models.FinalizedOrderStateValue)).First()
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+
+		order.FinishedAt = now
+		order.OrderStateID = finishedState.ID
+
+		rows, err := query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
+		if err != nil || rows.RowsAffected == 0 {
+			return nil, problems.ServerError()
+		}
+
+		nextTaskControl = nil
+	default:
+		return nil, problems.ReadAccess()
+	}
+
+	if nextTaskControl != nil {
+		err := query.TaskControl.Create(nextTaskControl)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		taskControl.NextID = &nextTaskControl.ID
+	}
+
+	taskControl.FinishedAt = now
+	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
+	if err != nil || rows.RowsAffected == 0 {
+		return nil, problems.ServerError()
+	}
+
+	return taskControl, nil
 }
