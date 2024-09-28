@@ -15,6 +15,8 @@ import {
 import { QUERY_LIMIT } from '~/constants/http';
 import { FABRICS_CREATE_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
+import type { FabricFilter } from '~/types/filter';
+import FabricFilters from '../components/FabricFilters';
 import FabricTable from '../components/FabricTable';
 import { countFabricsQuery, getFabricsQuery } from '../requests/fabricGet';
 
@@ -27,9 +29,10 @@ function Fabrics() {
 }
 
 function FabricsPage() {
+	const [filters, setFilters] = createSignal<FabricFilter>({});
 	const [page, setPage] = createSignal(1);
-	const fabrics = createQuery(() => getFabricsQuery(page()));
-	const countFabrics = createQuery(() => countFabricsQuery());
+	const fabrics = createQuery(() => getFabricsQuery(page(), filters()));
+	const countFabrics = createQuery(() => countFabricsQuery(filters()));
 	const { colorsQuery } = useColors();
 	const pages = createMemo<number>(() => {
 		const count = countFabrics.data?.at(0)?.count || 1;
@@ -51,8 +54,9 @@ function FabricsPage() {
 					<Loading label='Cargando telas' />
 				</Match>
 				<Match when={isSuccess()}>
-					<div>
+					<div class='flex flex-wrap gap-2 p-1'>
 						<CreateButton to={FABRICS_CREATE_PATH} policy='CreateFabrics' label='Nueva tela' />
+						<FabricFilters setFilters={setFilters} filters={filters} />
 					</div>
 					<FabricTable fabrics={fabrics.data} />
 					<Pagination

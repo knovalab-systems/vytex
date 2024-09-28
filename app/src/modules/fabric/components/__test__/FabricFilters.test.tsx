@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import { createPointerEvent } from '~/utils/event';
-import ResourceFilters from '../ResourceFilters';
+import FabricFilters from '../FabricFilters';
 
 const setFiltersMock = vi.fn();
 
@@ -19,16 +19,16 @@ vi.mock('~/hooks/useSuppliers', () => ({
 	}),
 }));
 
-describe('ResourceFilters', () => {
+describe('FabricFilters', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly', () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <FabricFilters filters={() => ({})} setFilters={setFiltersMock} />);
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
-		const codeField = screen.getByPlaceholderText('Código del insumo');
+		const nameField = screen.getByPlaceholderText('Nombre de la tela');
+		const codeField = screen.getByPlaceholderText('Código de la tela');
 		const statusFilterInput = screen.getByTitle('Ver colores');
 		const roleIdFilterInput = screen.getByTitle('Ver proveedores');
 
@@ -39,25 +39,25 @@ describe('ResourceFilters', () => {
 	});
 
 	it('should call setfilter on change name', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <FabricFilters filters={() => ({})} setFilters={setFiltersMock} />);
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
+		const nameField = screen.getByPlaceholderText('Nombre de la tela');
 		fireEvent.input(nameField, { target: { value: 'John' } });
 
 		await waitFor(() => expect(setFiltersMock).toBeCalled());
 	});
 
 	it('should call set filter on change code', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <FabricFilters filters={() => ({})} setFilters={setFiltersMock} />);
 
-		const codeField = screen.getByPlaceholderText('Código del insumo');
+		const codeField = screen.getByPlaceholderText('Código de la tela');
 		fireEvent.input(codeField, { target: { value: 'John' } });
 
 		await waitFor(() => expect(setFiltersMock).toBeCalled());
 	});
 
 	it('should call set filter on select color', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <FabricFilters filters={() => ({})} setFilters={setFiltersMock} />);
 
 		const colorSelect = screen.getByTitle('Ver colores');
 
@@ -92,7 +92,7 @@ describe('ResourceFilters', () => {
 	});
 
 	it('should call set filter on select supplier', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <FabricFilters filters={() => ({})} setFilters={setFiltersMock} />);
 
 		const supplierSelect = screen.getByTitle('Ver proveedores');
 
@@ -127,7 +127,7 @@ describe('ResourceFilters', () => {
 	});
 
 	it('should call set filter on change state', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <FabricFilters filters={() => ({})} setFilters={setFiltersMock} />);
 
 		const statusSelect = screen.getByText('Selecciona un estado');
 

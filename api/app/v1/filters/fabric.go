@@ -9,9 +9,9 @@ import (
 	"gorm.io/gen"
 )
 
-func ResourceFilters(s query.IResourceDo, filters string) (query.IResourceDo, error) {
+func FabricFilters(s query.IFabricDo, filters string) (query.IFabricDo, error) {
 
-	table := query.Resource
+	table := query.Fabric
 
 	var filtersMap map[string]map[string]interface{}
 	err := json.Unmarshal([]byte(filters), &filtersMap)
