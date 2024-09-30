@@ -15,4 +15,4 @@ export type VytexStep<Schema = any> = MergeCoreCollection<
 	}
 >;
 
-export type StepValue = 'corte';
+export type StepValue = 'corte' | 'confeccion';

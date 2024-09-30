@@ -19,5 +19,6 @@ export type PolicyNav = Extract<
 	| 'ReadOrders'
 	| 'ReadSuppliers'
 	| 'ReadCorte'
+	| 'ReadConfeccion'
 	| 'ReadRoles'
 >;

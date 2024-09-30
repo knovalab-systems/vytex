@@ -11,6 +11,7 @@ func CreateTasksSteps(db *gorm.DB) error {
 	if db.Migrator().HasTable(&models.Step{}) && db.Migrator().HasTable(&models.Task{}) {
 
 		steps := []*models.Step{}
+		stepMap := make(map[models.StepValue]uint)
 
 		defaultSteps := models.DefaultSteps()
 		for _, v := range defaultSteps {
@@ -20,9 +21,10 @@ func CreateTasksSteps(db *gorm.DB) error {
 				return err
 			}
 			steps = append(steps, step)
+			stepMap[v.Value] = step.ID
 		}
 
-		defaultTasks := models.DefaultTasks(steps[0].ID)
+		defaultTasks := models.DefaultTasks(stepMap)
 		for _, v := range defaultTasks {
 			err := db.Where(models.Task{Value: v.Value}).Assign(v).FirstOrCreate(&models.Task{}).Error
 			if err != nil {

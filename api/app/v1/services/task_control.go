@@ -56,6 +56,15 @@ func (m *TaskControlService) AggregationTaskControls(q *models.AggregateQuery) (
 	s := table.Unscoped()
 	aggregateElem := models.AggregateData{Count: nil}
 
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.TaskControlFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ResourceBadRequest()
+		}
+	}
+
 	if q.Count != "" {
 		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
@@ -112,15 +121,15 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 			now := time.Now()
 
 			if b.StartedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return m.startTaskControl(taskControl, &now)
+				return startTaskControl(taskControl, &now)
 			}
 
 			if b.RejectedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return m.rejectTaskControl(taskControl, &now)
+				return rejectTaskControl(taskControl, &now)
 			}
 
 			if b.FinishedAt != nil && taskControl.StartedAt != nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return m.finishTaskControl(taskControl, &now)
+				return finishTaskControl(taskControl, &now)
 			}
 
 			return nil, problems.ReadAccess()
@@ -130,7 +139,7 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 	return nil, problems.ReadAccess()
 }
 
-func (m *TaskControlService) startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+func startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
 	taskControl.StartedAt = now
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
@@ -139,7 +148,7 @@ func (m *TaskControlService) startTaskControl(taskControl *models.TaskControl, n
 	return taskControl, nil
 }
 
-func (m *TaskControlService) rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
 	taskControl.RejectedAt = now
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
@@ -173,7 +182,7 @@ func (m *TaskControlService) rejectTaskControl(taskControl *models.TaskControl, 
 	return taskControl, nil
 }
 
-func (m *TaskControlService) finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
 	nextTaskControl := &models.TaskControl{PreviousID: &taskControl.ID, OrderID: taskControl.OrderID}
 
 	switch taskControl.Task.Value {

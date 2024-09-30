@@ -45,6 +45,7 @@ const (
 	DESIGNER_VALUE         RoleCode = "designer"
 	PRO_SUPERVISOR_VALUE   RoleCode = "propsupervisor"
 	CORTE_SUPERVISOR_VALUE RoleCode = "cortepsupervisor"
+	CONF_SUPERVISOR_VALUE  RoleCode = "confsupervisor"
 )
 
 func DefaultRoles() []*Role {
@@ -104,6 +105,14 @@ func DefaultRoles() []*Role {
 				string(ReadReferences),
 				string(ReadCorte),
 				string(UpdateCorte),
+			},
+		},
+		{
+			Name: "Supervisor confección",
+			Code: CONF_SUPERVISOR_VALUE,
+			Policies: []string{
+				string(ReadReferences),
+				string(ReadConfeccion),
 			},
 		},
 	}

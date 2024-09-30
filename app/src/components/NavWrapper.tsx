@@ -5,6 +5,7 @@ import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoCut, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesTeamFill, RiUserFacesUserFill } from 'solid-icons/ri';
+import { TbNeedleThread } from 'solid-icons/tb'
 import { type Accessor, Match, Show, Suspense, Switch, createEffect, createMemo } from 'solid-js';
 import Loading from '~/components/Loading';
 import MenuNav from '~/components/MenuNav';
@@ -31,6 +32,7 @@ function NavWrapper(props: RouteSectionProps) {
 		ReadResources: { name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
 		ReadSuppliers: { name: 'Proveedores', icon: () => <HiSolidTruck size={24} />, path: PATHS.SUPPLIERS_PATH },
 		ReadCorte: { name: 'Corte', icon: () => <IoCut size={24} />, path: PATHS.CORTE_PATH },
+		ReadConfeccion: { name: 'Confección', icon: () => <TbNeedleThread size={24} />, path: PATHS.CONFECCION_PATH },
 		ReadRoles: { name: 'Roles', icon: () => <RiUserFacesTeamFill size={24} />, path: PATHS.ROLES_PATH },
 	};
 
