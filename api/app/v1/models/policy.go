@@ -45,6 +45,7 @@ const (
 	ReadCorte             Policy = "ReadCorte"
 	UpdateCorte           Policy = "UpdateCorte"
 	ReadConfeccion        Policy = "ReadConfeccion"
+	UpdateConfeccion      Policy = "UpdateConfeccion"
 	ReadRoles             Policy = "ReadRoles"
 	CreateRoles           Policy = "CreateRoles"
 	UpdateRoles           Policy = "UpdateRoles"

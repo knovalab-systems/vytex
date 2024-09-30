@@ -1,14 +1,18 @@
 import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from "~/hooks/useColors";
+import { usePolicies } from '~/hooks/usePolicies';
 import { useSteps } from "~/hooks/useSteps";
 import { parseDateTimeHuman } from '~/lib/parseTime';
 import { getStateTask } from '../helpers/getStateTask';
 import type { GetTaskType } from "../request/taskControlGet";
+import TaskControlActionsCell from './TaskControlActionsCell';
 
 function ConfeccionTable(props: { taskControls: GetTaskType }) {
     const { getTasksRecord } = useSteps();
     const { getColorsRecord } = useColors();
+    const { hasPolicy } = usePolicies();
+
 
     return (
         <TableContainer>
@@ -57,7 +61,14 @@ function ConfeccionTable(props: { taskControls: GetTaskType }) {
                                 <TableCell>{parseDateTimeHuman(taskControl.started_at)}</TableCell>
                                 <TableCell>{parseDateTimeHuman(taskControl.rejected_at)}</TableCell>
                                 <TableCell>{parseDateTimeHuman(taskControl.finished_at)}</TableCell>
-                                <TableCell>Acciones</TableCell>
+                                <Show when={hasPolicy('UpdateConfeccion')} fallback={<TableCell />}>
+                                    <TaskControlActionsCell
+                                        id={taskControl.id}
+                                        started={Boolean(taskControl.started_at)}
+                                        rejected={Boolean(taskControl.rejected_at)}
+                                        finished={Boolean(taskControl.finished_at)}
+                                    />
+                                </Show>
                             </TableRow>
                         )}
                     </For>

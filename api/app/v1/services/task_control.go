@@ -114,6 +114,7 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 		Policy models.Policy
 	}{
 		{Step: models.Corte, Policy: models.UpdateCorte},
+		{Step: models.Confeccion, Policy: models.UpdateConfeccion},
 	}
 
 	for _, v := range stepsByPolicy {
@@ -145,6 +146,33 @@ func startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.
 	if err != nil || rows.RowsAffected == 0 {
 		return nil, problems.ServerError()
 	}
+
+	order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	var newStateValue models.OrderStateValue
+	switch taskControl.Task.Step.Value {
+	case models.Corte:
+		newStateValue = models.CorteOrderStateValue
+	case models.Confeccion:
+		newStateValue = models.ConfeccionOrderStateValue
+	default:
+		return nil, problems.ServerError()
+	}
+
+	orderState, err := query.OrderState.Where(query.OrderState.Value.Eq(string(newStateValue))).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	order.OrderStateID = orderState.ID
+	_, err = query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
 	return taskControl, nil
 }
 
@@ -211,6 +239,55 @@ func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 		}
 		nextTaskControl.TaskID = task.ID
 	case models.Paquetear:
+		task, err := helpers.GetTaskByValue(models.Filetear)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+
+	case models.Filetear:
+		task, err := helpers.GetTaskByValue(models.ArmarEspalda)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.ArmarEspalda:
+		task, err := helpers.GetTaskByValue(models.TaparVarilla)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.TaparVarilla:
+		task, err := helpers.GetTaskByValue(models.FigurarAbrochadura)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.FigurarAbrochadura:
+		task, err := helpers.GetTaskByValue(models.CerrarCostado)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.CerrarCostado:
+		task, err := helpers.GetTaskByValue(models.MarquillaSesgar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.MarquillaSesgar:
+		task, err := helpers.GetTaskByValue(models.GafeteMangas)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.GafeteMangas:
+		task, err := helpers.GetTaskByValue(models.Presillar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Presillar:
 		order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
 		if err != nil {
 			return nil, problems.ServerError()

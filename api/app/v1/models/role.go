@@ -113,6 +113,7 @@ func DefaultRoles() []*Role {
 			Policies: []string{
 				string(ReadReferences),
 				string(ReadConfeccion),
+				string(UpdateConfeccion),
 			},
 		},
 	}

@@ -43,6 +43,7 @@ export type VytexPolicy =
 	| 'ReadCorte'
 	| 'UpdateCorte'
 	| 'ReadConfeccion'
+	| 'UpdateConfeccion'
 	| 'ReadRoles'
 	| 'CreateRoles'
 	| 'UpdateRoles';
