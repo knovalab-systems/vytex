@@ -49,6 +49,10 @@ export const CORTE_RELATIVE_PATH = '/corte';
 export const CORTE_PATH = TASKS_PATH + CORTE_RELATIVE_PATH;
 export const CONFECCION_RELATIVE_PATH = '/confeccion';
 export const CONFECCION_PATH = TASKS_PATH + CONFECCION_RELATIVE_PATH;
+export const CALIDAD_RELATIVE_PATH = '/calidad';
+export const CALIDAD_PATH = TASKS_PATH + CALIDAD_RELATIVE_PATH;
+export const EMPAQUE_RELATIVE_PATH = '/empaque';
+export const EMPAQUE_PATH = TASKS_PATH + EMPAQUE_RELATIVE_PATH;
 
 export const CLOUDINARY_PATH = 'https://api.cloudinary.com/v1_1/';
 export const CLOUDINARY_UPLOAD = '/image/upload';

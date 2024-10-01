@@ -12,11 +12,15 @@ type StepValue string
 const (
 	Corte      StepValue = "corte"
 	Confeccion StepValue = "confeccion"
+	Calidad    StepValue = "calidad"
+	Empaque    StepValue = "empaque"
 )
 
 func DefaultSteps() []*Step {
 	return []*Step{
 		{Name: "Corte", Value: Corte},
-		{Name: "Confeccion", Value: Confeccion},
+		{Name: "Confección", Value: Confeccion},
+		{Name: "Calidad", Value: Calidad},
+		{Name: "Empaque", Value: Empaque},
 	}
 }

@@ -15,7 +15,7 @@ func privateColorRoutes(g *echo.Group) {
 
 	route.GET("", colorController.ReadColors, middlewares.Policies([]models.Policy{models.ReadColors, models.ReadFabrics, models.ReadResources,
 		models.CreateFabrics, models.UpdateFabrics, models.CreateResources, models.UpdateResources, models.CreateReferences, models.UpdateReferences,
-		models.StartOrder, models.ReadCorte, models.ReadConfeccion}))
+		models.StartOrder, models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
 	route.POST("", colorController.CreateColor, middlewares.Policies([]models.Policy{models.CreateColors}))
 	route.GET("/aggregate", colorController.AggregateColors, middlewares.Policies([]models.Policy{models.ReadColors}))
 	route.GET("/:colorId", colorController.ReadColor, middlewares.Policies([]models.Policy{models.ReadColors, models.UpdateColors}))

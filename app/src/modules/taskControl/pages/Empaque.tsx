@@ -16,19 +16,19 @@ import { useSteps } from '~/hooks/useSteps';
 import TaskControlTable from '../components/TaskControlTable';
 import { type GetTaskType, countTasksQuery, getTaskControlsQuery } from '../request/taskControlGet';
 
-function Corte() {
+function Empaque() {
 	return (
-		<AllowPolicies policies={['ReadCorte']}>
-			<CortePage />
+		<AllowPolicies policies={['UpdateEmpaque']}>
+			<EmpaquePage />
 		</AllowPolicies>
 	);
 }
 
-function CortePage() {
+function EmpaquePage() {
 	const [page, setPage] = createSignal(1);
 	const { colorsQuery } = useColors();
 	const { stepsQuery, getStepByValue } = useSteps();
-	const tasksIds = createMemo(() => getStepByValue('corte')?.tasks?.map(e => e.id) || []);
+	const tasksIds = createMemo(() => getStepByValue('empaque')?.tasks?.map(e => e.id) || []);
 	const taskControls = createQuery(() => getTaskControlsQuery(page(), tasksIds()));
 	const counTaskControls = createQuery(() => countTasksQuery(tasksIds()));
 	const pages = createMemo<number>(() => {
@@ -47,10 +47,10 @@ function CortePage() {
 		<div class='h-full flex flex-col gap-2'>
 			<Switch>
 				<Match when={isError()}>
-					<ErrorMessage title='Error al cargar tareas de corte' />
+					<ErrorMessage title='Error al cargar tareas de empaque' />
 				</Match>
 				<Match when={isLoading()}>
-					<Loading label='Cargando tareas de corte' />
+					<Loading label='Cargando tareas de empaque' />
 				</Match>
 				<Match when={isSuccess()}>
 					<TaskControlTable taskControls={taskControls.data as GetTaskType} />
@@ -72,4 +72,4 @@ function CortePage() {
 	);
 }
 
-export default Corte;
+export default Empaque;

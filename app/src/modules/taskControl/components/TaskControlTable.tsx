@@ -1,17 +1,37 @@
+import type { StepValue } from '@vytex/client';
 import { For, Show } from 'solid-js';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { useColors } from '~/hooks/useColors';
 import { usePolicies } from '~/hooks/usePolicies';
 import { useSteps } from '~/hooks/useSteps';
 import { parseDateTimeHuman } from '~/lib/parseTime';
+import type { Policy } from '~/types/core';
 import { getStateTask } from '../helpers/getStateTask';
 import type { GetTaskType } from '../request/taskControlGet';
 import TaskControlActionsCell from './TaskControlActionsCell';
 
-function CorteTable(props: { taskControls: GetTaskType }) {
-	const { getTasksRecord } = useSteps();
+function TaskControlTable(props: { taskControls: GetTaskType }) {
+	const { getTasksRecord, getStepByValue } = useSteps();
 	const { getColorsRecord } = useColors();
 	const { hasPolicy } = usePolicies();
+
+	const canUpdate = (task: number) => {
+		const step = getTasksRecord()[task].step_id;
+		const arr: { policy: Policy; value: StepValue }[] = [
+			{ policy: 'UpdateCorte', value: 'corte' },
+			{ policy: 'UpdateConfeccion', value: 'confeccion' },
+			{ policy: 'UpdateCalidad', value: 'calidad' },
+			{ policy: 'UpdateEmpaque', value: 'empaque' },
+		];
+
+		for (const element of arr) {
+			if (hasPolicy(element.policy) && step === getStepByValue(element.value)?.id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	return (
 		<TableContainer>
 			<Table>
@@ -59,7 +79,7 @@ function CorteTable(props: { taskControls: GetTaskType }) {
 								<TableCell>{parseDateTimeHuman(taskControl.started_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(taskControl.rejected_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(taskControl.finished_at)}</TableCell>
-								<Show when={hasPolicy('UpdateCorte')} fallback={<TableCell />}>
+								<Show when={canUpdate(taskControl.task_id)} fallback={<TableCell />}>
 									<TaskControlActionsCell
 										id={taskControl.id}
 										started={Boolean(taskControl.started_at)}
@@ -76,4 +96,4 @@ function CorteTable(props: { taskControls: GetTaskType }) {
 	);
 }
 
-export default CorteTable;
+export default TaskControlTable;

@@ -13,5 +13,5 @@ func privateStepRoutes(g *echo.Group) {
 
 	stepController := controllers.StepController{StepRepository: &services.StepService{}}
 
-	route.GET("", stepController.ReadSteps, middlewares.Policies([]models.Policy{models.ReadCorte, models.ReadConfeccion}))
+	route.GET("", stepController.ReadSteps, middlewares.Policies([]models.Policy{models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
 }

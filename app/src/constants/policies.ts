@@ -101,6 +101,30 @@ export const POLICIES: Record<Policy, { name: string; value: Policy }> = {
 		name: 'Editar tareas corte',
 		value: 'UpdateCorte',
 	},
+	ReadConfeccion: {
+		name: 'Ver tareas confección',
+		value: 'ReadConfeccion',
+	},
+	UpdateConfeccion: {
+		name: 'Editar tareas confección',
+		value: 'UpdateConfeccion',
+	},
+	ReadCalidad: {
+		name: 'Ver tareas calidad',
+		value: 'ReadCalidad',
+	},
+	UpdateCalidad: {
+		name: 'Editar tareas calidad',
+		value: 'UpdateCalidad',
+	},
+	ReadEmpaque: {
+		name: 'Ver tareas empaque',
+		value: 'ReadEmpaque',
+	},
+	UpdateEmpaque: {
+		name: 'Editar tareas empaque',
+		value: 'UpdateEmpaque',
+	},
 	ReadRoles: {
 		name: 'Ver roles',
 		value: 'ReadRoles',

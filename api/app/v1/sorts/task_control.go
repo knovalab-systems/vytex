@@ -1,21 +1,17 @@
 package sorts
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/pkg/query"
 )
 
-func TaskControlSorts(s query.ITaskControlDo, sorts string) (query.ITaskControlDo, error) {
+func TaskControlSorts(s query.ITaskControlDo, sorts string) query.ITaskControlDo {
 	table := query.TaskControl
 
 	sortFields := strings.Split(sorts, ",")
 	for _, field := range sortFields {
 		field = strings.TrimSpace(field)
-		if field == "" {
-			continue
-		}
 
 		descending := false
 		if strings.HasPrefix(field, "-") {
@@ -48,10 +44,9 @@ func TaskControlSorts(s query.ITaskControlDo, sorts string) (query.ITaskControlD
 			} else {
 				s.Order(table.RejectedAt.Asc())
 			}
-		default:
-			return nil, errors.New("ERROR: INVALID SORT FIELD")
+
 		}
 	}
 
-	return s, nil
+	return s
 }

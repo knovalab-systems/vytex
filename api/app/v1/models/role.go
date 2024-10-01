@@ -43,9 +43,11 @@ type RoleCode string
 const (
 	ADMIN_VALUE            RoleCode = "admin"
 	DESIGNER_VALUE         RoleCode = "designer"
-	PRO_SUPERVISOR_VALUE   RoleCode = "propsupervisor"
-	CORTE_SUPERVISOR_VALUE RoleCode = "cortepsupervisor"
+	PRO_SUPERVISOR_VALUE   RoleCode = "prosupervisor"
+	CORTE_SUPERVISOR_VALUE RoleCode = "cortesupervisor"
 	CONF_SUPERVISOR_VALUE  RoleCode = "confsupervisor"
+	CALD_SUPERVISOR_VALUE  RoleCode = "caldsupervisor"
+	EMPQ_SUPERVISOR_VALUE  RoleCode = "empqsupervisor"
 )
 
 func DefaultRoles() []*Role {
@@ -114,6 +116,24 @@ func DefaultRoles() []*Role {
 				string(ReadReferences),
 				string(ReadConfeccion),
 				string(UpdateConfeccion),
+			},
+		},
+		{
+			Name: "Supervisor calidad",
+			Code: CALD_SUPERVISOR_VALUE,
+			Policies: []string{
+				string(ReadReferences),
+				string(ReadCalidad),
+				string(UpdateCalidad),
+			},
+		},
+		{
+			Name: "Supervisor empaque",
+			Code: EMPQ_SUPERVISOR_VALUE,
+			Policies: []string{
+				string(ReadReferences),
+				string(ReadEmpaque),
+				string(UpdateEmpaque),
 			},
 		},
 	}

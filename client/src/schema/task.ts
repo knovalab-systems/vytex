@@ -29,4 +29,13 @@ export type TaskValue =
 	| 'cerrar costado'
 	| 'marquilla y sesgar'
 	| 'gafete y mangas'
-	| 'presillar';
+	| 'presillar'
+	| 'pulir'
+	| 'revisar'
+	| 'acabados'
+	| 'bolsas'
+	| 'tiquetear'
+	| 'empacar'
+	| 'organizar'
+	| 'grabar'
+	| 'paletizar';

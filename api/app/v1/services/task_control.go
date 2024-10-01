@@ -2,10 +2,11 @@ package services
 
 import (
 	"errors"
-	"github.com/knovalab-systems/vytex/app/v1/sorts"
 	"slices"
 	"strings"
 	"time"
+
+	"github.com/knovalab-systems/vytex/app/v1/sorts"
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
@@ -44,11 +45,7 @@ func (m *TaskControlService) SelectTaskControls(q *models.Query) ([]*models.Task
 	}
 
 	if q.Sort != "" {
-		var err error
-		s, err = sorts.TaskControlSorts(s, q.Sort)
-		if err != nil {
-			return nil, problems.UsersBadRequest()
-		}
+		s = sorts.TaskControlSorts(s, q.Sort)
 	}
 
 	// run query
@@ -124,6 +121,8 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 	}{
 		{Step: models.Corte, Policy: models.UpdateCorte},
 		{Step: models.Confeccion, Policy: models.UpdateConfeccion},
+		{Step: models.Calidad, Policy: models.UpdateCalidad},
+		{Step: models.Empaque, Policy: models.UpdateEmpaque},
 	}
 
 	for _, v := range stepsByPolicy {
@@ -131,7 +130,8 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 			now := time.Now()
 
 			if b.StartedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return startTaskControl(taskControl, &now)
+				taskControl.StartedAt = &now
+				return startTaskControl(taskControl)
 			}
 
 			if b.RejectedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
@@ -149,36 +149,33 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 	return nil, problems.ReadAccess()
 }
 
-func startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
-	taskControl.StartedAt = now
+func startTaskControl(taskControl *models.TaskControl) (*models.TaskControl, error) {
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
 		return nil, problems.ServerError()
 	}
 
-	order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-
 	var newStateValue models.OrderStateValue
-	switch taskControl.Task.Step.Value {
-	case models.Corte:
+	switch taskControl.Task.Value {
+	case models.Trazar:
 		newStateValue = models.CorteOrderStateValue
-	case models.Confeccion:
+	case models.Filetear:
 		newStateValue = models.ConfeccionOrderStateValue
+	case models.Pulir:
+		newStateValue = models.CalidadOrderStateValue
+	case models.Bolsas:
+		newStateValue = models.EmpaqueOrderStateValue
 	default:
-		return nil, problems.ServerError()
+		return taskControl, nil
 	}
 
-	orderState, err := query.OrderState.Where(query.OrderState.Value.Eq(string(newStateValue))).First()
+	orderState, err := helpers.GetOrderStatusByValue(newStateValue)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
 
-	order.OrderStateID = orderState.ID
-	_, err = query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
-	if err != nil {
+	rows, err = query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).Updates(models.Order{OrderStateID: orderState.ID})
+	if err != nil || rows.RowsAffected == 0 {
 		return nil, problems.ServerError()
 	}
 
@@ -193,19 +190,12 @@ func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 	}
 
 	if taskControl.PreviousID == nil {
-		order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
+		canceledState, err := helpers.GetOrderStatusByValue(models.CanceledOrderStateValue)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
-		order.CanceledAt = now
 
-		canceledState, err := query.OrderState.Where(query.OrderState.Value.Eq(models.CanceledOrderStateValue)).First()
-		if err != nil {
-			return nil, problems.ServerError()
-		}
-		order.OrderStateID = canceledState.ID
-
-		rows, err = query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
+		rows, err = query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).Updates(models.Order{OrderStateID: canceledState.ID, CanceledAt: now})
 		if err != nil || rows.RowsAffected == 0 {
 			return nil, problems.ServerError()
 		}
@@ -297,20 +287,66 @@ func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 		}
 		nextTaskControl.TaskID = task.ID
 	case models.Presillar:
-		order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
+		task, err := helpers.GetTaskByValue(models.Pulir)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Pulir:
+		task, err := helpers.GetTaskByValue(models.Revisar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Revisar:
+		task, err := helpers.GetTaskByValue(models.Acabados)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Acabados:
+		task, err := helpers.GetTaskByValue(models.Bolsas)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Bolsas:
+		task, err := helpers.GetTaskByValue(models.Tiquetear)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Tiquetear:
+		task, err := helpers.GetTaskByValue(models.Empacar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Empacar:
+		task, err := helpers.GetTaskByValue(models.Organizar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Organizar:
+		task, err := helpers.GetTaskByValue(models.Grabar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Grabar:
+		task, err := helpers.GetTaskByValue(models.Paletizar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Paletizar:
+		finishedState, err := helpers.GetOrderStatusByValue(models.FinishedOrderStateValue)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
 
-		finishedState, err := query.OrderState.Where(query.OrderState.Value.Eq(models.FinishedOrderStateValue)).First()
-		if err != nil {
-			return nil, problems.ServerError()
-		}
-
-		order.FinishedAt = now
-		order.OrderStateID = finishedState.ID
-
-		rows, err := query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
+		rows, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).Updates(models.Order{OrderStateID: finishedState.ID, FinishedAt: now})
 		if err != nil || rows.RowsAffected == 0 {
 			return nil, problems.ServerError()
 		}

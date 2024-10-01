@@ -1,18 +1,18 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import CorteTable from '../CorteTable';
+import TaskControlTable from '../TaskControlTable';
 
 vi.mock('~/hooks/useSteps', () => ({
 	useSteps: () => ({ getTasksRecord: () => ({ 1: { name: 'Tarea 0' }, 2: { name: 'Tarea 0' } }) }),
 }));
 
-describe('CorteTable', () => {
+describe('TaskControlTable', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly on empty taskcontrols', () => {
-		render(() => <CorteTable taskControls={[]} />);
+		render(() => <TaskControlTable taskControls={[]} />);
 		const tableHeader = screen.getByText('No se han encontrado tareas.');
 
 		expect(tableHeader).toBeInTheDocument();
@@ -20,7 +20,7 @@ describe('CorteTable', () => {
 
 	it('renders correctly on taskcontrols', () => {
 		render(() => (
-			<CorteTable
+			<TaskControlTable
 				taskControls={[
 					{
 						id: 200,
