@@ -10,11 +10,13 @@ type Step struct {
 type StepValue string
 
 const (
-	Corte StepValue = "corte"
+	Corte      StepValue = "corte"
+	Confeccion StepValue = "confeccion"
 )
 
 func DefaultSteps() []*Step {
 	return []*Step{
 		{Name: "Corte", Value: Corte},
+		{Name: "Confeccion", Value: Confeccion},
 	}
 }

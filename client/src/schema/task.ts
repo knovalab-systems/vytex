@@ -16,4 +16,17 @@ export type VytexTask<Schema = any> = MergeCoreCollection<
 	}
 >;
 
-export type TaskValue = 'trazar' | 'plantear' | 'tender' | 'cortar' | 'paquetear';
+export type TaskValue =
+	| 'trazar'
+	| 'plantear'
+	| 'tender'
+	| 'cortar'
+	| 'paquetear'
+	| 'filetear'
+	| 'armar espalda'
+	| 'tapar varilla'
+	| 'figurar abrochadura'
+	| 'cerrar costado'
+	| 'marquilla y sesgar'
+	| 'gafete y mangas'
+	| 'presillar';

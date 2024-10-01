@@ -47,6 +47,8 @@ export const ROLES_UPDATE_PATH = ROLES_PATH + UPDATE_PATH;
 export const TASKS_PATH = '/tasks';
 export const CORTE_RELATIVE_PATH = '/corte';
 export const CORTE_PATH = TASKS_PATH + CORTE_RELATIVE_PATH;
+export const CONFECCION_RELATIVE_PATH = '/confeccion';
+export const CONFECCION_PATH = TASKS_PATH + CONFECCION_RELATIVE_PATH;
 
 export const CLOUDINARY_PATH = 'https://api.cloudinary.com/v1_1/';
 export const CLOUDINARY_UPLOAD = '/image/upload';

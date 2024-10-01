@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/knovalab-systems/vytex/app/v1/sorts"
 	"slices"
 	"strings"
 	"time"
@@ -42,6 +43,14 @@ func (m *TaskControlService) SelectTaskControls(q *models.Query) ([]*models.Task
 		}
 	}
 
+	if q.Sort != "" {
+		var err error
+		s, err = sorts.TaskControlSorts(s, q.Sort)
+		if err != nil {
+			return nil, problems.UsersBadRequest()
+		}
+	}
+
 	// run query
 	taskControls, err := s.Find()
 	if err != nil {
@@ -55,6 +64,15 @@ func (m *TaskControlService) AggregationTaskControls(q *models.AggregateQuery) (
 	table := query.TaskControl
 	s := table.Unscoped()
 	aggregateElem := models.AggregateData{Count: nil}
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.TaskControlFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ResourceBadRequest()
+		}
+	}
 
 	if q.Count != "" {
 		countArr := strings.Split(q.Count, ",")
@@ -105,6 +123,7 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 		Policy models.Policy
 	}{
 		{Step: models.Corte, Policy: models.UpdateCorte},
+		{Step: models.Confeccion, Policy: models.UpdateConfeccion},
 	}
 
 	for _, v := range stepsByPolicy {
@@ -112,15 +131,15 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 			now := time.Now()
 
 			if b.StartedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return m.startTaskControl(taskControl, &now)
+				return startTaskControl(taskControl, &now)
 			}
 
 			if b.RejectedAt != nil && taskControl.StartedAt == nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return m.rejectTaskControl(taskControl, &now)
+				return rejectTaskControl(taskControl, &now)
 			}
 
 			if b.FinishedAt != nil && taskControl.StartedAt != nil && taskControl.RejectedAt == nil && taskControl.FinishedAt == nil {
-				return m.finishTaskControl(taskControl, &now)
+				return finishTaskControl(taskControl, &now)
 			}
 
 			return nil, problems.ReadAccess()
@@ -130,16 +149,43 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 	return nil, problems.ReadAccess()
 }
 
-func (m *TaskControlService) startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+func startTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
 	taskControl.StartedAt = now
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
 		return nil, problems.ServerError()
 	}
+
+	order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	var newStateValue models.OrderStateValue
+	switch taskControl.Task.Step.Value {
+	case models.Corte:
+		newStateValue = models.CorteOrderStateValue
+	case models.Confeccion:
+		newStateValue = models.ConfeccionOrderStateValue
+	default:
+		return nil, problems.ServerError()
+	}
+
+	orderState, err := query.OrderState.Where(query.OrderState.Value.Eq(string(newStateValue))).First()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	order.OrderStateID = orderState.ID
+	_, err = query.Order.Where(query.Order.ID.Eq(order.ID)).Updates(order)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
 	return taskControl, nil
 }
 
-func (m *TaskControlService) rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
 	taskControl.RejectedAt = now
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
@@ -173,7 +219,7 @@ func (m *TaskControlService) rejectTaskControl(taskControl *models.TaskControl, 
 	return taskControl, nil
 }
 
-func (m *TaskControlService) finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
 	nextTaskControl := &models.TaskControl{PreviousID: &taskControl.ID, OrderID: taskControl.OrderID}
 
 	switch taskControl.Task.Value {
@@ -202,6 +248,55 @@ func (m *TaskControlService) finishTaskControl(taskControl *models.TaskControl, 
 		}
 		nextTaskControl.TaskID = task.ID
 	case models.Paquetear:
+		task, err := helpers.GetTaskByValue(models.Filetear)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+
+	case models.Filetear:
+		task, err := helpers.GetTaskByValue(models.ArmarEspalda)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.ArmarEspalda:
+		task, err := helpers.GetTaskByValue(models.TaparVarilla)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.TaparVarilla:
+		task, err := helpers.GetTaskByValue(models.FigurarAbrochadura)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.FigurarAbrochadura:
+		task, err := helpers.GetTaskByValue(models.CerrarCostado)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.CerrarCostado:
+		task, err := helpers.GetTaskByValue(models.MarquillaSesgar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.MarquillaSesgar:
+		task, err := helpers.GetTaskByValue(models.GafeteMangas)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.GafeteMangas:
+		task, err := helpers.GetTaskByValue(models.Presillar)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskID = task.ID
+	case models.Presillar:
 		order, err := query.Order.Where(query.Order.ID.Eq(taskControl.OrderID)).First()
 		if err != nil {
 			return nil, problems.ServerError()
