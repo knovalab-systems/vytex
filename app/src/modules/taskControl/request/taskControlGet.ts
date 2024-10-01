@@ -18,7 +18,7 @@ function getTaskControls(page: number, tasks: number[]) {
 		readTaskControls({
 			limit: QUERY_LIMIT,
 			page: page,
-			sort: ['-created_at', '-started_at', '-finished_at'],
+			sort: ['-created_at', '-started_at', '-finished_at', '-rejected_at'],
 			filter: {
 				task_id: {
 					_in: tasks,

@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/knovalab-systems/vytex/app/v1/sorts"
 	"slices"
 	"strings"
 	"time"
@@ -37,6 +38,14 @@ func (m *TaskControlService) SelectTaskControls(q *models.Query) ([]*models.Task
 	if q.Filter != "" {
 		var err error
 		s, err = filters.TaskControlFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.UsersBadRequest()
+		}
+	}
+
+	if q.Sort != "" {
+		var err error
+		s, err = sorts.TaskControlSorts(s, q.Sort)
 		if err != nil {
 			return nil, problems.UsersBadRequest()
 		}
