@@ -18,7 +18,16 @@ vi.mock('~/hooks/useColors', () => ({
 }));
 
 const recordById = { 1: { name: 'Creada' }, 2: { name: 'Iniciada' } };
-const recordByValue = { created: { name: 'Creada', id: 1 }, started: { name: 'Iniciada', id: 2 } };
+const recordByValue = {
+	created: { name: 'Creada', id: 1 },
+	started: { name: 'Iniciada', id: 2 },
+	corte: { name: 'Corte', id: 3 },
+	confeccion: { name: 'Confección', id: 3 },
+	calidad: { name: 'Calidad', id: 3 },
+	empaque: { name: 'Empaque', id: 3 },
+	finished: { name: 'Finalizada', id: 3 },
+	canceled: { name: 'Cancelada', id: 3 },
+};
 
 vi.mock('~/hooks/useOrderStatus', () => ({
 	useOrderStatus: () => ({

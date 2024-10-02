@@ -16,19 +16,19 @@ import { useSteps } from '~/hooks/useSteps';
 import TaskControlTable from '../components/TaskControlTable';
 import { type GetTaskType, countTasksQuery, getTaskControlsQuery } from '../request/taskControlGet';
 
-function Corte() {
+function Calidad() {
 	return (
-		<AllowPolicies policies={['ReadCorte']}>
-			<CortePage />
+		<AllowPolicies policies={['ReadCalidad']}>
+			<CalidadPage />
 		</AllowPolicies>
 	);
 }
 
-function CortePage() {
+function CalidadPage() {
 	const [page, setPage] = createSignal(1);
 	const { colorsQuery } = useColors();
 	const { stepsQuery, getStepByValue } = useSteps();
-	const tasksIds = createMemo(() => getStepByValue('corte')?.tasks?.map(e => e.id) || []);
+	const tasksIds = createMemo(() => getStepByValue('calidad')?.tasks?.map(e => e.id) || []);
 	const taskControls = createQuery(() => getTaskControlsQuery(page(), tasksIds()));
 	const counTaskControls = createQuery(() => countTasksQuery(tasksIds()));
 	const pages = createMemo<number>(() => {
@@ -47,10 +47,10 @@ function CortePage() {
 		<div class='h-full flex flex-col gap-2'>
 			<Switch>
 				<Match when={isError()}>
-					<ErrorMessage title='Error al cargar tareas de corte' />
+					<ErrorMessage title='Error al cargar tareas de calidad' />
 				</Match>
 				<Match when={isLoading()}>
-					<Loading label='Cargando tareas de corte' />
+					<Loading label='Cargando tareas de calidad' />
 				</Match>
 				<Match when={isSuccess()}>
 					<TaskControlTable taskControls={taskControls.data as GetTaskType} />
@@ -72,4 +72,4 @@ function CortePage() {
 	);
 }
 
-export default Corte;
+export default Calidad;

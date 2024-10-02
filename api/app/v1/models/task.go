@@ -24,6 +24,15 @@ const (
 	MarquillaSesgar    TaskValue = "marquilla y sesgar"
 	GafeteMangas       TaskValue = "gafete y mangas"
 	Presillar          TaskValue = "presillar"
+	Pulir              TaskValue = "pulir"
+	Revisar            TaskValue = "revisar"
+	Acabados           TaskValue = "acabados"
+	Bolsas             TaskValue = "bolsas"
+	Tiquetear          TaskValue = "tiquetear"
+	Empacar            TaskValue = "empacar"
+	Organizar          TaskValue = "organizar"
+	Grabar             TaskValue = "grabar"
+	Paletizar          TaskValue = "paletizar"
 )
 
 func DefaultTasks(steps map[StepValue]uint) []*Task {
@@ -41,5 +50,14 @@ func DefaultTasks(steps map[StepValue]uint) []*Task {
 		{Name: "Marquilla y Sesgar", Value: MarquillaSesgar, StepID: steps[Confeccion]},
 		{Name: "Gafete y Mangas", Value: GafeteMangas, StepID: steps[Confeccion]},
 		{Name: "Presillar", Value: Presillar, StepID: steps[Confeccion]},
+		{Name: "Pulir", Value: Pulir, StepID: steps[Calidad]},
+		{Name: "Revisar", Value: Revisar, StepID: steps[Calidad]},
+		{Name: "Acabados", Value: Acabados, StepID: steps[Calidad]},
+		{Name: "Armado de bolsas", Value: Bolsas, StepID: steps[Empaque]},
+		{Name: "Tiquetear", Value: Tiquetear, StepID: steps[Empaque]},
+		{Name: "Empacar", Value: Empacar, StepID: steps[Empaque]},
+		{Name: "Organizar", Value: Organizar, StepID: steps[Empaque]},
+		{Name: "Grabar", Value: Grabar, StepID: steps[Empaque]},
+		{Name: "Paletizar", Value: Paletizar, StepID: steps[Empaque]},
 	}
 }

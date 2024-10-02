@@ -15,6 +15,8 @@ const (
 	FinishedOrderStateValue   = "finished"
 	CorteOrderStateValue      = "corte"
 	ConfeccionOrderStateValue = "confeccion"
+	CalidadOrderStateValue    = "calidad"
+	EmpaqueOrderStateValue    = "empaque"
 )
 
 func DefaultOrderStatus() []*OrderState {
@@ -25,5 +27,7 @@ func DefaultOrderStatus() []*OrderState {
 		{Name: "Finalizada", Value: FinishedOrderStateValue},
 		{Name: "Corte", Value: CorteOrderStateValue},
 		{Name: "Confección", Value: ConfeccionOrderStateValue},
+		{Name: "Calidad", Value: CalidadOrderStateValue},
+		{Name: "Empaque", Value: EmpaqueOrderStateValue},
 	}
 }

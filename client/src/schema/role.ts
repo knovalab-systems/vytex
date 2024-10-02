@@ -11,7 +11,15 @@ export type VytexRole<Schema = any> = MergeCoreCollection<
 	}
 >;
 
-export type RoleCode = 'admin' | 'desginer' | 'propsupervisor' | 'cortepsupervisor' | 'confsupervisor' | null;
+export type RoleCode =
+	| 'admin'
+	| 'desginer'
+	| 'prosupervisor'
+	| 'cortesupervisor'
+	| 'confsupervisor'
+	| 'caldsupervisor'
+	| 'despsupervisor'
+	| null;
 
 export type VytexPolicy =
 	| 'ReadUsers'
@@ -44,6 +52,10 @@ export type VytexPolicy =
 	| 'UpdateCorte'
 	| 'ReadConfeccion'
 	| 'UpdateConfeccion'
+	| 'ReadCalidad'
+	| 'UpdateCalidad'
+	| 'ReadEmpaque'
+	| 'UpdateEmpaque'
 	| 'ReadRoles'
 	| 'CreateRoles'
 	| 'UpdateRoles';

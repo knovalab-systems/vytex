@@ -1,11 +1,13 @@
 import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlineApartment } from 'solid-icons/ai';
+import { BsBoxSeamFill } from 'solid-icons/bs';
 import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoCut, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
 import { RiUserFacesTeamFill, RiUserFacesUserFill } from 'solid-icons/ri';
-import { TbNeedleThread } from 'solid-icons/tb'
+import { TbNeedleThread } from 'solid-icons/tb';
+import { VsChecklist } from 'solid-icons/vs';
 import { type Accessor, Match, Show, Suspense, Switch, createEffect, createMemo } from 'solid-js';
 import Loading from '~/components/Loading';
 import MenuNav from '~/components/MenuNav';
@@ -34,6 +36,8 @@ function NavWrapper(props: RouteSectionProps) {
 		ReadCorte: { name: 'Corte', icon: () => <IoCut size={24} />, path: PATHS.CORTE_PATH },
 		ReadConfeccion: { name: 'Confección', icon: () => <TbNeedleThread size={24} />, path: PATHS.CONFECCION_PATH },
 		ReadRoles: { name: 'Roles', icon: () => <RiUserFacesTeamFill size={24} />, path: PATHS.ROLES_PATH },
+		ReadCalidad: { name: 'Calidad', icon: () => <VsChecklist size={24} />, path: PATHS.CALIDAD_PATH },
+		ReadEmpaque: { name: 'Empaque', icon: () => <BsBoxSeamFill size={24} />, path: PATHS.EMPAQUE_PATH },
 	};
 
 	const getPages: Accessor<NavPages[]> = createMemo(() => {
