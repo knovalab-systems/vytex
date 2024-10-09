@@ -15,7 +15,7 @@ function ColorTable(props: { colors?: GetColorsType }) {
 						<TableHead>Nombre</TableHead>
 						<TableHead>Hex</TableHead>
 						<TableHead>Color</TableHead>
-						<TableHead>Code</TableHead>
+						<TableHead>Código</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
 					</TableRow>

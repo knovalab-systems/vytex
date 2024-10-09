@@ -42,7 +42,10 @@ const TableHead: Component<ComponentProps<'th'>> = props => {
 	const [, rest] = splitProps(props, ['class']);
 	return (
 		<th
-			class={cn('px-4 py-3.5 text-left align-middle [&:has([role=checkbox])]:pr-0 font-semibold', props.class)}
+			class={cn(
+				'px-4 py-3.5 text-left text-nowrap align-middle [&:has([role=checkbox])]:pr-0 font-semibold',
+				props.class,
+			)}
 			{...rest}
 		/>
 	);

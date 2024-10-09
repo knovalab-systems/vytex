@@ -16,7 +16,16 @@ async function getOrders(page: number) {
 		readOrders({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['created_at', 'canceled_at', 'started_at', 'order_state_id', 'id', 'custom_id', 'finished_at'],
+			fields: [
+				'created_at',
+				'canceled_at',
+				'started_at',
+				'order_state_id',
+				'id',
+				'custom_id',
+				'finished_at',
+				{ color_by_reference: ['color_id', { reference: ['code'] }] },
+			],
 		}),
 	);
 }

@@ -29,6 +29,7 @@ describe('Order Table', () => {
 				started_at: null,
 				canceled_at: null,
 				custom_id: null,
+				color_by_reference: null,
 			},
 			{
 				custom_id: 345,
@@ -38,6 +39,7 @@ describe('Order Table', () => {
 				finished_at: null,
 				started_at: null,
 				canceled_at: null,
+				color_by_reference: null,
 			},
 			{
 				created_at: '2024-05-12T22:36:52.140901Z',
@@ -47,6 +49,7 @@ describe('Order Table', () => {
 				started_at: null,
 				canceled_at: null,
 				custom_id: null,
+				color_by_reference: null,
 			},
 			{
 				canceled_at: '2024-06-12T22:36:52.140901Z',
@@ -56,6 +59,7 @@ describe('Order Table', () => {
 				finished_at: null,
 				started_at: null,
 				custom_id: null,
+				color_by_reference: null,
 			},
 			{
 				finished_at: '2024-07-12T22:36:52.140901Z',
@@ -65,6 +69,7 @@ describe('Order Table', () => {
 				started_at: null,
 				canceled_at: null,
 				custom_id: null,
+				color_by_reference: null,
 			},
 			{
 				id: 0,
@@ -74,6 +79,7 @@ describe('Order Table', () => {
 				started_at: null,
 				canceled_at: null,
 				custom_id: null,
+				color_by_reference: null,
 			},
 		];
 		render(() => <OrderTable orders={orders} />);

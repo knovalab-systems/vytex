@@ -11,6 +11,7 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+import { useColors } from '~/hooks/useColors';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
 import OrderTable from '../components/OrderTable';
 import { countOrdersQuery, getOrdersQuery } from '../request/orderGet';
@@ -25,6 +26,7 @@ function Orders() {
 
 function OrdersPage() {
 	const [page, setPage] = createSignal(1);
+	const { colorsQuery } = useColors();
 	const orders = createQuery(() => getOrdersQuery(page()));
 	const { orderStatusQuery } = useOrderStatus();
 	const countOrders = createQuery(() => countOrdersQuery());
@@ -34,9 +36,11 @@ function OrdersPage() {
 		return Math.ceil(safe / 10);
 	});
 
-	const isError = () => orders.isError || countOrders.isError || orderStatusQuery.isError;
-	const isLoading = () => orders.isLoading || countOrders.isLoading || orderStatusQuery.isLoading;
-	const isSuccess = () => orders.isSuccess && countOrders.isSuccess && orderStatusQuery.isSuccess;
+	const isError = () => orders.isError || countOrders.isError || orderStatusQuery.isError || colorsQuery.isError;
+	const isLoading = () =>
+		orders.isLoading || countOrders.isLoading || orderStatusQuery.isLoading || colorsQuery.isLoading;
+	const isSuccess = () =>
+		orders.isSuccess && countOrders.isSuccess && orderStatusQuery.isSuccess && colorsQuery.isSuccess;
 
 	return (
 		<div class='h-full flex flex-col gap-2'>

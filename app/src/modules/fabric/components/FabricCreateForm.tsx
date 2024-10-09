@@ -117,7 +117,7 @@ function FabricCreateForm() {
 						<Field name='cost' type='number'>
 							{(field, props) => (
 								<div>
-									<Label for='cost-field'>Cost</Label>
+									<Label for='cost-field'>Costo</Label>
 									<Input
 										type='number'
 										placeholder='12000'
