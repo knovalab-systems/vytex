@@ -17,8 +17,8 @@ function FilterButton(props: {
 					variant='ghost'
 					title='Ver filtros'
 					class={cn(
-						'shadow-md border-[2.8px] border-gray-400 rounded-2xl hover:border-black hover:text-black',
-						props.active ? 'border-gray-600 text-gray-600' : 'text-gray-400',
+						'ml-1 shadow-md border-[2.8px] border-gray-400 rounded-2xl hover:border-black hover:text-black',
+						props.active ? 'border-gray-600 text-gray-600 shadow-indigo-400' : 'text-gray-400',
 					)}
 				>
 					<p class='font-bold font-mono'>Filtros</p>
@@ -27,7 +27,7 @@ function FilterButton(props: {
 					</Show>
 				</Button>
 			</PopoverTrigger>
-			<PopoverContent>{props.children}</PopoverContent>
+			<PopoverContent class='w-auto'>{props.children}</PopoverContent>
 		</Popover>
 	);
 }

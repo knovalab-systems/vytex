@@ -1,4 +1,3 @@
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { For, Show } from 'solid-js';
@@ -76,7 +75,7 @@ function FabricUpdateForm(props: { fabric?: GetFabricType }) {
 		const isDeleted = Boolean(props.fabric?.deleted_at);
 
 		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !isDeleted) {
-			fabric.deleted_at = now(getLocalTimeZone()).toAbsoluteString();
+			fabric.deleted_at = new Date().toISOString();
 		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && isDeleted) {
 			fabric.deleted_at = null;
 		}

@@ -1,4 +1,3 @@
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
@@ -47,7 +46,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 		}, {});
 
 		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !props.color?.deleted_at) {
-			color.deleted_at = now(getLocalTimeZone()).toAbsoluteString();
+			color.deleted_at = new Date().toISOString();
 		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && Boolean(props.color?.deleted_at)) {
 			color.deleted_at = null;
 		}

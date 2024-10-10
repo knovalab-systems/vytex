@@ -1,4 +1,3 @@
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { Show, createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import StatusLabel from '~/components/StatusLabel';
@@ -18,8 +17,8 @@ function DeletedAtCell(props: { userId: string; deleted_at: string | null }) {
 		setLoading(true);
 		const user: User = { deleted_at: null };
 		if (!newStatus) {
-			const date = now(getLocalTimeZone()).toAbsoluteString();
-			user.deleted_at = date;
+			const date = new Date();
+			user.deleted_at = date.toISOString();
 		}
 		updateUserRequest(props.userId, user)
 			.then(() => {

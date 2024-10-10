@@ -344,7 +344,7 @@ func TestUpdateOrder(t *testing.T) {
 		// context
 		id := "1"
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]interface{}{"status_id": 1})
+		json.NewEncoder(body).Encode(map[string]interface{}{"order_state_id": 1})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()

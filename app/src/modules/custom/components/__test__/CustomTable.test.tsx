@@ -43,7 +43,7 @@ describe('Custom Table', () => {
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');
 		const customClient = screen.getByText('pepe');
-		const customCreatedAt = screen.getByText('2024-05-12 5:36 PM');
+		const customCreatedAt = screen.getByText('2024-05-12 05:36 PM');
 
 		expect(customId).toBeInTheDocument();
 		expect(customClient).toBeInTheDocument();
@@ -69,8 +69,8 @@ describe('Custom Table', () => {
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');
 		const customClient = screen.getByText('pepe');
-		const customCreatedAt = screen.getByText('2024-05-12 5:36 PM');
-		const customFinishedAt = screen.getByText('2024-06-12 5:36 PM');
+		const customCreatedAt = screen.getByText('2024-05-12 05:36 PM');
+		const customFinishedAt = screen.getByText('2024-06-12 05:36 PM');
 
 		expect(customId).toBeInTheDocument();
 		expect(customClient).toBeInTheDocument();
@@ -100,8 +100,8 @@ describe('Custom Table', () => {
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');
 		const customClient = screen.getByText('pepe');
-		const customCreatedAt = screen.getByText('2024-05-12 5:36 PM');
-		const customFinishedAt = screen.getByText('2024-06-12 5:36 PM');
+		const customCreatedAt = screen.getByText('2024-05-12 05:36 PM');
+		const customFinishedAt = screen.getByText('2024-06-12 05:36 PM');
 
 		expect(customId).toBeInTheDocument();
 		expect(customClient).toBeInTheDocument();
@@ -131,9 +131,9 @@ describe('Custom Table', () => {
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');
 		const customClient = screen.getByText('pepe');
-		const customCreatedAt = screen.getByText('2024-05-12 5:36 PM');
-		const customFinishedAt = screen.getByText('2024-06-12 5:36 PM');
-		const customCanceledAt = screen.getByText('2024-07-12 5:36 PM');
+		const customCreatedAt = screen.getByText('2024-05-12 05:36 PM');
+		const customFinishedAt = screen.getByText('2024-06-12 05:36 PM');
+		const customCanceledAt = screen.getByText('2024-07-12 05:36 PM');
 
 		expect(customId).toBeInTheDocument();
 		expect(customClient).toBeInTheDocument();
@@ -164,7 +164,7 @@ describe('Custom Table', () => {
 		render(() => <CustomTable customs={customs} />);
 		const customId = screen.getByText('123');
 		const customClient = screen.getByText('pepe');
-		const customCreatedAt = screen.getByText('2024-05-12 5:36 PM');
+		const customCreatedAt = screen.getByText('2024-05-12 05:36 PM');
 		const actionsCell = screen.getByText('Agregar');
 
 		expect(customId).toBeInTheDocument();

@@ -1,4 +1,3 @@
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { Match, Switch, createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
@@ -28,7 +27,7 @@ function TaskControlActionsCell(props: { id: number; started: boolean; rejected:
 				<Match when={props.started && !props.rejected && !props.finished}>
 					<Button
 						disabled={disabled()}
-						onclick={() => updateTask({ finished_at: now(getLocalTimeZone()).toAbsoluteString() })}
+						onclick={() => updateTask({ finished_at: new Date().toISOString() })}
 						variant='action'
 					>
 						Finalizar
@@ -38,14 +37,14 @@ function TaskControlActionsCell(props: { id: number; started: boolean; rejected:
 					<div class='inline-flex gap-2'>
 						<Button
 							disabled={disabled()}
-							onclick={() => updateTask({ started_at: now(getLocalTimeZone()).toAbsoluteString() })}
+							onclick={() => updateTask({ started_at: new Date().toISOString() })}
 							variant='action'
 						>
 							Empezar
 						</Button>
 						<Button
 							disabled={disabled()}
-							onclick={() => updateTask({ rejected_at: now(getLocalTimeZone()).toAbsoluteString() })}
+							onclick={() => updateTask({ rejected_at: new Date().toISOString() })}
 							variant='destructive'
 						>
 							Rechazar

@@ -13,3 +13,11 @@ export type FabricFilter = {
 	suppliers?: number[];
 	state?: string;
 };
+
+export type OrderFilter = {
+	status?: number[];
+	startedDate?: string;
+	createdDate?: string;
+	finishedDate?: string;
+	canceledDate?: string;
+};

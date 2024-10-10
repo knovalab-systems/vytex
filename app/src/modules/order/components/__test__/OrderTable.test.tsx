@@ -88,9 +88,9 @@ describe('Order Table', () => {
 		const customId = screen.getByText('345');
 		const statusCreated = screen.getAllByText('Creada');
 		const statusStart = screen.getByText('Iniciada');
-		const orderCreatedAt = screen.getByText('2024-05-12 5:36 PM');
-		const orderCanceledAt = screen.getByText('2024-06-12 5:36 PM');
-		const orderFinishedAt = screen.getByText('2024-07-12 5:36 PM');
+		const orderCreatedAt = screen.getByText('2024-05-12 05:36 PM');
+		const orderCanceledAt = screen.getByText('2024-06-12 05:36 PM');
+		const orderFinishedAt = screen.getByText('2024-07-12 05:36 PM');
 
 		expect(orderId).toBeInTheDocument();
 		expect(customId).toBeInTheDocument();
