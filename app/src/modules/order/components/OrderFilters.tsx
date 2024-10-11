@@ -28,6 +28,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 
 		props.setFilters(filters);
 		setOpen(false);
+		reset(form, { initialValues: filters });
 		if (Object.keys(filters).length === 0) {
 			setActive(false);
 		}
@@ -102,10 +103,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 								<Input
 									type='date'
 									placeholder='Fecha de creación'
-									autocomplete='off'
 									id='createdDate-field'
-									aria-errormessage={field.error}
-									required
 									value={field.value}
 									{...props}
 								/>
@@ -119,10 +117,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 								<Input
 									type='date'
 									placeholder='Fecha de inicio'
-									autocomplete='off'
 									id='startedDate-field'
-									aria-errormessage={field.error}
-									required
 									value={field.value}
 									{...props}
 								/>
@@ -136,10 +131,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 								<Input
 									type='date'
 									placeholder='Fecha de finalización'
-									autocomplete='off'
 									id='finishedDate-field'
-									aria-errormessage={field.error}
-									required
 									value={field.value}
 									{...props}
 								/>
@@ -153,10 +145,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 								<Input
 									type='date'
 									placeholder='Fecha de cancelación'
-									autocomplete='off'
 									id='canceledDate-field'
-									aria-errormessage={field.error}
-									required
 									value={field.value}
 									{...props}
 								/>
