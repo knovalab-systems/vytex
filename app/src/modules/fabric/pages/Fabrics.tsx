@@ -54,8 +54,8 @@ function FabricsPage() {
 					<Loading label='Cargando telas' />
 				</Match>
 				<Match when={isSuccess()}>
-					<div class='flex flex-wrap gap-2 p-1'>
-						<CreateButton to={FABRICS_CREATE_PATH} policy='CreateFabrics' label='Nueva tela' />
+					<div class='flex flex-col md:flex-row gap-2 p-1'>
+						<CreateButton to={FABRICS_CREATE_PATH} class='w-full' policy='CreateFabrics' label='Nueva tela' />
 						<FabricFilters setFilters={setFilters} filters={filters} />
 					</div>
 					<FabricTable fabrics={fabrics.data} />

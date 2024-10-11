@@ -34,7 +34,7 @@ function ReferenceTable(props: { references?: GetReferenceType }) {
 				<TableHeader class='sticky top-0'>
 					<TableRow>
 						<TableHead>ID</TableHead>
-						<TableHead>Code</TableHead>
+						<TableHead>Código</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
 					</TableRow>

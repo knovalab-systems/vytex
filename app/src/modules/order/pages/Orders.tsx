@@ -11,7 +11,10 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
+import { useColors } from '~/hooks/useColors';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
+import type { OrderFilter } from '~/types/filter';
+import OrderFilters from '../components/OrderFilters';
 import OrderTable from '../components/OrderTable';
 import { countOrdersQuery, getOrdersQuery } from '../request/orderGet';
 
@@ -24,19 +27,23 @@ function Orders() {
 }
 
 function OrdersPage() {
+	const [filters, setFilters] = createSignal<OrderFilter>({});
 	const [page, setPage] = createSignal(1);
-	const orders = createQuery(() => getOrdersQuery(page()));
+	const { colorsQuery } = useColors();
+	const orders = createQuery(() => getOrdersQuery(page(), filters()));
 	const { orderStatusQuery } = useOrderStatus();
-	const countOrders = createQuery(() => countOrdersQuery());
+	const countOrders = createQuery(() => countOrdersQuery(filters()));
 	const pages = createMemo<number>(() => {
 		const count = countOrders.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
 		return Math.ceil(safe / 10);
 	});
 
-	const isError = () => orders.isError || countOrders.isError || orderStatusQuery.isError;
-	const isLoading = () => orders.isLoading || countOrders.isLoading || orderStatusQuery.isLoading;
-	const isSuccess = () => orders.isSuccess && countOrders.isSuccess && orderStatusQuery.isSuccess;
+	const isError = () => orders.isError || countOrders.isError || orderStatusQuery.isError || colorsQuery.isError;
+	const isLoading = () =>
+		orders.isLoading || countOrders.isLoading || orderStatusQuery.isLoading || colorsQuery.isLoading;
+	const isSuccess = () =>
+		orders.isSuccess && countOrders.isSuccess && orderStatusQuery.isSuccess && colorsQuery.isSuccess;
 
 	return (
 		<div class='h-full flex flex-col gap-2'>
@@ -48,6 +55,9 @@ function OrdersPage() {
 					<Loading label='Cargando ordenes' />
 				</Match>
 				<Match when={isSuccess()}>
+					<div>
+						<OrderFilters filters={filters()} setFilters={setFilters} />
+					</div>
 					<OrderTable orders={orders.data} />
 					<Pagination
 						class='[&>*]:justify-center'

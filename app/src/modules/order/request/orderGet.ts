@@ -1,40 +1,56 @@
 import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readOrder, readOrders } from '@vytex/client';
+import dayjs from 'dayjs';
 import { QUERY_LIMIT } from '~/constants/http';
 import { SIZES } from '~/constants/sizes';
 import { client } from '~/lib/client';
+import { getBetweenDay } from '~/lib/parseTime';
+import type { OrderFilter } from '~/types/filter';
 
-export function getOrdersQuery(page: number) {
+export function getOrdersQuery(page: number, filters: OrderFilter) {
 	return queryOptions({
-		queryKey: ['getOrders', page],
-		queryFn: () => getOrders(page),
+		queryKey: ['getOrders', page, filters],
+		queryFn: () => getOrders(page, filters),
 	});
 }
 
-async function getOrders(page: number) {
+async function getOrders(page: number, filters: OrderFilter) {
 	return await client.request(
 		readOrders({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['created_at', 'canceled_at', 'started_at', 'order_state_id', 'id', 'custom_id', 'finished_at'],
+			fields: [
+				'created_at',
+				'canceled_at',
+				'started_at',
+				'order_state_id',
+				'id',
+				'custom_id',
+				'finished_at',
+				{ color_by_reference: ['color_id', { reference: ['code'] }] },
+			],
+			filter: doFilters(filters),
 		}),
 	);
 }
 
 export type GetOrdersType = Awaited<ReturnType<typeof getOrders>>;
 
-export function countOrdersQuery() {
+export function countOrdersQuery(filters: OrderFilter) {
 	return queryOptions({
-		queryKey: ['countOrders'],
-		queryFn: () => countOrders(),
+		queryKey: ['countOrders', filters],
+		queryFn: () => countOrders(filters),
 	});
 }
 
-async function countOrders() {
+async function countOrders(filters: OrderFilter) {
 	return await client.request(
 		aggregate('vytex_orders', {
 			aggregate: {
 				count: '*',
+			},
+			query: {
+				filter: doFilters(filters),
 			},
 		}),
 	);
@@ -67,3 +83,34 @@ async function getOrderStart(id: number) {
 }
 
 export type GetOrderStart = Awaited<ReturnType<typeof getOrderStart>>;
+
+function doFilters(filters: OrderFilter) {
+	return {
+		...(filters.canceledDate && {
+			canceled_at: {
+				_between: getBetweenDay(dayjs(filters.canceledDate)),
+			},
+		}),
+		...(filters.finishedDate && {
+			finished_at: {
+				_between: getBetweenDay(dayjs(filters.finishedDate)),
+			},
+		}),
+		...(filters.createdDate && {
+			created_at: {
+				_between: getBetweenDay(dayjs(filters.createdDate)),
+			},
+		}),
+		...(filters.startedDate && {
+			started_at: {
+				_between: getBetweenDay(dayjs(filters.startedDate)),
+			},
+		}),
+		...(filters.status &&
+			filters.status.length > 0 && {
+				order_state_id: {
+					_in: filters.status,
+				},
+			}),
+	};
+}

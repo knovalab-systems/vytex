@@ -54,8 +54,8 @@ function ResourcesPage() {
 					<Loading label='Cargando insumos' />
 				</Match>
 				<Match when={isSuccess()}>
-					<div class='flex flex-wrap gap-2 p-1'>
-						<CreateButton to={RESOURCES_CREATE_PATH} policy='CreateResources' label='Nuevo Insumo' />
+					<div class='flex flex-col md:flex-row gap-2 p-1'>
+						<CreateButton to={RESOURCES_CREATE_PATH} class='w-full' policy='CreateResources' label='Nuevo Insumo' />
 						<ResourceFilters setFilters={setFilters} filters={filters} />
 					</div>
 					<ResourceTable resources={resources.data} />

@@ -9,26 +9,20 @@ import (
 
 func UserFields(s query.IUserDo, fields string) query.IUserDo {
 	userTable := query.User
-	fieldsArr := strings.Split(fields, ",")
+	userFields := strings.Split(fields, ",")
 	var exprs []field.Expr
 	roleFieldsArr := []string{}
 
 	switchFunc := func(v string) bool {
-		if strings.HasPrefix(v, "role.") {
-			roleFieldsArr = append(roleFieldsArr, strings.ReplaceAll(v, "role.", ""))
-			return true
-		}
-
-		if v == "role" {
-			exprs = append(exprs, userTable.RoleId)
-			s = s.Preload(userTable.Role)
+		if strings.HasPrefix(v, "role.") || v == "role" {
+			roleFieldsArr = append(roleFieldsArr, strings.TrimPrefix(v, "role."))
 			return true
 		}
 
 		return false
 	}
 
-	exprs = append(exprs, userSwitch(fieldsArr, switchFunc)...)
+	exprs = append(exprs, userSwitch(userFields, switchFunc)...)
 
 	if len(roleFieldsArr) != 0 {
 		exprs = append(exprs, userTable.RoleId)

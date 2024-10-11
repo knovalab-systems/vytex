@@ -40,7 +40,7 @@ describe('UserCard', () => {
 		render(() => <UserCard user={user as GetUserType} />);
 
 		const name = screen.getByText('Jose');
-		const deleted_at = screen.getByText('2024-05-10 5:36 PM');
+		const deleted_at = screen.getByText('2024-05-10 05:36 PM');
 
 		expect(deleted_at).toBeInTheDocument();
 		expect(name).toBeInTheDocument();

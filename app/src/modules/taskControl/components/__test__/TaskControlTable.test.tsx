@@ -85,10 +85,10 @@ describe('TaskControlTable', () => {
 		const stateFinished = screen.getByText('Terminada');
 		const refValue = screen.getAllByText('1');
 
-		const finishedAt = screen.getByText('2024-06-13 5:36 PM');
-		const rejectedAt = screen.getByText('2024-06-12 5:36 PM');
-		const startedAt = screen.getByText('2024-06-14 5:36 PM');
-		const createdAt = screen.getByText('2024-06-11 5:36 PM');
+		const finishedAt = screen.getByText('2024-06-13 05:36 PM');
+		const rejectedAt = screen.getByText('2024-06-12 05:36 PM');
+		const startedAt = screen.getByText('2024-06-14 05:36 PM');
+		const createdAt = screen.getByText('2024-06-11 05:36 PM');
 
 		expect(refTitle).toBeInTheDocument();
 		expect(ordenTitle).toBeInTheDocument();

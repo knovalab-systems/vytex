@@ -1,4 +1,3 @@
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
@@ -42,7 +41,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 		}, {});
 
 		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !props.user?.deleted_at) {
-			user.deleted_at = now(getLocalTimeZone()).toAbsoluteString();
+			user.deleted_at = new Date().toISOString();
 		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && Boolean(props.user?.deleted_at)) {
 			user.deleted_at = null;
 		}

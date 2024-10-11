@@ -30,7 +30,7 @@ function FabricTable(props: { fabrics?: GetFabricsType }) {
 				<TableHeader class='sticky top-0'>
 					<TableRow>
 						<TableHead>ID</TableHead>
-						<TableHead>Code</TableHead>
+						<TableHead>Código</TableHead>
 						<TableHead>Nombre</TableHead>
 						<TableHead>Color</TableHead>
 						<TableHead class='p-0 w-auto' />

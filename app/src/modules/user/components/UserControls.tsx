@@ -68,28 +68,35 @@ const UserControls = (props: UserControlsProps) => {
 	};
 
 	return (
-		<div class='flex flex-wrap gap-2 md:gap-4 p-1'>
+		<div class='flex flex-col md:flex-row gap-2 md:gap-4 p-1'>
 			<Button variant='new' class='h-full' onclick={goToUserCreationPage}>
 				Nuevo usuario
 				<AiOutlinePlus class='ml-2' size={22} />
 			</Button>
 			<FilterInput
-				class='w-52'
+				class='w-auto'
 				filterValue={props.usernameFilterValue}
 				setFilter={debounce(setUsername, 300)}
 				placeholder='Usuario'
 			/>
-			<FilterInput filterValue={props.nameFilterValue} setFilter={debounce(setName, 300)} placeholder='Nombre' />
+			<FilterInput
+				class='w-auto'
+				filterValue={props.nameFilterValue}
+				setFilter={debounce(setName, 300)}
+				placeholder='Nombre'
+			/>
 			<SelectOptions
 				options={USER_STATUS_OPTIONS}
 				placeholder='Estado de usuario'
 				setSelect={setStatus}
+				class='w-auto min-h-10'
 				value={props.statusFilterValue}
 			/>
 			<SelectOptions
 				options={getRoles().map(role => ({ label: role.name, value: role.id }))}
 				placeholder='Rol de usuario'
 				setSelect={setRole}
+				class='w-auto min-h-10'
 				value={props.roleIdFilterValue}
 			/>
 			<Show when={areFiltersApplied()}>

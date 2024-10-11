@@ -1,30 +1,21 @@
-import { type Time, parseAbsoluteToLocal, toCalendarDate, toTime } from '@internationalized/date';
-
-export function convert24To12(time: string) {
-	// Split hours, minutes m seconds
-	let [hours, minutes] = time.split(':').map(Number);
-
-	// AM o PM
-	const period = hours >= 12 ? 'PM' : 'AM';
-
-	// Convert time from 24 to 12
-	hours = hours % 12 || 12;
-
-	// Format hours n minutes
-	const formattedTime = `${hours}:${minutes < 10 ? `0${minutes}` : minutes} ${period}`;
-
-	return formattedTime;
-}
+import dayjs from 'dayjs';
 
 export function parseDateTimeHuman(dateTime?: string | null) {
 	if (dateTime) {
-		const local = parseAbsoluteToLocal(dateTime);
-		const parse = `${toCalendarDate(local)} ${convertTimeTo12(toTime(local))}`;
-		return parse;
+		const date = dayjs(dateTime).format('YYYY-MM-DD hh:mm A');
+
+		return date;
 	}
 	return '';
 }
 
-export function convertTimeTo12(time: Time) {
-	return convert24To12(time.toString());
+/**
+ * Get the between date with start n end of day on iso string
+ * @param dateTime
+ * @returns
+ */
+export function getBetweenDay(dateTime: dayjs.Dayjs): [string, string] {
+	const start = dateTime.startOf('d');
+	const end = dateTime.endOf('d');
+	return [start.toISOString(), end.toISOString()];
 }

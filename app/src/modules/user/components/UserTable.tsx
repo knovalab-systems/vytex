@@ -32,7 +32,7 @@ function UserTable(props: { users?: GetUsersType }) {
 
 	return (
 		<TableContainer>
-			<Table class='md:table-fixed'>
+			<Table>
 				<TableHeader class='sticky top-0 z-10'>
 					<TableRow>
 						<TableHead>ID</TableHead>

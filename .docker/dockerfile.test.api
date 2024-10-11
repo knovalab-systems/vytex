@@ -4,7 +4,7 @@ FROM golang:1.22.1-alpine
 WORKDIR /app
 
 # Install hot reload module
-RUN go install github.com/air-verse/air@latest
+RUN go install github.com/air-verse/air@v1.52.3
 
 # Expose port 8080 to the outside world
 EXPOSE 8080

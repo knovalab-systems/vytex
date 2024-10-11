@@ -1,4 +1,3 @@
-import { getLocalTimeZone, now } from '@internationalized/date';
 import { type SubmitHandler, createForm, setValue, valiForm } from '@modular-forms/solid';
 import { useNavigate } from '@solidjs/router';
 import { Show } from 'solid-js';
@@ -69,7 +68,7 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 		const isDeleted = Boolean(props.resource?.deleted_at);
 
 		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !isDeleted) {
-			resource.deleted_at = now(getLocalTimeZone()).toAbsoluteString();
+			resource.deleted_at = new Date().toISOString();
 		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && isDeleted) {
 			resource.deleted_at = null;
 		}
