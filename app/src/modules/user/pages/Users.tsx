@@ -1,6 +1,7 @@
 import { createQuery } from '@tanstack/solid-query';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
+import CreateButton from '~/components/CreateButton';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import {
@@ -12,8 +13,10 @@ import {
 	PaginationPrevious,
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
+import { USER_CREATE_PATH } from '~/constants/paths';
 import { useRoles } from '~/hooks/useRoles';
-import UserControls from '../components/UserControls';
+import type { UserFilter } from '~/types/filter';
+import UserFilters from '../components/UserFilters';
 import UserTable from '../components/UserTable';
 import { countUsersQuery, getUsersQuery } from '../requests/userGet';
 
@@ -28,14 +31,9 @@ function Users() {
 function UsersPage() {
 	const { rolesQuery } = useRoles();
 	const [page, setPage] = createSignal(1);
-	const [nameFilter, setNameFilter] = createSignal('');
-	const [usernameFilter, setUsernameFilter] = createSignal('');
-	const [statusFilter, setStatusFilter] = createSignal('');
-	const [roleIdFilter, setRoleIdFilter] = createSignal('');
-	const users = createQuery(() =>
-		getUsersQuery(nameFilter(), usernameFilter(), roleIdFilter(), statusFilter(), page()),
-	);
-	const usersCount = createQuery(() => countUsersQuery(nameFilter(), usernameFilter(), roleIdFilter(), statusFilter()));
+	const [filters, setFilters] = createSignal<UserFilter>({});
+	const users = createQuery(() => getUsersQuery(page(), filters()));
+	const usersCount = createQuery(() => countUsersQuery(filters()));
 	const pages = createMemo<number>(() => {
 		const count = usersCount.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
@@ -56,17 +54,10 @@ function UsersPage() {
 					<Loading label='Cargando usuarios' />
 				</Match>
 				<Match when={isSuccess()}>
-					<UserControls
-						setPage={() => setPage(1)}
-						setNameFilter={setNameFilter}
-						nameFilterValue={nameFilter()}
-						setUsernameFilter={setUsernameFilter}
-						usernameFilterValue={usernameFilter()}
-						setStatusFilter={setStatusFilter}
-						statusFilterValue={statusFilter()}
-						setRoleIdFilter={setRoleIdFilter}
-						roleIdFilterValue={roleIdFilter()}
-					/>
+					<div class='flex justify-between'>
+						<UserFilters setFilters={setFilters} filters={filters()} />
+						<CreateButton to={USER_CREATE_PATH} class='w-full' policy='CreateUsers' label='Nuevo usuario' />
+					</div>
 					<UserTable users={users.data} />
 					<Pagination
 						class='[&>*]:justify-center'

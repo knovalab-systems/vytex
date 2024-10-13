@@ -1,11 +1,9 @@
-import { A } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { AiOutlinePlus } from 'solid-icons/ai';
 import { Match, Switch, createMemo, createSignal } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
+import CreateButton from '~/components/CreateButton';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
-import { Button } from '~/components/ui/Button';
 import {
 	Pagination,
 	PaginationEllipsis,
@@ -39,12 +37,8 @@ function SuppliersPage() {
 
 	return (
 		<div class='h-full w-full flex flex-col gap-2'>
-			<div>
-				<A href={SUPPLIERS_CREATE_PATH}>
-					<Button variant='new'>
-						Nuevo Proveedor <AiOutlinePlus class='ml-2' size={22} />
-					</Button>
-				</A>
+			<div class='ml-auto'>
+				<CreateButton to={SUPPLIERS_CREATE_PATH} policy='CreateSuppliers' label='Nuevo Proveedor' />
 			</div>
 			<Switch>
 				<Match when={suppliers.isError || countSuppliers.isError}>

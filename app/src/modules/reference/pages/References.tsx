@@ -45,7 +45,7 @@ function ReferencesPage() {
 					<Loading label='Cargando referencias' />
 				</Match>
 				<Match when={references.isSuccess && countReferences.isSuccess}>
-					<div>
+					<div class='ml-auto'>
 						<CreateButton to={REFS_CREATE_PATH} policy='CreateReferences' label='Nueva Referencia' />
 					</div>
 					<ReferenceTable references={references.data} />

@@ -1,9 +1,14 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
-import { createPointerEvent } from '~/utils/event';
+import type { JSXElement } from 'solid-js';
+import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import ResourceFilters from '../ResourceFilters';
 
 const setFiltersMock = vi.fn();
+
+vi.mock('~/components/FilterButton', () => ({
+	default: (props: { children: JSXElement }) => <div>{props.children}</div>,
+}));
 
 vi.mock('~/hooks/useColors', () => ({
 	useColors: () => ({
@@ -20,116 +25,97 @@ vi.mock('~/hooks/useSuppliers', () => ({
 }));
 
 describe('ResourceFilters', () => {
+	installPointerEvent();
+
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
 	it('renders correctly', () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <ResourceFilters filters={{}} setFilters={setFiltersMock} />);
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
-		const codeField = screen.getByPlaceholderText('Código del insumo');
-		const statusFilterInput = screen.getByTitle('Ver colores');
-		const roleIdFilterInput = screen.getByTitle('Ver proveedores');
+		const nameField = screen.getByText('Nombre');
+		const codeField = screen.getByText('Código');
+		const colorField = screen.getByTitle('Ver colores');
+		const supplierField = screen.getByTitle('Ver proveedores');
+		const stateField = screen.getByText('Estado');
 
 		expect(nameField).toBeInTheDocument();
 		expect(codeField).toBeInTheDocument();
-		expect(statusFilterInput).toBeInTheDocument();
-		expect(roleIdFilterInput).toBeInTheDocument();
+		expect(colorField).toBeInTheDocument();
+		expect(supplierField).toBeInTheDocument();
+		expect(stateField).toBeInTheDocument();
 	});
 
-	it('should call setfilter on change name', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+	const testCasesInputDate = [
+		{ placeholder: 'Código del insumo', value: '21321', key: 'code' },
+		{ placeholder: 'Nombre del insumo', value: 'nombreinsumo', key: 'name' },
+	];
 
-		const nameField = screen.getByPlaceholderText('Nombre del insumo');
-		fireEvent.input(nameField, { target: { value: 'John' } });
+	for (const testCase of testCasesInputDate) {
+		it(`calls set filter on submit with date field ${testCase.key}`, async () => {
+			render(() => <ResourceFilters filters={{}} setFilters={setFiltersMock} />);
 
-		await waitFor(() => expect(setFiltersMock).toBeCalled());
-	});
+			const submit = screen.getByText('Aplicar');
+			const input = screen.getByPlaceholderText(testCase.placeholder);
 
-	it('should call set filter on change code', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+			fireEvent.input(input, { target: { value: testCase.value } });
+			fireEvent.click(submit);
 
-		const codeField = screen.getByPlaceholderText('Código del insumo');
-		fireEvent.input(codeField, { target: { value: 'John' } });
+			await waitFor(() => expect(setFiltersMock).toHaveBeenCalledWith({ [testCase.key]: testCase.value }));
+		});
+	}
 
-		await waitFor(() => expect(setFiltersMock).toBeCalled());
-	});
+	const testCasesSelect = [
+		{ title: 'Ver colores', value: [1], key: 'colors' },
+		{ title: 'Ver proveedores', value: [1], key: 'suppliers' },
+	];
 
-	it('should call set filter on select color', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+	for (const testCase of testCasesSelect) {
+		it('should call set filter on select', async () => {
+			render(() => <ResourceFilters filters={{}} setFilters={setFiltersMock} />);
 
-		const colorSelect = screen.getByTitle('Ver colores');
+			const select = screen.getByTitle(testCase.title);
+			const submit = screen.getByText('Aplicar');
 
-		fireEvent(
-			colorSelect,
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
+			fireEvent(
+				select,
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
 
-		fireEvent(colorSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
+			fireEvent(select, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
 
-		const listboxColor = screen.getByRole('listbox');
-		const colors = within(listboxColor).getAllByRole('option');
+			const listbox = screen.getByRole('listbox');
+			const options = within(listbox).getAllByRole('option');
 
-		fireEvent(
-			colors[0],
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
+			fireEvent(
+				options[0],
+				createPointerEvent('pointerdown', {
+					pointerId: 1,
+					pointerType: 'mouse',
+				}),
+			);
+			await Promise.resolve();
 
-		fireEvent(colors[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
+			fireEvent(options[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
+			await Promise.resolve();
 
-		await waitFor(() => expect(setFiltersMock).toBeCalled());
-	});
+			fireEvent.click(submit);
 
-	it('should call set filter on select supplier', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
-
-		const supplierSelect = screen.getByTitle('Ver proveedores');
-
-		fireEvent(
-			supplierSelect,
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(supplierSelect, createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		const listboxSupplier = screen.getByRole('listbox');
-		const suppliers = within(listboxSupplier).getAllByRole('option');
-
-		fireEvent(
-			suppliers[0],
-			createPointerEvent('pointerdown', {
-				pointerId: 1,
-				pointerType: 'mouse',
-			}),
-		);
-		await Promise.resolve();
-
-		fireEvent(suppliers[0], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
-		await Promise.resolve();
-
-		await waitFor(() => expect(setFiltersMock).toBeCalled());
-	});
+			await waitFor(() => expect(setFiltersMock).toHaveBeenCalledWith({ [testCase.key]: testCase.value }));
+		});
+	}
 
 	it('should call set filter on change state', async () => {
-		render(() => <ResourceFilters filters={() => ({})} setFilters={setFiltersMock} />);
+		render(() => <ResourceFilters filters={{}} setFilters={setFiltersMock} />);
 
 		const statusSelect = screen.getByText('Selecciona un estado');
+		const submit = screen.getByText('Aplicar');
 
 		fireEvent(
 			statusSelect,
@@ -157,7 +143,22 @@ describe('ResourceFilters', () => {
 
 		fireEvent(status[1], createPointerEvent('pointerup', { pointerId: 1, pointerType: 'mouse' }));
 		await Promise.resolve();
+		fireEvent.click(submit);
 
 		await waitFor(() => expect(setFiltersMock).toBeCalled());
+	});
+
+	it('calls set filter on clear', async () => {
+		render(() => <ResourceFilters filters={{}} setFilters={setFiltersMock} />);
+
+		const submit = screen.getByText('Aplicar');
+		const clear = screen.getByText('Limpiar filtros');
+		const input = screen.getByPlaceholderText('Nombre del insumo');
+
+		fireEvent.input(input, { target: { value: 'insumo' } });
+		fireEvent.click(submit);
+		fireEvent.click(clear);
+
+		await waitFor(() => expect(setFiltersMock).toHaveBeenCalledTimes(2));
 	});
 });

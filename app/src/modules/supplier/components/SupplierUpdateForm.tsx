@@ -9,7 +9,7 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { SUPPLIERS_PATH } from '~/constants/paths';
-import { STATUS_OPTIONS } from '~/constants/status';
+import { STATUS_VALUES } from '~/constants/status';
 import { refetchSuppliers } from '~/hooks/useSuppliers';
 import type { Supplier } from '~/types/core';
 import type { GetSupplierType } from '../requests/supplierGet';
@@ -47,9 +47,9 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 			return p;
 		}, {});
 
-		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !props.supplier?.deleted_at) {
+		if (deleted_at === 'Inactivo' && !props.supplier?.deleted_at) {
 			supplier.deleted_at = new Date().toISOString();
-		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && Boolean(props.supplier?.deleted_at)) {
+		} else if (deleted_at === 'Activo' && Boolean(props.supplier?.deleted_at)) {
 			supplier.deleted_at = null;
 		}
 
@@ -157,7 +157,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 								onChange={value => {
 									setValue(form, 'deleted_at', value);
 								}}
-								options={Object.keys(STATUS_OPTIONS)}
+								options={STATUS_VALUES}
 								placeholder='Selecciona un estado'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>

@@ -9,7 +9,7 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { USERS_PATH } from '~/constants/paths';
-import { STATUS_OPTIONS } from '~/constants/status';
+import { STATUS_VALUES } from '~/constants/status';
 import { useRoles } from '~/hooks/useRoles';
 import type { User } from '~/types/core';
 import type { GetUserType } from '../requests/userGet';
@@ -40,9 +40,9 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 			return p;
 		}, {});
 
-		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !props.user?.deleted_at) {
+		if (deleted_at === 'Inactivo' && !props.user?.deleted_at) {
 			user.deleted_at = new Date().toISOString();
-		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && Boolean(props.user?.deleted_at)) {
+		} else if (deleted_at === 'Activo' && Boolean(props.user?.deleted_at)) {
 			user.deleted_at = null;
 		}
 
@@ -146,7 +146,7 @@ function UserUpdateForm(props: { user?: GetUserType }) {
 								onChange={value => {
 									setValue(form, 'deleted_at', value);
 								}}
-								options={Object.keys(STATUS_OPTIONS)}
+								options={STATUS_VALUES}
 								placeholder='Selecciona un estado'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>

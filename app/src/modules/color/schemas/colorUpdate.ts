@@ -11,7 +11,7 @@ import {
 	string,
 } from 'valibot';
 import { REQ_NAME } from '~/constants/commonErrMsgs';
-import { STATUS_OPTIONS } from '~/constants/status';
+import { STATUS_VALUES } from '~/constants/status';
 
 export const ColorUpdateSchema = object({
 	name: pipe(string(), minLength(1, REQ_NAME)),
@@ -21,7 +21,7 @@ export const ColorUpdateSchema = object({
 		hexadecimal('Ingresa un valor válido de hexadecimal.'),
 		check(e => e.length === 6 || e.length === 3, 'Ingresa solo 3 o 6 valores.'),
 	),
-	deleted_at: picklist<string[], string>(Object.keys(STATUS_OPTIONS), 'Selecciona un estado.'),
+	deleted_at: picklist<string[], string>(STATUS_VALUES, 'Selecciona un estado.'),
 });
 
 export type ColorUpdateType = InferInput<typeof ColorUpdateSchema>;
