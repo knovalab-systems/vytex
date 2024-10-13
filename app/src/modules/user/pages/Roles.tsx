@@ -14,6 +14,8 @@ import {
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
 import { ROLES_CREATE_PATH } from '~/constants/paths';
+import type { RoleFilter } from '~/types/filter';
+import RoleFilters from '../components/RoleFilters';
 import RoleTable from '../components/RoleTable';
 import { type GetRolesType, countRolesQuery, getRolesQuery } from '../requests/roleGet';
 
@@ -27,8 +29,9 @@ function Roles() {
 
 function RolesPage() {
 	const [page, setPage] = createSignal(1);
-	const roles = createQuery(() => getRolesQuery(page()));
-	const rolesCount = createQuery(countRolesQuery);
+	const [filters, setFilters] = createSignal<RoleFilter>({});
+	const roles = createQuery(() => getRolesQuery(page(), filters()));
+	const rolesCount = createQuery(() => countRolesQuery(filters()));
 	const pages = createMemo<number>(() => {
 		const count = rolesCount.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
@@ -51,6 +54,7 @@ function RolesPage() {
 				<Match when={isSuccess()}>
 					<div>
 						<CreateButton to={ROLES_CREATE_PATH} policy='CreateRoles' label='Nuevo rol' />
+						<RoleFilters filters={filters()} setFilters={setFilters} />
 					</div>
 					<RoleTable roles={roles.data as GetRolesType} />
 					<Pagination

@@ -21,3 +21,10 @@ export type OrderFilter = {
 	finishedDate?: string;
 	canceledDate?: string;
 };
+
+export type RoleFilter = {
+	name?: string;
+	origin?: RoleFilterOrigin;
+};
+
+export type RoleFilterOrigin = 'Sistema' | 'Personalizado';
