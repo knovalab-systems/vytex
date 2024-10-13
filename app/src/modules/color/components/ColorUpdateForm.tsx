@@ -9,7 +9,7 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { COLORS_PATH } from '~/constants/paths';
-import { STATUS_OPTIONS } from '~/constants/status';
+import { STATUS_VALUES } from '~/constants/status';
 import { refetchColors } from '~/hooks/useColors';
 import type { Color } from '~/types/core';
 import type { GetColorType } from '../requests/colorGet';
@@ -45,9 +45,9 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 			return p;
 		}, {});
 
-		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !props.color?.deleted_at) {
+		if (deleted_at === 'Inactivo' && !props.color?.deleted_at) {
 			color.deleted_at = new Date().toISOString();
-		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && Boolean(props.color?.deleted_at)) {
+		} else if (deleted_at === 'Activo' && Boolean(props.color?.deleted_at)) {
 			color.deleted_at = null;
 		}
 
@@ -139,7 +139,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 								onChange={value => {
 									setValue(form, 'deleted_at', value);
 								}}
-								options={Object.keys(STATUS_OPTIONS)}
+								options={STATUS_VALUES}
 								placeholder='Selecciona un estado'
 								itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 							>

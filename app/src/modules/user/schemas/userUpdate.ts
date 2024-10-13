@@ -1,6 +1,6 @@
 import { type InferInput, literal, minLength, object, picklist, pipe, regex, string, union } from 'valibot';
 import { REQ_NAME } from '~/constants/commonErrMsgs';
-import { STATUS_OPTIONS } from '~/constants/status';
+import { STATUS_VALUES } from '~/constants/status';
 
 export const UserUpdateSchema = object({
 	name: pipe(string(), minLength(1, REQ_NAME)),
@@ -17,7 +17,7 @@ export const UserUpdateSchema = object({
 		'La contraseña debe ser de mínimo 8 caracteres.',
 	),
 	role_id: pipe(string('Selecciona un rol.'), minLength(1, 'Selecciona un rol.')),
-	deleted_at: picklist<string[], string>(Object.keys(STATUS_OPTIONS), 'Selecciona un estado.'),
+	deleted_at: picklist<string[], string>(STATUS_VALUES, 'Selecciona un estado.'),
 });
 
 export type UserUpdateType = InferInput<typeof UserUpdateSchema>;

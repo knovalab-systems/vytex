@@ -19,7 +19,7 @@ import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
 import { STATUS_CODE } from '~/constants/http';
 import { RESOURCES_PATH } from '~/constants/paths';
-import { STATUS_OPTIONS } from '~/constants/status';
+import { STATUS_VALUES } from '~/constants/status';
 import { type Colors, useColors } from '~/hooks/useColors';
 import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
 import type { Resource } from '~/types/core';
@@ -67,9 +67,9 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 
 		const isDeleted = Boolean(props.resource?.deleted_at);
 
-		if (!STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && !isDeleted) {
+		if (deleted_at === 'Inactivo' && !isDeleted) {
 			resource.deleted_at = new Date().toISOString();
-		} else if (STATUS_OPTIONS[deleted_at as keyof typeof STATUS_OPTIONS] && isDeleted) {
+		} else if (deleted_at === 'Activo' && isDeleted) {
 			resource.deleted_at = null;
 		}
 
@@ -240,7 +240,7 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 									onChange={value => {
 										setValue(form, 'deleted_at', value);
 									}}
-									options={Object.keys(STATUS_OPTIONS)}
+									options={STATUS_VALUES}
 									placeholder='Selecciona un estado'
 									itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
 								>

@@ -1,9 +1,11 @@
+import type { StateValues } from './state';
+
 export type ResourceFilter = {
 	name?: string;
 	code?: string;
 	colors?: number[];
 	suppliers?: number[];
-	state?: string;
+	state?: StateValues;
 };
 
 export type FabricFilter = {
@@ -11,7 +13,7 @@ export type FabricFilter = {
 	code?: string;
 	colors?: number[];
 	suppliers?: number[];
-	state?: string;
+	state?: StateValues;
 };
 
 export type OrderFilter = {
@@ -25,6 +27,13 @@ export type OrderFilter = {
 export type RoleFilter = {
 	name?: string;
 	origin?: RoleFilterOrigin;
+};
+
+export type UserFilter = {
+	name?: string;
+	username?: string;
+	state?: StateValues;
+	roles?: string[];
 };
 
 export type RoleFilterOrigin = 'Sistema' | 'Personalizado';

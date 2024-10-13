@@ -52,9 +52,9 @@ function RolesPage() {
 					<Loading label='Cargando roles' />
 				</Match>
 				<Match when={isSuccess()}>
-					<div>
-						<CreateButton to={ROLES_CREATE_PATH} policy='CreateRoles' label='Nuevo rol' />
+					<div class='flex justify-between'>
 						<RoleFilters filters={filters()} setFilters={setFilters} />
+						<CreateButton to={ROLES_CREATE_PATH} policy='CreateRoles' label='Nuevo rol' />
 					</div>
 					<RoleTable roles={roles.data as GetRolesType} />
 					<Pagination

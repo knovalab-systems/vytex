@@ -75,7 +75,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 															<span class='my-auto flex' onPointerDown={e => e.stopPropagation()}>
 																{option.name}
 																<button type='button' onClick={() => state.remove(option)}>
-																	<IoCloseOutline class='my-auto mr-2' title='Remover' />
+																	<IoCloseOutline class='my-auto mr-2' title='Remover todos' />
 																</button>
 															</span>
 														)}

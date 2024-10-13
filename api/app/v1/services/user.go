@@ -1,16 +1,14 @@
 package services
 
 import (
-	"encoding/json"
 	"errors"
-	"fmt"
-	"strconv"
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
+	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
@@ -34,13 +32,16 @@ func (m *UserService) SelectUsers(q *models.Query) ([]*models.User, error) {
 	}
 
 	// filters
-	filter, err := userFilters(q.Filter, s)
-	if err != nil {
-		return nil, problems.UsersBadRequest()
+	if q.Filter != "" {
+		var err error
+		s, err = filters.UserFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.UsersBadRequest()
+		}
 	}
 
 	// run query
-	users, err := filter.Find()
+	users, err := s.Find()
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -62,13 +63,16 @@ func (m *UserService) SelectUser(q *models.UserRead) (*models.User, error) {
 	}
 
 	// filters
-	filter, err := userFilters(q.Filter, s)
-	if err != nil {
-		return nil, problems.UsersBadRequest()
+	if q.Filter != "" {
+		var err error
+		s, err = filters.UserFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.UsersBadRequest()
+		}
 	}
 
 	// run query
-	user, err := filter.Where(table.ID.Eq(q.ID)).First()
+	user, err := s.Where(table.ID.Eq(q.ID)).First()
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, problems.ReadAccess()
@@ -88,15 +92,19 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
 
-		filter, err := userFilters(q.Filter, s)
-		if err != nil {
-			return nil, problems.ServerError()
+		// filters
+		if q.Filter != "" {
+			var err error
+			s, err = filters.UserFilters(s, q.Filter)
+			if err != nil {
+				return nil, problems.UsersBadRequest()
+			}
 		}
 
 		for _, v := range countArr {
 			switch v {
 			case "id":
-				count, err := filter.Select(table.ID).Count()
+				count, err := s.Select(table.ID).Count()
 				if err != nil {
 					return nil, problems.ServerError()
 				}
@@ -104,7 +112,7 @@ func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.Aggr
 			default:
 
 				if aggregateElem.Count == nil {
-					count, err := filter.Count()
+					count, err := s.Count()
 					if err != nil {
 						return nil, problems.ServerError()
 					}
@@ -191,63 +199,4 @@ func checkUsername(username string) error {
 		return problems.ServerError()
 	}
 	return problems.UserExists()
-}
-
-func userFilters(u string, s query.IUserDo) (query.IUserDo, error) {
-
-	if u == "" {
-		return s, nil
-	}
-
-	table := query.User
-	var result map[string]map[string]interface{}
-	err := json.Unmarshal([]byte(u), &result)
-	if err != nil {
-		return nil, err
-	}
-
-	var userFilter models.UserFilter
-	for key, value := range result {
-		switch key {
-		case "username":
-			userFilter.Username = value["_eq"].(string)
-		case "name":
-			userFilter.Name = value["_eq"].(string)
-		case "role":
-			userFilter.Role = fmt.Sprintf("%v", value["_eq"])
-		case "deleted_at":
-			userFilter.DeletedAt = fmt.Sprintf("%v", value["_eq"])
-		}
-	}
-
-	if userFilter.Name != "" {
-		condition := table.Name.Lower().Like("%" + userFilter.Name + "%")
-		s = s.Where(condition)
-	}
-
-	if userFilter.Username != "" {
-		condition := table.Username.Lower().Like("%" + userFilter.Username + "%")
-		s = s.Where(condition)
-	}
-
-	if userFilter.Role != "" {
-		condition := table.RoleId.Eq(userFilter.Role)
-		s = s.Where(condition)
-	}
-
-	if userFilter.DeletedAt != "" {
-		value, err := strconv.ParseBool(userFilter.DeletedAt)
-		if err != nil {
-			return nil, err
-		}
-		if value {
-			condition := table.DeletedAt.IsNull()
-			s = s.Where(condition)
-		} else {
-			condition := table.DeletedAt.IsNotNull()
-			s = s.Where(condition)
-		}
-	}
-
-	return s, nil
 }
