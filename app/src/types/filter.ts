@@ -37,3 +37,9 @@ export type UserFilter = {
 };
 
 export type RoleFilterOrigin = 'Sistema' | 'Personalizado';
+
+export type TaskControlFilter = {
+	id?: number;
+	order?: number;
+	task?: number[];
+};

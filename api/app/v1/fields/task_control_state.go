@@ -7,14 +7,14 @@ import (
 	"gorm.io/gen/field"
 )
 
-func OrderStateFields(s query.IOrderStateDo, fields string) query.IOrderStateDo {
+func TaskControlStateFields(s query.ITaskControlStateDo, fields string) query.ITaskControlStateDo {
 	fieldsArr := strings.Split(fields, ",")
-	exprs := orderStateSwitch(fieldsArr, func(s string) bool { return false })
+	exprs := taskControlStateSwitch(fieldsArr, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
 
-func orderStateSwitch(fields []string, function func(string) bool) []field.Expr {
+func taskControlStateSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.TaskControlState
 	exprs := []field.Expr{}
 

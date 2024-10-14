@@ -125,7 +125,7 @@ func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, er
 		return nil, err
 	}
 
-	status, err := helpers.GetOrderStatusByValue(models.CreatedOrderStateValue)
+	status, err := helpers.GetOrderStateByValue(models.CreatedOrderStateValue)
 	if err != nil {
 		return nil, err
 	}
@@ -159,7 +159,7 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 	if b.OrderStateID != 0 {
 
 		if order.OrderState.Value == models.CreatedOrderStateValue {
-			stateStarted, err := helpers.GetOrderStatusByValue(models.StartedOrderStateValue)
+			stateStarted, err := helpers.GetOrderStateByValue(models.StartedOrderStateValue)
 			if err != nil {
 				return nil, problems.ServerError()
 			}
@@ -186,7 +186,11 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 			if err != nil {
 				return nil, problems.ServerError()
 			}
-			err = query.TaskControl.Create(&models.TaskControl{TaskID: task.ID, OrderID: order.ID})
+			taskState, err := helpers.GetTaskByValue(models.CreatedTaskControlStateValue)
+			if err != nil {
+				return nil, problems.ServerError()
+			}
+			err = query.TaskControl.Create(&models.TaskControl{TaskID: task.ID, OrderID: order.ID, TaskControlStateID: taskState.ID})
 			if err != nil {
 				return nil, problems.ServerError()
 			}

@@ -6,7 +6,12 @@ import (
 
 func Migrate(db *gorm.DB) error {
 
-	err := CreateTimeByTasksDefault(db)
+	err := Models(db)
+	if err != nil {
+		return err
+	}
+
+	err = CreateTimeByTasksDefault(db)
 	if err != nil {
 		return err
 	}
@@ -25,10 +30,13 @@ func Migrate(db *gorm.DB) error {
 	if err != nil {
 		return err
 	}
+
 	err = CreateTasksSteps(db)
 	if err != nil {
 		return err
 	}
 
-	return nil
+	err = CreateTaskControlStatus(db)
+
+	return err
 }
