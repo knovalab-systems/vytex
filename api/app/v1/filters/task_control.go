@@ -21,6 +21,32 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 
 	for key, value := range filtersMap {
 		switch key {
+		case "id":
+			conditions := []gen.Condition{}
+			for k, v := range value {
+				switch k {
+				case "_eq":
+					id, ok := v.(float64)
+					if !ok {
+						return nil, errors.New("ERROR: INVALID TYPE")
+					}
+					conditions = append(conditions, table.ID.Eq(uint(id)))
+				}
+			}
+			s.Where(conditions...)
+		case "order_id":
+			conditions := []gen.Condition{}
+			for k, v := range value {
+				switch k {
+				case "_eq":
+					id, ok := v.(float64)
+					if !ok {
+						return nil, errors.New("ERROR: INVALID TYPE")
+					}
+					conditions = append(conditions, table.OrderID.Eq(uint(id)))
+				}
+			}
+			s.Where(conditions...)
 		case "task_id":
 			conditions := []gen.Condition{}
 			for k, v := range value {
@@ -38,6 +64,20 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 					}
 					ids := formats.ConvertSliceUint(idsInterface)
 					conditions = append(conditions, table.TaskID.In(ids...))
+				}
+			}
+			s.Where(conditions...)
+		case "task_control_state_id":
+			conditions := []gen.Condition{}
+			for k, v := range value {
+				switch k {
+				case "_in":
+					idsInterface, ok := v.([]interface{})
+					if !ok {
+						return nil, errors.New("ERROR: INVALID TYPE")
+					}
+					ids := formats.ConvertSliceUint(idsInterface)
+					conditions = append(conditions, table.TaskControlStateID.In(ids...))
 				}
 			}
 			s.Where(conditions...)

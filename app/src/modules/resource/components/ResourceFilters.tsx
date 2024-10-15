@@ -139,7 +139,7 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 												</div>
 												<Show when={state.selectedOptions().length > 1}>
 													<button type='button' onPointerDown={e => e.stopPropagation()} onClick={state.clear}>
-														<IoCloseOutline title='Remover todos' />
+														<IoCloseOutline class='text-destructive' title='Remover todos' />
 													</button>
 												</Show>
 
@@ -196,7 +196,7 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 												</div>
 												<Show when={state.selectedOptions().length > 1}>
 													<button type='button' onPointerDown={e => e.stopPropagation()} onClick={state.clear}>
-														<IoCloseOutline title='Remover todos' />
+														<IoCloseOutline class='text-destructive' title='Remover todos' />
 													</button>
 												</Show>
 												<ComboboxTrigger title='Ver proveedores' />

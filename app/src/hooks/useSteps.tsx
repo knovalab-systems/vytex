@@ -26,7 +26,7 @@ export type Steps = Awaited<ReturnType<typeof stepsContextRequest>>;
 
 type Step = Steps[number];
 
-type Tasks = Step['tasks'];
+export type Tasks = Step['tasks'];
 
 type StepsContext = {
 	stepsQuery: CreateQueryResult<Steps>;
