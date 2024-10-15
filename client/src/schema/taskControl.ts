@@ -1,5 +1,5 @@
 import type { MergeCoreCollection } from '../index.js';
-import type { VytexOrder, VytexTask } from './index.js';
+import type { VytexOrder, VytexTask, VytexTaskControlState } from './index.js';
 
 /**
  * vytex_task-controls type
@@ -13,6 +13,8 @@ export type VytexTaskControl<Schema = any> = MergeCoreCollection<
 		started_at: string;
 		finished_at: string;
 		rejected_at: string;
+		task_control_state_id: number;
+		task_control_state: VytexTaskControlState<Schema[]> | null;
 		task_id: number;
 		task: VytexTask<Schema>;
 		order_id: number;

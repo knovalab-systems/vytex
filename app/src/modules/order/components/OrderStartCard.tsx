@@ -20,9 +20,9 @@ function OrderStartCard(props: { order: GetOrderStart }) {
 	const { getColorsRecord } = useColors();
 	const [disabled, setDisabled] = createSignal(false);
 	const navigate = useNavigate();
-	const { getStatuByValue } = useOrderStatus();
-	const created = () => getStatuByValue('created');
-	const started = () => getStatuByValue('started');
+	const { getStateByValue } = useOrderStatus();
+	const created = () => getStateByValue('created');
+	const started = () => getStateByValue('started');
 
 	const resourcesUsage = createMemo(() => {
 		const arr: DataUsage[] = [];

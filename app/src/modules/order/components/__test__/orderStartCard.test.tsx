@@ -32,7 +32,7 @@ const recordByValue = {
 vi.mock('~/hooks/useOrderStatus', () => ({
 	useOrderStatus: () => ({
 		getOrderStatusRecord: () => recordById,
-		getStatuByValue: (value: OrderStatus[number]['value']) => recordByValue[value],
+		getStateByValue: (value: OrderStatus[number]['value']) => recordByValue[value],
 	}),
 }));
 

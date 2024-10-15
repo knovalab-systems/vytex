@@ -150,7 +150,7 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 }
 
 func startTaskControl(taskControl *models.TaskControl) (*models.TaskControl, error) {
-	taskState, err := helpers.GetOrderStateByValue(models.StartedTaskControlStateValue)
+	taskState, err := helpers.GetTaskControlStatusByValue(models.StartedTaskControlStateValue)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -188,7 +188,7 @@ func startTaskControl(taskControl *models.TaskControl) (*models.TaskControl, err
 }
 
 func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
-	taskState, err := helpers.GetOrderStateByValue(models.RejectedTaskControlStateValue)
+	taskState, err := helpers.GetTaskControlStatusByValue(models.RejectedTaskControlStateValue)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -210,7 +210,7 @@ func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 			return nil, problems.ServerError()
 		}
 	} else {
-		taskState, err := helpers.GetOrderStateByValue(models.RejectedTaskControlStateValue)
+		taskState, err := helpers.GetTaskControlStatusByValue(models.RejectedTaskControlStateValue)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
@@ -372,13 +372,19 @@ func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 	}
 
 	if nextTaskControl != nil {
-		err := query.TaskControl.Create(nextTaskControl)
+		taskState, err := helpers.GetTaskControlStatusByValue(models.CreatedTaskControlStateValue)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskControlStateID = taskState.ID
+		err = query.TaskControl.Create(nextTaskControl)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
 		taskControl.NextID = &nextTaskControl.ID
 	}
-	taskState, err := helpers.GetOrderStateByValue(models.FinishedTaskControlStateValue)
+
+	taskState, err := helpers.GetTaskControlStatusByValue(models.FinishedTaskControlStateValue)
 	if err != nil {
 		return nil, problems.ServerError()
 	}

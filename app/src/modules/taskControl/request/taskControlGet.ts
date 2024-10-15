@@ -32,6 +32,7 @@ function getTaskControls(page: number, tasks: number[]) {
 				'started_at',
 				'rejected_at',
 				'task_id',
+				'task_control_state_id',
 				{ order: [{ color_by_reference: ['color_id', { reference: ['code'] }] }] },
 			],
 		}),

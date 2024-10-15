@@ -1,26 +1,26 @@
 import { render, screen, waitFor } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import * as query from '@tanstack/solid-query';
-import { OrderStatusProvider, useOrderStatus } from '../useOrderStatus';
+import { TaskControlStatusProvider, useTaskControlStatus } from '../useTaskControlStatus';
 
 const requestMock = vi.fn();
 
-const TestOrderStatusRecordElement = () => {
-	const { getOrderStatusRecord } = useOrderStatus();
-	return <div>{Object.keys(getOrderStatusRecord()).join(',')}</div>;
+const TestTaskControlStatusRecordElement = () => {
+	const { getTaskControlStatusRecord } = useTaskControlStatus();
+	return <div>{Object.keys(getTaskControlStatusRecord()).join(',')}</div>;
 };
 
-const TestOrderStatusArrByValueElement = () => {
-	const { getStateByValue } = useOrderStatus();
+const TestTaskControlStatusArrByValueElement = () => {
+	const { getStateByValue } = useTaskControlStatus();
 	return <div>{getStateByValue('created')?.name ?? 'default'}</div>;
 };
 
-describe('useOrderStatus', () => {
+describe('useTaskControlStatus', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});
 
-	it('checks get order state record', async () => {
+	it('checks get task control state record', async () => {
 		// @ts-ignore: mock other values is no neccesary
 		vi.spyOn(query, 'createQuery').mockImplementation(() => {
 			requestMock();
@@ -32,9 +32,9 @@ describe('useOrderStatus', () => {
 		});
 
 		render(() => (
-			<OrderStatusProvider>
-				<TestOrderStatusRecordElement />
-			</OrderStatusProvider>
+			<TaskControlStatusProvider>
+				<TestTaskControlStatusRecordElement />
+			</TaskControlStatusProvider>
 		));
 		const result = screen.getByText('1,2');
 		expect(result).toBeInTheDocument();
@@ -44,7 +44,7 @@ describe('useOrderStatus', () => {
 		});
 	});
 
-	it('checks get order state', async () => {
+	it('checks get task control state', async () => {
 		// @ts-ignore: mock other values is no neccesary
 		vi.spyOn(query, 'createQuery').mockImplementation(() => {
 			requestMock();
@@ -56,9 +56,9 @@ describe('useOrderStatus', () => {
 		});
 
 		render(() => (
-			<OrderStatusProvider>
-				<TestOrderStatusArrByValueElement />
-			</OrderStatusProvider>
+			<TaskControlStatusProvider>
+				<TestTaskControlStatusArrByValueElement />
+			</TaskControlStatusProvider>
 		));
 		const result = screen.getByText('creado');
 		expect(result).toBeInTheDocument();
@@ -68,7 +68,7 @@ describe('useOrderStatus', () => {
 		});
 	});
 
-	it('checks get order state when not found', async () => {
+	it('checks get task control state when not found', async () => {
 		// @ts-ignore: mock other values is no neccesary
 		vi.spyOn(query, 'createQuery').mockImplementation(() => {
 			requestMock();
@@ -80,9 +80,9 @@ describe('useOrderStatus', () => {
 		});
 
 		render(() => (
-			<OrderStatusProvider>
-				<TestOrderStatusArrByValueElement />
-			</OrderStatusProvider>
+			<TaskControlStatusProvider>
+				<TestTaskControlStatusArrByValueElement />
+			</TaskControlStatusProvider>
 		));
 		const result = screen.getByText('default');
 		expect(result).toBeInTheDocument();

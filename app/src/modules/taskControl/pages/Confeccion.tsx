@@ -13,6 +13,7 @@ import {
 } from '~/components/ui/Pagination';
 import { useColors } from '~/hooks/useColors';
 import { useSteps } from '~/hooks/useSteps';
+import { useTaskControlStatus } from '~/hooks/useTaskControlStatus';
 import TaskControlTable from '../components/TaskControlTable';
 import { type GetTaskType, countTasksQuery, getTaskControlsQuery } from '../request/taskControlGet';
 
@@ -27,6 +28,7 @@ function Confeccion() {
 function ConfeccionPage() {
 	const [page, setPage] = createSignal(1);
 	const { colorsQuery } = useColors();
+	const { taskControlStatusQuery } = useTaskControlStatus();
 	const { stepsQuery, getStepByValue } = useSteps();
 	const tasksIds = createMemo(() => getStepByValue('confeccion')?.tasks?.map(e => e.id) || []);
 	const taskControls = createQuery(() => getTaskControlsQuery(page(), tasksIds()));
@@ -37,11 +39,24 @@ function ConfeccionPage() {
 		return Math.ceil(safe / 10);
 	});
 
-	const isError = () => taskControls.isError || counTaskControls.isError || stepsQuery.isError || colorsQuery.isError;
+	const isError = () =>
+		taskControls.isError ||
+		counTaskControls.isError ||
+		stepsQuery.isError ||
+		colorsQuery.isError ||
+		taskControlStatusQuery.isError;
 	const isLoading = () =>
-		taskControls.isFetching || counTaskControls.isPending || stepsQuery.isPending || colorsQuery.isPending;
+		taskControls.isFetching ||
+		counTaskControls.isPending ||
+		stepsQuery.isPending ||
+		colorsQuery.isPending ||
+		taskControlStatusQuery.isPending;
 	const isSuccess = () =>
-		taskControls.isSuccess && counTaskControls.isSuccess && stepsQuery.isSuccess && colorsQuery.isSuccess;
+		taskControls.isSuccess &&
+		counTaskControls.isSuccess &&
+		stepsQuery.isSuccess &&
+		colorsQuery.isSuccess &&
+		taskControlStatusQuery.isSuccess;
 
 	return (
 		<div class='h-full flex flex-col gap-2'>

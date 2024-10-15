@@ -19,7 +19,7 @@ func DefaultTaskControlStatus() []*TaskControlState {
 	return []*TaskControlState{
 		{Name: "Creada", Value: CreatedTaskControlStateValue},
 		{Name: "Iniciada", Value: StartedTaskControlStateValue},
-		{Name: "Rechazada", Value: FinishedTaskControlStateValue},
+		{Name: "Rechazada", Value: RejectedTaskControlStateValue},
 		{Name: "Finalizada", Value: FinishedTaskControlStateValue},
 	}
 }
