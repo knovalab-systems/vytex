@@ -10,7 +10,7 @@ const OrderStatusContext = createContext<OrderStatusContext>({
 	getOrderStatusRecord: () => ({}),
 	getOrderStatus: () => [],
 	setActive: () => {},
-	getStatuByValue: () => undefined,
+	getStateByValue: () => undefined,
 });
 
 async function orderStatusContextRequest() {
@@ -32,7 +32,7 @@ type OrderStatusContext = {
 	getOrderStatusRecord: Accessor<OrderStatusRecord>;
 	getOrderStatus: Accessor<OrderStatus>;
 	setActive: () => void;
-	getStatuByValue: (value: OrderState['value']) => OrderState | undefined;
+	getStateByValue: (value: OrderState['value']) => OrderState | undefined;
 };
 
 export function OrderStatusProvider(props: { children: JSXElement }) {
@@ -54,7 +54,7 @@ export function OrderStatusProvider(props: { children: JSXElement }) {
 		return obj || {};
 	});
 
-	const getStatuByValue = (value: OrderState['value']) => getOrderStatus().find(e => e.value === value);
+	const getStateByValue = (value: OrderState['value']) => getOrderStatus().find(e => e.value === value);
 
 	const setActive = () => {
 		setEnabled(true);
@@ -65,7 +65,7 @@ export function OrderStatusProvider(props: { children: JSXElement }) {
 		orderStatusQuery,
 		getOrderStatusRecord,
 		setActive,
-		getStatuByValue,
+		getStateByValue,
 	};
 
 	return <OrderStatusContext.Provider value={values}>{props.children}</OrderStatusContext.Provider>;

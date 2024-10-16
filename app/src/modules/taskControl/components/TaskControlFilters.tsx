@@ -17,25 +17,27 @@ import {
 import { Input } from '~/components/ui/Input';
 import { Label, LabelSpan } from '~/components/ui/Label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '~/components/ui/Select';
-import { STATUS_VALUES } from '~/constants/status';
-import { type Colors, useColors } from '~/hooks/useColors';
-import { type Suppliers, useSuppliers } from '~/hooks/useSuppliers';
-import type { ResourceFilter } from '~/types/filter';
-import type { StateValues } from '~/types/state';
+import { type Tasks, useSteps } from '~/hooks/useSteps';
+import { type TaskControlStatus, useTaskControlStatus } from '~/hooks/useTaskControlStatus';
+import type { TaskControlFilter } from '~/types/filter';
 
-function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<ResourceFilter> }) {
+function TaskControlFilters(props: {
+	filters: TaskControlFilter;
+	setFilters: Setter<TaskControlFilter>;
+	tasks: Tasks;
+}) {
 	const hasFilters = () => Object.keys(props.filters).length !== 0;
-	const { getColors, getColorsRecord } = useColors();
-	const { getSuppliers, getSuppliersRecord } = useSuppliers();
 	const [open, setOpen] = createSignal(false);
 	const [active, setActive] = createSignal(hasFilters());
-	const [form, { Form, Field }] = createForm<ResourceFilter>({ initialValues: props.filters });
+	const [form, { Form, Field }] = createForm<TaskControlFilter>({ initialValues: props.filters });
+	const { getTaskControlStatus, getTaskControlStatusRecord } = useTaskControlStatus();
+	const { getTasksRecord } = useSteps();
 
-	const handleSubmit: SubmitHandler<ResourceFilter> = data => {
-		const filters: ResourceFilter = {};
+	const handleSubmit: SubmitHandler<TaskControlFilter> = data => {
+		const filters: TaskControlFilter = {};
 		for (const [k, v] of Object.entries(data)) {
-			if (v && v.length > 0) {
-				filters[k as keyof ResourceFilter] = v as (string & number[] & StateValues) | undefined;
+			if (v && ((Array.isArray(v) && v.length > 0) || (typeof v === 'number' && v > 0))) {
+				filters[k as keyof TaskControlFilter] = v as (number & number[]) | undefined;
 				setActive(true);
 			}
 		}
@@ -54,110 +56,99 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 		setOpen(false);
 		setActive(false);
 	};
-
 	return (
 		<FilterButton open={open()} onOpenChange={setOpen} active={active()}>
 			<Form onSubmit={handleSubmit}>
 				<div class='flex flex-col gap-2'>
-					<Field name={'name'}>
+					<Field name={'id'} type='number'>
 						{(field, props) => (
 							<div>
-								<Label for='name-filter'>Nombre</Label>
-								<Input
-									value={field.value ?? ''}
-									{...props}
-									class='h-full'
-									type='text'
-									placeholder='Nombre del insumo'
-									autocomplete='off'
-									id='name-filter'
-								/>
-							</div>
-						)}
-					</Field>
-					<Field name={'code'}>
-						{(field, props) => (
-							<div>
-								<Label for='code-filter'>Código</Label>
+								<Label for='id-filter'>Identificador</Label>
 								<Input
 									value={field.value ?? ''}
 									{...props}
 									class='h-full'
 									type='number'
-									placeholder='Código del insumo'
+									placeholder='Identificador de la tarea'
 									autocomplete='off'
-									id='code-filter'
+									id='id-filter'
 								/>
 							</div>
 						)}
 					</Field>
-					<Field name={'colors'} type='string'>
-						{field => (
+					<Field name={'order'} type='number'>
+						{(field, props) => (
 							<div>
-								<LabelSpan>Colores</LabelSpan>
-								<Combobox<Colors[0]>
-									value={field.value?.map(e => getColorsRecord()[e]) ?? []}
+								<Label for='order-filter'>Orden</Label>
+								<Input
+									value={field.value ?? ''}
+									{...props}
+									class='h-full'
+									type='number'
+									placeholder='Orden de la tarea'
+									autocomplete='off'
+									id='order-filter'
+								/>
+							</div>
+						)}
+					</Field>
+					<Field name={'status'} type='string'>
+						{field => (
+							<>
+								<LabelSpan>Estado</LabelSpan>
+								<Select<TaskControlStatus[0]>
+									multiple
+									class='whitespace-nowrap min-w-48'
+									optionValue='id'
+									optionTextValue='name'
+									value={field.value?.map(e => getTaskControlStatusRecord()[e]) ?? []}
 									onChange={value => {
 										setValue(
 											form,
-											field.name,
+											'status',
 											value.map(e => e.id),
 										);
 									}}
-									class='whitespace-nowrap'
-									optionLabel='name'
-									multiple
-									optionValue='id'
-									placeholder='Selecciona o escribe un color'
-									itemComponent={props => (
-										<ComboboxItem item={props.item}>
-											<div class='flex gap-2'>
-												<div class='h-5 w-5 m-auto border' style={{ background: props.item.rawValue.hex || '' }} />
-												<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
-											</div>
-											<ComboboxItemIndicator />
-										</ComboboxItem>
-									)}
-									options={getColors()}
+									placeholder='Selecciona uno o más estados'
+									itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue.name}</SelectItem>}
+									options={getTaskControlStatus()}
 								>
-									<ComboboxControl<Colors[0]> class='bg-white' aria-label='Colores'>
-										{state => (
-											<>
-												<div class='inline-flex gap-1 w-full'>
+									<SelectTrigger title='Ver estados' class='min-w-48 w-full'>
+										<SelectValue<TaskControlStatus[0]> class='bg-white'>
+											{state => (
+												<div class='flex w-full gap-1'>
 													<For each={state.selectedOptions()}>
 														{option => (
 															<span class='my-auto flex' onPointerDown={e => e.stopPropagation()}>
-																<div class='h-5 w-5 mr-2 m-auto border' style={{ background: option.hex || '' }} />
 																{option.name}
 																<button type='button' onClick={() => state.remove(option)}>
-																	<IoCloseOutline class='my-auto mr-2' title='Remover' />
+																	<IoCloseOutline class='my-auto mr-2' title='Remover todos' />
 																</button>
 															</span>
 														)}
 													</For>
-													<ComboboxInput />
+													<Show when={state.selectedOptions().length > 1}>
+														<span>
+															<button type='reset' onPointerDown={e => e.stopPropagation()} onClick={state.clear}>
+																<IoCloseOutline class='text-destructive' size={20} title='Remover todos' />
+															</button>
+														</span>
+													</Show>
 												</div>
-												<Show when={state.selectedOptions().length > 1}>
-													<button type='button' onPointerDown={e => e.stopPropagation()} onClick={state.clear}>
-														<IoCloseOutline class='text-destructive' title='Remover todos' />
-													</button>
-												</Show>
-
-												<ComboboxTrigger title='Ver colores' aria-label='Colores' />
-											</>
-										)}
-									</ComboboxControl>
-									<ComboboxContent />
-								</Combobox>
-							</div>
+											)}
+										</SelectValue>
+									</SelectTrigger>
+									<SelectContent />
+								</Select>
+							</>
 						)}
 					</Field>
-					<Field name={'suppliers'} type='string'>
+					<Field name={'tasks'} type='string'>
 						{field => (
 							<div>
-								<LabelSpan>Proveedores</LabelSpan>
-								<Combobox<Suppliers[0]>
-									value={field.value?.map(e => getSuppliersRecord()[e]) ?? []}
+								<LabelSpan>Tareas</LabelSpan>
+								<Combobox<Tasks[0]>
+									value={field.value?.map(e => getTasksRecord()[e]) ?? []}
 									onChange={value => {
 										setValue(
 											form,
@@ -169,16 +160,16 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 									multiple={true}
 									optionLabel='name'
 									optionValue='id'
-									placeholder='Selecciona o escribe un proveedor'
+									placeholder='Selecciona o escribe una tarea'
 									itemComponent={props => (
 										<ComboboxItem item={props.item}>
 											<ComboboxItemLabel>{props.item.rawValue.name}</ComboboxItemLabel>
 											<ComboboxItemIndicator />
 										</ComboboxItem>
 									)}
-									options={getSuppliers()}
+									options={props.tasks}
 								>
-									<ComboboxControl<Suppliers[0]> class='bg-white' aria-label='Proveedores'>
+									<ComboboxControl<Tasks[0]> class='bg-white' aria-label='Tareas'>
 										{state => (
 											<>
 												<div class='inline-flex gap-1 w-full'>
@@ -199,34 +190,12 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 														<IoCloseOutline class='text-destructive' title='Remover todos' />
 													</button>
 												</Show>
-												<ComboboxTrigger title='Ver proveedores' />
+												<ComboboxTrigger title='Ver tareas' />
 											</>
 										)}
 									</ComboboxControl>
 									<ComboboxContent />
 								</Combobox>
-							</div>
-						)}
-					</Field>
-					<Field name={'state'}>
-						{field => (
-							<div>
-								<LabelSpan>Estado</LabelSpan>
-								<Select<string>
-									value={field.value}
-									onChange={value => {
-										setValue(form, 'state', value as StateValues);
-									}}
-									class='h-full'
-									options={STATUS_VALUES}
-									placeholder='Selecciona un estado'
-									itemComponent={props => <SelectItem item={props.item}>{props.item.rawValue}</SelectItem>}
-								>
-									<SelectTrigger class='bg-white h-full min-w-48' aria-label='Estado' title='Ver estados'>
-										<SelectValue<string>>{state => state.selectedOption()}</SelectValue>
-									</SelectTrigger>
-									<SelectContent />
-								</Select>
 							</div>
 						)}
 					</Field>
@@ -245,4 +214,4 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 	);
 }
 
-export default ResourceFilters;
+export default TaskControlFilters;

@@ -1,3 +1,4 @@
+import type { TaskControlStateValue } from '@vytex/client';
 import { Match, Switch, createSignal } from 'solid-js';
 import toast from 'solid-toast';
 import { Button } from '~/components/ui/Button';
@@ -7,7 +8,7 @@ import type { TaskControl } from '~/types/core';
 import { getTaskControlsQueryKey } from '../request/taskControlGet';
 import { updateTaskControlRequest } from '../request/taskControlUpdate';
 
-function TaskControlActionsCell(props: { id: number; started: boolean; rejected: boolean; finished: boolean }) {
+function TaskControlActionsCell(props: { id: number; state: TaskControlStateValue }) {
 	const [disabled, setDisabled] = createSignal(false);
 
 	const updateTask = async (taskControl: Partial<TaskControl>) => {
@@ -24,7 +25,7 @@ function TaskControlActionsCell(props: { id: number; started: boolean; rejected:
 	return (
 		<TableCell>
 			<Switch>
-				<Match when={props.started && !props.rejected && !props.finished}>
+				<Match when={props.state === 'started'}>
 					<Button
 						disabled={disabled()}
 						onclick={() => updateTask({ finished_at: new Date().toISOString() })}
@@ -33,7 +34,7 @@ function TaskControlActionsCell(props: { id: number; started: boolean; rejected:
 						Finalizar
 					</Button>
 				</Match>
-				<Match when={!props.started && !props.rejected && !props.finished}>
+				<Match when={props.state === 'created'}>
 					<div class='inline-flex gap-2'>
 						<Button
 							disabled={disabled()}

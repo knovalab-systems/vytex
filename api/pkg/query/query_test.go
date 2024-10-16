@@ -95,6 +95,7 @@ func Test_WithContext(t *testing.T) {
 		qCtx.Supplier.UnderlyingDB().Statement.Context,
 		qCtx.Task.UnderlyingDB().Statement.Context,
 		qCtx.TaskControl.UnderlyingDB().Statement.Context,
+		qCtx.TaskControlState.UnderlyingDB().Statement.Context,
 		qCtx.TimeByTask.UnderlyingDB().Statement.Context,
 		qCtx.User.UnderlyingDB().Statement.Context,
 	} {

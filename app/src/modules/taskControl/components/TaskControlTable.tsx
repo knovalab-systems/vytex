@@ -4,14 +4,15 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, Ta
 import { useColors } from '~/hooks/useColors';
 import { usePolicies } from '~/hooks/usePolicies';
 import { useSteps } from '~/hooks/useSteps';
+import { useTaskControlStatus } from '~/hooks/useTaskControlStatus';
 import { parseDateTimeHuman } from '~/lib/parseTime';
 import type { Policy } from '~/types/core';
-import { getStateTask } from '../helpers/getStateTask';
 import type { GetTaskType } from '../request/taskControlGet';
 import TaskControlActionsCell from './TaskControlActionsCell';
 
 function TaskControlTable(props: { taskControls: GetTaskType }) {
 	const { getTasksRecord, getStepByValue } = useSteps();
+	const { getTaskControlStatusRecord } = useTaskControlStatus();
 	const { getColorsRecord } = useColors();
 	const { hasPolicy } = usePolicies();
 
@@ -74,7 +75,7 @@ function TaskControlTable(props: { taskControls: GetTaskType }) {
 									/>
 									<div class='my-auto'>{taskControl.order.color_by_reference?.reference?.code}</div>
 								</TableCell>
-								<TableCell>{getStateTask(taskControl)}</TableCell>
+								<TableCell>{getTaskControlStatusRecord()[taskControl.task_control_state_id]?.name}</TableCell>
 								<TableCell>{parseDateTimeHuman(taskControl.created_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(taskControl.started_at)}</TableCell>
 								<TableCell>{parseDateTimeHuman(taskControl.rejected_at)}</TableCell>
@@ -82,9 +83,7 @@ function TaskControlTable(props: { taskControls: GetTaskType }) {
 								<Show when={canUpdate(taskControl.task_id)} fallback={<TableCell />}>
 									<TaskControlActionsCell
 										id={taskControl.id}
-										started={Boolean(taskControl.started_at)}
-										rejected={Boolean(taskControl.rejected_at)}
-										finished={Boolean(taskControl.finished_at)}
+										state={getTaskControlStatusRecord()[taskControl.task_control_state_id]?.value}
 									/>
 								</Show>
 							</TableRow>

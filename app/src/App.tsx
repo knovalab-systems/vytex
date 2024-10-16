@@ -9,6 +9,7 @@ import { OrderStatusProvider } from './hooks/useOrderStatus';
 import { RolesProvider } from './hooks/useRoles';
 import { StepsProvider } from './hooks/useSteps';
 import { SuppliersProvider } from './hooks/useSuppliers';
+import { TaskControlStatusProvider } from './hooks/useTaskControlStatus';
 import { queryClient } from './lib/queryClient';
 
 function App() {
@@ -17,15 +18,17 @@ function App() {
 			root={(props: RouteSectionProps) => (
 				<QueryClientProvider client={queryClient}>
 					<AuthProvider>
-						<OrderStatusProvider>
-							<SuppliersProvider>
-								<ColorsProvider>
-									<RolesProvider>
-										<StepsProvider>{props.children}</StepsProvider>
-									</RolesProvider>
-								</ColorsProvider>
-							</SuppliersProvider>
-						</OrderStatusProvider>
+						<TaskControlStatusProvider>
+							<OrderStatusProvider>
+								<SuppliersProvider>
+									<ColorsProvider>
+										<RolesProvider>
+											<StepsProvider>{props.children}</StepsProvider>
+										</RolesProvider>
+									</ColorsProvider>
+								</SuppliersProvider>
+							</OrderStatusProvider>
+						</TaskControlStatusProvider>
 						<Toaster />
 					</AuthProvider>
 				</QueryClientProvider>

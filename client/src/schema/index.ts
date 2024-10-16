@@ -31,6 +31,7 @@ export * from './step.js';
 export * from './supplier.js';
 export * from './task.js';
 export * from './taskControl.js';
+export * from './taskControlState.js';
 export * from './timeByTask.js';
 export * from './translation.js';
 export * from './user.js';
