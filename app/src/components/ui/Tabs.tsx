@@ -11,7 +11,7 @@ type TabsProps = TabsPrimitive.TabsRootProps & { class?: string; children?: JSX.
 const Tabs: Component<TabsProps> = props => {
     const [local, others] = splitProps(props, ['class', 'children']);
     return (
-        <TabsPrimitive.Root class={cn('w-full h-full', local.class)} {...others}>
+        <TabsPrimitive.Root class={cn('', local.class)} {...others}>
             {local.children}
         </TabsPrimitive.Root>
     );
@@ -22,7 +22,7 @@ type TabsListProps = TabsPrimitive.TabsListProps & { class?: string; children?: 
 const TabsList: Component<TabsListProps> = props => {
     const [local, others] = splitProps(props, ['class', 'children']);
     return (
-        <TabsPrimitive.List class={cn('relative flex border-b border-gray-300', local.class)} {...others}>
+        <TabsPrimitive.List class={cn('relative flex bg-gray-50 border-gray-300', local.class)} {...others}>
             {local.children}
         </TabsPrimitive.List>
     );
@@ -58,7 +58,6 @@ const TabsIndicator: Component<TabsIndicatorProps> = props => {
     );
 };
 
-
 type TabsContentProps<T extends ValidComponent = 'div'> = TabsPrimitive.TabsContentProps<T> & {
     class?: string | undefined;
 };
@@ -67,7 +66,7 @@ const TabsContent = <T extends ValidComponent = 'div'>(props: PolymorphicProps<T
     const [local, others] = splitProps(props as TabsContentProps, ['class']);
     return (
         <TabsPrimitive.Content
-            class={cn('p-2 ', local.class)}
+            class={cn('p-2', local.class)}
             {...others}
         />
     );
