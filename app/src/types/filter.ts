@@ -44,3 +44,9 @@ export type TaskControlFilter = {
 	tasks?: number[];
 	status?: number[];
 };
+
+export type ReferenceFilter = {
+	code?: string;
+	state?: StateValues;
+	colors?: number[];
+};

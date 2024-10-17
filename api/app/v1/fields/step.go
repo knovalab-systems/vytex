@@ -8,7 +8,6 @@ import (
 )
 
 func StepFields(s query.IStepDo, fields string) query.IStepDo {
-
 	fieldsArr := strings.Split(fields, ",")
 	table := query.Step
 	var f []field.Expr

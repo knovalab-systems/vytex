@@ -1,9 +1,37 @@
 package fields
 
 import (
+	"strings"
+
 	"github.com/knovalab-systems/vytex/pkg/query"
 	"gorm.io/gen/field"
 )
+
+func ReferenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
+	referenceTable := query.Reference
+	referenceFields := strings.Split(fields, ",")
+	referenceExprs := []field.Expr{}
+	colorsFields := []string{}
+
+	referenceSwitchFunc := func(v string) bool {
+		if strings.HasPrefix(v, "colors.") || v == "colors" {
+			colorsFields = append(colorsFields, strings.TrimPrefix(v, "colors."))
+			return true
+		}
+
+		return false
+	}
+
+	referenceExprs = append(referenceExprs, referenceSwitch(referenceFields, referenceSwitchFunc)...)
+
+	if len(colorsFields) != 0 {
+		referenceExprs = append(referenceExprs, referenceTable.ID)
+		colorsExprs := append(colorByReferenceSwitch(colorsFields, func(s string) bool { return false }), query.ColorByReference.ReferenceID)
+		s.Preload(referenceTable.Colors.Select(colorsExprs...))
+	}
+
+	return s.Select(referenceExprs...)
+}
 
 func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 
@@ -21,6 +49,21 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.ID)
 		case "code":
 			exprs = append(exprs, table.Code)
+		case "created_at":
+			exprs = append(exprs, table.CreatedAt)
+		case "deleted_at":
+			exprs = append(exprs, table.DeletedAt)
+		case "created_by":
+			exprs = append(exprs, table.CreatedBy)
+		case "track":
+			exprs = append(exprs, table.Track)
+		case "front":
+			exprs = append(exprs, table.Front)
+		case "time_by_task_ID":
+			exprs = append(exprs, table.TimeByTaskID)
+		case "back":
+			exprs = append(exprs, table.Back)
+
 		default:
 			exprs = append(exprs, table.ALL)
 		}
@@ -28,7 +71,6 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 	}
 
 	return exprs
-
 }
 
 func colorByReferenceSwitch(fields []string, function func(string) bool) []field.Expr {

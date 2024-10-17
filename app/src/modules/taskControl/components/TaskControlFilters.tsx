@@ -37,7 +37,7 @@ function TaskControlFilters(props: {
 		const filters: TaskControlFilter = {};
 		for (const [k, v] of Object.entries(data)) {
 			if (v && ((Array.isArray(v) && v.length > 0) || (typeof v === 'number' && v > 0))) {
-				filters[k as keyof TaskControlFilter] = v as (number & number[]) | undefined;
+				filters[k as keyof TaskControlFilter] = v as number & number[];
 				setActive(true);
 			}
 		}

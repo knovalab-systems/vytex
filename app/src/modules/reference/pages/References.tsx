@@ -14,6 +14,9 @@ import {
 } from '~/components/ui/Pagination';
 import { QUERY_LIMIT } from '~/constants/http';
 import { REFS_CREATE_PATH } from '~/constants/paths';
+import { useColors } from '~/hooks/useColors';
+import type { ReferenceFilter } from '~/types/filter';
+import ReferenceFilters from '../components/ReferenceFilters';
 import ReferenceTable from '../components/ReferenceTable';
 import { countReferencesQuery, getReferencesQuery } from '../requests/referenceGet';
 
@@ -27,25 +30,32 @@ function References() {
 
 function ReferencesPage() {
 	const [page, setPage] = createSignal(1);
-	const references = createQuery(() => getReferencesQuery(page()));
-	const countReferences = createQuery(() => countReferencesQuery());
+	const [filters, setFilters] = createSignal<ReferenceFilter>({});
+	const { colorsQuery } = useColors();
+	const references = createQuery(() => getReferencesQuery(page(), filters()));
+	const countReferences = createQuery(() => countReferencesQuery(filters()));
 	const pages = createMemo<number>(() => {
 		const count = countReferences.data?.at(0)?.count || 1;
 		const safe = count === 0 ? 1 : count;
 		return Math.ceil(safe / QUERY_LIMIT);
 	});
 
+	const isLoading = () => references.isLoading || colorsQuery.isLoading || countReferences.isLoading;
+	const isError = () => references.isError || colorsQuery.isError || countReferences.isError;
+	const isSuccess = () => references.isSuccess && colorsQuery.isSuccess && countReferences.isSuccess;
+
 	return (
 		<div class='h-full w-full flex flex-col gap-2'>
 			<Switch>
-				<Match when={references.isError || countReferences.isError}>
+				<Match when={isError()}>
 					<ErrorMessage title='Error al cargar referencias' />
 				</Match>
-				<Match when={references.isLoading || countReferences.isLoading}>
+				<Match when={isLoading()}>
 					<Loading label='Cargando referencias' />
 				</Match>
-				<Match when={references.isSuccess && countReferences.isSuccess}>
-					<div class='ml-auto'>
+				<Match when={isSuccess()}>
+					<div class='flex justify-between'>
+						<ReferenceFilters filters={filters()} setFilters={setFilters} />
 						<CreateButton to={REFS_CREATE_PATH} policy='CreateReferences' label='Nueva Referencia' />
 					</div>
 					<ReferenceTable references={references.data} />
