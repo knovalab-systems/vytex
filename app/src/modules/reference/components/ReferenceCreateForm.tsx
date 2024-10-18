@@ -52,7 +52,9 @@ type Combined = {
 function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: ResourcesByRefCreate }) {
 	const { getColorsRecord, getColors } = useColors();
 	const navigate = useNavigate();
-	const [activeTab, setActiveTab] = createSignal('form');
+	const [activeTab, setActiveTab] = createSignal('operational');
+	const [newOperational, setNewOperational] = createSignal('');
+
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name as string })),
@@ -76,6 +78,9 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 					resources: [{ resource: '', sizes: DEFAULT_SIZES }],
 				},
 			],
+			pieces: Array(6).fill({ piece: undefined }),
+			front: undefined,
+			back: undefined,
 		},
 	});
 
@@ -83,7 +88,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 		const currentTab = activeTab();
 		const validationFields: Record<string, (keyof ReferenceCreateType)[]> = {
 			form: ['code', 'colors'],
-			piece: ['front', 'back'],
+			piece: ['front', 'back', 'piece'],
 			operational: ['operational'],
 		};
 
@@ -95,8 +100,42 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 		const isValid = await validate(form, validationFields[currentTab]);
 
 		if (!isValid) {
-			toast.error('Por favor, complete todos los campos requeridos.');
+			toast.error('Complete todos los campos requeridos.');
 			return;
+		}
+
+		if (currentTab === 'form') {
+			const formValues = getValues(form);
+			if (!formValues.colors) {
+				toast.error('Debe seleccionar al menos un color.');
+				return;
+			}
+
+			const checkFabricResources = formValues.colors.map(() => ({ fabric: false, resource: false }));
+			formValues.colors.forEach((color, i) => {
+				if (!color || !color.resources) {
+					toast.error('Cada color debe tener al menos un recurso.');
+					return;
+				}
+
+				for (const v of color.resources) {
+					if (v?.resource?.startsWith('r')) {
+						checkFabricResources[i].resource = true;
+					} else {
+						checkFabricResources[i].fabric = true;
+					}
+				}
+			});
+
+			if (checkFabricResources.some(e => e.resource === false)) {
+				toast.error('Cada color de la referencia debe tener al menos un insumo.');
+				return;
+			}
+
+			if (checkFabricResources.some(e => e.fabric === false)) {
+				toast.error('Cada color de la referencia debe tener al menos una tela.');
+				return;
+			}
 		}
 
 		setActiveTab(nextTab[currentTab]);
@@ -114,9 +153,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 		}
 	};
 
-
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
-		const checkFabricResources = data.colors.map(() => ({ fabric: false, resource: false }));
 		const reference: Reference = {
 			code: data.code.toString(),
 			colors: data.colors.map((color, i) => ({
@@ -125,10 +162,8 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 					(p: ResourceFabric, v) => {
 						const r = Number(v.resource.slice(1));
 						if (v.resource.startsWith('r')) {
-							checkFabricResources[i].resource = true;
 							p.resources.push({ ...(v.sizes as VytexSize), resource_id: r });
 						} else {
-							checkFabricResources[i].fabric = true;
 							p.fabrics.push({ ...(v.sizes as VytexSize), fabric_id: r });
 						}
 						return p;
@@ -137,14 +172,6 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 				),
 			})),
 		};
-
-		if (checkFabricResources.some(e => e.resource === false)) {
-			return toast.error('Cada color de la referencia debe tener al menos un insumo ');
-		}
-
-		if (checkFabricResources.some(e => e.fabric === false)) {
-			return toast.error('Cada color de la referencia debe tener al menos una tela.');
-		}
 
 		const formData = new FormData();
 		formData.append('files', data.front);
@@ -174,7 +201,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 
 	return (
 		<Form
-			class='h-full justify-between flex flex-col'
+			class='h-full w-full justify-between flex flex-col'
 			onSubmit={handleSubmit}
 		>
 			<Tabs value={activeTab()}>
@@ -426,12 +453,12 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 							</FieldArray>
 						</div>
 					</TabsContent>
-					<TabsContent value="piece">
+					<TabsContent value='piece'>
 						<div class='flex flex-row gap-2'>
-							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md '>
+							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md flex-none w-[28rem] h-[30rem]'>
 								<Field name='front' type='File'>
 									{(field, props) => (
-										<div class='w-[26rem] h-[26rem]'>
+										<div class='w-full h-full'>
 											<LabelSpan>Foto frontal</LabelSpan>
 											<FileInput
 												label='Foto frontal'
@@ -454,10 +481,10 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 									)}
 								</Field>
 							</div>
-							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md '>
+							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md flex-none w-[28rem] h-[30rem]'>
 								<Field name='back' type='File'>
 									{(field, props) => (
-										<div class='w-[26rem] h-[26rem]'>
+										<div class='w-full h-full'>
 											<LabelSpan>Foto posterior</LabelSpan>
 											<FileInput
 												label='Foto posterior'
@@ -480,28 +507,135 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 									)}
 								</Field>
 							</div>
+							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md flex-grow'>
+								<LabelSpan>Piezas</LabelSpan>
+								<FieldArray name='pieces'>
+									{fieldPieces => (
+										<div>
+											<div class='grid grid-cols-3 gap-2'>
+												<For each={fieldPieces.items}>
+													{(_, piece) => (
+														<div class='relative mt-2 w-[18rem] h-[18rem] border border-gray-200'>
+															<Field name={`${fieldPieces.name}.${piece()}.piece`} type='File'>
+																{(field, props) => (
+																	<>
+																		<FileInput
+																			label='Foto'
+																			preview
+																			class='w-full h-full'
+																			value={field.value}
+																			error={field.error}
+																			required
+																			{...props}
+																		/>
+																		<Show when={field.value}>
+																			<Button
+																				variant='destructive'
+																				class='absolute top-0 right-0'
+																				onClick={() => remove(form, fieldPieces.name, { at: piece() })}
+																			>
+																				<FiTrash2 size={10} />
+																			</Button>
+																		</Show>
+																	</>
+																)}
+															</Field>
+														</div>
+													)}
+												</For>
+											</div>
+											<div class='flex justify-end mt-2'>
+												<Button
+													variant='action'
+													class='whitespace-nowrap gap-1'
+													onClick={() => {
+														insert(form, fieldPieces.name, { value: { piece: undefined } });
+													}}
+												>
+													<FiPlus size={32} />
+													Agregar foto
+												</Button>
+											</div>
+										</div>
+									)}
+								</FieldArray>
+							</div>
 						</div>
 					</TabsContent>
 					<TabsContent value="operational">
-						<div class='flex flex-row gap-2'>
-							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md '>
-								<Field name='operational'>
-									{(field, props) => (
-										<div>
-											<LabelSpan>Listado operacional</LabelSpan>
-											<Input
-												type='text'
-												placeholder='listado operacional'
-												autocomplete='on'
-												aria-errormessage={field.error}
-												required
-												value={field.value}
-												{...props}
-											/>
-										</div>
-									)}
-								</Field>
-							</div>
+						<div class='flex flex-col gap-2 max-w-5xl mx-auto'>
+							<TableContainer>
+								<Table>
+									<TableHeader>
+										<TableRow>
+											<TableHead>#</TableHead>
+											<TableHead>Descripción</TableHead>
+											<TableHead>Acciones</TableHead>
+										</TableRow>
+									</TableHeader>
+									<TableBody>
+										<FieldArray name='operational'>
+											{fieldOperational => (
+												<>
+													<For each={fieldOperational.items}>
+														{(_, index) => (
+															<TableRow>
+																<TableCell>{index() + 1}</TableCell>
+																<TableCell>
+																	<Field name={`${fieldOperational.name}.${index()}.description`}>
+																		{(field, props) => (
+																			<Input
+																				value={field.value}
+																				aria-errormessage={field.error}
+
+																				{...props}
+																			/>
+																		)}
+																	</Field>
+																</TableCell>
+																<TableCell>
+																	<Button
+																		variant='destructive'
+																		onClick={() => remove(form, fieldOperational.name, { at: index() })}
+																	>
+																		<FiTrash2 size={16} />
+																	</Button>
+																</TableCell>
+															</TableRow>
+														)}
+													</For>
+													<TableRow>
+														<TableCell>{fieldOperational.items.length + 1}</TableCell>
+														<TableCell>
+															<Input
+																type='text'
+																placeholder='Agregar descripción'
+																value={newOperational()}
+																onInput={(e) => setNewOperational(e.currentTarget.value)}
+															/>
+														</TableCell>
+														<TableCell>
+															<Button
+																variant='action'
+																onClick={() => {
+																	const newOperationalValue = newOperational();
+																	if (newOperationalValue.trim() !== '') {
+																		insert(form, 'operational', { value: { description: newOperational() } });
+																		setNewOperational('');
+																	}
+																}}
+															>
+																<FiPlus size={16} />
+																Agregar
+															</Button>
+														</TableCell>
+													</TableRow>
+												</>
+											)}
+										</FieldArray>
+									</TableBody>
+								</Table>
+							</TableContainer>
 						</div>
 					</TabsContent>
 				</div>
@@ -513,11 +647,11 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 					</div>
 				</Show>
 				<Show when={activeTab() !== 'form'}>
-					<Button variant='destructive' onClick={handlePrev}>Atrás</Button>
+					<Button variant='secondary' onClick={handlePrev}>Atrás</Button>
 				</Show>
 				<Switch>
 					<Match when={activeTab() !== 'operational'}>
-						<Button variant='new' onClick={handleNext}>Siguiente</Button>
+						<Button variant='secondary' onClick={handleNext}>Siguiente</Button>
 					</Match>
 					<Match when={activeTab() === 'operational'}>
 						<Button type='submit' variant='success'>

@@ -38,7 +38,20 @@ export const ReferenceCreateSchema = object({
 		mimeType(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'], 'Formatos validos: jpeg, png, jpg, webp.'),
 		maxSize(1024 * 1024 * 5, 'El tamaño máximo permitido es de 5MB.'),
 	),
-	operational: pipe(string('Ingresa el listado operacional.'), minLength(1, 'Ingresa el listado operacional.')),
+	pieces: array(
+		object({
+			piece: pipe(
+				file('Elije una imagen.'),
+				mimeType(['image/jpeg', 'image/png', 'image/jpg', 'image/webp'], 'Formatos validos: jpeg, png, jpg, webp.'),
+				maxSize(1024 * 1024 * 5, 'El tamaño máximo permitido es de 5MB.'),
+			),
+		}),
+	),
+	operational: array(
+		object({
+			description: pipe(string('Ingresa una descripción.'), minLength(1, 'La descripción no puede estar vacía.')),
+		}),
+	),
 });
 
 export type ReferenceCreateType = InferInput<typeof ReferenceCreateSchema>;

@@ -37,8 +37,8 @@ const TabsTrigger = <T extends ValidComponent = 'button'>(props: PolymorphicProp
     return (
         <TabsPrimitive.Trigger
             class={cn(
-                'inline-block px-4 py-2 outline-none bg-blue-300 text-white hover:bg-green-400',
-                'data-[selected]:bg-green-600',
+                'inline-block px-4 py-2 outline-none bg-blue-300 text-white hover:bg-nav/60',
+                'data-[selected]:bg-nav',
                 local.class
             )}
             {...others}
