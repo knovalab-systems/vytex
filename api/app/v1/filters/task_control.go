@@ -2,7 +2,6 @@ package filters
 
 import (
 	"encoding/json"
-	"errors"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -26,11 +25,11 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 			for k, v := range value {
 				switch k {
 				case "_eq":
-					id, ok := v.(float64)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					id, err := formats.ConvertToNumber[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					conditions = append(conditions, table.ID.Eq(uint(id)))
+					conditions = append(conditions, table.ID.Eq(id))
 				}
 			}
 			s.Where(conditions...)
@@ -39,11 +38,11 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 			for k, v := range value {
 				switch k {
 				case "_eq":
-					id, ok := v.(float64)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					id, err := formats.ConvertToNumber[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					conditions = append(conditions, table.OrderID.Eq(uint(id)))
+					conditions = append(conditions, table.OrderID.Eq(id))
 				}
 			}
 			s.Where(conditions...)
@@ -52,17 +51,16 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 			for k, v := range value {
 				switch k {
 				case "_eq":
-					id, ok := v.(float64)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					id, err := formats.ConvertToNumber[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					conditions = append(conditions, table.TaskID.Eq(uint(id)))
+					conditions = append(conditions, table.TaskID.Eq(id))
 				case "_in":
-					idsInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					ids, err := formats.ConvertSliceNumberInterface[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					ids := formats.ConvertSliceUint(idsInterface)
 					conditions = append(conditions, table.TaskID.In(ids...))
 				}
 			}
@@ -72,11 +70,10 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 			for k, v := range value {
 				switch k {
 				case "_in":
-					idsInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					ids, err := formats.ConvertSliceNumberInterface[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					ids := formats.ConvertSliceUint(idsInterface)
 					conditions = append(conditions, table.TaskControlStateID.In(ids...))
 				}
 			}
@@ -86,9 +83,9 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 			for k, v := range value {
 				switch k {
 				case "_null":
-					cond, ok := v.(bool)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					cond, err := formats.ConvertInterface[bool](v)
+					if err != nil {
+						return nil, err
 					}
 					if cond {
 						conditions = append(conditions, table.RejectedAt.IsNull())
@@ -103,9 +100,9 @@ func TaskControlFilters(s query.ITaskControlDo, filters string) (query.ITaskCont
 			for k, v := range value {
 				switch k {
 				case "_null":
-					cond, ok := v.(bool)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					cond, err := formats.ConvertInterface[bool](v)
+					if err != nil {
+						return nil, err
 					}
 					if cond {
 						conditions = append(conditions, table.FinishedAt.IsNull())

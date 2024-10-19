@@ -139,7 +139,7 @@ func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*m
 
 func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*models.Reference, error) {
 	// check reference exists
-	err := checkReferenceExists(b.Code)
+	err := helpers.CheckReferenceExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -194,7 +194,7 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 		return nil, err
 	}
 
-	timeByTask, err := getTimeByTask(&b.TimeByTask)
+	timeByTask, err := helpers.GetTimeByTask(&b.TimeByTask)
 	if err != nil {
 		return nil, err
 	}
@@ -219,28 +219,4 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 	}
 
 	return reference, nil
-}
-
-func checkReferenceExists(code string) error {
-	t := query.Reference
-
-	_, err := t.Unscoped().Where(t.Code.Eq(code)).First()
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	return problems.ReferenceExists()
-}
-
-func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
-	table := query.TimeByTask
-	timeByTaskFormat := formats.TimeByTaskDTOFormat(*t)
-
-	timeByTask, err := table.Where(field.Attrs(timeByTaskFormat)).FirstOrCreate()
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-	return timeByTask, nil
 }

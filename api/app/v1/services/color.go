@@ -6,6 +6,7 @@ import (
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -74,7 +75,7 @@ func (m *ColorService) AggregationColors(q *models.AggregateQuery) ([]*models.Ag
 
 func (m *ColorService) CreateColor(b *models.ColorCreateBody) (*models.Color, error) {
 	// check code
-	err := checkColorExists(b.Code)
+	err := helpers.CheckColorExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -123,7 +124,7 @@ func (m *ColorService) SelectColor(q *models.ReadColor) (*models.Color, error) {
 func (m *ColorService) UpdateColor(b *models.ColorUpdateBody) (*models.Color, error) {
 	// check code
 	if b.Code != "" {
-		err := checkColorExists(b.Code)
+		err := helpers.CheckColorExists(b.Code)
 		if err != nil {
 			return nil, err
 		}
@@ -154,17 +155,4 @@ func (m *ColorService) UpdateColor(b *models.ColorUpdateBody) (*models.Color, er
 	}
 
 	return color, nil
-}
-
-func checkColorExists(code string) error {
-	table := query.Color
-
-	_, err := table.Unscoped().Where(table.Code.Eq(code)).First()
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	return problems.ColorExists()
 }

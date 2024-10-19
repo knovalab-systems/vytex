@@ -4,11 +4,12 @@ import (
 	"errors"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
-	"gorm.io/gen/field"
 	"gorm.io/gorm"
 )
 
@@ -25,7 +26,9 @@ func (m *SupplierService) SelectSuppliers(q *models.Query) ([]*models.Supplier, 
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = supplierFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.SupplierFields(s, q.Fields)
+	}
 
 	// run query
 	suppliers, err := s.Find()
@@ -45,7 +48,9 @@ func (m *SupplierService) SelectSupplier(q *models.ReadSupplier) (*models.Suppli
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = supplierFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.SupplierFields(s, q.Fields)
+	}
 
 	// run query
 	supplier, err := s.Where(table.ID.Eq(q.ID)).First()
@@ -97,7 +102,7 @@ func (m *SupplierService) AggregationSuppliers(q *models.AggregateQuery) ([]*mod
 
 func (m *SupplierService) CreateSupplier(b *models.SupplierCreateBody) (*models.Supplier, error) {
 
-	err := checkSupplierExists(b.Code, b.Nit)
+	err := helpers.CheckSupplierExists(b.Code, b.Nit)
 	if err != nil {
 		return nil, err
 	}
@@ -117,60 +122,8 @@ func (m *SupplierService) CreateSupplier(b *models.SupplierCreateBody) (*models.
 	return supplier, nil
 }
 
-func checkSupplierExists(code string, nit string) error {
-	table := query.Supplier
-
-	supplier, err := table.Unscoped().Where(table.Code.Eq(code)).Or(table.Nit.Eq(nit)).First()
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	if supplier.Code == code && supplier.Nit == nit {
-		return problems.SupplierCodeNitExists()
-	}
-	if supplier.Code == code {
-		return problems.SupplierCodeExists()
-	}
-	return problems.SupplierNitExists()
-}
-
-func supplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
-	if fields != "" {
-		table := query.Supplier
-		fieldsArr := strings.Split(fields, ",")
-		f := []field.Expr{}
-
-		for _, v := range fieldsArr {
-			switch v {
-			case "id":
-				f = append(f, table.ID)
-			case "name":
-				f = append(f, table.Name)
-			case "brand":
-				f = append(f, table.Brand)
-			case "code":
-				f = append(f, table.Code)
-			case "nit":
-				f = append(f, table.Nit)
-			case "created_at":
-				f = append(f, table.CreatedAt)
-			case "deleted_at":
-				f = append(f, table.DeletedAt)
-			case "updated_at":
-				f = append(f, table.UpdatedAt)
-			default:
-				f = append(f, table.ALL)
-			}
-		}
-		s = s.Select(f...)
-	}
-	return s
-}
-
 func (m *SupplierService) UpdateSupplier(b *models.SupplierUpdateBody) (*models.Supplier, error) {
-	err := checkSupplierExists(b.Code, b.Nit)
+	err := helpers.CheckSupplierExists(b.Code, b.Nit)
 	if err != nil {
 		return nil, err
 	}

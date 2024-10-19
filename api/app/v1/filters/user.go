@@ -2,7 +2,6 @@ package filters
 
 import (
 	"encoding/json"
-	"errors"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -26,9 +25,9 @@ func UserFilters(s query.IUserDo, filters string) (query.IUserDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_contains":
-					code, ok := v.(string)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					code, err := formats.ConvertInterface[string](v)
+					if err != nil {
+						return nil, err
 					}
 					conditions = append(conditions, table.Name.Lower().Like("%"+code+"%"))
 				}
@@ -39,9 +38,9 @@ func UserFilters(s query.IUserDo, filters string) (query.IUserDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_contains":
-					code, ok := v.(string)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					code, err := formats.ConvertInterface[string](v)
+					if err != nil {
+						return nil, err
 					}
 					conditions = append(conditions, table.Username.Lower().Like("%"+code+"%"))
 				}
@@ -52,11 +51,10 @@ func UserFilters(s query.IUserDo, filters string) (query.IUserDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_in":
-					idsInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					ids, err := formats.ConvertSliceInterface[string](v)
+					if err != nil {
+						return nil, err
 					}
-					ids := formats.ConvertSlice[string](idsInterface)
 					conditions = append(conditions, table.RoleId.In(ids...))
 				}
 			}
@@ -66,9 +64,9 @@ func UserFilters(s query.IUserDo, filters string) (query.IUserDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_null":
-					cond, ok := v.(bool)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					cond, err := formats.ConvertInterface[bool](v)
+					if err != nil {
+						return nil, err
 					}
 					if cond {
 						conditions = append(conditions, table.DeletedAt.IsNull())

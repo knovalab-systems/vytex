@@ -2,7 +2,6 @@ package filters
 
 import (
 	"encoding/json"
-	"errors"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -26,17 +25,16 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_eq":
-					id, ok := v.(float64)
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					id, err := formats.ConvertToNumber[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					conditions = append(conditions, table.OrderStateID.Eq(uint(id)))
+					conditions = append(conditions, table.OrderStateID.Eq(id))
 				case "_in":
-					idsInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
+					ids, err := formats.ConvertSliceNumberInterface[uint](v)
+					if err != nil {
+						return nil, err
 					}
-					ids := formats.ConvertSliceUint(idsInterface)
 					conditions = append(conditions, table.OrderStateID.In(ids...))
 				}
 			}
@@ -46,13 +44,9 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_between":
-					stringInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
-					}
-					times, err := formats.ConvertSliceTime(stringInterface)
+					times, err := formats.ConvertSliceTimeInterface(v)
 					if err != nil {
-						return nil, errors.New("ERROR: INVALID TYPE")
+						return nil, err
 					}
 					conditions = append(conditions, table.CreatedAt.Between(times[0], times[1]))
 				}
@@ -63,13 +57,9 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_between":
-					stringInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
-					}
-					times, err := formats.ConvertSliceTime(stringInterface)
+					times, err := formats.ConvertSliceTimeInterface(v)
 					if err != nil {
-						return nil, errors.New("ERROR: INVALID TYPE")
+						return nil, err
 					}
 					conditions = append(conditions, table.StartedAt.Between(times[0], times[1]))
 				}
@@ -80,13 +70,9 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_between":
-					stringInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
-					}
-					times, err := formats.ConvertSliceTime(stringInterface)
+					times, err := formats.ConvertSliceTimeInterface(v)
 					if err != nil {
-						return nil, errors.New("ERROR: INVALID TYPE")
+						return nil, err
 					}
 					conditions = append(conditions, table.CanceledAt.Between(times[0], times[1]))
 				}
@@ -97,13 +83,9 @@ func OrderFilters(s query.IOrderDo, filters string) (query.IOrderDo, error) {
 			for k, v := range value {
 				switch k {
 				case "_between":
-					stringInterface, ok := v.([]interface{})
-					if !ok {
-						return nil, errors.New("ERROR: INVALID TYPE")
-					}
-					times, err := formats.ConvertSliceTime(stringInterface)
+					times, err := formats.ConvertSliceTimeInterface(v)
 					if err != nil {
-						return nil, errors.New("ERROR: INVALID TYPE")
+						return nil, err
 					}
 					conditions = append(conditions, table.FinishedAt.Between(times[0], times[1]))
 				}
