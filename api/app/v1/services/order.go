@@ -119,7 +119,7 @@ func (m *OrderService) AggregationOrders(q *models.AggregateQuery) ([]*models.Ag
 
 func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, error) {
 	// check valid custom
-	err := checkValidCustom(b.CustomID)
+	err := helpers.CheckValidCustom(b.CustomID)
 
 	if err != nil {
 		return nil, err
@@ -201,26 +201,4 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 	}
 
 	return nil, problems.ReadAccess()
-}
-
-func checkValidCustom(customID uint) error {
-	table := query.Custom
-
-	// def query
-	custom, err := table.Unscoped().Where(table.ID.Eq(customID)).First()
-
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-
-	if custom.FinishedAt != nil {
-		return problems.CustomFinished()
-	} else if custom.CanceledAt != nil {
-		return problems.CustomCanceled()
-	}
-
-	return nil
 }

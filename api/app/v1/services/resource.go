@@ -6,8 +6,10 @@ import (
 
 	"gorm.io/gorm"
 
+	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -34,7 +36,9 @@ func (m *ResourceService) SelectResources(q *models.Query) ([]*models.Resource, 
 		As("table2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = resourceFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.ResourceFields(s, q.Fields)
+	}
 
 	// filters
 	if q.Filter != "" {
@@ -65,7 +69,9 @@ func (m *ResourceService) SelectResource(q *models.ResourceRead) (*models.Resour
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = resourceFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.ResourceFields(s, q.Fields)
+	}
 
 	// run query
 	resource, err := s.Where(table.ID.Eq(q.ID)).First()
@@ -125,7 +131,7 @@ func (m *ResourceService) AggregationResources(q *models.AggregateQuery) ([]*mod
 }
 
 func (m *ResourceService) CreateResource(b *models.ResourceCreateBody) (*models.Resource, error) {
-	err := checkResourceExist(b.Code)
+	err := helpers.CheckResourceExist(b.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +160,7 @@ func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.
 		return nil, problems.ServerError()
 	}
 
-	hasChanges, err := formats.ResourceUpdateVersion(b, resource, checkResourceExist)
+	hasChanges, err := formats.ResourceUpdateVersion(b, resource, helpers.CheckResourceExist)
 	if err != nil {
 		return nil, err
 	}
@@ -169,79 +175,4 @@ func (m *ResourceService) UpdateResource(b *models.ResourceUpdateBody) (*models.
 	}
 
 	return resource, nil
-}
-
-func checkResourceExist(code string) error {
-	table := query.Resource
-
-	// def subquery
-	table2 := table.As("table2")
-	subQuery := table.Unscoped().
-		Group(table.Track).
-		Select(table.Track, table.ID.Max().As("id_max")).
-		As("table2")
-
-	_, err := table.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
-		Where(table.Where(field.NewInt64("table2", "id_max").EqCol(table.ID)).Where(table.Code.Eq(code))).
-		First()
-
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	return problems.ResourceExists()
-}
-
-func resourceFields(s query.IResourceDo, fields string) query.IResourceDo {
-	if fields != "" {
-		table := query.Resource
-		fieldsArr := strings.Split(fields, ",")
-		f := []field.Expr{}
-
-		for _, v := range fieldsArr {
-
-			if strings.HasPrefix(v, "color.") {
-				f = append(f, table.ColorID)
-				s = s.Preload(table.Color)
-				continue
-			}
-
-			if strings.HasPrefix(v, "supplier.") {
-				f = append(f, table.SupplierID)
-				s = s.Preload(table.Supplier)
-				continue
-			}
-
-			switch v {
-			case "id":
-				f = append(f, table.ID)
-			case "name":
-				f = append(f, table.Name)
-			case "cost":
-				f = append(f, table.Cost)
-			case "code":
-				f = append(f, table.Code)
-			case "color_id":
-				f = append(f, table.ColorID)
-			case "color":
-				f = append(f, table.ColorID)
-				s = s.Preload(table.Color)
-			case "supplier_id":
-				f = append(f, table.SupplierID)
-			case "supplier":
-				f = append(f, table.SupplierID)
-				s = s.Preload(table.Supplier)
-			case "created_at":
-				f = append(f, table.CreatedAt)
-			case "deleted_at":
-				f = append(f, table.DeletedAt)
-			default:
-				f = append(f, table.ALL)
-			}
-		}
-		s = s.Select(f...)
-	}
-	return s
 }
