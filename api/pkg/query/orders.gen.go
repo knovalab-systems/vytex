@@ -82,6 +82,18 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 			TimeByTask struct {
 				field.RelationField
 			}
+			OperationalList struct {
+				field.RelationField
+				Reference struct {
+					field.RelationField
+				}
+				Operations struct {
+					field.RelationField
+					OperationalList struct {
+						field.RelationField
+					}
+				}
+			}
 			Colors struct {
 				field.RelationField
 			}
@@ -123,6 +135,38 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("ColorByReference.Reference.TimeByTask", "models.TimeByTask"),
+			},
+			OperationalList: struct {
+				field.RelationField
+				Reference struct {
+					field.RelationField
+				}
+				Operations struct {
+					field.RelationField
+					OperationalList struct {
+						field.RelationField
+					}
+				}
+			}{
+				RelationField: field.NewRelation("ColorByReference.Reference.OperationalList", "models.OperationalList"),
+				Reference: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("ColorByReference.Reference.OperationalList.Reference", "models.Reference"),
+				},
+				Operations: struct {
+					field.RelationField
+					OperationalList struct {
+						field.RelationField
+					}
+				}{
+					RelationField: field.NewRelation("ColorByReference.Reference.OperationalList.Operations", "models.Operation"),
+					OperationalList: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("ColorByReference.Reference.OperationalList.Operations.OperationalList", "models.OperationalList"),
+					},
+				},
 			},
 			Colors: struct {
 				field.RelationField
@@ -535,6 +579,18 @@ type orderBelongsToColorByReference struct {
 		}
 		TimeByTask struct {
 			field.RelationField
+		}
+		OperationalList struct {
+			field.RelationField
+			Reference struct {
+				field.RelationField
+			}
+			Operations struct {
+				field.RelationField
+				OperationalList struct {
+					field.RelationField
+				}
+			}
 		}
 		Colors struct {
 			field.RelationField

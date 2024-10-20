@@ -104,7 +104,7 @@ func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*m
 
 func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*models.Reference, error) {
 	// check reference exists
-	err := checkReferenceExists(b.Code)
+	err := helpers.CheckReferenceExists(b.Code)
 	if err != nil {
 		return nil, err
 	}
@@ -156,6 +156,23 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		return nil, problems.ServerError()
 	}
 
+	if len(b.OperationalList.Operations) > 0 {
+		operations := []models.Operation{}
+		for _, operation := range b.OperationalList.Operations {
+			operations = append(operations, models.Operation{Description: operation.Description})
+		}
+
+		operationalList := &models.OperationalList{
+			ReferenceID: reference.ID,
+			Operations:  operations,
+		}
+
+		err = query.OperationalList.Create(operationalList)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+	}
+
 	return reference, nil
 }
 
@@ -198,19 +215,6 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 	}
 
 	return reference, nil
-}
-
-func checkReferenceExists(code string) error {
-	t := query.Reference
-
-	_, err := t.Unscoped().Where(t.Code.Eq(code)).First()
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	return problems.ReferenceExists()
 }
 
 func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {

@@ -132,6 +132,38 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 		}{
 			RelationField: field.NewRelation("Reference.TimeByTask", "models.TimeByTask"),
 		},
+		OperationalList: struct {
+			field.RelationField
+			Reference struct {
+				field.RelationField
+			}
+			Operations struct {
+				field.RelationField
+				OperationalList struct {
+					field.RelationField
+				}
+			}
+		}{
+			RelationField: field.NewRelation("Reference.OperationalList", "models.OperationalList"),
+			Reference: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Reference.OperationalList.Reference", "models.Reference"),
+			},
+			Operations: struct {
+				field.RelationField
+				OperationalList struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Reference.OperationalList.Operations", "models.Operation"),
+				OperationalList: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Reference.OperationalList.Operations.OperationalList", "models.OperationalList"),
+				},
+			},
+		},
 		Colors: struct {
 			field.RelationField
 			Color struct {
@@ -524,6 +556,18 @@ type colorByReferenceBelongsToReference struct {
 	}
 	TimeByTask struct {
 		field.RelationField
+	}
+	OperationalList struct {
+		field.RelationField
+		Reference struct {
+			field.RelationField
+		}
+		Operations struct {
+			field.RelationField
+			OperationalList struct {
+				field.RelationField
+			}
+		}
 	}
 	Colors struct {
 		field.RelationField

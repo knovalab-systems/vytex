@@ -65,6 +65,18 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				TimeByTask struct {
 					field.RelationField
 				}
+				OperationalList struct {
+					field.RelationField
+					Reference struct {
+						field.RelationField
+					}
+					Operations struct {
+						field.RelationField
+						OperationalList struct {
+							field.RelationField
+						}
+					}
+				}
 				Colors struct {
 					field.RelationField
 				}
@@ -129,6 +141,18 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				TimeByTask struct {
 					field.RelationField
 				}
+				OperationalList struct {
+					field.RelationField
+					Reference struct {
+						field.RelationField
+					}
+					Operations struct {
+						field.RelationField
+						OperationalList struct {
+							field.RelationField
+						}
+					}
+				}
 				Colors struct {
 					field.RelationField
 				}
@@ -170,6 +194,38 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 					field.RelationField
 				}{
 					RelationField: field.NewRelation("Orders.ColorByReference.Reference.TimeByTask", "models.TimeByTask"),
+				},
+				OperationalList: struct {
+					field.RelationField
+					Reference struct {
+						field.RelationField
+					}
+					Operations struct {
+						field.RelationField
+						OperationalList struct {
+							field.RelationField
+						}
+					}
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList", "models.OperationalList"),
+					Reference: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList.Reference", "models.Reference"),
+					},
+					Operations: struct {
+						field.RelationField
+						OperationalList struct {
+							field.RelationField
+						}
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList.Operations", "models.Operation"),
+						OperationalList: struct {
+							field.RelationField
+						}{
+							RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList.Operations.OperationalList", "models.OperationalList"),
+						},
+					},
 				},
 				Colors: struct {
 					field.RelationField
@@ -443,6 +499,18 @@ type customHasManyOrders struct {
 			}
 			TimeByTask struct {
 				field.RelationField
+			}
+			OperationalList struct {
+				field.RelationField
+				Reference struct {
+					field.RelationField
+				}
+				Operations struct {
+					field.RelationField
+					OperationalList struct {
+						field.RelationField
+					}
+				}
 			}
 			Colors struct {
 				field.RelationField
