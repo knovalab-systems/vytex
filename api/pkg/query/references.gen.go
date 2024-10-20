@@ -65,6 +65,15 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 			Colors struct {
 				field.RelationField
 			}
+			Pieces struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+				Reference struct {
+					field.RelationField
+				}
+			}
 		}{
 			RelationField: field.NewRelation("Colors.Reference", "models.Reference"),
 			User: struct {
@@ -99,6 +108,27 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("Colors.Reference.Colors", "models.ColorByReference"),
+			},
+			Pieces: struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+				Reference struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Colors.Reference.Pieces", "models.ImageByReference"),
+				Image: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Reference.Pieces.Image", "models.Image"),
+				},
+				Reference: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Reference.Pieces.Reference", "models.Reference"),
+				},
 			},
 		},
 		Resources: struct {
@@ -184,6 +214,12 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 		},
 	}
 
+	_reference.Pieces = referenceHasManyPieces{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Pieces", "models.ImageByReference"),
+	}
+
 	_reference.User = referenceBelongsToUser{
 		db: db.Session(&gorm.Session{}),
 
@@ -227,6 +263,8 @@ type reference struct {
 	Back         field.String
 	TimeByTaskID field.Uint
 	Colors       referenceHasManyColors
+
+	Pieces referenceHasManyPieces
 
 	User referenceBelongsToUser
 
@@ -276,7 +314,7 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 14)
+	r.fieldMap = make(map[string]field.Expr, 15)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["created_at"] = r.CreatedAt
@@ -326,6 +364,15 @@ type referenceHasManyColors struct {
 		}
 		Colors struct {
 			field.RelationField
+		}
+		Pieces struct {
+			field.RelationField
+			Image struct {
+				field.RelationField
+			}
+			Reference struct {
+				field.RelationField
+			}
 		}
 	}
 	Resources struct {
@@ -419,6 +466,77 @@ func (a referenceHasManyColorsTx) Clear() error {
 }
 
 func (a referenceHasManyColorsTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceHasManyPieces struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceHasManyPieces) Where(conds ...field.Expr) *referenceHasManyPieces {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceHasManyPieces) WithContext(ctx context.Context) *referenceHasManyPieces {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceHasManyPieces) Session(session *gorm.Session) *referenceHasManyPieces {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceHasManyPieces) Model(m *models.Reference) *referenceHasManyPiecesTx {
+	return &referenceHasManyPiecesTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceHasManyPiecesTx struct{ tx *gorm.Association }
+
+func (a referenceHasManyPiecesTx) Find() (result []*models.ImageByReference, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceHasManyPiecesTx) Append(values ...*models.ImageByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceHasManyPiecesTx) Replace(values ...*models.ImageByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceHasManyPiecesTx) Delete(values ...*models.ImageByReference) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceHasManyPiecesTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceHasManyPiecesTx) Count() int64 {
 	return a.tx.Count()
 }
 

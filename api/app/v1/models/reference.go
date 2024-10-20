@@ -22,6 +22,7 @@ type Reference struct {
 	TimeByTaskID uint               `json:"time_by_task_id,omitempty"`
 	TimeByTask   *TimeByTask        `json:"time_by_task,omitempty"`
 	Colors       []ColorByReference `json:"colors,omitempty"`
+	Pieces       []ImageByReference `json:"pieces,omitempty"`
 }
 
 // BeforeCreate will set a UUID
@@ -30,6 +31,14 @@ func (b *Reference) BeforeCreate(tx *gorm.DB) (err error) {
 		b.Track = uuid.New().String()
 	}
 	return nil
+}
+
+type ImageByReference struct {
+	ID          uint       `json:"id,omitempty" gorm:"primary_key"`
+	ImageID     string     `json:"image_id,omitempty"`
+	Image       *Image     `json:"image,omitempty"`
+	ReferenceID uint       `json:"reference_id,omitempty"`
+	Reference   *Reference `json:"reference,omitempty"`
 }
 
 type ColorByReference struct {
@@ -86,7 +95,12 @@ type ReferenceCreateBody struct {
 	Front     string                   `json:"front" validate:"required,uuid"`
 	Back      string                   `json:"back" validate:"required,uuid"`
 	Colors    []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
+	Pieces    []PieceByReferenceCreate `json:"pieces" validate:"required,min=1,dive"`
 	CreatedBy string                   `json:"create_by" validate:"required,uuid"`
+}
+
+type PieceByReferenceCreate struct {
+	Image string `json:"image_id" validate:"required,uuid"`
 }
 
 type ColorByReferenceCreate struct {

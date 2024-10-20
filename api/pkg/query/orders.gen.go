@@ -85,6 +85,15 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 			Colors struct {
 				field.RelationField
 			}
+			Pieces struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+				Reference struct {
+					field.RelationField
+				}
+			}
 		}{
 			RelationField: field.NewRelation("ColorByReference.Reference", "models.Reference"),
 			User: struct {
@@ -119,6 +128,27 @@ func newOrder(db *gorm.DB, opts ...gen.DOOption) order {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("ColorByReference.Reference.Colors", "models.ColorByReference"),
+			},
+			Pieces: struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+				Reference struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("ColorByReference.Reference.Pieces", "models.ImageByReference"),
+				Image: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("ColorByReference.Reference.Pieces.Image", "models.Image"),
+				},
+				Reference: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("ColorByReference.Reference.Pieces.Reference", "models.Reference"),
+				},
 			},
 		},
 		Resources: struct {
@@ -508,6 +538,15 @@ type orderBelongsToColorByReference struct {
 		}
 		Colors struct {
 			field.RelationField
+		}
+		Pieces struct {
+			field.RelationField
+			Image struct {
+				field.RelationField
+			}
+			Reference struct {
+				field.RelationField
+			}
 		}
 	}
 	Resources struct {

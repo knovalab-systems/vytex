@@ -36,7 +36,7 @@ func DB() *gorm.DB {
 	err = db.AutoMigrate(&models.User{}, &models.Session{},
 		&models.Color{}, &models.Resource{}, &models.Fabric{},
 		&models.Reference{}, &models.ColorByReference{},
-		&models.ResourceByReference{}, &models.FabricByReference{},
+		&models.ResourceByReference{}, &models.FabricByReference{}, &models.ImageByReference{},
 		&models.Image{}, &models.Supplier{}, &models.Composition{},
 		&models.Custom{}, &models.Order{}, &models.TimeByTask{}, &models.Role{},
 		&models.OrderState{}, &models.Step{}, &models.Task{}, &models.TaskControl{})

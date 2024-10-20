@@ -89,6 +89,15 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 				Colors struct {
 					field.RelationField
 				}
+				Pieces struct {
+					field.RelationField
+					Image struct {
+						field.RelationField
+					}
+					Reference struct {
+						field.RelationField
+					}
+				}
 			}
 			Resources struct {
 				field.RelationField
@@ -144,6 +153,15 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 				Colors struct {
 					field.RelationField
 				}
+				Pieces struct {
+					field.RelationField
+					Image struct {
+						field.RelationField
+					}
+					Reference struct {
+						field.RelationField
+					}
+				}
 			}{
 				RelationField: field.NewRelation("Order.ColorByReference.Reference", "models.Reference"),
 				User: struct {
@@ -178,6 +196,27 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 					field.RelationField
 				}{
 					RelationField: field.NewRelation("Order.ColorByReference.Reference.Colors", "models.ColorByReference"),
+				},
+				Pieces: struct {
+					field.RelationField
+					Image struct {
+						field.RelationField
+					}
+					Reference struct {
+						field.RelationField
+					}
+				}{
+					RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces", "models.ImageByReference"),
+					Image: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces.Image", "models.Image"),
+					},
+					Reference: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces.Reference", "models.Reference"),
+					},
 				},
 			},
 			Resources: struct {
@@ -534,6 +573,15 @@ type taskControlBelongsToOrder struct {
 			}
 			Colors struct {
 				field.RelationField
+			}
+			Pieces struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+				Reference struct {
+					field.RelationField
+				}
 			}
 		}
 		Resources struct {
