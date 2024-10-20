@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/formats"
@@ -32,7 +33,9 @@ func (m *ReferenceService) SelectReferences(q *models.Query) ([]*models.Referenc
 		As("u2").Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = referenceFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.ReferenceFields(s, q.Fields)
+	}
 
 	// run query
 	references, err := s.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
@@ -54,7 +57,9 @@ func (m *ReferenceService) SelectReference(q *models.ReferenceRead) (*models.Ref
 	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
 
 	// fields
-	s = referenceFields(s, q.Fields)
+	if q.Fields != "" {
+		s = fields.ReferenceFields(s, q.Fields)
+	}
 
 	// run query
 	reference, err := s.Where(table.ID.Eq(q.ID)).First()
@@ -215,69 +220,6 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 	}
 
 	return reference, nil
-}
-
-func referenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
-	if fields != "" {
-		table := query.Reference
-		fieldsArr := strings.Split(fields, ",")
-		f := []field.Expr{}
-
-		for _, v := range fieldsArr {
-
-			if strings.HasPrefix(v, "colors.") {
-				f = append(f, table.ID)
-				s = s.Preload(table.Colors)
-				continue
-			}
-
-			if strings.HasPrefix(v, "time_by_task.") {
-				f = append(f, table.TimeByTaskID)
-				s = s.Preload(table.TimeByTask)
-				continue
-			}
-
-			switch v {
-			case "id":
-				f = append(f, table.ID)
-			case "code":
-				f = append(f, table.Code)
-			case "created_at":
-				f = append(f, table.CreatedAt)
-			case "deleted_at":
-				f = append(f, table.DeletedAt)
-			case "created_by":
-				f = append(f, table.CreatedBy)
-			case "user":
-				f = append(f, table.CreatedBy)
-				s = s.Preload(table.User)
-			case "track":
-				f = append(f, table.Track)
-			case "front":
-				f = append(f, table.Front)
-			case "front_image":
-				f = append(f, table.Front)
-				s = s.Preload(table.FrontImage)
-			case "time_by_task_ID":
-				f = append(f, table.TimeByTaskID)
-			case "time_by_task":
-				f = append(f, table.TimeByTaskID)
-				s = s.Preload(table.TimeByTask)
-			case "back":
-				f = append(f, table.Back)
-			case "back_image":
-				f = append(f, table.Back)
-				s = s.Preload(table.BackImage)
-			case "colors":
-				f = append(f, table.ID)
-				s = s.Preload(table.Colors)
-			default:
-				f = append(f, table.ALL)
-			}
-		}
-		s = s.Select(f...)
-	}
-	return s
 }
 
 func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {

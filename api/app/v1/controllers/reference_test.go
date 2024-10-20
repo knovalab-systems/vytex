@@ -379,7 +379,7 @@ func TestCreateReference(t *testing.T) {
 	t.Run("Fail create reference", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"code": "23", "colors": []map[string]any{{"color_id": 1, "fabrics": []map[string]any{{"fabric_id": 1}}, "resources": []map[string]any{{"resource_id": 1}}}}})
+		json.NewEncoder(body).Encode(map[string]any{"code": "23", "front": "31b63ffb-15f5-48d7-9a24-587f437f07ec", "back": "31b63ffb-15f5-48d7-9a24-587f437f07ec", "colors": []map[string]any{{"color_id": 1, "fabrics": []map[string]any{{"fabric_id": 1}}, "resources": []map[string]any{{"resource_id": 1}}}}})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -400,14 +400,66 @@ func TestCreateReference(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Create reference succesfully", func(t *testing.T) {
+	t.Run("Fail binding, pieces", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]any{"pieces": 123})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+
+		// controller
+		controller := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := controller.CreateReference(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Fail binding, operational list", func(t *testing.T) {
+		// context
+		body := new(bytes.Buffer)
+		json.NewEncoder(body).Encode(map[string]any{"operational_list": 123})
+		req := httptest.NewRequest(http.MethodPost, "/", body)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.Set("user", &jwt.Token{Claims: &models.JWTClaims{User: "31b63ffb-15f5-48d7-9a24-587f437f07ec"}})
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+
+		// controller
+		controller := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := controller.CreateReference(c)
+		if assert.Error(t, err) {
+			assert.Equal(t, http.StatusBadRequest, err.(*echo.HTTPError).Code)
+		}
+	})
+
+	t.Run("Create reference successfully", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
 		json.NewEncoder(body).Encode(map[string]any{"code": "23",
 			"front": "31b63ffb-15f5-48d7-9a24-587f437f07ec", "back": "31b63ffb-15f5-48d7-9a24-587f437f07ec",
 			"colors": []map[string]any{{"color_id": 1,
 				"fabrics":   []map[string]any{{"fabric_id": 1}},
-				"resources": []map[string]any{{"resource_id": 1}}}}})
+				"resources": []map[string]any{{"resource_id": 1}}}},
+			"pieces":           []map[string]any{{"image_id": "31b63ffb-15f5-48d7-9a24-587f437f07ec"}},
+			"operational_list": map[string]any{"operations": []map[string]any{{"description": "test operation"}}}})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -429,7 +481,6 @@ func TestCreateReference(t *testing.T) {
 			assert.Equal(t, http.StatusCreated, rec.Code)
 		}
 	})
-
 }
 
 func TestUpdateTimesReference(t *testing.T) {
