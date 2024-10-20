@@ -52,7 +52,7 @@ type Combined = {
 function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: ResourcesByRefCreate }) {
 	const { getColorsRecord, getColors } = useColors();
 	const navigate = useNavigate();
-	const [activeTab, setActiveTab] = createSignal('operational');
+	const [activeTab, setActiveTab] = createSignal('form');
 	const [newOperational, setNewOperational] = createSignal('');
 
 
@@ -88,7 +88,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 		const currentTab = activeTab();
 		const validationFields: Record<string, (keyof ReferenceCreateType)[]> = {
 			form: ['code', 'colors'],
-			piece: ['front', 'back', 'piece'],
+			piece: ['front', 'back', 'pieces'],
 			operational: ['operational'],
 		};
 
@@ -171,18 +171,32 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 					{ resources: [], fabrics: [] },
 				),
 			})),
+			operational_list: {
+				operations: data.operational.map(e => ({ description: e.description })),
+			},
 		};
 
 		const formData = new FormData();
+
+		// pieces
+		for (const piece of data.pieces) {
+			if (piece.piece) {
+				formData.append('files', piece.piece);
+			}
+		}
+
 		formData.append('files', data.front);
 		formData.append('files', data.back);
 
 		return uploadImagesRequest(formData)
 			.then(async res => {
+				const images = res as unknown as Array<{ id: string }>;
+
 				return createReferenceRequest({
 					...reference,
-					front: (res as unknown as Array<Record<'id', string>>)[0].id,
-					back: (res as unknown as Array<Record<'id', string>>)[1].id,
+					front: images[0].id,
+					back: images[1].id,
+					pieces: images.slice(2).map(e => ({ image_id: e.id })),
 				})
 					.then(() => {
 						toast.success('Referencia creada correctamente');
