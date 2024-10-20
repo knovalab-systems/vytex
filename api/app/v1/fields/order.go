@@ -7,31 +7,30 @@ import (
 	"gorm.io/gen/field"
 )
 
-func OrderFields(s query.IOrderDo, fields string) query.IOrderDo {
-
-	orderFields := strings.Split(fields, ",")
-	orderTable := query.Order
-	var orderExprs []field.Expr
+func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
+	table := query.Order
+	fields := strings.Split(queryFields, ",")
+	exprs := []field.Expr{}
 	colorByReferenceFields := []string{}
 	referenceFields := []string{}
 
 	switchFunc := func(v string) bool {
 
 		if strings.HasPrefix(v, "create_user.") || v == "create_user" {
-			orderExprs = append(orderExprs, orderTable.CreatedBy)
-			s = s.Preload(orderTable.CreateUser)
+			exprs = append(exprs, table.CreatedBy)
+			s = s.Preload(table.CreateUser)
 			return true
 		}
 
 		if strings.HasPrefix(v, "cancel_user.") || v == "cancel_user" {
-			orderExprs = append(orderExprs, orderTable.CanceledBy)
-			s = s.Preload(orderTable.CancelUser)
+			exprs = append(exprs, table.CanceledBy)
+			s = s.Preload(table.CancelUser)
 			return true
 		}
 
 		if strings.HasPrefix(v, "custom.") || v == "custom" {
-			orderExprs = append(orderExprs, orderTable.CustomID)
-			s = s.Preload(orderTable.Custom)
+			exprs = append(exprs, table.CustomID)
+			s = s.Preload(table.Custom)
 			return true
 		}
 
@@ -41,8 +40,8 @@ func OrderFields(s query.IOrderDo, fields string) query.IOrderDo {
 		}
 
 		if strings.HasPrefix(v, "order_state.") || v == "order_state" {
-			orderExprs = append(orderExprs, orderTable.OrderStateID)
-			s = s.Preload(orderTable.OrderState)
+			exprs = append(exprs, table.OrderStateID)
+			s = s.Preload(table.OrderState)
 			return true
 		}
 
@@ -52,14 +51,14 @@ func OrderFields(s query.IOrderDo, fields string) query.IOrderDo {
 	colorByReferenceSwitchFunc := func(v string) bool {
 
 		if strings.HasPrefix(v, "resources.") {
-			s = s.Preload(orderTable.ColorByReference.Resources)
-			s = s.Preload(orderTable.ColorByReference.Resources.Resource)
+			s = s.Preload(table.ColorByReference.Resources)
+			s = s.Preload(table.ColorByReference.Resources.Resource)
 			return true
 		}
 
 		if strings.HasPrefix(v, "fabrics.") {
-			s = s.Preload(orderTable.ColorByReference.Fabrics)
-			s = s.Preload(orderTable.ColorByReference.Fabrics.Fabric)
+			s = s.Preload(table.ColorByReference.Fabrics)
+			s = s.Preload(table.ColorByReference.Fabrics.Fabric)
 			return true
 		}
 
@@ -71,24 +70,24 @@ func OrderFields(s query.IOrderDo, fields string) query.IOrderDo {
 		return false
 	}
 
-	orderExprs = append(orderExprs, orderSwitch(orderFields, switchFunc)...)
+	exprs = append(exprs, orderSwitch(fields, switchFunc)...)
 
 	if len(colorByReferenceFields) != 0 {
-		orderExprs = append(orderExprs, orderTable.ColorByReferenceID)
+		exprs = append(exprs, table.ColorByReferenceID)
 		coloByReferenceExprs := append(colorByReferenceSwitch(colorByReferenceFields, colorByReferenceSwitchFunc), query.ColorByReference.ID)
 
 		if len(referenceFields) != 0 {
 			coloByReferenceExprs = append(coloByReferenceExprs, query.ColorByReference.ReferenceID)
 			referenceExprs := append(referenceSwitch(referenceFields, func(s string) bool { return false }), query.Reference.ID)
 
-			s = s.Preload(orderTable.ColorByReference.Reference.Select(referenceExprs...))
+			s = s.Preload(table.ColorByReference.Reference.Select(referenceExprs...))
 		}
 
-		s = s.Preload(orderTable.ColorByReference.Select(coloByReferenceExprs...))
+		s = s.Preload(table.ColorByReference.Select(coloByReferenceExprs...))
 
 	}
 
-	return s.Select(orderExprs...)
+	return s.Select(exprs...)
 }
 
 func orderSwitch(fields []string, function func(string) bool) []field.Expr {

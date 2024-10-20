@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	"golang.org/x/crypto/bcrypt"
+	"gorm.io/gen/field"
 	"gorm.io/gorm"
 
+	"github.com/knovalab-systems/vytex/app/v1/aggregate"
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
@@ -84,49 +86,38 @@ func (m *UserService) SelectUser(q *models.UserRead) (*models.User, error) {
 	return user, nil
 }
 
-func (m *UserService) AggregationUsers(q *models.AggregateQuery) ([]*models.AggregateData, error) {
-	table := query.User
-	s := table.Unscoped()
-	aggregateElem := models.AggregateData{Count: nil}
+func (m *UserService) AggregationUsers(q *models.AggregateQuery) (a []*models.AggregateData, err error) {
+	s := query.User.Unscoped()
+	groupBy := []field.Expr{}
 
-	if q.Count != "" {
-		countArr := strings.Split(q.Count, ",")
-		countObj := make(map[string]int64)
+	if q.GroupBy != "" {
+		groupByArr := strings.Split(q.GroupBy, ",")
+		groupBy = fields.UserSwitch(groupByArr, func(s string) bool { return false })
+	}
 
-		// filters
-		if q.Filter != "" {
-			var err error
-			s, err = filters.UserFilters(s, q.Filter)
-			if err != nil {
-				return nil, problems.UsersBadRequest()
-			}
-		}
-
-		for _, v := range countArr {
-			switch v {
-			case "id":
-				count, err := s.Select(table.ID).Count()
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-				countObj["id"] = count
-			default:
-
-				if aggregateElem.Count == nil {
-					count, err := s.Count()
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-					aggregateElem.Count = count
-				}
-			}
-		}
-		if len(countObj) > 0 {
-			aggregateElem.Count = countObj
+	// filters
+	if q.Filter != "" {
+		s, err = filters.UserFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.UsersBadRequest()
 		}
 	}
 
-	return []*models.AggregateData{&aggregateElem}, nil
+	if q.Count != "" {
+		var aggregateElems []*models.AggregateData
+		countArr := strings.Split(q.Count, ",")
+		if len(groupBy) == 0 {
+			aggregateElems, err = aggregate.CountUsers(s, countArr)
+		} else {
+			aggregateElems, err = aggregate.CountUsersGroupBy(s, countArr, groupBy)
+		}
+		if err != nil {
+			return nil, err
+		}
+		a = append(a, aggregateElems...)
+	}
+
+	return
 }
 
 func (m *UserService) UpdateUser(b *models.UserUpdateBody) (*models.User, error) {

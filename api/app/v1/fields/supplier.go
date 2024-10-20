@@ -7,9 +7,9 @@ import (
 	"gorm.io/gen/field"
 )
 
-func SupplierFields(s query.ISupplierDo, fields string) query.ISupplierDo {
-	fieldsArr := strings.Split(fields, ",")
-	exprs := supplierSwitch(fieldsArr, func(s string) bool { return false })
+func SupplierFields(s query.ISupplierDo, queryFields string) query.ISupplierDo {
+	fields := strings.Split(queryFields, ",")
+	exprs := supplierSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }

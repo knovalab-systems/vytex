@@ -7,10 +7,10 @@ import (
 	"gorm.io/gen/field"
 )
 
-func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControlDo {
-	fieldsArr := strings.Split(fields, ",")
+func TaskControlFields(s query.ITaskControlDo, queryFields string) query.ITaskControlDo {
 	table := query.TaskControl
-	var f []field.Expr
+	fieldsArr := strings.Split(queryFields, ",")
+	exprs := []field.Expr{}
 	orderFields := []string{}
 
 	for _, v := range fieldsArr {
@@ -22,46 +22,45 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 
 		switch v {
 		case "id":
-			f = append(f, table.ID)
+			exprs = append(exprs, table.ID)
 		case "created_at":
-			f = append(f, table.CreatedAt)
+			exprs = append(exprs, table.CreatedAt)
 		case "started_at":
-			f = append(f, table.StartedAt)
+			exprs = append(exprs, table.StartedAt)
 		case "rejected_at":
-			f = append(f, table.RejectedAt)
+			exprs = append(exprs, table.RejectedAt)
 		case "finished_at":
-			f = append(f, table.FinishedAt)
+			exprs = append(exprs, table.FinishedAt)
 		case "order_id":
-			f = append(f, table.OrderID)
+			exprs = append(exprs, table.OrderID)
 		case "order":
-			f = append(f, table.OrderID)
+			exprs = append(exprs, table.OrderID)
 			s.Preload(table.Order.RelationField)
 		case "task_id":
-			f = append(f, table.TaskID)
+			exprs = append(exprs, table.TaskID)
 		case "task":
-			f = append(f, table.TaskID)
+			exprs = append(exprs, table.TaskID)
 			s.Preload(table.Task.RelationField)
 		case "next_id":
-			f = append(f, table.NextID)
+			exprs = append(exprs, table.NextID)
 		case "next":
-			f = append(f, table.NextID)
+			exprs = append(exprs, table.NextID)
 			s.Preload(table.Next.RelationField)
 		case "previous_id":
-			f = append(f, table.PreviousID)
+			exprs = append(exprs, table.PreviousID)
 		case "previous":
-			f = append(f, table.PreviousID)
+			exprs = append(exprs, table.PreviousID)
 			s.Preload(table.Previous.RelationField)
 		default:
-			f = append(f, table.ALL)
+			exprs = append(exprs, table.ALL)
 		}
 	}
 
 	if len(orderFields) != 0 {
-		f = append(f, table.OrderID)
+		exprs = append(exprs, table.OrderID)
 		colorByReferenceFields := []string{}
 
-		orderTable := query.Order
-		orderF := []field.Expr{orderTable.ID}
+		orderExprs := []field.Expr{query.Order.ID}
 
 		for _, v := range orderFields {
 
@@ -72,19 +71,18 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 
 			switch v {
 			case "id":
-				orderF = append(orderF, orderTable.ID)
+				orderExprs = append(orderExprs, query.Order.ID)
 			default:
-				orderF = append(orderF, orderTable.ALL)
+				orderExprs = append(orderExprs, query.Order.ALL)
 			}
 		}
 
 		if len(colorByReferenceFields) != 0 {
-			orderF = append(orderF, orderTable.ColorByReferenceID)
+			orderExprs = append(orderExprs, query.Order.ColorByReferenceID)
 			referenceFields := []string{}
 			colorFields := []string{}
 
-			colorByReferenceTable := query.ColorByReference
-			colorByReferenceF := []field.Expr{colorByReferenceTable.ID}
+			colorByReferenceF := []field.Expr{query.ColorByReference.ID}
 
 			for _, v := range colorByReferenceFields {
 
@@ -100,23 +98,23 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 
 				switch v {
 				case "id":
-					colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ID)
+					colorByReferenceF = append(colorByReferenceF, query.ColorByReference.ID)
 				case "color_id":
-					colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ColorID)
+					colorByReferenceF = append(colorByReferenceF, query.ColorByReference.ColorID)
 				default:
-					colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ALL)
+					colorByReferenceF = append(colorByReferenceF, query.ColorByReference.ALL)
 				}
 			}
 
 			if len(colorFields) != 0 {
-				colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ColorID)
+				colorByReferenceF = append(colorByReferenceF, query.ColorByReference.ColorID)
 				colorF := append(colorSwitch(colorFields, func(string) bool { return false }), query.Color.ID)
 
 				s = s.Preload(table.Order.ColorByReference.Color.Select(colorF...))
 			}
 
 			if len(referenceFields) != 0 {
-				colorByReferenceF = append(colorByReferenceF, colorByReferenceTable.ReferenceID)
+				colorByReferenceF = append(colorByReferenceF, query.ColorByReference.ReferenceID)
 				referenceTable := query.Reference
 				referenceF := []field.Expr{referenceTable.ID}
 
@@ -139,8 +137,8 @@ func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControl
 			s = s.Preload(table.Order.ColorByReference.Select(colorByReferenceF...))
 		}
 
-		s = s.Preload(table.Order.Select(orderF...))
+		s = s.Preload(table.Order.Select(orderExprs...))
 	}
 
-	return s.Select(f...)
+	return s.Select(exprs...)
 }

@@ -14,6 +14,7 @@ type AggregateData struct {
 }
 
 type AggregateQuery struct {
-	Count  string `query:"count"`
-	Filter string `query:"filter"`
+	Count   string `query:"count"`
+	GroupBy string `query:"groupBy"`
+	Filter  string `query:"filter"`
 }
