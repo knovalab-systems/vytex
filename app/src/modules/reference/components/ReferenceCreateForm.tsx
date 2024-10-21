@@ -49,12 +49,25 @@ type Combined = {
 	name: string;
 };
 
+type TabName = 'form' | 'pieces' | 'operational';
+
 function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: ResourcesByRefCreate }) {
 	const { getColorsRecord, getColors } = useColors();
 	const navigate = useNavigate();
-	const [activeTab, setActiveTab] = createSignal('form');
+	const [activeTab, setActiveTab] = createSignal<TabName>('form');
 	const [newOperational, setNewOperational] = createSignal('');
 
+	const validationFields: Record<TabName, (keyof ReferenceCreateType)[]> = {
+		form: ['code', 'colors'],
+		pieces: ['front', 'back', 'pieces'],
+		operational: ['operational'],
+	};
+
+	const nextTab: Record<TabName, TabName> = {
+		form: 'pieces',
+		pieces: 'operational',
+		operational: 'operational',
+	};
 
 	const resources: () => Combined[] = () => [
 		...props.resources.map(i => ({ id: `r${i.id}`, name: i.name as string })),
@@ -86,17 +99,6 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 
 	const handleNext = async () => {
 		const currentTab = activeTab();
-		const validationFields: Record<string, (keyof ReferenceCreateType)[]> = {
-			form: ['code', 'colors'],
-			piece: ['front', 'back', 'pieces'],
-			operational: ['operational'],
-		};
-
-		const nextTab: Record<string, string> = {
-			form: 'piece',
-			piece: 'operational',
-		};
-
 		const isValid = await validate(form, validationFields[currentTab]);
 
 		if (!isValid) {
@@ -143,20 +145,20 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 
 	const handlePrev = () => {
 		const currentTab = activeTab();
-		const prevTab: Record<string, string> = {
-			operational: 'piece',
-			piece: 'form',
+		const prevTab: Record<TabName, TabName> = {
+			operational: 'pieces',
+			pieces: 'form',
+			form: 'form',
 		};
 
 		if (prevTab[currentTab]) {
 			setActiveTab(prevTab[currentTab]);
 		}
 	};
-
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
 		const reference: Reference = {
 			code: data.code.toString(),
-			colors: data.colors.map((color, i) => ({
+			colors: data.colors.map((color) => ({
 				color_id: color.color,
 				...color.resources.reduce(
 					(p: ResourceFabric, v) => {
@@ -204,7 +206,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 					})
 					.catch(error => {
 						if (error.response.status === STATUS_CODE.conflict) {
-							toast.error(`El código de la referencia "${data.code}" no está disponible. Intente con otro.`);
+							toast.error(`El código de la referencia '${data.code}' no está disponible. Intente con otro.`);
 						} else {
 							toast.error('Error al crear referencia.');
 						}
@@ -220,13 +222,13 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 		>
 			<Tabs value={activeTab()}>
 				<TabsList class='sticky top-0 z-10'>
-					<TabsTrigger value="form">Formulario</TabsTrigger>
-					<TabsTrigger value="piece">Piezas</TabsTrigger>
-					<TabsTrigger value="operational">Listado Operacional</TabsTrigger>
+					<TabsTrigger value='form'>Formulario</TabsTrigger>
+					<TabsTrigger value='pieces'>Piezas</TabsTrigger>
+					<TabsTrigger value='operational'>Listado Operacional</TabsTrigger>
 					<TabsIndicator />
 				</TabsList>
-				<div class="mt-1">
-					<TabsContent value="form">
+				<div class='mt-1'>
+					<TabsContent value='form'>
 						<div class='w-full space-y-2 xl:space-y-0 xl:grid xl:grid-cols-4 h-full gap-2 bg-gray-100'>
 							<div class='mb-auto flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 								<h1 class='text-2xl font-bold text-center'>Crear referencia</h1>
@@ -467,7 +469,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 							</FieldArray>
 						</div>
 					</TabsContent>
-					<TabsContent value='piece'>
+					<TabsContent value='pieces'>
 						<div class='flex flex-row gap-2'>
 							<div class='text-center p-4 bg-white rounded-md border border-gray-100 shadow-md flex-none w-[28rem] h-[30rem]'>
 								<Field name='front' type='File'>
@@ -576,7 +578,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 							</div>
 						</div>
 					</TabsContent>
-					<TabsContent value="operational">
+					<TabsContent value='operational'>
 						<div class='flex flex-col gap-2 max-w-5xl mx-auto'>
 							<TableContainer>
 								<Table>
@@ -654,7 +656,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 					</TabsContent>
 				</div>
 			</Tabs>
-			<div class="flex justify-between">
+			<div class='flex justify-between'>
 				<Show when={activeTab() === 'form'}>
 					<div class='xl:flex hidden justify-between'>
 						<CancelButton to={REFS_PATH} />
