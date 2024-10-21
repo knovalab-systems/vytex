@@ -25,4 +25,5 @@ func privateRoutes(group *echo.Group) {
 	privateStepRoutes(group)
 	privateTaskControlRoutes(group)
 	privateRoleRoutes(group)
+	privateTaskControlStateRoutes(group)
 }

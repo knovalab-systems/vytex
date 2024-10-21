@@ -11,8 +11,8 @@ const TestOrderStatusRecordElement = () => {
 };
 
 const TestOrderStatusArrByValueElement = () => {
-	const { getStatuByValue } = useOrderStatus();
-	return <div>{getStatuByValue('created')?.name ?? 'default'}</div>;
+	const { getStateByValue } = useOrderStatus();
+	return <div>{getStateByValue('created')?.name ?? 'default'}</div>;
 };
 
 describe('useOrderStatus', () => {

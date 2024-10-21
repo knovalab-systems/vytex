@@ -3,11 +3,13 @@ import ActionsCell from '~/components/ActionsCell';
 import StatusLabel from '~/components/StatusLabel';
 import { Table, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
 import { REFS_PATH, REFS_TIMES_PATH } from '~/constants/paths';
+import { useColors } from '~/hooks/useColors';
 import { usePolicies } from '~/hooks/usePolicies';
 import type { Action } from '~/types/actionsCell';
 import type { GetReferenceType } from '../requests/referenceGet';
 
 function ReferenceTable(props: { references?: GetReferenceType }) {
+	const { getColorsRecord } = useColors();
 	const { hasPolicy } = usePolicies();
 	const actions = (id: number) => {
 		const arr: Action[] = [
@@ -35,6 +37,7 @@ function ReferenceTable(props: { references?: GetReferenceType }) {
 					<TableRow>
 						<TableHead>ID</TableHead>
 						<TableHead>Código</TableHead>
+						<TableHead>Colores</TableHead>
 						<TableHead>Estado</TableHead>
 						<TableHead>Acciones</TableHead>
 					</TableRow>
@@ -49,6 +52,19 @@ function ReferenceTable(props: { references?: GetReferenceType }) {
 						<TableRow class='bg-white'>
 							<TableCell>{reference.id}</TableCell>
 							<TableCell>{reference.code}</TableCell>
+							<TableCell class='flex gap-2'>
+								<For each={reference.colors}>
+									{color => (
+										<div
+											class='h-10 w-10 border-2'
+											title={getColorsRecord()[color.color_id as number]?.name || ''}
+											style={{
+												background: getColorsRecord()[color.color_id as number]?.hex || '',
+											}}
+										/>
+									)}
+								</For>
+							</TableCell>
 							<TableCell>
 								<StatusLabel status={!reference.deleted_at} />
 							</TableCell>

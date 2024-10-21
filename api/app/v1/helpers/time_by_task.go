@@ -16,3 +16,14 @@ func GetDefaultTimeByTask() (*models.TimeByTask, error) {
 	}
 	return timeByTask, nil
 }
+
+func GetTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
+	table := query.TimeByTask
+	timeByTaskFormat := formats.TimeByTaskDTOFormat(*t)
+
+	timeByTask, err := table.Where(field.Attrs(timeByTaskFormat)).FirstOrCreate()
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	return timeByTask, nil
+}

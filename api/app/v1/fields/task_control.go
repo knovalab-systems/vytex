@@ -8,7 +8,6 @@ import (
 )
 
 func TaskControlFields(s query.ITaskControlDo, fields string) query.ITaskControlDo {
-
 	fieldsArr := strings.Split(fields, ",")
 	table := query.TaskControl
 	var f []field.Expr

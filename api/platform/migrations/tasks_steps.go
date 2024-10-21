@@ -10,7 +10,6 @@ import (
 func CreateTasksSteps(db *gorm.DB) error {
 	if db.Migrator().HasTable(&models.Step{}) && db.Migrator().HasTable(&models.Task{}) {
 
-		steps := []*models.Step{}
 		stepMap := make(map[models.StepValue]uint)
 
 		defaultSteps := models.DefaultSteps()
@@ -20,7 +19,6 @@ func CreateTasksSteps(db *gorm.DB) error {
 			if err != nil {
 				return err
 			}
-			steps = append(steps, step)
 			stepMap[v.Value] = step.ID
 		}
 

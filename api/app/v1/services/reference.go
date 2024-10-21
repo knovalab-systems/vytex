@@ -5,6 +5,8 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/fields"
+	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
 	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
@@ -18,6 +20,7 @@ type ReferenceService struct {
 }
 
 func (m *ReferenceService) SelectReferences(q *models.Query) ([]*models.Reference, error) {
+
 	// sanitize
 	formats.SanitizedQuery(q)
 
@@ -35,6 +38,15 @@ func (m *ReferenceService) SelectReferences(q *models.Query) ([]*models.Referenc
 	// fields
 	if q.Fields != "" {
 		s = fields.ReferenceFields(s, q.Fields)
+	}
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.ReferenceFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ReferencesBadRequest()
+		}
 	}
 
 	// run query
@@ -61,6 +73,16 @@ func (m *ReferenceService) SelectReference(q *models.ReferenceRead) (*models.Ref
 		s = fields.ReferenceFields(s, q.Fields)
 	}
 
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.ReferenceFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ReferencesBadRequest()
+		}
+	}
+
 	// run query
 	reference, err := s.Where(table.ID.Eq(q.ID)).First()
 	if err != nil {
@@ -77,6 +99,16 @@ func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*m
 	table := query.Reference
 	s := table.Unscoped().Group(table.Code)
 	aggregateElem := models.AggregateData{Count: nil}
+
+	// filters
+	if q.Filter != "" {
+		var err error
+		s, err = filters.ReferenceFilters(s, q.Filter)
+		if err != nil {
+			return nil, problems.ReferencesBadRequest()
+		}
+	}
+
 	if q.Count != "" {
 		countArr := strings.Split(q.Count, ",")
 		countObj := make(map[string]int64)
@@ -195,7 +227,7 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 		return nil, err
 	}
 
-	timeByTask, err := getTimeByTask(&b.TimeByTask)
+	timeByTask, err := helpers.GetTimeByTask(&b.TimeByTask)
 	if err != nil {
 		return nil, err
 	}
@@ -222,6 +254,7 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 	return reference, nil
 }
 
+
 func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
 	table := query.TimeByTask
 	timeByTaskFormat := formats.TimeByTaskDTOFormat(*t)
@@ -232,3 +265,4 @@ func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
 	}
 	return timeByTask, nil
 }
+

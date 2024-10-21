@@ -83,7 +83,7 @@ function OrderFilters(props: { filters: OrderFilter; setFilters: Setter<OrderFil
 													<Show when={state.selectedOptions().length > 1}>
 														<span>
 															<button type='reset' onPointerDown={e => e.stopPropagation()} onClick={state.clear}>
-																<IoCloseOutline class=' text-destructive' size={20} title='Remover todos' />
+																<IoCloseOutline class='text-destructive' size={20} title='Remover todos' />
 															</button>
 														</span>
 													</Show>

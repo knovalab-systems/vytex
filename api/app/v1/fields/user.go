@@ -10,7 +10,7 @@ import (
 func UserFields(s query.IUserDo, fields string) query.IUserDo {
 	userTable := query.User
 	userFields := strings.Split(fields, ",")
-	var exprs []field.Expr
+	userExprs := []field.Expr{}
 	roleFieldsArr := []string{}
 
 	switchFunc := func(v string) bool {
@@ -22,16 +22,16 @@ func UserFields(s query.IUserDo, fields string) query.IUserDo {
 		return false
 	}
 
-	exprs = append(exprs, userSwitch(userFields, switchFunc)...)
+	userExprs = append(userExprs, userSwitch(userFields, switchFunc)...)
 
 	if len(roleFieldsArr) != 0 {
-		exprs = append(exprs, userTable.RoleId)
+		userExprs = append(userExprs, userTable.RoleId)
 		roleExprs := append(roleSwitch(roleFieldsArr, func(s string) bool { return false }), query.Role.ID)
 
 		s = s.Preload(userTable.Role.Select(roleExprs...))
 	}
 
-	return s.Select(exprs...)
+	return s.Select(userExprs...)
 }
 
 func userSwitch(fields []string, function func(string) bool) []field.Expr {

@@ -1,7 +1,7 @@
 import type { MergeCoreCollection } from '../index.js';
 
 /**
- * vytex_customs type
+ * vytex_order_status type
  */
 export type VytexOrderState<Schema = any> = MergeCoreCollection<
 	Schema,
@@ -9,6 +9,16 @@ export type VytexOrderState<Schema = any> = MergeCoreCollection<
 	{
 		id: number;
 		name: string;
-		value: 'created' | 'started' | 'finished' | 'canceled' | 'corte' | 'confeccion' | 'calidad' | 'empaque';
+		value: OrderStateValue;
 	}
 >;
+
+export type OrderStateValue =
+	| 'created'
+	| 'started'
+	| 'finished'
+	| 'canceled'
+	| 'corte'
+	| 'confeccion'
+	| 'calidad'
+	| 'empaque';

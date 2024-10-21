@@ -6,6 +6,17 @@ vi.mock('~/hooks/useSteps', () => ({
 	useSteps: () => ({ getTasksRecord: () => ({ 1: { name: 'Tarea 0' }, 2: { name: 'Tarea 0' } }) }),
 }));
 
+vi.mock('~/hooks/useTaskControlStatus', () => ({
+	useTaskControlStatus: () => ({
+		getTaskControlStatusRecord: () => ({
+			1: { name: 'Creada' },
+			2: { name: 'Iniciada' },
+			3: { name: 'Terminada' },
+			4: { name: 'Rechazada' },
+		}),
+	}),
+}));
+
 describe('TaskControlTable', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
@@ -31,6 +42,7 @@ describe('TaskControlTable', () => {
 						task_id: 1,
 						order_id: 2,
 						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						task_control_state_id: 1,
 					},
 					{
 						id: 0,
@@ -41,6 +53,7 @@ describe('TaskControlTable', () => {
 						task_id: 1,
 						order_id: 3,
 						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						task_control_state_id: 2,
 					},
 					{
 						id: 0,
@@ -51,6 +64,7 @@ describe('TaskControlTable', () => {
 						task_id: 1,
 						order_id: 4,
 						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						task_control_state_id: 3,
 					},
 					{
 						id: 0,
@@ -61,6 +75,7 @@ describe('TaskControlTable', () => {
 						task_id: 1,
 						order_id: 5,
 						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						task_control_state_id: 4,
 					},
 				]}
 			/>

@@ -10,6 +10,7 @@ import (
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
+	"github.com/knovalab-systems/vytex/app/v1/helpers"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/query"
@@ -132,7 +133,7 @@ func (m *UserService) UpdateUser(b *models.UserUpdateBody) (*models.User, error)
 	table := query.User
 
 	if b.Username != "" {
-		err := checkUsername(b.Username)
+		err := helpers.CheckUsername(b.Username)
 		if err != nil {
 			return nil, err
 		}
@@ -162,7 +163,7 @@ func (m *UserService) UpdateUser(b *models.UserUpdateBody) (*models.User, error)
 
 func (m *UserService) CreateUser(b *models.UserCreateBody) (*models.User, error) {
 	// check user existence
-	err := checkUsername(b.Username)
+	err := helpers.CheckUsername(b.Username)
 	if err != nil {
 		return nil, err
 	}
@@ -186,17 +187,4 @@ func (m *UserService) CreateUser(b *models.UserCreateBody) (*models.User, error)
 	}
 
 	return user, nil
-}
-
-func checkUsername(username string) error {
-	table := query.User
-
-	_, err := table.Unscoped().Where(table.Username.Eq(username)).First()
-	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil
-		}
-		return problems.ServerError()
-	}
-	return problems.UserExists()
 }

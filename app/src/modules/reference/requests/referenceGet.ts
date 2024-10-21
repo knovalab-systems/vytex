@@ -2,36 +2,43 @@ import { queryOptions } from '@tanstack/solid-query';
 import { aggregate, readReference, readReferences } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
+import type { ReferenceFilter } from '~/types/filter';
 
-export function getReferencesQuery(page: number) {
+export function getReferencesQuery(page: number, filters: ReferenceFilter) {
 	return queryOptions({
-		queryKey: ['getReferences', page],
-		queryFn: () => getReferences(page),
+		queryKey: ['getReferences', page, filters],
+		queryFn: () => getReferences(page, filters),
 	});
 }
 
-async function getReferences(page: number) {
+async function getReferences(page: number, filters: ReferenceFilter) {
 	return await client.request(
 		readReferences({
 			page: page,
 			limit: QUERY_LIMIT,
-			fields: ['id', 'code', 'deleted_at'],
+			filter: doFilters(filters),
+			fields: ['id', 'code', 'deleted_at', { colors: ['color_id'] }],
+			deep: doDeep(filters),
 		}),
 	);
 }
 
-export function countReferencesQuery() {
+export function countReferencesQuery(filters: ReferenceFilter) {
 	return queryOptions({
-		queryKey: ['countReference'],
-		queryFn: () => countReferences(),
+		queryKey: ['countReference', filters],
+		queryFn: () => countReferences(filters),
 	});
 }
 
-async function countReferences() {
+async function countReferences(filters: ReferenceFilter) {
 	return await client.request(
 		aggregate('vytex_references', {
 			aggregate: {
 				count: '*',
+			},
+			query: {
+				filter: doFilters(filters),
+				deep: doDeep(filters),
 			},
 		}),
 	);
@@ -72,3 +79,31 @@ async function getReferenceProSupervisor(key: number) {
 }
 
 export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceProSupervisor>>;
+
+function doFilters(filters: ReferenceFilter) {
+	return {
+		...(filters.code && {
+			code: {
+				_contains: filters.code,
+			},
+		}),
+		...(filters.state && {
+			delete_at: {
+				_null: filters.state === 'Activo',
+			},
+		}),
+		...(filters.colors &&
+			filters.colors.length > 0 && {
+				colors: { color_id: { _in: filters.colors } },
+			}),
+	};
+}
+
+function doDeep(filters: ReferenceFilter) {
+	return {
+		...(filters.colors &&
+			filters.colors.length > 0 && {
+				colors: { _filter: { color_id: { _in: filters.colors } } },
+			}),
+	};
+}

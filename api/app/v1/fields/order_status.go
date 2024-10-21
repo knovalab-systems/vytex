@@ -8,25 +8,34 @@ import (
 )
 
 func OrderStateFields(s query.IOrderStateDo, fields string) query.IOrderStateDo {
-
 	fieldsArr := strings.Split(fields, ",")
-	table := query.OrderState
-	var f []field.Expr
+	exprs := orderStateSwitch(fieldsArr, func(s string) bool { return false })
 
-	for _, v := range fieldsArr {
+	return s.Select(exprs...)
+}
+
+func orderStateSwitch(fields []string, function func(string) bool) []field.Expr {
+	table := query.TaskControlState
+	exprs := []field.Expr{}
+
+	for _, v := range fields {
+
+		if function(v) {
+			continue
+		}
 
 		switch v {
 		case "id":
-			f = append(f, table.ID)
+			exprs = append(exprs, table.ID)
 		case "name":
-			f = append(f, table.Name)
+			exprs = append(exprs, table.Name)
 		case "value":
-			f = append(f, table.Value)
+			exprs = append(exprs, table.Value)
 		default:
-			f = append(f, table.ALL)
+			exprs = append(exprs, table.ALL)
 		}
+
 	}
 
-	return s.Select(f...)
-
+	return exprs
 }

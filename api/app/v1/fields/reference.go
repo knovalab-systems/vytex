@@ -19,6 +19,7 @@ func ReferenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 			colorsFields = append(colorsFields, strings.TrimPrefix(v, "colors."))
 			return true
 		}
+
 		if strings.HasPrefix(v, "pieces.") || v == "pieces" {
 			piecesFields = append(piecesFields, strings.TrimPrefix(v, "pieces."))
 			return true
@@ -33,6 +34,7 @@ func ReferenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 		colorsExprs := append(colorByReferenceSwitch(colorsFields, func(s string) bool { return false }), query.ColorByReference.ReferenceID)
 		s.Preload(referenceTable.Colors.Select(colorsExprs...))
 	}
+
 
 	if len(piecesFields) != 0 {
 		referenceExprs = append(referenceExprs, referenceTable.ID)
@@ -102,6 +104,7 @@ func imageByReferenceSwitch(fields []string, function func(string) bool) []field
 			exprs = append(exprs, table.ImageID)
 		case "reference_id":
 			exprs = append(exprs, table.ReferenceID)
+
 		default:
 			exprs = append(exprs, table.ALL)
 		}
@@ -109,7 +112,6 @@ func imageByReferenceSwitch(fields []string, function func(string) bool) []field
 	}
 
 	return exprs
-
 }
 
 func colorByReferenceSwitch(fields []string, function func(string) bool) []field.Expr {

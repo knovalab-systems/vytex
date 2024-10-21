@@ -36,7 +36,8 @@ func main() {
 		&models.ImageByReference{}, &models.OperationalList{}, &models.Operation{},
 		models.Image{}, models.Supplier{}, models.Composition{},
 		models.Custom{}, models.Order{}, models.TimeByTask{}, models.Role{},
-		models.OrderState{}, models.Step{}, models.Task{}, models.TaskControl{})
+		models.OrderState{}, models.Step{}, models.Task{}, models.TaskControl{},
+		models.TaskControlState{})
 
 	// Generate the code
 	g.Execute()

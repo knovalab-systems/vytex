@@ -28,6 +28,7 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 	tableName := _taskControl.taskControlDo.TableName()
 	_taskControl.ALL = field.NewAsterisk(tableName)
 	_taskControl.ID = field.NewUint(tableName, "id")
+	_taskControl.TaskControlStateID = field.NewUint(tableName, "task_control_state_id")
 	_taskControl.CreatedAt = field.NewTime(tableName, "created_at")
 	_taskControl.StartedAt = field.NewTime(tableName, "started_at")
 	_taskControl.FinishedAt = field.NewTime(tableName, "finished_at")
@@ -36,6 +37,12 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 	_taskControl.OrderID = field.NewUint(tableName, "order_id")
 	_taskControl.NextID = field.NewUint(tableName, "next_id")
 	_taskControl.PreviousID = field.NewUint(tableName, "previous_id")
+	_taskControl.TaskControlState = taskControlBelongsToTaskControlState{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("TaskControlState", "models.TaskControlState"),
+	}
+
 	_taskControl.Task = taskControlBelongsToTask{
 		db: db.Session(&gorm.Session{}),
 
@@ -402,6 +409,11 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 		db: db.Session(&gorm.Session{}),
 
 		RelationField: field.NewRelation("Next", "models.TaskControl"),
+		TaskControlState: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Next.TaskControlState", "models.TaskControlState"),
+		},
 		Task: struct {
 			field.RelationField
 		}{
@@ -438,17 +450,20 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 type taskControl struct {
 	taskControlDo
 
-	ALL        field.Asterisk
-	ID         field.Uint
-	CreatedAt  field.Time
-	StartedAt  field.Time
-	FinishedAt field.Time
-	RejectedAt field.Time
-	TaskID     field.Uint
-	OrderID    field.Uint
-	NextID     field.Uint
-	PreviousID field.Uint
-	Task       taskControlBelongsToTask
+	ALL                field.Asterisk
+	ID                 field.Uint
+	TaskControlStateID field.Uint
+	CreatedAt          field.Time
+	StartedAt          field.Time
+	FinishedAt         field.Time
+	RejectedAt         field.Time
+	TaskID             field.Uint
+	OrderID            field.Uint
+	NextID             field.Uint
+	PreviousID         field.Uint
+	TaskControlState   taskControlBelongsToTaskControlState
+
+	Task taskControlBelongsToTask
 
 	Order taskControlBelongsToOrder
 
@@ -472,6 +487,7 @@ func (t taskControl) As(alias string) *taskControl {
 func (t *taskControl) updateTableName(table string) *taskControl {
 	t.ALL = field.NewAsterisk(table)
 	t.ID = field.NewUint(table, "id")
+	t.TaskControlStateID = field.NewUint(table, "task_control_state_id")
 	t.CreatedAt = field.NewTime(table, "created_at")
 	t.StartedAt = field.NewTime(table, "started_at")
 	t.FinishedAt = field.NewTime(table, "finished_at")
@@ -496,8 +512,9 @@ func (t *taskControl) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (t *taskControl) fillFieldMap() {
-	t.fieldMap = make(map[string]field.Expr, 13)
+	t.fieldMap = make(map[string]field.Expr, 15)
 	t.fieldMap["id"] = t.ID
+	t.fieldMap["task_control_state_id"] = t.TaskControlStateID
 	t.fieldMap["created_at"] = t.CreatedAt
 	t.fieldMap["started_at"] = t.StartedAt
 	t.fieldMap["finished_at"] = t.FinishedAt
@@ -517,6 +534,77 @@ func (t taskControl) clone(db *gorm.DB) taskControl {
 func (t taskControl) replaceDB(db *gorm.DB) taskControl {
 	t.taskControlDo.ReplaceDB(db)
 	return t
+}
+
+type taskControlBelongsToTaskControlState struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a taskControlBelongsToTaskControlState) Where(conds ...field.Expr) *taskControlBelongsToTaskControlState {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a taskControlBelongsToTaskControlState) WithContext(ctx context.Context) *taskControlBelongsToTaskControlState {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a taskControlBelongsToTaskControlState) Session(session *gorm.Session) *taskControlBelongsToTaskControlState {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a taskControlBelongsToTaskControlState) Model(m *models.TaskControl) *taskControlBelongsToTaskControlStateTx {
+	return &taskControlBelongsToTaskControlStateTx{a.db.Model(m).Association(a.Name())}
+}
+
+type taskControlBelongsToTaskControlStateTx struct{ tx *gorm.Association }
+
+func (a taskControlBelongsToTaskControlStateTx) Find() (result *models.TaskControlState, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a taskControlBelongsToTaskControlStateTx) Append(values ...*models.TaskControlState) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a taskControlBelongsToTaskControlStateTx) Replace(values ...*models.TaskControlState) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a taskControlBelongsToTaskControlStateTx) Delete(values ...*models.TaskControlState) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a taskControlBelongsToTaskControlStateTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a taskControlBelongsToTaskControlStateTx) Count() int64 {
+	return a.tx.Count()
 }
 
 type taskControlBelongsToTask struct {
@@ -770,6 +858,9 @@ type taskControlBelongsToNext struct {
 
 	field.RelationField
 
+	TaskControlState struct {
+		field.RelationField
+	}
 	Task struct {
 		field.RelationField
 	}

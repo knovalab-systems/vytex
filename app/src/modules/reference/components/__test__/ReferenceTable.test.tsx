@@ -41,6 +41,7 @@ describe('Reference Table', () => {
 					id: 123,
 					code: 'REF001',
 					deleted_at: null,
+					colors: null,
 				},
 			];
 

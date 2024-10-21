@@ -150,6 +150,11 @@ func (m *TaskControlService) UpdateTaskControl(b *models.TaskControlUpdateBody, 
 }
 
 func startTaskControl(taskControl *models.TaskControl) (*models.TaskControl, error) {
+	taskState, err := helpers.GetTaskControlStatusByValue(models.StartedTaskControlStateValue)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	taskControl.TaskControlStateID = taskState.ID
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
 		return nil, problems.ServerError()
@@ -169,7 +174,7 @@ func startTaskControl(taskControl *models.TaskControl) (*models.TaskControl, err
 		return taskControl, nil
 	}
 
-	orderState, err := helpers.GetOrderStatusByValue(newStateValue)
+	orderState, err := helpers.GetOrderStateByValue(newStateValue)
 	if err != nil {
 		return nil, problems.ServerError()
 	}
@@ -183,6 +188,11 @@ func startTaskControl(taskControl *models.TaskControl) (*models.TaskControl, err
 }
 
 func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models.TaskControl, error) {
+	taskState, err := helpers.GetTaskControlStatusByValue(models.RejectedTaskControlStateValue)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	taskControl.TaskControlStateID = taskState.ID
 	taskControl.RejectedAt = now
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
@@ -190,7 +200,7 @@ func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 	}
 
 	if taskControl.PreviousID == nil {
-		canceledState, err := helpers.GetOrderStatusByValue(models.CanceledOrderStateValue)
+		canceledState, err := helpers.GetOrderStateByValue(models.CanceledOrderStateValue)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
@@ -200,7 +210,12 @@ func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 			return nil, problems.ServerError()
 		}
 	} else {
-		rows, err = query.TaskControl.Where(query.TaskControl.ID.Eq(*taskControl.PreviousID)).Updates(map[string]interface{}{"finished_at": nil, "next_id": nil})
+		taskState, err := helpers.GetTaskControlStatusByValue(models.RejectedTaskControlStateValue)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		rows, err = query.TaskControl.Where(query.TaskControl.ID.Eq(*taskControl.PreviousID)).Updates(map[string]interface{}{"finished_at": nil, "next_id": nil,
+			"task_control_state_id": taskState.ID})
 		if err != nil || rows.RowsAffected == 0 {
 			return nil, problems.ServerError()
 		}
@@ -341,7 +356,7 @@ func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 		}
 		nextTaskControl.TaskID = task.ID
 	case models.Paletizar:
-		finishedState, err := helpers.GetOrderStatusByValue(models.FinishedOrderStateValue)
+		finishedState, err := helpers.GetOrderStateByValue(models.FinishedOrderStateValue)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
@@ -357,13 +372,23 @@ func finishTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 	}
 
 	if nextTaskControl != nil {
-		err := query.TaskControl.Create(nextTaskControl)
+		taskState, err := helpers.GetTaskControlStatusByValue(models.CreatedTaskControlStateValue)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		nextTaskControl.TaskControlStateID = taskState.ID
+		err = query.TaskControl.Create(nextTaskControl)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
 		taskControl.NextID = &nextTaskControl.ID
 	}
 
+	taskState, err := helpers.GetTaskControlStatusByValue(models.FinishedTaskControlStateValue)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	taskControl.TaskControlStateID = taskState.ID
 	taskControl.FinishedAt = now
 	rows, err := query.TaskControl.Where(query.TaskControl.ID.Eq(taskControl.ID)).Updates(taskControl)
 	if err != nil || rows.RowsAffected == 0 {
