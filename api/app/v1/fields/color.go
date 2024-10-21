@@ -39,7 +39,7 @@ func colorSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.DeletedAt)
 		case "updated_at":
 			exprs = append(exprs, table.UpdatedAt)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 	}

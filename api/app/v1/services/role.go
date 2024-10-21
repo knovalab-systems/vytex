@@ -74,30 +74,38 @@ func (m *RoleService) SelectRole(q *models.RoleRead) (*models.Role, error) {
 	return role, nil
 }
 
-func (m *RoleService) AggregationRoles(q *models.AggregateQuery) (a []*models.AggregateData, err error) {
+func (m *RoleService) AggregationRoles(q *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	s := query.Role.Unscoped()
-	groupBy := []field.Expr{}
+	count := []field.Expr{}
+	countArr := []string{}
+
+	a := &[]map[string]interface{}{}
+
+	if q.Count != "" {
+		countArr = strings.Split(q.Count, ",")
+		count = aggregate.ExprsCountRol(countArr)
+	}
 
 	if q.GroupBy != "" {
 		groupByArr := strings.Split(q.GroupBy, ",")
-		groupBy = fields.RoleSwitch(groupByArr, func(s string) bool { return false })
-	}
-
-	if q.Count != "" {
-		var aggregateElems []*models.AggregateData
-		countArr := strings.Split(q.Count, ",")
-		if len(groupBy) == 0 {
-			aggregateElems, err = aggregate.CountRole(s, countArr)
-		} else {
-			aggregateElems, err = aggregate.CountRoleGroupBy(s, countArr, groupBy)
-		}
+		groupBy := fields.RoleSwitch(groupByArr, func(s string) bool { return false })
+		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(a)
 		if err != nil {
-			return nil, err
+			return nil, problems.ServerError()
 		}
-		a = append(a, aggregateElems...)
+		aggregate.AdjustSubfix(a, countArr)
+		return a, nil
 	}
 
-	return
+	b := map[string]interface{}{}
+	err := s.Select(count...).Scan(&b)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	*a = append(*a, b)
+	aggregate.AdjustSubfix(a, countArr)
+	return a, nil
+
 }
 
 func (m *RoleService) CreateRole(b *models.RoleCreateBody) (*models.Role, error) {

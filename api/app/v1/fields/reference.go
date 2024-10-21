@@ -64,7 +64,7 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 		case "back":
 			exprs = append(exprs, table.Back)
 
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 
@@ -89,7 +89,7 @@ func colorByReferenceSwitch(fields []string, function func(string) bool) []field
 			exprs = append(exprs, table.ID)
 		case "color_id":
 			exprs = append(exprs, table.ColorID)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

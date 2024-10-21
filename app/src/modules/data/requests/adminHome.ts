@@ -39,6 +39,8 @@ async function countUsersByRoleId() {
 	);
 }
 
+export type CountUsersByRoleIdType = Awaited<ReturnType<typeof countUsersByRoleId>>;
+
 export function countRoleByCodeQuery() {
 	return queryOptions({
 		queryKey: ['countRoleByCode'],
@@ -56,3 +58,5 @@ async function countRoleByCode() {
 		}),
 	);
 }
+
+export type CountRoleByCodeType = Awaited<ReturnType<typeof countRoleByCode>>;

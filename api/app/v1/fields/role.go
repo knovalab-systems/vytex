@@ -33,7 +33,7 @@ func RoleSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.Code)
 		case "policies":
 			exprs = append(exprs, table.Policies)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

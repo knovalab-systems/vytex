@@ -13,6 +13,8 @@ type AggregateData struct {
 	Count any `json:"count,omitempty"`
 }
 
+type AggregateDatav2 map[string]interface{}
+
 type AggregateQuery struct {
 	Count   string `query:"count"`
 	GroupBy string `query:"groupBy"`

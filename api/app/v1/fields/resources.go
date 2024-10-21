@@ -78,7 +78,7 @@ func resourceSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.CreatedAt)
 		case "deleted_at":
 			exprs = append(exprs, table.DeletedAt)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

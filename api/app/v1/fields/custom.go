@@ -74,7 +74,7 @@ func customSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.CreatedBy)
 		case "canceled_by":
 			exprs = append(exprs, table.CanceledBy)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

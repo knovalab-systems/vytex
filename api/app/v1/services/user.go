@@ -86,38 +86,38 @@ func (m *UserService) SelectUser(q *models.UserRead) (*models.User, error) {
 	return user, nil
 }
 
-func (m *UserService) AggregationUsers(q *models.AggregateQuery) (a []*models.AggregateData, err error) {
+func (m *UserService) AggregationUsers(q *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	s := query.User.Unscoped()
-	groupBy := []field.Expr{}
+	count := []field.Expr{}
+	countArr := []string{}
+
+	a := &[]map[string]interface{}{}
+
+	if q.Count != "" {
+		countArr = strings.Split(q.Count, ",")
+		count = aggregate.ExprsCountUser(countArr)
+	}
 
 	if q.GroupBy != "" {
 		groupByArr := strings.Split(q.GroupBy, ",")
-		groupBy = fields.UserSwitch(groupByArr, func(s string) bool { return false })
-	}
-
-	// filters
-	if q.Filter != "" {
-		s, err = filters.UserFilters(s, q.Filter)
+		groupBy := fields.UserSwitch(groupByArr, func(s string) bool { return false })
+		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(a)
 		if err != nil {
-			return nil, problems.UsersBadRequest()
+			return nil, problems.ServerError()
 		}
+		aggregate.AdjustSubfix(a, countArr)
+		return a, nil
 	}
 
-	if q.Count != "" {
-		var aggregateElems []*models.AggregateData
-		countArr := strings.Split(q.Count, ",")
-		if len(groupBy) == 0 {
-			aggregateElems, err = aggregate.CountUsers(s, countArr)
-		} else {
-			aggregateElems, err = aggregate.CountUsersGroupBy(s, countArr, groupBy)
-		}
-		if err != nil {
-			return nil, err
-		}
-		a = append(a, aggregateElems...)
+	b := map[string]interface{}{}
+	err := s.Select(count...).Scan(&b)
+	if err != nil {
+		return nil, problems.ServerError()
 	}
+	*a = append(*a, b)
+	aggregate.AdjustSubfix(a, countArr)
+	return a, nil
 
-	return
 }
 
 func (m *UserService) UpdateUser(b *models.UserUpdateBody) (*models.User, error) {

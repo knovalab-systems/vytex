@@ -60,7 +60,7 @@ func UserSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.CreatedAt)
 		case "updated_at":
 			exprs = append(exprs, table.UpdatedAt)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

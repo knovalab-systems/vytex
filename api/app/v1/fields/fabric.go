@@ -90,7 +90,7 @@ func fabricSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.DeletedAt)
 		case "composition_id":
 			exprs = append(exprs, table.CompositionID)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

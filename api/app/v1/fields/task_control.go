@@ -51,7 +51,7 @@ func TaskControlFields(s query.ITaskControlDo, queryFields string) query.ITaskCo
 		case "previous":
 			exprs = append(exprs, table.PreviousID)
 			s.Preload(table.Previous.RelationField)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 	}

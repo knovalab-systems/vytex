@@ -31,7 +31,7 @@ func orderStateSwitch(fields []string, function func(string) bool) []field.Expr 
 			exprs = append(exprs, table.Name)
 		case "value":
 			exprs = append(exprs, table.Value)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 
