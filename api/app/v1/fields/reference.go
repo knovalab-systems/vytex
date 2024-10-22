@@ -7,13 +7,13 @@ import (
 	"gorm.io/gen/field"
 )
 
-func ReferenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
-	referenceTable := query.Reference
-	referenceFields := strings.Split(fields, ",")
-	referenceExprs := []field.Expr{}
+func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceDo {
+	table := query.Reference
+	fields := strings.Split(queryFields, ",")
+	exprs := []field.Expr{}
 	colorsFields := []string{}
 
-	referenceSwitchFunc := func(v string) bool {
+	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "colors.") || v == "colors" {
 			colorsFields = append(colorsFields, strings.TrimPrefix(v, "colors."))
 			return true
@@ -22,15 +22,15 @@ func ReferenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 		return false
 	}
 
-	referenceExprs = append(referenceExprs, referenceSwitch(referenceFields, referenceSwitchFunc)...)
+	exprs = append(exprs, referenceSwitch(fields, switchFunc)...)
 
 	if len(colorsFields) != 0 {
-		referenceExprs = append(referenceExprs, referenceTable.ID)
+		exprs = append(exprs, table.ID)
 		colorsExprs := append(colorByReferenceSwitch(colorsFields, func(s string) bool { return false }), query.ColorByReference.ReferenceID)
-		s.Preload(referenceTable.Colors.Select(colorsExprs...))
+		s.Preload(table.Colors.Select(colorsExprs...))
 	}
 
-	return s.Select(referenceExprs...)
+	return s.Select(exprs...)
 }
 
 func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
@@ -64,7 +64,7 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 		case "back":
 			exprs = append(exprs, table.Back)
 
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 
@@ -89,7 +89,7 @@ func colorByReferenceSwitch(fields []string, function func(string) bool) []field
 			exprs = append(exprs, table.ID)
 		case "color_id":
 			exprs = append(exprs, table.ColorID)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

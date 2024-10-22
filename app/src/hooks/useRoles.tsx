@@ -17,7 +17,7 @@ async function rolesContextReq() {
 	return await client.request(
 		readRoles({
 			limit: -1,
-			fields: ['id', 'name', 'code'],
+			fields: ['id', 'name'],
 		}),
 	);
 }

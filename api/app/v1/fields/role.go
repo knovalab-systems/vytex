@@ -7,14 +7,14 @@ import (
 	"gorm.io/gen/field"
 )
 
-func RoleFields(s query.IRoleDo, fields string) query.IRoleDo {
-	fieldsArr := strings.Split(fields, ",")
-	exprs := roleSwitch(fieldsArr, func(s string) bool { return false })
+func RoleFields(s query.IRoleDo, queryFields string) query.IRoleDo {
+	fields := strings.Split(queryFields, ",")
+	exprs := RoleSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
 
-func roleSwitch(fields []string, function func(string) bool) []field.Expr {
+func RoleSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.Role
 	exprs := []field.Expr{}
 
@@ -33,7 +33,7 @@ func roleSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.Code)
 		case "policies":
 			exprs = append(exprs, table.Policies)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

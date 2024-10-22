@@ -7,9 +7,9 @@ import (
 	"gorm.io/gen/field"
 )
 
-func TaskControlStateFields(s query.ITaskControlStateDo, fields string) query.ITaskControlStateDo {
-	fieldsArr := strings.Split(fields, ",")
-	exprs := taskControlStateSwitch(fieldsArr, func(s string) bool { return false })
+func TaskControlStateFields(s query.ITaskControlStateDo, queryFields string) query.ITaskControlStateDo {
+	fields := strings.Split(queryFields, ",")
+	exprs := taskControlStateSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
@@ -31,7 +31,7 @@ func taskControlStateSwitch(fields []string, function func(string) bool) []field
 			exprs = append(exprs, table.Name)
 		case "value":
 			exprs = append(exprs, table.Value)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

@@ -7,9 +7,9 @@ import (
 	"gorm.io/gen/field"
 )
 
-func OrderStateFields(s query.IOrderStateDo, fields string) query.IOrderStateDo {
-	fieldsArr := strings.Split(fields, ",")
-	exprs := orderStateSwitch(fieldsArr, func(s string) bool { return false })
+func OrderStateFields(s query.IOrderStateDo, queryFields string) query.IOrderStateDo {
+	fields := strings.Split(queryFields, ",")
+	exprs := orderStateSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
@@ -31,7 +31,7 @@ func orderStateSwitch(fields []string, function func(string) bool) []field.Expr 
 			exprs = append(exprs, table.Name)
 		case "value":
 			exprs = append(exprs, table.Value)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

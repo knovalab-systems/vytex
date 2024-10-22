@@ -7,34 +7,33 @@ import (
 	"gorm.io/gen/field"
 )
 
-func UserFields(s query.IUserDo, fields string) query.IUserDo {
-	userTable := query.User
-	userFields := strings.Split(fields, ",")
-	userExprs := []field.Expr{}
-	roleFieldsArr := []string{}
+func UserFields(s query.IUserDo, queryFields string) query.IUserDo {
+	table := query.User
+	exprs := []field.Expr{}
+	roleFields := []string{}
 
 	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "role.") || v == "role" {
-			roleFieldsArr = append(roleFieldsArr, strings.TrimPrefix(v, "role."))
+			roleFields = append(roleFields, strings.TrimPrefix(v, "role."))
 			return true
 		}
 
 		return false
 	}
+	fields := strings.Split(queryFields, ",")
+	exprs = append(exprs, UserSwitch(fields, switchFunc)...)
 
-	userExprs = append(userExprs, userSwitch(userFields, switchFunc)...)
+	if len(roleFields) != 0 {
+		exprs = append(exprs, table.RoleId)
+		roleExprs := append(RoleSwitch(roleFields, func(s string) bool { return false }), query.Role.ID)
 
-	if len(roleFieldsArr) != 0 {
-		userExprs = append(userExprs, userTable.RoleId)
-		roleExprs := append(roleSwitch(roleFieldsArr, func(s string) bool { return false }), query.Role.ID)
-
-		s = s.Preload(userTable.Role.Select(roleExprs...))
+		s = s.Preload(table.Role.Select(roleExprs...))
 	}
 
-	return s.Select(userExprs...)
+	return s.Select(exprs...)
 }
 
-func userSwitch(fields []string, function func(string) bool) []field.Expr {
+func UserSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.User
 	exprs := []field.Expr{}
 
@@ -61,7 +60,7 @@ func userSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.CreatedAt)
 		case "updated_at":
 			exprs = append(exprs, table.UpdatedAt)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

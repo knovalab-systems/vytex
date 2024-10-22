@@ -231,7 +231,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, defaultError)
 		userController := UserController{UserRepository: &userMock}
 
 		// test
@@ -251,7 +251,7 @@ func TestAggregateUser(t *testing.T) {
 
 		// mocks
 		userMock := mocks.UserMock{}
-		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		userMock.On("AggregationUsers", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, nil)
 		userController := UserController{UserRepository: &userMock}
 
 		// test

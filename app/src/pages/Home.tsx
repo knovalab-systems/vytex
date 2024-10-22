@@ -1,8 +1,10 @@
 import { Match, Switch, lazy } from 'solid-js';
 import { queryClient } from '~/lib/queryClient';
+import CustomRoleHome from '~/modules/data/pages/CustomRoleHome';
 import { getMeQueryKey, type getMeType } from '~/requests/getMe';
 
 const NotPermission = lazy(() => import('~/pages/NotPermission'));
+const AdminHome = lazy(() => import('~/modules/data/pages/AdminHome'));
 
 function Home() {
 	const user = queryClient.getQueryData<getMeType>([getMeQueryKey]);
@@ -20,6 +22,12 @@ function Home() {
 		>
 			<Match when={!user?.role}>
 				<NotPermission />
+			</Match>
+			<Match when={!user?.role?.code}>
+				<CustomRoleHome />
+			</Match>
+			<Match when={user?.role?.code === 'admin'}>
+				<AdminHome />
 			</Match>
 		</Switch>
 	);
