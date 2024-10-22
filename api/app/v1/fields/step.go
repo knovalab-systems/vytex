@@ -7,12 +7,12 @@ import (
 	"gorm.io/gen/field"
 )
 
-func StepFields(s query.IStepDo, fields string) query.IStepDo {
-	fieldsArr := strings.Split(fields, ",")
+func StepFields(s query.IStepDo, queryFields string) query.IStepDo {
+	fields := strings.Split(queryFields, ",")
 	table := query.Step
 	var f []field.Expr
 
-	for _, v := range fieldsArr {
+	for _, v := range fields {
 
 		if strings.HasPrefix(v, "tasks.") {
 			s = s.Preload(table.Tasks)

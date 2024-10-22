@@ -7,15 +7,15 @@ import (
 	"gorm.io/gen/field"
 )
 
-func CustomFields(s query.ICustomDo, fields string) query.ICustomDo {
+func CustomFields(s query.ICustomDo, queryFields string) query.ICustomDo {
 
-	customTable := query.Custom
-	customExprs := []field.Expr{}
-	customFields := strings.Split(fields, ",")
+	table := query.Custom
+	exprs := []field.Expr{}
+	fields := strings.Split(queryFields, ",")
 	cancelFieldsArr := []string{}
 	createFieldsArr := []string{}
 
-	customSwitchFunc := func(v string) bool {
+	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "create_user.") || v == "create_user" {
 			cancelFieldsArr = append(cancelFieldsArr, strings.TrimPrefix(v, "create_user."))
 			return true
@@ -29,23 +29,23 @@ func CustomFields(s query.ICustomDo, fields string) query.ICustomDo {
 		return false
 	}
 
-	customExprs = append(customExprs, customSwitch(customFields, customSwitchFunc)...)
+	exprs = append(exprs, customSwitch(fields, switchFunc)...)
 
 	if len(cancelFieldsArr) != 0 {
-		customExprs = append(customExprs, customTable.CanceledBy)
-		cancelExprs := append(userSwitch(cancelFieldsArr, func(s string) bool { return false }), query.Color.ID)
+		exprs = append(exprs, table.CanceledBy)
+		cancelExprs := append(UserSwitch(cancelFieldsArr, func(s string) bool { return false }), query.Color.ID)
 
-		s = s.Preload(customTable.CancelUser.Select(cancelExprs...))
+		s = s.Preload(table.CancelUser.Select(cancelExprs...))
 	}
 
 	if len(createFieldsArr) != 0 {
-		customExprs = append(customExprs, customTable.CreatedBy)
-		createExprs := append(userSwitch(createFieldsArr, func(s string) bool { return false }), query.Supplier.ID)
+		exprs = append(exprs, table.CreatedBy)
+		createExprs := append(UserSwitch(createFieldsArr, func(s string) bool { return false }), query.Supplier.ID)
 
-		s = s.Preload(customTable.CreateUser.Select(createExprs...))
+		s = s.Preload(table.CreateUser.Select(createExprs...))
 	}
 
-	return s.Select(customExprs...)
+	return s.Select(exprs...)
 }
 
 func customSwitch(fields []string, function func(string) bool) []field.Expr {
@@ -74,7 +74,7 @@ func customSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.CreatedBy)
 		case "canceled_by":
 			exprs = append(exprs, table.CanceledBy)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

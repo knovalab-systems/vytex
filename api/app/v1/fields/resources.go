@@ -7,45 +7,45 @@ import (
 	"gorm.io/gen/field"
 )
 
-func ResourceFields(s query.IResourceDo, fields string) query.IResourceDo {
+func ResourceFields(s query.IResourceDo, queryFields string) query.IResourceDo {
 
-	resourceTable := query.Resource
-	resourceExprs := []field.Expr{}
-	resourceFields := strings.Split(fields, ",")
-	colorFieldsArr := []string{}
-	supplierFieldsArr := []string{}
+	table := query.Resource
+	exprs := []field.Expr{}
+	fields := strings.Split(queryFields, ",")
+	colorFields := []string{}
+	supplierFields := []string{}
 
-	resourceSwitchFunc := func(v string) bool {
+	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "color.") || v == "color" {
-			colorFieldsArr = append(colorFieldsArr, strings.TrimPrefix(v, "color."))
+			colorFields = append(colorFields, strings.TrimPrefix(v, "color."))
 			return true
 		}
 
 		if strings.HasPrefix(v, "supplier.") || v == "supplier" {
-			supplierFieldsArr = append(colorFieldsArr, strings.TrimPrefix(v, "supplier."))
+			supplierFields = append(colorFields, strings.TrimPrefix(v, "supplier."))
 			return true
 		}
 
 		return false
 	}
 
-	resourceExprs = append(resourceExprs, resourceSwitch(resourceFields, resourceSwitchFunc)...)
+	exprs = append(exprs, resourceSwitch(fields, switchFunc)...)
 
-	if len(colorFieldsArr) != 0 {
-		resourceExprs = append(resourceExprs, resourceTable.ColorID)
-		colorExprs := append(colorSwitch(colorFieldsArr, func(s string) bool { return false }), query.Color.ID)
+	if len(colorFields) != 0 {
+		exprs = append(exprs, table.ColorID)
+		colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
 
-		s = s.Preload(resourceTable.Color.Select(colorExprs...))
+		s = s.Preload(table.Color.Select(colorExprs...))
 	}
 
-	if len(supplierFieldsArr) != 0 {
-		resourceExprs = append(resourceExprs, resourceTable.SupplierID)
-		supplierExprs := append(supplierSwitch(supplierFieldsArr, func(s string) bool { return false }), query.Supplier.ID)
+	if len(supplierFields) != 0 {
+		exprs = append(exprs, table.SupplierID)
+		supplierExprs := append(supplierSwitch(supplierFields, func(s string) bool { return false }), query.Supplier.ID)
 
-		s = s.Preload(resourceTable.Supplier.Select(supplierExprs...))
+		s = s.Preload(table.Supplier.Select(supplierExprs...))
 	}
 
-	return s.Select(resourceExprs...)
+	return s.Select(exprs...)
 }
 
 func resourceSwitch(fields []string, function func(string) bool) []field.Expr {
@@ -78,7 +78,7 @@ func resourceSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.CreatedAt)
 		case "deleted_at":
 			exprs = append(exprs, table.DeletedAt)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

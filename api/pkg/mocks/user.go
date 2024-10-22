@@ -19,9 +19,9 @@ func (m *UserMock) SelectUser(req *models.UserRead) (*models.User, error) {
 	return &models.User{}, args.Error(0)
 }
 
-func (m *UserMock) AggregationUsers(req *models.AggregateQuery) ([]*models.AggregateData, error) {
+func (m *UserMock) AggregationUsers(req *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	args := m.Called(req)
-	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
+	return &[]map[string]interface{}{args.Get(0).(map[string]interface{})}, args.Error(1)
 }
 
 func (m *UserMock) UpdateUser(update *models.UserUpdateBody) (*models.User, error) {

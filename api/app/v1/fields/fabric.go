@@ -7,55 +7,55 @@ import (
 	"gorm.io/gen/field"
 )
 
-func FabricFields(s query.IFabricDo, fields string) query.IFabricDo {
+func FabricFields(s query.IFabricDo, queryFields string) query.IFabricDo {
 
-	fabricTable := query.Fabric
-	fabricExprs := []field.Expr{}
-	fabricFields := strings.Split(fields, ",")
-	colorFieldsArr := []string{}
-	supplierFieldsArr := []string{}
-	compositionFieldsArr := []string{}
+	table := query.Fabric
+	exprs := []field.Expr{}
+	fields := strings.Split(queryFields, ",")
+	colorFields := []string{}
+	supplierFields := []string{}
+	compositionFields := []string{}
 
-	fabricSwitchFunc := func(v string) bool {
+	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "color.") || v == "color" {
-			colorFieldsArr = append(colorFieldsArr, strings.TrimPrefix(v, "color."))
+			colorFields = append(colorFields, strings.TrimPrefix(v, "color."))
 			return true
 		}
 
 		if strings.HasPrefix(v, "supplier.") || v == "supplier" {
-			supplierFieldsArr = append(supplierFieldsArr, strings.TrimPrefix(v, "supplier."))
+			supplierFields = append(supplierFields, strings.TrimPrefix(v, "supplier."))
 			return true
 		}
 
 		if strings.HasPrefix(v, "composition.") || v == "composition" {
-			compositionFieldsArr = append(compositionFieldsArr, strings.TrimPrefix(v, "composition."))
+			compositionFields = append(compositionFields, strings.TrimPrefix(v, "composition."))
 			return true
 		}
 		return false
 	}
 
-	fabricExprs = append(fabricExprs, fabricSwitch(fabricFields, fabricSwitchFunc)...)
+	exprs = append(exprs, fabricSwitch(fields, switchFunc)...)
 
-	if len(colorFieldsArr) != 0 {
-		fabricExprs = append(fabricExprs, fabricTable.ColorID)
-		colorExprs := append(colorSwitch(colorFieldsArr, func(s string) bool { return false }), query.Color.ID)
+	if len(colorFields) != 0 {
+		exprs = append(exprs, table.ColorID)
+		colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
 
-		s = s.Preload(fabricTable.Color.Select(colorExprs...))
+		s = s.Preload(table.Color.Select(colorExprs...))
 	}
 
-	if len(supplierFieldsArr) != 0 {
-		fabricExprs = append(fabricExprs, fabricTable.SupplierID)
-		supplierExprs := append(supplierSwitch(supplierFieldsArr, func(s string) bool { return false }), query.Supplier.ID)
+	if len(supplierFields) != 0 {
+		exprs = append(exprs, table.SupplierID)
+		supplierExprs := append(supplierSwitch(supplierFields, func(s string) bool { return false }), query.Supplier.ID)
 
-		s = s.Preload(fabricTable.Supplier.Select(supplierExprs...))
+		s = s.Preload(table.Supplier.Select(supplierExprs...))
 	}
 
-	if len(compositionFieldsArr) != 0 {
-		fabricExprs = append(fabricExprs, fabricTable.CompositionID)
-		s = s.Preload(fabricTable.Supplier)
+	if len(compositionFields) != 0 {
+		exprs = append(exprs, table.CompositionID)
+		s = s.Preload(table.Supplier)
 	}
 
-	return s.Select(fabricExprs...)
+	return s.Select(exprs...)
 }
 
 func fabricSwitch(fields []string, function func(string) bool) []field.Expr {
@@ -90,7 +90,7 @@ func fabricSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.DeletedAt)
 		case "composition_id":
 			exprs = append(exprs, table.CompositionID)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 

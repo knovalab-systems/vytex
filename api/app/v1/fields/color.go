@@ -7,9 +7,9 @@ import (
 	"gorm.io/gen/field"
 )
 
-func ColorFields(s query.IColorDo, fields string) query.IColorDo {
-	fieldsArr := strings.Split(fields, ",")
-	exprs := colorSwitch(fieldsArr, func(s string) bool { return false })
+func ColorFields(s query.IColorDo, queryFields string) query.IColorDo {
+	fields := strings.Split(queryFields, ",")
+	exprs := colorSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
@@ -39,7 +39,7 @@ func colorSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.DeletedAt)
 		case "updated_at":
 			exprs = append(exprs, table.UpdatedAt)
-		default:
+		case "*":
 			exprs = append(exprs, table.ALL)
 		}
 	}
