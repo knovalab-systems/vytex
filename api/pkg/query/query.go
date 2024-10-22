@@ -24,9 +24,7 @@ var (
 	Fabric              *fabric
 	FabricByReference   *fabricByReference
 	Image               *image
-	ImageByReference    *imageByReference
 	Operation           *operation
-	OperationalList     *operationalList
 	Order               *order
 	OrderState          *orderState
 	Reference           *reference
@@ -52,9 +50,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Fabric = &Q.Fabric
 	FabricByReference = &Q.FabricByReference
 	Image = &Q.Image
-	ImageByReference = &Q.ImageByReference
 	Operation = &Q.Operation
-	OperationalList = &Q.OperationalList
 	Order = &Q.Order
 	OrderState = &Q.OrderState
 	Reference = &Q.Reference
@@ -81,9 +77,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		Fabric:              newFabric(db, opts...),
 		FabricByReference:   newFabricByReference(db, opts...),
 		Image:               newImage(db, opts...),
-		ImageByReference:    newImageByReference(db, opts...),
 		Operation:           newOperation(db, opts...),
-		OperationalList:     newOperationalList(db, opts...),
 		Order:               newOrder(db, opts...),
 		OrderState:          newOrderState(db, opts...),
 		Reference:           newReference(db, opts...),
@@ -111,9 +105,7 @@ type Query struct {
 	Fabric              fabric
 	FabricByReference   fabricByReference
 	Image               image
-	ImageByReference    imageByReference
 	Operation           operation
-	OperationalList     operationalList
 	Order               order
 	OrderState          orderState
 	Reference           reference
@@ -142,9 +134,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		Fabric:              q.Fabric.clone(db),
 		FabricByReference:   q.FabricByReference.clone(db),
 		Image:               q.Image.clone(db),
-		ImageByReference:    q.ImageByReference.clone(db),
 		Operation:           q.Operation.clone(db),
-		OperationalList:     q.OperationalList.clone(db),
 		Order:               q.Order.clone(db),
 		OrderState:          q.OrderState.clone(db),
 		Reference:           q.Reference.clone(db),
@@ -180,9 +170,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		Fabric:              q.Fabric.replaceDB(db),
 		FabricByReference:   q.FabricByReference.replaceDB(db),
 		Image:               q.Image.replaceDB(db),
-		ImageByReference:    q.ImageByReference.replaceDB(db),
 		Operation:           q.Operation.replaceDB(db),
-		OperationalList:     q.OperationalList.replaceDB(db),
 		Order:               q.Order.replaceDB(db),
 		OrderState:          q.OrderState.replaceDB(db),
 		Reference:           q.Reference.replaceDB(db),
@@ -208,9 +196,7 @@ type queryCtx struct {
 	Fabric              IFabricDo
 	FabricByReference   IFabricByReferenceDo
 	Image               IImageDo
-	ImageByReference    IImageByReferenceDo
 	Operation           IOperationDo
-	OperationalList     IOperationalListDo
 	Order               IOrderDo
 	OrderState          IOrderStateDo
 	Reference           IReferenceDo
@@ -236,9 +222,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		Fabric:              q.Fabric.WithContext(ctx),
 		FabricByReference:   q.FabricByReference.WithContext(ctx),
 		Image:               q.Image.WithContext(ctx),
-		ImageByReference:    q.ImageByReference.WithContext(ctx),
 		Operation:           q.Operation.WithContext(ctx),
-		OperationalList:     q.OperationalList.WithContext(ctx),
 		Order:               q.Order.WithContext(ctx),
 		OrderState:          q.OrderState.WithContext(ctx),
 		Reference:           q.Reference.WithContext(ctx),

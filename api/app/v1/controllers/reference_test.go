@@ -425,10 +425,10 @@ func TestCreateReference(t *testing.T) {
 		}
 	})
 
-	t.Run("Fail binding, operational list", func(t *testing.T) {
+	t.Run("Fail binding, operations", func(t *testing.T) {
 		// context
 		body := new(bytes.Buffer)
-		json.NewEncoder(body).Encode(map[string]any{"operational_list": 123})
+		json.NewEncoder(body).Encode(map[string]any{"operations": 123})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()
@@ -458,8 +458,8 @@ func TestCreateReference(t *testing.T) {
 			"colors": []map[string]any{{"color_id": 1,
 				"fabrics":   []map[string]any{{"fabric_id": 1}},
 				"resources": []map[string]any{{"resource_id": 1}}}},
-			"pieces":           []map[string]any{{"image_id": "31b63ffb-15f5-48d7-9a24-587f437f07ec"}},
-			"operational_list": map[string]any{"operations": []map[string]any{{"description": "test operation"}}}})
+			"pieces":     []map[string]any{{"image_id": "31b63ffb-15f5-48d7-9a24-587f437f07ec"}},
+			"operations": []map[string]any{{"description": "test operation"}}})
 		req := httptest.NewRequest(http.MethodPost, "/", body)
 		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 		rec := httptest.NewRecorder()

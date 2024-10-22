@@ -33,11 +33,10 @@ func main() {
 		models.Color{}, models.Resource{}, models.Fabric{},
 		models.Reference{}, models.ColorByReference{},
 		models.ResourceByReference{}, models.FabricByReference{},
-		&models.ImageByReference{}, &models.OperationalList{}, &models.Operation{},
 		models.Image{}, models.Supplier{}, models.Composition{},
 		models.Custom{}, models.Order{}, models.TimeByTask{}, models.Role{},
 		models.OrderState{}, models.Step{}, models.Task{}, models.TaskControl{},
-		models.TaskControlState{})
+		models.TaskControlState{}, models.Operation{})
 
 	// Generate the code
 	g.Execute()

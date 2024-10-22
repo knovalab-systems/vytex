@@ -132,38 +132,6 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 		}{
 			RelationField: field.NewRelation("Reference.TimeByTask", "models.TimeByTask"),
 		},
-		OperationalList: struct {
-			field.RelationField
-			Reference struct {
-				field.RelationField
-			}
-			Operations struct {
-				field.RelationField
-				OperationalList struct {
-					field.RelationField
-				}
-			}
-		}{
-			RelationField: field.NewRelation("Reference.OperationalList", "models.OperationalList"),
-			Reference: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("Reference.OperationalList.Reference", "models.Reference"),
-			},
-			Operations: struct {
-				field.RelationField
-				OperationalList struct {
-					field.RelationField
-				}
-			}{
-				RelationField: field.NewRelation("Reference.OperationalList.Operations", "models.Operation"),
-				OperationalList: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("Reference.OperationalList.Operations.OperationalList", "models.OperationalList"),
-				},
-			},
-		},
 		Colors: struct {
 			field.RelationField
 			Color struct {
@@ -206,21 +174,18 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 			Image struct {
 				field.RelationField
 			}
-			Reference struct {
-				field.RelationField
-			}
 		}{
-			RelationField: field.NewRelation("Reference.Pieces", "models.ImageByReference"),
+			RelationField: field.NewRelation("Reference.Pieces", "models.Piece"),
 			Image: struct {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("Reference.Pieces.Image", "models.Image"),
 			},
-			Reference: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("Reference.Pieces.Reference", "models.Reference"),
-			},
+		},
+		Operations: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Reference.Operations", "models.Operation"),
 		},
 	}
 
@@ -557,18 +522,6 @@ type colorByReferenceBelongsToReference struct {
 	TimeByTask struct {
 		field.RelationField
 	}
-	OperationalList struct {
-		field.RelationField
-		Reference struct {
-			field.RelationField
-		}
-		Operations struct {
-			field.RelationField
-			OperationalList struct {
-				field.RelationField
-			}
-		}
-	}
 	Colors struct {
 		field.RelationField
 		Color struct {
@@ -589,9 +542,9 @@ type colorByReferenceBelongsToReference struct {
 		Image struct {
 			field.RelationField
 		}
-		Reference struct {
-			field.RelationField
-		}
+	}
+	Operations struct {
+		field.RelationField
 	}
 }
 

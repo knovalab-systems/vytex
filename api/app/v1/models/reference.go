@@ -8,23 +8,22 @@ import (
 )
 
 type Reference struct {
-	ID                uint               `json:"id,omitempty" gorm:"primary_key"`
-	Code              string             `json:"code,omitempty"`
-	CreatedAt         *time.Time         `json:"created_at,omitempty"`
-	DeletedAt         *gorm.DeletedAt    `json:"deleted_at,omitempty" gorm:"index"`
-	CreatedBy         string             `json:"created_by,omitempty"`
-	Track             string             `json:"track,omitempty" gorm:"type:uuid"`
-	User              *User              `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
-	Front             string             `json:"front,omitempty"`
-	FrontImage        *Image             `json:"front_image,omitempty" gorm:"foreignKey:Front"`
-	Back              string             `json:"back,omitempty"`
-	BackImage         *Image             `json:"back_image,omitempty" gorm:"foreignKey:Back"`
-	TimeByTaskID      uint               `json:"time_by_task_id,omitempty"`
-	TimeByTask        *TimeByTask        `json:"time_by_task,omitempty"`
-	Colors            []ColorByReference `json:"colors,omitempty"`
-	Pieces            []ImageByReference `json:"pieces,omitempty"`
-	OperationalListID uint               `json:"operational_list_id,omitempty"`
-	OperationalList   *OperationalList   `json:"operational_list,omitempty"`
+	ID           uint               `json:"id,omitempty" gorm:"primary_key"`
+	Code         string             `json:"code,omitempty"`
+	CreatedAt    *time.Time         `json:"created_at,omitempty"`
+	DeletedAt    *gorm.DeletedAt    `json:"deleted_at,omitempty" gorm:"index"`
+	CreatedBy    string             `json:"created_by,omitempty"`
+	Track        string             `json:"track,omitempty" gorm:"type:uuid"`
+	User         *User              `json:"user,omitempty" gorm:"foreignKey:CreatedBy"`
+	Front        string             `json:"front,omitempty"`
+	FrontImage   *Image             `json:"front_image,omitempty" gorm:"foreignKey:Front"`
+	Back         string             `json:"back,omitempty"`
+	BackImage    *Image             `json:"back_image,omitempty" gorm:"foreignKey:Back"`
+	TimeByTaskID uint               `json:"time_by_task_id,omitempty"`
+	TimeByTask   *TimeByTask        `json:"time_by_task,omitempty"`
+	Colors       []ColorByReference `json:"colors,omitempty"`
+	Pieces       []Piece            `json:"pieces,omitempty" gorm:"many2many:reference_pieces"`
+	Operations   []Operation        `json:"operations,omitempty" gorm:"many2many:reference_operations"`
 }
 
 // BeforeCreate will set a UUID
@@ -33,14 +32,6 @@ func (b *Reference) BeforeCreate(tx *gorm.DB) (err error) {
 		b.Track = uuid.New().String()
 	}
 	return nil
-}
-
-type ImageByReference struct {
-	ID          uint       `json:"id,omitempty" gorm:"primary_key"`
-	ImageID     string     `json:"image_id,omitempty"`
-	Image       *Image     `json:"image,omitempty"`
-	ReferenceID uint       `json:"reference_id,omitempty"`
-	Reference   *Reference `json:"reference,omitempty"`
 }
 
 type ColorByReference struct {
@@ -93,17 +84,13 @@ func (b *FabricByReference) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type ReferenceCreateBody struct {
-	Code            string                   `json:"code" validate:"required"`
-	Front           string                   `json:"front" validate:"required,uuid"`
-	Back            string                   `json:"back" validate:"required,uuid"`
-	Colors          []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
-	Pieces          []PieceByReferenceCreate `json:"pieces" validate:"required,min=1,dive"`
-	OperationalList OperationalListCreate    `json:"operational_list" validate:"required"` // Asegúrate de que esto esté definido
-	CreatedBy       string                   `json:"create_by" validate:"required,uuid"`
-}
-
-type OperationalListCreate struct {
-	Operations []OperationCreate `json:"operations" validate:"required,min=1,dive"`
+	Code       string                   `json:"code" validate:"required"`
+	Front      string                   `json:"front" validate:"required,uuid"`
+	Back       string                   `json:"back" validate:"required,uuid"`
+	Colors     []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
+	Pieces     []PieceByReferenceCreate `json:"pieces" validate:"required,min=1,dive"`
+	Operations []OperationCreate        `json:"operations" validate:"required,min=1,dive"`
+	CreatedBy  string                   `json:"create_by" validate:"required,uuid"`
 }
 
 type OperationCreate struct {

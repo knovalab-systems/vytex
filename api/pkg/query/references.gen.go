@@ -36,11 +36,15 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 	_reference.Front = field.NewString(tableName, "front")
 	_reference.Back = field.NewString(tableName, "back")
 	_reference.TimeByTaskID = field.NewUint(tableName, "time_by_task_id")
-	_reference.OperationalListID = field.NewUint(tableName, "operational_list_id")
-	_reference.OperationalList = referenceHasOneOperationalList{
+	_reference.Colors = referenceHasManyColors{
 		db: db.Session(&gorm.Session{}),
 
-		RelationField: field.NewRelation("OperationalList", "models.OperationalList"),
+		RelationField: field.NewRelation("Colors", "models.ColorByReference"),
+		Color: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Colors.Color", "models.Color"),
+		},
 		Reference: struct {
 			field.RelationField
 			User struct {
@@ -58,265 +62,153 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 			TimeByTask struct {
 				field.RelationField
 			}
-			OperationalList struct {
-				field.RelationField
-			}
 			Colors struct {
 				field.RelationField
-				Color struct {
-					field.RelationField
-				}
-				Reference struct {
-					field.RelationField
-				}
-				Resources struct {
-					field.RelationField
-					Resource struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}
-				}
-				Fabrics struct {
-					field.RelationField
-					Fabric struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}
-				}
 			}
 			Pieces struct {
 				field.RelationField
 				Image struct {
 					field.RelationField
 				}
-				Reference struct {
-					field.RelationField
-				}
+			}
+			Operations struct {
+				field.RelationField
 			}
 		}{
-			RelationField: field.NewRelation("OperationalList.Reference", "models.Reference"),
+			RelationField: field.NewRelation("Colors.Reference", "models.Reference"),
 			User: struct {
 				field.RelationField
 				Role struct {
 					field.RelationField
 				}
 			}{
-				RelationField: field.NewRelation("OperationalList.Reference.User", "models.User"),
+				RelationField: field.NewRelation("Colors.Reference.User", "models.User"),
 				Role: struct {
 					field.RelationField
 				}{
-					RelationField: field.NewRelation("OperationalList.Reference.User.Role", "models.Role"),
+					RelationField: field.NewRelation("Colors.Reference.User.Role", "models.Role"),
 				},
 			},
 			FrontImage: struct {
 				field.RelationField
 			}{
-				RelationField: field.NewRelation("OperationalList.Reference.FrontImage", "models.Image"),
+				RelationField: field.NewRelation("Colors.Reference.FrontImage", "models.Image"),
 			},
 			BackImage: struct {
 				field.RelationField
 			}{
-				RelationField: field.NewRelation("OperationalList.Reference.BackImage", "models.Image"),
+				RelationField: field.NewRelation("Colors.Reference.BackImage", "models.Image"),
 			},
 			TimeByTask: struct {
 				field.RelationField
 			}{
-				RelationField: field.NewRelation("OperationalList.Reference.TimeByTask", "models.TimeByTask"),
-			},
-			OperationalList: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.OperationalList", "models.OperationalList"),
+				RelationField: field.NewRelation("Colors.Reference.TimeByTask", "models.TimeByTask"),
 			},
 			Colors: struct {
 				field.RelationField
-				Color struct {
-					field.RelationField
-				}
-				Reference struct {
-					field.RelationField
-				}
-				Resources struct {
-					field.RelationField
-					Resource struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}
-				}
-				Fabrics struct {
-					field.RelationField
-					Fabric struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}
-				}
 			}{
-				RelationField: field.NewRelation("OperationalList.Reference.Colors", "models.ColorByReference"),
-				Color: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Color", "models.Color"),
-				},
-				Reference: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Reference", "models.Reference"),
-				},
-				Resources: struct {
-					field.RelationField
-					Resource struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources", "models.ResourceByReference"),
-					Resource: struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}{
-						RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources.Resource", "models.Resource"),
-						Color: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources.Resource.Color", "models.Color"),
-						},
-						Supplier: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources.Resource.Supplier", "models.Supplier"),
-						},
-					},
-				},
-				Fabrics: struct {
-					field.RelationField
-					Fabric struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics", "models.FabricByReference"),
-					Fabric: struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}{
-						RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric", "models.Fabric"),
-						Color: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric.Color", "models.Color"),
-						},
-						Supplier: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric.Supplier", "models.Supplier"),
-						},
-						Composition: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric.Composition", "models.Composition"),
-						},
-					},
-				},
+				RelationField: field.NewRelation("Colors.Reference.Colors", "models.ColorByReference"),
 			},
 			Pieces: struct {
 				field.RelationField
 				Image struct {
 					field.RelationField
 				}
-				Reference struct {
-					field.RelationField
-				}
 			}{
-				RelationField: field.NewRelation("OperationalList.Reference.Pieces", "models.ImageByReference"),
+				RelationField: field.NewRelation("Colors.Reference.Pieces", "models.Piece"),
 				Image: struct {
 					field.RelationField
 				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Pieces.Image", "models.Image"),
-				},
-				Reference: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Pieces.Reference", "models.Reference"),
+					RelationField: field.NewRelation("Colors.Reference.Pieces.Image", "models.Image"),
 				},
 			},
-		},
-		Operations: struct {
-			field.RelationField
-			OperationalList struct {
-				field.RelationField
-			}
-		}{
-			RelationField: field.NewRelation("OperationalList.Operations", "models.Operation"),
-			OperationalList: struct {
+			Operations: struct {
 				field.RelationField
 			}{
-				RelationField: field.NewRelation("OperationalList.Operations.OperationalList", "models.OperationalList"),
+				RelationField: field.NewRelation("Colors.Reference.Operations", "models.Operation"),
 			},
 		},
-	}
-
-	_reference.Colors = referenceHasManyColors{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("Colors", "models.ColorByReference"),
-	}
-
-	_reference.Pieces = referenceHasManyPieces{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("Pieces", "models.ImageByReference"),
+		Resources: struct {
+			field.RelationField
+			Resource struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+			}
+		}{
+			RelationField: field.NewRelation("Colors.Resources", "models.ResourceByReference"),
+			Resource: struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Colors.Resources.Resource", "models.Resource"),
+				Color: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Resources.Resource.Color", "models.Color"),
+				},
+				Supplier: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Resources.Resource.Supplier", "models.Supplier"),
+				},
+			},
+		},
+		Fabrics: struct {
+			field.RelationField
+			Fabric struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+				Composition struct {
+					field.RelationField
+				}
+			}
+		}{
+			RelationField: field.NewRelation("Colors.Fabrics", "models.FabricByReference"),
+			Fabric: struct {
+				field.RelationField
+				Color struct {
+					field.RelationField
+				}
+				Supplier struct {
+					field.RelationField
+				}
+				Composition struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Colors.Fabrics.Fabric", "models.Fabric"),
+				Color: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Fabrics.Fabric.Color", "models.Color"),
+				},
+				Supplier: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Fabrics.Fabric.Supplier", "models.Supplier"),
+				},
+				Composition: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Fabrics.Fabric.Composition", "models.Composition"),
+				},
+			},
+		},
 	}
 
 	_reference.User = referenceBelongsToUser{
@@ -343,6 +235,18 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 		RelationField: field.NewRelation("TimeByTask", "models.TimeByTask"),
 	}
 
+	_reference.Pieces = referenceManyToManyPieces{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Pieces", "models.Piece"),
+	}
+
+	_reference.Operations = referenceManyToManyOperations{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Operations", "models.Operation"),
+	}
+
 	_reference.fillFieldMap()
 
 	return _reference
@@ -351,22 +255,17 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 type reference struct {
 	referenceDo
 
-	ALL               field.Asterisk
-	ID                field.Uint
-	Code              field.String
-	CreatedAt         field.Time
-	DeletedAt         field.Field
-	CreatedBy         field.String
-	Track             field.String
-	Front             field.String
-	Back              field.String
-	TimeByTaskID      field.Uint
-	OperationalListID field.Uint
-	OperationalList   referenceHasOneOperationalList
-
-	Colors referenceHasManyColors
-
-	Pieces referenceHasManyPieces
+	ALL          field.Asterisk
+	ID           field.Uint
+	Code         field.String
+	CreatedAt    field.Time
+	DeletedAt    field.Field
+	CreatedBy    field.String
+	Track        field.String
+	Front        field.String
+	Back         field.String
+	TimeByTaskID field.Uint
+	Colors       referenceHasManyColors
 
 	User referenceBelongsToUser
 
@@ -375,6 +274,10 @@ type reference struct {
 	BackImage referenceBelongsToBackImage
 
 	TimeByTask referenceBelongsToTimeByTask
+
+	Pieces referenceManyToManyPieces
+
+	Operations referenceManyToManyOperations
 
 	fieldMap map[string]field.Expr
 }
@@ -400,7 +303,6 @@ func (r *reference) updateTableName(table string) *reference {
 	r.Front = field.NewString(table, "front")
 	r.Back = field.NewString(table, "back")
 	r.TimeByTaskID = field.NewUint(table, "time_by_task_id")
-	r.OperationalListID = field.NewUint(table, "operational_list_id")
 
 	r.fillFieldMap()
 
@@ -417,7 +319,7 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 17)
+	r.fieldMap = make(map[string]field.Expr, 16)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["created_at"] = r.CreatedAt
@@ -427,7 +329,6 @@ func (r *reference) fillFieldMap() {
 	r.fieldMap["front"] = r.Front
 	r.fieldMap["back"] = r.Back
 	r.fieldMap["time_by_task_id"] = r.TimeByTaskID
-	r.fieldMap["operational_list_id"] = r.OperationalListID
 
 }
 
@@ -441,11 +342,14 @@ func (r reference) replaceDB(db *gorm.DB) reference {
 	return r
 }
 
-type referenceHasOneOperationalList struct {
+type referenceHasManyColors struct {
 	db *gorm.DB
 
 	field.RelationField
 
+	Color struct {
+		field.RelationField
+	}
 	Reference struct {
 		field.RelationField
 		User struct {
@@ -463,132 +367,46 @@ type referenceHasOneOperationalList struct {
 		TimeByTask struct {
 			field.RelationField
 		}
-		OperationalList struct {
-			field.RelationField
-		}
 		Colors struct {
 			field.RelationField
-			Color struct {
-				field.RelationField
-			}
-			Reference struct {
-				field.RelationField
-			}
-			Resources struct {
-				field.RelationField
-				Resource struct {
-					field.RelationField
-					Color struct {
-						field.RelationField
-					}
-					Supplier struct {
-						field.RelationField
-					}
-				}
-			}
-			Fabrics struct {
-				field.RelationField
-				Fabric struct {
-					field.RelationField
-					Color struct {
-						field.RelationField
-					}
-					Supplier struct {
-						field.RelationField
-					}
-					Composition struct {
-						field.RelationField
-					}
-				}
-			}
 		}
 		Pieces struct {
 			field.RelationField
 			Image struct {
 				field.RelationField
 			}
-			Reference struct {
+		}
+		Operations struct {
+			field.RelationField
+		}
+	}
+	Resources struct {
+		field.RelationField
+		Resource struct {
+			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Supplier struct {
 				field.RelationField
 			}
 		}
 	}
-	Operations struct {
+	Fabrics struct {
 		field.RelationField
-		OperationalList struct {
+		Fabric struct {
 			field.RelationField
+			Color struct {
+				field.RelationField
+			}
+			Supplier struct {
+				field.RelationField
+			}
+			Composition struct {
+				field.RelationField
+			}
 		}
 	}
-}
-
-func (a referenceHasOneOperationalList) Where(conds ...field.Expr) *referenceHasOneOperationalList {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a referenceHasOneOperationalList) WithContext(ctx context.Context) *referenceHasOneOperationalList {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a referenceHasOneOperationalList) Session(session *gorm.Session) *referenceHasOneOperationalList {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a referenceHasOneOperationalList) Model(m *models.Reference) *referenceHasOneOperationalListTx {
-	return &referenceHasOneOperationalListTx{a.db.Model(m).Association(a.Name())}
-}
-
-type referenceHasOneOperationalListTx struct{ tx *gorm.Association }
-
-func (a referenceHasOneOperationalListTx) Find() (result *models.OperationalList, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a referenceHasOneOperationalListTx) Append(values ...*models.OperationalList) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a referenceHasOneOperationalListTx) Replace(values ...*models.OperationalList) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a referenceHasOneOperationalListTx) Delete(values ...*models.OperationalList) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a referenceHasOneOperationalListTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a referenceHasOneOperationalListTx) Count() int64 {
-	return a.tx.Count()
-}
-
-type referenceHasManyColors struct {
-	db *gorm.DB
-
-	field.RelationField
 }
 
 func (a referenceHasManyColors) Where(conds ...field.Expr) *referenceHasManyColors {
@@ -653,77 +471,6 @@ func (a referenceHasManyColorsTx) Clear() error {
 }
 
 func (a referenceHasManyColorsTx) Count() int64 {
-	return a.tx.Count()
-}
-
-type referenceHasManyPieces struct {
-	db *gorm.DB
-
-	field.RelationField
-}
-
-func (a referenceHasManyPieces) Where(conds ...field.Expr) *referenceHasManyPieces {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a referenceHasManyPieces) WithContext(ctx context.Context) *referenceHasManyPieces {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a referenceHasManyPieces) Session(session *gorm.Session) *referenceHasManyPieces {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a referenceHasManyPieces) Model(m *models.Reference) *referenceHasManyPiecesTx {
-	return &referenceHasManyPiecesTx{a.db.Model(m).Association(a.Name())}
-}
-
-type referenceHasManyPiecesTx struct{ tx *gorm.Association }
-
-func (a referenceHasManyPiecesTx) Find() (result []*models.ImageByReference, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a referenceHasManyPiecesTx) Append(values ...*models.ImageByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a referenceHasManyPiecesTx) Replace(values ...*models.ImageByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a referenceHasManyPiecesTx) Delete(values ...*models.ImageByReference) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a referenceHasManyPiecesTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a referenceHasManyPiecesTx) Count() int64 {
 	return a.tx.Count()
 }
 
@@ -1008,6 +755,148 @@ func (a referenceBelongsToTimeByTaskTx) Clear() error {
 }
 
 func (a referenceBelongsToTimeByTaskTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceManyToManyPieces struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceManyToManyPieces) Where(conds ...field.Expr) *referenceManyToManyPieces {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceManyToManyPieces) WithContext(ctx context.Context) *referenceManyToManyPieces {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceManyToManyPieces) Session(session *gorm.Session) *referenceManyToManyPieces {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceManyToManyPieces) Model(m *models.Reference) *referenceManyToManyPiecesTx {
+	return &referenceManyToManyPiecesTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceManyToManyPiecesTx struct{ tx *gorm.Association }
+
+func (a referenceManyToManyPiecesTx) Find() (result []*models.Piece, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceManyToManyPiecesTx) Append(values ...*models.Piece) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceManyToManyPiecesTx) Replace(values ...*models.Piece) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceManyToManyPiecesTx) Delete(values ...*models.Piece) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceManyToManyPiecesTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceManyToManyPiecesTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceManyToManyOperations struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceManyToManyOperations) Where(conds ...field.Expr) *referenceManyToManyOperations {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceManyToManyOperations) WithContext(ctx context.Context) *referenceManyToManyOperations {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceManyToManyOperations) Session(session *gorm.Session) *referenceManyToManyOperations {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceManyToManyOperations) Model(m *models.Reference) *referenceManyToManyOperationsTx {
+	return &referenceManyToManyOperationsTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceManyToManyOperationsTx struct{ tx *gorm.Association }
+
+func (a referenceManyToManyOperationsTx) Find() (result []*models.Operation, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceManyToManyOperationsTx) Append(values ...*models.Operation) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceManyToManyOperationsTx) Replace(values ...*models.Operation) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceManyToManyOperationsTx) Delete(values ...*models.Operation) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceManyToManyOperationsTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceManyToManyOperationsTx) Count() int64 {
 	return a.tx.Count()
 }
 

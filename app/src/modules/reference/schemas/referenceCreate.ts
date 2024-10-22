@@ -47,9 +47,9 @@ export const ReferenceCreateSchema = object({
 			),
 		}),
 	),
-	operational: array(
+	operations: array(
 		object({
-			description: pipe(string('Ingresa una descripción.'), minLength(1, 'La descripción no puede estar vacía.')),
+			description: pipe(string('Ingresa una descripción.'), minLength(1, 'Ingresa la descripción de la operación.')),
 		}),
 	),
 });

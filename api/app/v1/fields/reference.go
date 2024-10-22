@@ -35,13 +35,6 @@ func ReferenceFields(s query.IReferenceDo, fields string) query.IReferenceDo {
 		s.Preload(referenceTable.Colors.Select(colorsExprs...))
 	}
 
-
-	if len(piecesFields) != 0 {
-		referenceExprs = append(referenceExprs, referenceTable.ID)
-		piecesExprs := append(imageByReferenceSwitch(piecesFields, func(s string) bool { return false }), query.ImageByReference.ReferenceID)
-		s.Preload(referenceTable.Pieces.Select(piecesExprs...))
-	}
-
 	return s.Select(referenceExprs...)
 }
 
@@ -75,36 +68,6 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.TimeByTaskID)
 		case "back":
 			exprs = append(exprs, table.Back)
-		case "operational_list_id":
-			exprs = append(exprs, table.OperationalListID)
-		default:
-			exprs = append(exprs, table.ALL)
-		}
-
-	}
-
-	return exprs
-}
-
-func imageByReferenceSwitch(fields []string, function func(string) bool) []field.Expr {
-
-	table := query.ImageByReference
-	exprs := []field.Expr{}
-
-	for _, v := range fields {
-
-		if function(v) {
-			continue
-		}
-
-		switch v {
-		case "id":
-			exprs = append(exprs, table.ID)
-		case "image_id":
-			exprs = append(exprs, table.ImageID)
-		case "reference_id":
-			exprs = append(exprs, table.ReferenceID)
-
 		default:
 			exprs = append(exprs, table.ALL)
 		}

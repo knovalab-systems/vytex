@@ -7,7 +7,6 @@ package query
 import (
 	"context"
 
-	"github.com/knovalab-systems/vytex/app/v1/models"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 	"gorm.io/gorm/schema"
@@ -16,6 +15,8 @@ import (
 	"gorm.io/gen/field"
 
 	"gorm.io/plugin/dbresolver"
+
+	"github.com/knovalab-systems/vytex/app/v1/models"
 )
 
 func newOperation(db *gorm.DB, opts ...gen.DOOption) operation {
@@ -27,277 +28,7 @@ func newOperation(db *gorm.DB, opts ...gen.DOOption) operation {
 	tableName := _operation.operationDo.TableName()
 	_operation.ALL = field.NewAsterisk(tableName)
 	_operation.ID = field.NewUint(tableName, "id")
-	_operation.OperationalListID = field.NewUint(tableName, "operational_list_id")
 	_operation.Description = field.NewString(tableName, "description")
-	_operation.OperationalList = operationBelongsToOperationalList{
-		db: db.Session(&gorm.Session{}),
-
-		RelationField: field.NewRelation("OperationalList", "models.OperationalList"),
-		Reference: struct {
-			field.RelationField
-			User struct {
-				field.RelationField
-				Role struct {
-					field.RelationField
-				}
-			}
-			FrontImage struct {
-				field.RelationField
-			}
-			BackImage struct {
-				field.RelationField
-			}
-			TimeByTask struct {
-				field.RelationField
-			}
-			OperationalList struct {
-				field.RelationField
-			}
-			Colors struct {
-				field.RelationField
-				Color struct {
-					field.RelationField
-				}
-				Reference struct {
-					field.RelationField
-				}
-				Resources struct {
-					field.RelationField
-					Resource struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}
-				}
-				Fabrics struct {
-					field.RelationField
-					Fabric struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}
-				}
-			}
-			Pieces struct {
-				field.RelationField
-				Image struct {
-					field.RelationField
-				}
-				Reference struct {
-					field.RelationField
-				}
-			}
-		}{
-			RelationField: field.NewRelation("OperationalList.Reference", "models.Reference"),
-			User: struct {
-				field.RelationField
-				Role struct {
-					field.RelationField
-				}
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.User", "models.User"),
-				Role: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.User.Role", "models.Role"),
-				},
-			},
-			FrontImage: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.FrontImage", "models.Image"),
-			},
-			BackImage: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.BackImage", "models.Image"),
-			},
-			TimeByTask: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.TimeByTask", "models.TimeByTask"),
-			},
-			OperationalList: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.OperationalList", "models.OperationalList"),
-			},
-			Colors: struct {
-				field.RelationField
-				Color struct {
-					field.RelationField
-				}
-				Reference struct {
-					field.RelationField
-				}
-				Resources struct {
-					field.RelationField
-					Resource struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}
-				}
-				Fabrics struct {
-					field.RelationField
-					Fabric struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}
-				}
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.Colors", "models.ColorByReference"),
-				Color: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Color", "models.Color"),
-				},
-				Reference: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Reference", "models.Reference"),
-				},
-				Resources: struct {
-					field.RelationField
-					Resource struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources", "models.ResourceByReference"),
-					Resource: struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-					}{
-						RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources.Resource", "models.Resource"),
-						Color: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources.Resource.Color", "models.Color"),
-						},
-						Supplier: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Resources.Resource.Supplier", "models.Supplier"),
-						},
-					},
-				},
-				Fabrics: struct {
-					field.RelationField
-					Fabric struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics", "models.FabricByReference"),
-					Fabric: struct {
-						field.RelationField
-						Color struct {
-							field.RelationField
-						}
-						Supplier struct {
-							field.RelationField
-						}
-						Composition struct {
-							field.RelationField
-						}
-					}{
-						RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric", "models.Fabric"),
-						Color: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric.Color", "models.Color"),
-						},
-						Supplier: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric.Supplier", "models.Supplier"),
-						},
-						Composition: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("OperationalList.Reference.Colors.Fabrics.Fabric.Composition", "models.Composition"),
-						},
-					},
-				},
-			},
-			Pieces: struct {
-				field.RelationField
-				Image struct {
-					field.RelationField
-				}
-				Reference struct {
-					field.RelationField
-				}
-			}{
-				RelationField: field.NewRelation("OperationalList.Reference.Pieces", "models.ImageByReference"),
-				Image: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Pieces.Image", "models.Image"),
-				},
-				Reference: struct {
-					field.RelationField
-				}{
-					RelationField: field.NewRelation("OperationalList.Reference.Pieces.Reference", "models.Reference"),
-				},
-			},
-		},
-		Operations: struct {
-			field.RelationField
-			OperationalList struct {
-				field.RelationField
-			}
-		}{
-			RelationField: field.NewRelation("OperationalList.Operations", "models.Operation"),
-			OperationalList: struct {
-				field.RelationField
-			}{
-				RelationField: field.NewRelation("OperationalList.Operations.OperationalList", "models.OperationalList"),
-			},
-		},
-	}
 
 	_operation.fillFieldMap()
 
@@ -307,11 +38,9 @@ func newOperation(db *gorm.DB, opts ...gen.DOOption) operation {
 type operation struct {
 	operationDo
 
-	ALL               field.Asterisk
-	ID                field.Uint
-	OperationalListID field.Uint
-	Description       field.String
-	OperationalList   operationBelongsToOperationalList
+	ALL         field.Asterisk
+	ID          field.Uint
+	Description field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -329,7 +58,6 @@ func (o operation) As(alias string) *operation {
 func (o *operation) updateTableName(table string) *operation {
 	o.ALL = field.NewAsterisk(table)
 	o.ID = field.NewUint(table, "id")
-	o.OperationalListID = field.NewUint(table, "operational_list_id")
 	o.Description = field.NewString(table, "description")
 
 	o.fillFieldMap()
@@ -347,11 +75,9 @@ func (o *operation) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (o *operation) fillFieldMap() {
-	o.fieldMap = make(map[string]field.Expr, 4)
+	o.fieldMap = make(map[string]field.Expr, 2)
 	o.fieldMap["id"] = o.ID
-	o.fieldMap["operational_list_id"] = o.OperationalListID
 	o.fieldMap["description"] = o.Description
-
 }
 
 func (o operation) clone(db *gorm.DB) operation {
@@ -362,150 +88,6 @@ func (o operation) clone(db *gorm.DB) operation {
 func (o operation) replaceDB(db *gorm.DB) operation {
 	o.operationDo.ReplaceDB(db)
 	return o
-}
-
-type operationBelongsToOperationalList struct {
-	db *gorm.DB
-
-	field.RelationField
-
-	Reference struct {
-		field.RelationField
-		User struct {
-			field.RelationField
-			Role struct {
-				field.RelationField
-			}
-		}
-		FrontImage struct {
-			field.RelationField
-		}
-		BackImage struct {
-			field.RelationField
-		}
-		TimeByTask struct {
-			field.RelationField
-		}
-		OperationalList struct {
-			field.RelationField
-		}
-		Colors struct {
-			field.RelationField
-			Color struct {
-				field.RelationField
-			}
-			Reference struct {
-				field.RelationField
-			}
-			Resources struct {
-				field.RelationField
-				Resource struct {
-					field.RelationField
-					Color struct {
-						field.RelationField
-					}
-					Supplier struct {
-						field.RelationField
-					}
-				}
-			}
-			Fabrics struct {
-				field.RelationField
-				Fabric struct {
-					field.RelationField
-					Color struct {
-						field.RelationField
-					}
-					Supplier struct {
-						field.RelationField
-					}
-					Composition struct {
-						field.RelationField
-					}
-				}
-			}
-		}
-		Pieces struct {
-			field.RelationField
-			Image struct {
-				field.RelationField
-			}
-			Reference struct {
-				field.RelationField
-			}
-		}
-	}
-	Operations struct {
-		field.RelationField
-		OperationalList struct {
-			field.RelationField
-		}
-	}
-}
-
-func (a operationBelongsToOperationalList) Where(conds ...field.Expr) *operationBelongsToOperationalList {
-	if len(conds) == 0 {
-		return &a
-	}
-
-	exprs := make([]clause.Expression, 0, len(conds))
-	for _, cond := range conds {
-		exprs = append(exprs, cond.BeCond().(clause.Expression))
-	}
-	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
-	return &a
-}
-
-func (a operationBelongsToOperationalList) WithContext(ctx context.Context) *operationBelongsToOperationalList {
-	a.db = a.db.WithContext(ctx)
-	return &a
-}
-
-func (a operationBelongsToOperationalList) Session(session *gorm.Session) *operationBelongsToOperationalList {
-	a.db = a.db.Session(session)
-	return &a
-}
-
-func (a operationBelongsToOperationalList) Model(m *models.Operation) *operationBelongsToOperationalListTx {
-	return &operationBelongsToOperationalListTx{a.db.Model(m).Association(a.Name())}
-}
-
-type operationBelongsToOperationalListTx struct{ tx *gorm.Association }
-
-func (a operationBelongsToOperationalListTx) Find() (result *models.OperationalList, err error) {
-	return result, a.tx.Find(&result)
-}
-
-func (a operationBelongsToOperationalListTx) Append(values ...*models.OperationalList) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Append(targetValues...)
-}
-
-func (a operationBelongsToOperationalListTx) Replace(values ...*models.OperationalList) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Replace(targetValues...)
-}
-
-func (a operationBelongsToOperationalListTx) Delete(values ...*models.OperationalList) (err error) {
-	targetValues := make([]interface{}, len(values))
-	for i, v := range values {
-		targetValues[i] = v
-	}
-	return a.tx.Delete(targetValues...)
-}
-
-func (a operationBelongsToOperationalListTx) Clear() error {
-	return a.tx.Clear()
-}
-
-func (a operationBelongsToOperationalListTx) Count() int64 {
-	return a.tx.Count()
 }
 
 type operationDo struct{ gen.DO }

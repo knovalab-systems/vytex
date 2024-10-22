@@ -65,18 +65,6 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				TimeByTask struct {
 					field.RelationField
 				}
-				OperationalList struct {
-					field.RelationField
-					Reference struct {
-						field.RelationField
-					}
-					Operations struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}
-				}
 				Colors struct {
 					field.RelationField
 				}
@@ -85,9 +73,9 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 					Image struct {
 						field.RelationField
 					}
-					Reference struct {
-						field.RelationField
-					}
+				}
+				Operations struct {
+					field.RelationField
 				}
 			}
 			Resources struct {
@@ -141,18 +129,6 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				TimeByTask struct {
 					field.RelationField
 				}
-				OperationalList struct {
-					field.RelationField
-					Reference struct {
-						field.RelationField
-					}
-					Operations struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}
-				}
 				Colors struct {
 					field.RelationField
 				}
@@ -161,9 +137,9 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 					Image struct {
 						field.RelationField
 					}
-					Reference struct {
-						field.RelationField
-					}
+				}
+				Operations struct {
+					field.RelationField
 				}
 			}{
 				RelationField: field.NewRelation("Orders.ColorByReference.Reference", "models.Reference"),
@@ -195,38 +171,6 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				}{
 					RelationField: field.NewRelation("Orders.ColorByReference.Reference.TimeByTask", "models.TimeByTask"),
 				},
-				OperationalList: struct {
-					field.RelationField
-					Reference struct {
-						field.RelationField
-					}
-					Operations struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}
-				}{
-					RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList", "models.OperationalList"),
-					Reference: struct {
-						field.RelationField
-					}{
-						RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList.Reference", "models.Reference"),
-					},
-					Operations: struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}{
-						RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList.Operations", "models.Operation"),
-						OperationalList: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("Orders.ColorByReference.Reference.OperationalList.Operations.OperationalList", "models.OperationalList"),
-						},
-					},
-				},
 				Colors: struct {
 					field.RelationField
 				}{
@@ -237,21 +181,18 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 					Image struct {
 						field.RelationField
 					}
-					Reference struct {
-						field.RelationField
-					}
 				}{
-					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Pieces", "models.ImageByReference"),
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Pieces", "models.Piece"),
 					Image: struct {
 						field.RelationField
 					}{
 						RelationField: field.NewRelation("Orders.ColorByReference.Reference.Pieces.Image", "models.Image"),
 					},
-					Reference: struct {
-						field.RelationField
-					}{
-						RelationField: field.NewRelation("Orders.ColorByReference.Reference.Pieces.Reference", "models.Reference"),
-					},
+				},
+				Operations: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Operations", "models.Operation"),
 				},
 			},
 			Resources: struct {
@@ -500,18 +441,6 @@ type customHasManyOrders struct {
 			TimeByTask struct {
 				field.RelationField
 			}
-			OperationalList struct {
-				field.RelationField
-				Reference struct {
-					field.RelationField
-				}
-				Operations struct {
-					field.RelationField
-					OperationalList struct {
-						field.RelationField
-					}
-				}
-			}
 			Colors struct {
 				field.RelationField
 			}
@@ -520,9 +449,9 @@ type customHasManyOrders struct {
 				Image struct {
 					field.RelationField
 				}
-				Reference struct {
-					field.RelationField
-				}
+			}
+			Operations struct {
+				field.RelationField
 			}
 		}
 		Resources struct {

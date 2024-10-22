@@ -93,18 +93,6 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 				TimeByTask struct {
 					field.RelationField
 				}
-				OperationalList struct {
-					field.RelationField
-					Reference struct {
-						field.RelationField
-					}
-					Operations struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}
-				}
 				Colors struct {
 					field.RelationField
 				}
@@ -113,9 +101,9 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 					Image struct {
 						field.RelationField
 					}
-					Reference struct {
-						field.RelationField
-					}
+				}
+				Operations struct {
+					field.RelationField
 				}
 			}
 			Resources struct {
@@ -169,18 +157,6 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 				TimeByTask struct {
 					field.RelationField
 				}
-				OperationalList struct {
-					field.RelationField
-					Reference struct {
-						field.RelationField
-					}
-					Operations struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}
-				}
 				Colors struct {
 					field.RelationField
 				}
@@ -189,9 +165,9 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 					Image struct {
 						field.RelationField
 					}
-					Reference struct {
-						field.RelationField
-					}
+				}
+				Operations struct {
+					field.RelationField
 				}
 			}{
 				RelationField: field.NewRelation("Order.ColorByReference.Reference", "models.Reference"),
@@ -223,38 +199,6 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 				}{
 					RelationField: field.NewRelation("Order.ColorByReference.Reference.TimeByTask", "models.TimeByTask"),
 				},
-				OperationalList: struct {
-					field.RelationField
-					Reference struct {
-						field.RelationField
-					}
-					Operations struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}
-				}{
-					RelationField: field.NewRelation("Order.ColorByReference.Reference.OperationalList", "models.OperationalList"),
-					Reference: struct {
-						field.RelationField
-					}{
-						RelationField: field.NewRelation("Order.ColorByReference.Reference.OperationalList.Reference", "models.Reference"),
-					},
-					Operations: struct {
-						field.RelationField
-						OperationalList struct {
-							field.RelationField
-						}
-					}{
-						RelationField: field.NewRelation("Order.ColorByReference.Reference.OperationalList.Operations", "models.Operation"),
-						OperationalList: struct {
-							field.RelationField
-						}{
-							RelationField: field.NewRelation("Order.ColorByReference.Reference.OperationalList.Operations.OperationalList", "models.OperationalList"),
-						},
-					},
-				},
 				Colors: struct {
 					field.RelationField
 				}{
@@ -265,21 +209,18 @@ func newTaskControl(db *gorm.DB, opts ...gen.DOOption) taskControl {
 					Image struct {
 						field.RelationField
 					}
-					Reference struct {
-						field.RelationField
-					}
 				}{
-					RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces", "models.ImageByReference"),
+					RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces", "models.Piece"),
 					Image: struct {
 						field.RelationField
 					}{
 						RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces.Image", "models.Image"),
 					},
-					Reference: struct {
-						field.RelationField
-					}{
-						RelationField: field.NewRelation("Order.ColorByReference.Reference.Pieces.Reference", "models.Reference"),
-					},
+				},
+				Operations: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Order.ColorByReference.Reference.Operations", "models.Operation"),
 				},
 			},
 			Resources: struct {
@@ -715,18 +656,6 @@ type taskControlBelongsToOrder struct {
 			TimeByTask struct {
 				field.RelationField
 			}
-			OperationalList struct {
-				field.RelationField
-				Reference struct {
-					field.RelationField
-				}
-				Operations struct {
-					field.RelationField
-					OperationalList struct {
-						field.RelationField
-					}
-				}
-			}
 			Colors struct {
 				field.RelationField
 			}
@@ -735,9 +664,9 @@ type taskControlBelongsToOrder struct {
 				Image struct {
 					field.RelationField
 				}
-				Reference struct {
-					field.RelationField
-				}
+			}
+			Operations struct {
+				field.RelationField
 			}
 		}
 		Resources struct {

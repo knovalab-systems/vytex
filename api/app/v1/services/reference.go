@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"strings"
 
 	"github.com/knovalab-systems/vytex/app/v1/fields"
@@ -72,7 +71,6 @@ func (m *ReferenceService) SelectReference(q *models.ReferenceRead) (*models.Ref
 	if q.Fields != "" {
 		s = fields.ReferenceFields(s, q.Fields)
 	}
-
 
 	// filters
 	if q.Filter != "" {
@@ -167,9 +165,14 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 	}
 
 	// format pieces
-	pieceByReference := []models.ImageByReference{}
+	pieceByReference := []models.Piece{}
 	for _, piece := range b.Pieces {
-		pieceByReference = append(pieceByReference, models.ImageByReference{ImageID: piece.Image})
+		pieceByReference = append(pieceByReference, models.Piece{ImageID: piece.Image})
+	}
+
+	operations := []models.Operation{}
+	for _, operation := range b.Operations {
+		operations = append(operations, models.Operation{Description: operation.Description})
 	}
 
 	timeByTask, err := helpers.GetDefaultTimeByTask()
@@ -186,28 +189,12 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		Colors:       colorsByReference,
 		TimeByTaskID: timeByTask.ID,
 		Pieces:       pieceByReference,
+		Operations:   operations,
 	}
 
 	err = query.Reference.Create(reference)
 	if err != nil {
 		return nil, problems.ServerError()
-	}
-
-	if len(b.OperationalList.Operations) > 0 {
-		operations := []models.Operation{}
-		for _, operation := range b.OperationalList.Operations {
-			operations = append(operations, models.Operation{Description: operation.Description})
-		}
-
-		operationalList := &models.OperationalList{
-			ReferenceID: reference.ID,
-			Operations:  operations,
-		}
-
-		err = query.OperationalList.Create(operationalList)
-		if err != nil {
-			return nil, problems.ServerError()
-		}
 	}
 
 	return reference, nil
@@ -253,16 +240,3 @@ func (m *ReferenceService) UpdateTimesReference(b *models.TimeByTaskReferenceUpd
 
 	return reference, nil
 }
-
-
-func getTimeByTask(t *models.TimeByTaskDTO) (*models.TimeByTask, error) {
-	table := query.TimeByTask
-	timeByTaskFormat := formats.TimeByTaskDTOFormat(*t)
-
-	timeByTask, err := table.Where(field.Attrs(timeByTaskFormat)).FirstOrCreate()
-	if err != nil {
-		return nil, problems.ServerError()
-	}
-	return timeByTask, nil
-}
-
