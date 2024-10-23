@@ -32,6 +32,7 @@ func DB() *gorm.DB {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
 
+
 	err = migrations.Migrate(db)
 	if err != nil {
 		log.Fatalln("error, not migrated, %w", err)
@@ -46,6 +47,7 @@ func DBGEN() *gorm.DB {
 	if err != nil {
 		log.Fatalln("error, not connected to database, %w", err)
 	}
+
 
 	err = migrations.Migrate(db)
 	if err != nil {

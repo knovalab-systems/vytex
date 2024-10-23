@@ -8,6 +8,7 @@ import type {
 	VytexTimeByTask,
 	VytexUser,
 } from '../index.js';
+import type { VytexOperation } from './operation.js';
 
 /**
  * vytex_reference type
@@ -29,6 +30,8 @@ export type VytexReference<Schema = any> = MergeCoreCollection<
 		time_by_task_id: string | null;
 		time_by_task: VytexTimeByTask<Schema> | null;
 		colors: VytexColorByReference<Schema>[] | null;
+		pieces: VytexImageByReference<Schema>[] | null;
+		operations: VytexOperation<Schema>[] | null;
 	}
 >;
 
@@ -45,6 +48,18 @@ export type VytexColorByReference<Schema = any> = MergeCoreCollection<
 		reference: VytexReference<Schema> | null;
 		fabrics: VytexFabricByReference<Schema>[] | null;
 		resources: VytexResourceByReference<Schema>[] | null;
+	}
+>;
+
+export type VytexImageByReference<Schema = any> = MergeCoreCollection<
+	Schema,
+	'vytex_references',
+	{
+		id: number;
+		image_id: string | null;
+		image: VytexImage<Schema> | null;
+		reference_id: number | null;
+		reference: VytexReference<Schema> | null;
 	}
 >;
 

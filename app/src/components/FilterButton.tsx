@@ -17,7 +17,7 @@ function FilterButton(props: {
 					variant='ghost'
 					title='Ver filtros'
 					class={cn(
-						'ml-1 shadow-md border-[2.8px] border-gray-400 rounded-2xl hover:border-black hover:text-black',
+						'ml-1 bg-white shadow-md border-[2.8px] border-gray-400 rounded-2xl hover:border-black hover:text-black',
 						props.active ? 'border-gray-600 text-gray-600 shadow-indigo-400' : 'text-gray-400',
 					)}
 				>

@@ -164,13 +164,33 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
 	}
 
+	// format pieces
+	pieceByReference := []models.Piece{}
+	for _, piece := range b.Pieces {
+		pieceByReference = append(pieceByReference, models.Piece{ImageID: piece.Image})
+	}
+
+	operations := []models.Operation{}
+	for _, operation := range b.Operations {
+		operations = append(operations, models.Operation{Description: operation.Description})
+	}
+
 	timeByTask, err := helpers.GetDefaultTimeByTask()
 	if err != nil {
 		return nil, err
 	}
 
 	// create reference
-	reference := &models.Reference{Code: b.Code, CreatedBy: b.CreatedBy, Front: b.Front, Back: b.Back, Colors: colorsByReference, TimeByTaskID: timeByTask.ID}
+	reference := &models.Reference{
+		Code:         b.Code,
+		CreatedBy:    b.CreatedBy,
+		Front:        b.Front,
+		Back:         b.Back,
+		Colors:       colorsByReference,
+		TimeByTaskID: timeByTask.ID,
+		Pieces:       pieceByReference,
+		Operations:   operations,
+	}
 
 	err = query.Reference.Create(reference)
 	if err != nil {

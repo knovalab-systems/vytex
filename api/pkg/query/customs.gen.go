@@ -68,6 +68,15 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				Colors struct {
 					field.RelationField
 				}
+				Pieces struct {
+					field.RelationField
+					Image struct {
+						field.RelationField
+					}
+				}
+				Operations struct {
+					field.RelationField
+				}
 			}
 			Resources struct {
 				field.RelationField
@@ -123,6 +132,15 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 				Colors struct {
 					field.RelationField
 				}
+				Pieces struct {
+					field.RelationField
+					Image struct {
+						field.RelationField
+					}
+				}
+				Operations struct {
+					field.RelationField
+				}
 			}{
 				RelationField: field.NewRelation("Orders.ColorByReference.Reference", "models.Reference"),
 				User: struct {
@@ -157,6 +175,24 @@ func newCustom(db *gorm.DB, opts ...gen.DOOption) custom {
 					field.RelationField
 				}{
 					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Colors", "models.ColorByReference"),
+				},
+				Pieces: struct {
+					field.RelationField
+					Image struct {
+						field.RelationField
+					}
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Pieces", "models.Piece"),
+					Image: struct {
+						field.RelationField
+					}{
+						RelationField: field.NewRelation("Orders.ColorByReference.Reference.Pieces.Image", "models.Image"),
+					},
+				},
+				Operations: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Orders.ColorByReference.Reference.Operations", "models.Operation"),
 				},
 			},
 			Resources: struct {
@@ -406,6 +442,15 @@ type customHasManyOrders struct {
 				field.RelationField
 			}
 			Colors struct {
+				field.RelationField
+			}
+			Pieces struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+			}
+			Operations struct {
 				field.RelationField
 			}
 		}

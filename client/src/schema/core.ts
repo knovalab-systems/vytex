@@ -8,6 +8,7 @@ import type { VytexOrderState } from './orderState.js';
 import type {
 	VytexColorByReference,
 	VytexFabricByReference,
+	VytexImageByReference,
 	VytexReference,
 	VytexResourceByReference,
 } from './reference.js';
@@ -35,6 +36,7 @@ export interface CoreSchema<Schema = any> {
 	vytex_roles: VytexRole<Schema>[];
 	'vytex_order-status': VytexOrderState<Schema>[];
 	vytex_color_by_reference: VytexColorByReference<Schema>[];
+	vytex_image_by_reference: VytexImageByReference<Schema>[];
 	vytex_fabric_by_reference: VytexFabricByReference<Schema>[];
 	vytex_reference_by_reference: VytexResourceByReference<Schema>[];
 	vytex_steps: VytexStep<Schema>[];

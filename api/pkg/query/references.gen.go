@@ -65,6 +65,15 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 			Colors struct {
 				field.RelationField
 			}
+			Pieces struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+			}
+			Operations struct {
+				field.RelationField
+			}
 		}{
 			RelationField: field.NewRelation("Colors.Reference", "models.Reference"),
 			User: struct {
@@ -99,6 +108,24 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 				field.RelationField
 			}{
 				RelationField: field.NewRelation("Colors.Reference.Colors", "models.ColorByReference"),
+			},
+			Pieces: struct {
+				field.RelationField
+				Image struct {
+					field.RelationField
+				}
+			}{
+				RelationField: field.NewRelation("Colors.Reference.Pieces", "models.Piece"),
+				Image: struct {
+					field.RelationField
+				}{
+					RelationField: field.NewRelation("Colors.Reference.Pieces.Image", "models.Image"),
+				},
+			},
+			Operations: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Colors.Reference.Operations", "models.Operation"),
 			},
 		},
 		Resources: struct {
@@ -208,6 +235,18 @@ func newReference(db *gorm.DB, opts ...gen.DOOption) reference {
 		RelationField: field.NewRelation("TimeByTask", "models.TimeByTask"),
 	}
 
+	_reference.Pieces = referenceManyToManyPieces{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Pieces", "models.Piece"),
+	}
+
+	_reference.Operations = referenceManyToManyOperations{
+		db: db.Session(&gorm.Session{}),
+
+		RelationField: field.NewRelation("Operations", "models.Operation"),
+	}
+
 	_reference.fillFieldMap()
 
 	return _reference
@@ -235,6 +274,10 @@ type reference struct {
 	BackImage referenceBelongsToBackImage
 
 	TimeByTask referenceBelongsToTimeByTask
+
+	Pieces referenceManyToManyPieces
+
+	Operations referenceManyToManyOperations
 
 	fieldMap map[string]field.Expr
 }
@@ -276,7 +319,7 @@ func (r *reference) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (r *reference) fillFieldMap() {
-	r.fieldMap = make(map[string]field.Expr, 14)
+	r.fieldMap = make(map[string]field.Expr, 16)
 	r.fieldMap["id"] = r.ID
 	r.fieldMap["code"] = r.Code
 	r.fieldMap["created_at"] = r.CreatedAt
@@ -325,6 +368,15 @@ type referenceHasManyColors struct {
 			field.RelationField
 		}
 		Colors struct {
+			field.RelationField
+		}
+		Pieces struct {
+			field.RelationField
+			Image struct {
+				field.RelationField
+			}
+		}
+		Operations struct {
 			field.RelationField
 		}
 	}
@@ -703,6 +755,148 @@ func (a referenceBelongsToTimeByTaskTx) Clear() error {
 }
 
 func (a referenceBelongsToTimeByTaskTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceManyToManyPieces struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceManyToManyPieces) Where(conds ...field.Expr) *referenceManyToManyPieces {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceManyToManyPieces) WithContext(ctx context.Context) *referenceManyToManyPieces {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceManyToManyPieces) Session(session *gorm.Session) *referenceManyToManyPieces {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceManyToManyPieces) Model(m *models.Reference) *referenceManyToManyPiecesTx {
+	return &referenceManyToManyPiecesTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceManyToManyPiecesTx struct{ tx *gorm.Association }
+
+func (a referenceManyToManyPiecesTx) Find() (result []*models.Piece, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceManyToManyPiecesTx) Append(values ...*models.Piece) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceManyToManyPiecesTx) Replace(values ...*models.Piece) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceManyToManyPiecesTx) Delete(values ...*models.Piece) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceManyToManyPiecesTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceManyToManyPiecesTx) Count() int64 {
+	return a.tx.Count()
+}
+
+type referenceManyToManyOperations struct {
+	db *gorm.DB
+
+	field.RelationField
+}
+
+func (a referenceManyToManyOperations) Where(conds ...field.Expr) *referenceManyToManyOperations {
+	if len(conds) == 0 {
+		return &a
+	}
+
+	exprs := make([]clause.Expression, 0, len(conds))
+	for _, cond := range conds {
+		exprs = append(exprs, cond.BeCond().(clause.Expression))
+	}
+	a.db = a.db.Clauses(clause.Where{Exprs: exprs})
+	return &a
+}
+
+func (a referenceManyToManyOperations) WithContext(ctx context.Context) *referenceManyToManyOperations {
+	a.db = a.db.WithContext(ctx)
+	return &a
+}
+
+func (a referenceManyToManyOperations) Session(session *gorm.Session) *referenceManyToManyOperations {
+	a.db = a.db.Session(session)
+	return &a
+}
+
+func (a referenceManyToManyOperations) Model(m *models.Reference) *referenceManyToManyOperationsTx {
+	return &referenceManyToManyOperationsTx{a.db.Model(m).Association(a.Name())}
+}
+
+type referenceManyToManyOperationsTx struct{ tx *gorm.Association }
+
+func (a referenceManyToManyOperationsTx) Find() (result []*models.Operation, err error) {
+	return result, a.tx.Find(&result)
+}
+
+func (a referenceManyToManyOperationsTx) Append(values ...*models.Operation) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Append(targetValues...)
+}
+
+func (a referenceManyToManyOperationsTx) Replace(values ...*models.Operation) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Replace(targetValues...)
+}
+
+func (a referenceManyToManyOperationsTx) Delete(values ...*models.Operation) (err error) {
+	targetValues := make([]interface{}, len(values))
+	for i, v := range values {
+		targetValues[i] = v
+	}
+	return a.tx.Delete(targetValues...)
+}
+
+func (a referenceManyToManyOperationsTx) Clear() error {
+	return a.tx.Clear()
+}
+
+func (a referenceManyToManyOperationsTx) Count() int64 {
 	return a.tx.Count()
 }
 

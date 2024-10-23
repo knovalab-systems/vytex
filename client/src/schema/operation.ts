@@ -21,3 +21,12 @@ export type DirectusOperation<Schema = any> = MergeCoreCollection<
 		user_created: VytexUser<Schema> | string | null;
 	}
 >;
+
+export type VytexOperation<Schema = any> = MergeCoreCollection<
+	Schema,
+	'vytex_operation',
+	{
+		id: number;
+		description: string | null;
+	}
+>;

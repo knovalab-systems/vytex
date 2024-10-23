@@ -12,6 +12,7 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 	fields := strings.Split(queryFields, ",")
 	exprs := []field.Expr{}
 	colorsFields := []string{}
+	piecesFields := []string{}
 
 	switchFunc := func(v string) bool {
 		if strings.HasPrefix(v, "colors.") || v == "colors" {
@@ -19,6 +20,10 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 			return true
 		}
 
+		if strings.HasPrefix(v, "pieces.") || v == "pieces" {
+			piecesFields = append(piecesFields, strings.TrimPrefix(v, "pieces."))
+			return true
+		}
 		return false
 	}
 
@@ -63,7 +68,6 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.TimeByTaskID)
 		case "back":
 			exprs = append(exprs, table.Back)
-
 		case "*":
 			exprs = append(exprs, table.ALL)
 		}

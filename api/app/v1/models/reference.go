@@ -22,6 +22,8 @@ type Reference struct {
 	TimeByTaskID uint               `json:"time_by_task_id,omitempty"`
 	TimeByTask   *TimeByTask        `json:"time_by_task,omitempty"`
 	Colors       []ColorByReference `json:"colors,omitempty"`
+	Pieces       []Piece            `json:"pieces,omitempty" gorm:"many2many:reference_pieces"`
+	Operations   []Operation        `json:"operations,omitempty" gorm:"many2many:reference_operations"`
 }
 
 // BeforeCreate will set a UUID
@@ -82,11 +84,21 @@ func (b *FabricByReference) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 type ReferenceCreateBody struct {
-	Code      string                   `json:"code" validate:"required"`
-	Front     string                   `json:"front" validate:"required,uuid"`
-	Back      string                   `json:"back" validate:"required,uuid"`
-	Colors    []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
-	CreatedBy string                   `json:"create_by" validate:"required,uuid"`
+	Code       string                   `json:"code" validate:"required"`
+	Front      string                   `json:"front" validate:"required,uuid"`
+	Back       string                   `json:"back" validate:"required,uuid"`
+	Colors     []ColorByReferenceCreate `json:"colors" validate:"required,min=1,dive"`
+	Pieces     []PieceByReferenceCreate `json:"pieces" validate:"required,min=1,dive"`
+	Operations []OperationCreate        `json:"operations" validate:"required,min=1,dive"`
+	CreatedBy  string                   `json:"create_by" validate:"required,uuid"`
+}
+
+type OperationCreate struct {
+	Description string `json:"description" validate:"required"`
+}
+
+type PieceByReferenceCreate struct {
+	Image string `json:"image_id" validate:"required,uuid"`
 }
 
 type ColorByReferenceCreate struct {

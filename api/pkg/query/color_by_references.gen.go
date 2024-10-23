@@ -169,6 +169,24 @@ func newColorByReference(db *gorm.DB, opts ...gen.DOOption) colorByReference {
 				RelationField: field.NewRelation("Reference.Colors.Fabrics", "models.FabricByReference"),
 			},
 		},
+		Pieces: struct {
+			field.RelationField
+			Image struct {
+				field.RelationField
+			}
+		}{
+			RelationField: field.NewRelation("Reference.Pieces", "models.Piece"),
+			Image: struct {
+				field.RelationField
+			}{
+				RelationField: field.NewRelation("Reference.Pieces.Image", "models.Image"),
+			},
+		},
+		Operations: struct {
+			field.RelationField
+		}{
+			RelationField: field.NewRelation("Reference.Operations", "models.Operation"),
+		},
 	}
 
 	_colorByReference.fillFieldMap()
@@ -518,6 +536,15 @@ type colorByReferenceBelongsToReference struct {
 		Fabrics struct {
 			field.RelationField
 		}
+	}
+	Pieces struct {
+		field.RelationField
+		Image struct {
+			field.RelationField
+		}
+	}
+	Operations struct {
+		field.RelationField
 	}
 }
 

@@ -48,8 +48,8 @@ function FileInput(props: FileInputProps) {
 			>
 				<Match when={props.preview && getFiles().length && !props.multiple}>
 					<figure class='flex flex-col items-center justify-center w-full h-full'>
-						<div class='w-full h-full flex items-center justify-center overflow-hidden'>
-							<img src={URL.createObjectURL(props.value as File)} alt='Preview' class='object-contain w-full h-full' />
+						<div class='w-full h-full object- flex items-center justify-center overflow-hidden'>
+							<img src={URL.createObjectURL(props.value as File)} alt='Preview' class='object-contain' />
 						</div>
 						<figcaption class='text-sm text-gray-500 my-2'>
 							{getFiles()
