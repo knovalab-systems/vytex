@@ -169,15 +169,20 @@ function CustomCreateForm(props: {
 																		)}
 																		options={colorRerences().arr}
 																	>
-																		<ComboboxControl aria-errormessage={field.error} aria-label='Referencias'>
-																			<div
-																				class='h-5 w-5 mr-2 m-auto border'
-																				style={{
-																					background: getColorsRecord()[field.value || 0]?.hex || 'transparent',
-																				}}
-																			/>
-																			<ComboboxInput />
-																			<ComboboxTrigger title='Ver referencias' aria-label='Referencias' />
+																		<ComboboxControl<ColorReference>
+																			aria-errormessage={field.error}
+																			aria-label='Referencias'
+																		>
+																			{state => (
+																				<>
+																					<div
+																						class='h-5 w-5 mr-2 m-auto border'
+																						style={{ background: state.selectedOptions().at(0)?.hex || '' }}
+																					/>
+																					<ComboboxInput />
+																					<ComboboxTrigger title='Ver referencias' aria-label='Referencias' />
+																				</>
+																			)}
 																		</ComboboxControl>
 																		<Show when={Boolean(field.error)}>
 																			<div class={'text-sm my-auto text-red-600'}>{field.error}</div>

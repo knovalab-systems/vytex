@@ -55,7 +55,7 @@ function FabricCreateForm() {
 
 		const fabric: Fabric = {
 			...rest,
-			code: code.toString(),
+			code: code,
 			color_id: color,
 			supplier_id: supplier,
 			composition: composition as Composition,
@@ -97,12 +97,11 @@ function FabricCreateForm() {
 								</div>
 							)}
 						</Field>
-						<Field name='code' type='number'>
+						<Field name='code'>
 							{(field, props) => (
 								<div>
 									<Label for='code-field'>Código</Label>
 									<Input
-										type='number'
 										placeholder='23231'
 										autocomplete='off'
 										id='code-field'

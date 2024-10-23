@@ -24,7 +24,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 		initialValues: {
 			name: props.supplier?.name || '',
 			brand: props.supplier?.brand || '',
-			code: Number(props.supplier?.code),
+			code: props.supplier?.code || '',
 			nit: Number(props.supplier?.nit),
 			deleted_at: !props.supplier?.deleted_at ? 'Activo' : 'Inactivo',
 		},
@@ -33,7 +33,7 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 	const handleSubmit: SubmitHandler<SupplierUpdateType> = async data => {
 		const formData = {
 			...data,
-			code: String(data.code),
+			code: data.code,
 			nit: String(data.nit),
 		};
 
@@ -114,14 +114,13 @@ function SupplireUpdateForm(props: { supplier?: GetSupplierType }) {
 						</div>
 					)}
 				</Field>
-				<Field name='code' type='number'>
+				<Field name='code'>
 					{(field, props) => (
 						<div>
 							<Label for='code-field'>Código</Label>
 							<Input
 								placeholder='2322'
 								autocomplete='off'
-								type='number'
 								id='code-field'
 								aria-errormessage={field.error}
 								required

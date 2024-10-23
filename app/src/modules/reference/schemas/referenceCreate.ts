@@ -16,7 +16,7 @@ import { MIN_NUM_VALUE, REQ_NUM_VALUE } from '~/constants/commonErrMsgs';
 import { SIZES } from '~/constants/sizes';
 
 export const ReferenceCreateSchema = object({
-	code: pipe(number('Ingresa el código de la referencia.'), minValue(1, 'Ingresa un valor mayor a 0.')),
+	code: pipe(string('Ingresa el código.'), minLength(1, 'Ingresa el código.')),
 	colors: array(
 		object({
 			color: pipe(number('Selecciona un color.'), minValue(1, 'Selecciona un color.')),

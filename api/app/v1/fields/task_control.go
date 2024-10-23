@@ -31,6 +31,8 @@ func TaskControlFields(s query.ITaskControlDo, queryFields string) query.ITaskCo
 			exprs = append(exprs, table.RejectedAt)
 		case "finished_at":
 			exprs = append(exprs, table.FinishedAt)
+		case "task_control_state_id":
+			exprs = append(exprs, table.TaskControlStateID)
 		case "order_id":
 			exprs = append(exprs, table.OrderID)
 		case "order":

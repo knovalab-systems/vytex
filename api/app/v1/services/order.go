@@ -186,7 +186,7 @@ func (m *OrderService) UpdateOrder(b *models.OrderUpdateBody) (*models.Order, er
 			if err != nil {
 				return nil, problems.ServerError()
 			}
-			taskState, err := helpers.GetTaskByValue(models.CreatedTaskControlStateValue)
+			taskState, err := helpers.GetTaskControlStateByValue(models.CreatedTaskControlStateValue)
 			if err != nil {
 				return nil, problems.ServerError()
 			}

@@ -29,7 +29,7 @@ async function getOrders(page: number, filters: OrderFilter) {
 				'finished_at',
 				{ color_by_reference: ['color_id', { reference: ['code'] }] },
 			],
-			filter: doFilters(filters),
+			...doFilters(filters),
 		}),
 	);
 }
@@ -50,7 +50,7 @@ async function countOrders(filters: OrderFilter) {
 				count: '*',
 			},
 			query: {
-				filter: doFilters(filters),
+				...doFilters(filters),
 			},
 		}),
 	);
@@ -85,32 +85,38 @@ async function getOrderStart(id: number) {
 export type GetOrderStart = Awaited<ReturnType<typeof getOrderStart>>;
 
 function doFilters(filters: OrderFilter) {
+	if (Object.keys(filters).length === 0) {
+		return;
+	}
+
 	return {
-		...(filters.canceledDate && {
-			canceled_at: {
-				_between: getBetweenDay(dayjs(filters.canceledDate)),
-			},
-		}),
-		...(filters.finishedDate && {
-			finished_at: {
-				_between: getBetweenDay(dayjs(filters.finishedDate)),
-			},
-		}),
-		...(filters.createdDate && {
-			created_at: {
-				_between: getBetweenDay(dayjs(filters.createdDate)),
-			},
-		}),
-		...(filters.startedDate && {
-			started_at: {
-				_between: getBetweenDay(dayjs(filters.startedDate)),
-			},
-		}),
-		...(filters.status &&
-			filters.status.length > 0 && {
-				order_state_id: {
-					_in: filters.status,
+		filter: {
+			...(filters.canceledDate && {
+				canceled_at: {
+					_between: getBetweenDay(dayjs(filters.canceledDate)),
 				},
 			}),
+			...(filters.finishedDate && {
+				finished_at: {
+					_between: getBetweenDay(dayjs(filters.finishedDate)),
+				},
+			}),
+			...(filters.createdDate && {
+				created_at: {
+					_between: getBetweenDay(dayjs(filters.createdDate)),
+				},
+			}),
+			...(filters.startedDate && {
+				started_at: {
+					_between: getBetweenDay(dayjs(filters.startedDate)),
+				},
+			}),
+			...(filters.status &&
+				filters.status.length > 0 && {
+					order_state_id: {
+						_in: filters.status,
+					},
+				}),
+		},
 	};
 }

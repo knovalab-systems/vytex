@@ -83,7 +83,6 @@ function ResourceFilters(props: { filters: ResourceFilter; setFilters: Setter<Re
 									value={field.value ?? ''}
 									{...props}
 									class='h-full'
-									type='number'
 									placeholder='Código del insumo'
 									autocomplete='off'
 									id='code-filter'

@@ -41,7 +41,7 @@ function FabricUpdateForm(props: { fabric?: GetFabricType }) {
 			color: props.fabric?.color_id || undefined,
 			cost: props.fabric?.cost || 0,
 			deleted_at: !props.fabric?.deleted_at ? 'Activo' : 'Inactivo',
-			code: Number(props.fabric?.code),
+			code: props.fabric?.code || '',
 			composition: COMPOSITIONS.reduce((p: Record<string, number>, v) => {
 				p[v] = 0;
 				if (props.fabric?.composition?.[v as keyof typeof props.fabric.composition]) {
@@ -57,7 +57,7 @@ function FabricUpdateForm(props: { fabric?: GetFabricType }) {
 
 		const formData = {
 			...restData,
-			code: code.toString(),
+			code: code,
 			color_id: color,
 			supplier_id: supplier,
 		};
@@ -134,12 +134,11 @@ function FabricUpdateForm(props: { fabric?: GetFabricType }) {
 								</div>
 							)}
 						</Field>
-						<Field name='code' type='number'>
+						<Field name='code'>
 							{(field, props) => (
 								<div>
 									<Label for='code-field'>Código</Label>
 									<Input
-										type='number'
 										placeholder='23231'
 										autocomplete='off'
 										id='code-field'

@@ -17,7 +17,7 @@ async function getUsers(page: number, filters: UserFilter) {
 			page: page,
 			limit: QUERY_LIMIT,
 			fields: ['id', 'name', 'username', 'deleted_at', 'role_id'],
-			filter: doFilters(filters),
+			...doFilters(filters),
 		}),
 	);
 }
@@ -34,7 +34,7 @@ async function countUsers(filters: UserFilter) {
 		aggregate('vytex_users', {
 			aggregate: { count: '*' },
 			query: {
-				filter: doFilters(filters),
+				...doFilters(filters),
 			},
 		}),
 	);
@@ -60,27 +60,33 @@ async function getUser(id: string) {
 export type GetUserType = Awaited<ReturnType<typeof getUser>>;
 
 function doFilters(filters: UserFilter) {
+	if (Object.keys(filters).length === 0) {
+		return;
+	}
+
 	return {
-		...(filters.name && {
-			name: {
-				_contains: filters.name.toLowerCase(),
-			},
-		}),
-		...(filters.username && {
-			username: {
-				_contains: filters.username.toLowerCase(),
-			},
-		}),
-		...(filters.roles &&
-			filters.roles.length > 0 && {
-				role_id: {
-					_in: filters.roles,
+		filter: {
+			...(filters.name && {
+				name: {
+					_contains: filters.name.toLowerCase(),
 				},
 			}),
-		...(filters.state && {
-			delete_at: {
-				_null: filters.state === 'Activo',
-			},
-		}),
+			...(filters.username && {
+				username: {
+					_contains: filters.username.toLowerCase(),
+				},
+			}),
+			...(filters.roles &&
+				filters.roles.length > 0 && {
+					role_id: {
+						_in: filters.roles,
+					},
+				}),
+			...(filters.state && {
+				delete_at: {
+					_null: filters.state === 'Activo',
+				},
+			}),
+		},
 	};
 }

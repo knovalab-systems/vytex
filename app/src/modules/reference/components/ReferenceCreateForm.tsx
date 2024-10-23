@@ -146,7 +146,7 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 
 	const handleSubmit: SubmitHandler<ReferenceCreateType> = async data => {
 		const reference: Reference = {
-			code: data.code.toString(),
+			code: data.code,
 			colors: data.colors.map(color => ({
 				color_id: color.color,
 				...color.resources.reduce(
@@ -213,12 +213,11 @@ function ReferenceCreateForm(props: { fabrics: FabricsByRefCreate; resources: Re
 				<TabsContent value='form' class='flex flex-col gap-2'>
 					<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
 						<h1 class='text-2xl font-bold text-center'>Crear referencia</h1>
-						<Field name='code' type='number'>
+						<Field name='code'>
 							{(field, props) => (
 								<div>
 									<LabelSpan>Código de la referencia</LabelSpan>
 									<Input
-										type='number'
 										placeholder='3453'
 										autocomplete='on'
 										aria-errormessage={field.error}

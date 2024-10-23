@@ -16,11 +16,10 @@ function ColorCreateForm() {
 
 	const [form, { Form, Field }] = createForm<ColorCreateType>({
 		validate: valiForm(ColorCreateSchema),
-		initialValues: { name: '', hex: '' },
 	});
 
 	const handleSubmit: SubmitHandler<ColorCreateType> = async data => {
-		const color = { ...data, hex: `#${data.hex}`, code: String(data.code) };
+		const color = { ...data, hex: `#${data.hex}`, code: data.code };
 		return createColorRequest(color)
 			.then(() => {
 				refetchColors();
@@ -56,14 +55,13 @@ function ColorCreateForm() {
 						</div>
 					)}
 				</Field>
-				<Field name='code' type='number'>
+				<Field name='code'>
 					{(field, props) => (
 						<div>
 							<Label for='code-field'>Código</Label>
 							<Input
 								placeholder='2322'
 								autocomplete='off'
-								type='number'
 								id='code-field'
 								aria-errormessage={field.error}
 								required

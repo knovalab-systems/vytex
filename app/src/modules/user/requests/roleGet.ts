@@ -17,7 +17,7 @@ async function getRoles(page: number, filters: RoleFilter) {
 			page: page,
 			limit: QUERY_LIMIT,
 			fields: ['id', 'name', 'code'],
-			filter: doFilters(filters),
+			...doFilters(filters),
 		}),
 	);
 }
@@ -38,7 +38,7 @@ async function countRoles(filters: RoleFilter) {
 				count: '*',
 			},
 			query: {
-				filter: doFilters(filters),
+				...doFilters(filters),
 			},
 		}),
 	);
@@ -58,16 +58,22 @@ async function getRole(id: string) {
 export type GetRoleType = Awaited<ReturnType<typeof getRole>>;
 
 function doFilters(filters: RoleFilter) {
+	if (Object.keys(filters).length === 0) {
+		return;
+	}
+
 	return {
-		...(filters.origin && {
-			code: {
-				_null: filters.origin === 'Personalizado',
-			},
-		}),
-		...(filters.name && {
-			name: {
-				_contains: filters.name,
-			},
-		}),
+		filter: {
+			...(filters.origin && {
+				code: {
+					_null: filters.origin === 'Personalizado',
+				},
+			}),
+			...(filters.name && {
+				name: {
+					_contains: filters.name,
+				},
+			}),
+		},
 	};
 }

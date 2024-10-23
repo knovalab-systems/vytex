@@ -41,7 +41,7 @@ function NavWrapper(props: RouteSectionProps) {
 	};
 
 	const getPages: Accessor<NavPages[]> = createMemo(() => {
-		const p: NavPages[] = [{ name: 'Home', icon: () => <OcHomefill3 size={24} />, path: '/', end: true }];
+		const p: NavPages[] = [{ name: 'Inicio', icon: () => <OcHomefill3 size={24} />, path: '/', end: true }];
 		for (const policy of user.data?.role?.policies ?? []) {
 			if (Object.hasOwn(pages, policy)) {
 				p.push(pages[policy as PolicyNav]);

@@ -24,6 +24,12 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 			piecesFields = append(piecesFields, strings.TrimPrefix(v, "pieces."))
 			return true
 		}
+
+		if strings.HasPrefix(v, "time_by_task.") || v == "time_by_task" {
+			exprs = append(exprs, table.TimeByTaskID)
+			s.Preload(table.TimeByTask)
+			return true
+		}
 		return false
 	}
 
@@ -64,7 +70,7 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 			exprs = append(exprs, table.Track)
 		case "front":
 			exprs = append(exprs, table.Front)
-		case "time_by_task_ID":
+		case "time_by_task_id":
 			exprs = append(exprs, table.TimeByTaskID)
 		case "back":
 			exprs = append(exprs, table.Back)
