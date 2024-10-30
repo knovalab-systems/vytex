@@ -1,6 +1,7 @@
 import type { StateValues } from './state';
 
 export type ResourceFilter = {
+	ids: number[];
 	name?: string;
 	code?: string;
 	colors?: number[];
@@ -9,6 +10,7 @@ export type ResourceFilter = {
 };
 
 export type FabricFilter = {
+	ids?: number[];
 	name?: string;
 	code?: string;
 	colors?: number[];

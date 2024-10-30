@@ -1,14 +1,16 @@
 import { useNavigate, useParams } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
-import { Match, Switch } from 'solid-js';
+import { For, Match, Switch } from 'solid-js';
 import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { Button } from '~/components/ui/Button';
+import { Tabs, TabsContent, TabsIndicator, TabsList, TabsTrigger } from '~/components/ui/Tabs';
 import { REFS_PATH } from '~/constants/paths';
-import type { TimeByTask } from '~/types/core';
+import type { ColorByReference, TimeByTask } from '~/types/core';
 import ReferenceCard from '../components/ReferenceCard';
-import { getReferenceProSupervisorQuery } from '../requests/referenceGet';
+import ReferenceDetails from '../components/ReferenceDetails';
+import { getReferenceForSupervisorQuery } from '../requests/referenceGet';
 
 function Reference() {
 	return (
@@ -21,7 +23,7 @@ function Reference() {
 function ReferenceProSupervisor() {
 	const params = useParams();
 
-	const reference = createQuery(() => getReferenceProSupervisorQuery(Number(params.id)));
+	const reference = createQuery(() => getReferenceForSupervisorQuery(Number(params.id)));
 
 	const navigate = useNavigate();
 	const handleCancel = () => navigate(REFS_PATH);
@@ -37,17 +39,45 @@ function ReferenceProSupervisor() {
 				</Match>
 				<Match when={reference.isError}>Error</Match>
 				<Match when={reference.isSuccess}>
-					<div class='w-full md:w-4/6 xl:w-2/5'>
-						<ReferenceCard times={reference.data?.time_by_task as TimeByTask} />
-						<div class='flex m-4 justify-between'>
-							<Button type='button' onclick={handleCancel} variant='secondary'>
-								Volver
-							</Button>
-						</div>
+					<div class='h-full w-full justify-between flex flex-col gap-2'>
+						<Tabs>
+							<TabsList class='sticky top-0 z-10 '>
+								<TabsTrigger value='details'>Detalles</TabsTrigger>
+								<TabsTrigger value='pieces'>Piezas</TabsTrigger>
+								<TabsTrigger value='operations'>Listado Operacional</TabsTrigger>
+								<TabsTrigger value='times'>Tiempos</TabsTrigger>
+								<TabsIndicator />
+							</TabsList>
+							<TabsContent value='details' class='flex flex-col gap-2'>
+								<ReferenceDetails
+									colorsByReference={reference.data?.colors as ColorByReference[]}
+									code={reference.data?.code ?? ''}
+								/>
+								<div class='flex m-4 justify-between'>
+									<Button type='button' onclick={handleCancel} variant='secondary'>
+										Volver
+									</Button>
+								</div>
+							</TabsContent>
+							<TabsContent value='pieces' class='flex flex-col gap-2'>
+								<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
+									<h1>Piezas</h1>
+								</div>
+							</TabsContent>
+							<TabsContent value='operations' class='flex flex-col gap-2'>
+								<h1>Operational list</h1>
+							</TabsContent>
+							<TabsContent value='times'>
+								<div class='w-full md:w-4/6 xl:w-2/5'>
+									<ReferenceCard times={reference.data?.time_by_task as TimeByTask} />
+								</div>
+							</TabsContent>
+
+						</Tabs>
 					</div>
 				</Match>
 			</Switch>
-		</div>
+		</div >
 	);
 }
 

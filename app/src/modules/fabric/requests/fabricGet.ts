@@ -74,6 +74,11 @@ function doFilters(filters: FabricFilter) {
 					_contains: filters.name,
 				},
 			}),
+			...(filters.ids && {
+				id: {
+					_in: filters.ids,
+				},
+			}),
 			...(filters.colors &&
 				filters.colors.length > 0 && {
 					color_id: {

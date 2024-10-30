@@ -61,22 +61,36 @@ async function getReferenceForTimes(key: number) {
 
 export type GetReferenceForTimesType = Awaited<ReturnType<typeof getReferenceForTimes>>;
 
-export function getReferenceProSupervisorQuery(key: number) {
+export function getReferenceForSupervisorQuery(key: number) {
 	return queryOptions({
-		queryKey: ['getReferenceForTimes', key],
-		queryFn: () => getReferenceProSupervisor(key),
+		queryKey: ['getReferenceForSupervisor', key],
+		queryFn: () => getReferenceForSupervisor(key),
 	});
 }
 
-async function getReferenceProSupervisor(key: number) {
+async function getReferenceForSupervisor(key: number) {
 	return await client.request(
 		readReference(key, {
-			fields: ['id', { time_by_task: ['*'] }],
+			fields: [
+				'*',
+				{ time_by_task: ['*'] },
+				{
+					colors: [
+						'id',
+						'color_id',
+						{ fabrics: ['code', 'fabric_id', '*'] },
+						{ resources: ['resource_id', 'code', '*'] },
+					],
+				},
+				{ pieces: ['image_id', 'reference_id'] },
+				'front',
+				'created_at',
+			],
 		}),
 	);
 }
 
-export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceProSupervisor>>;
+export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceForSupervisor>>;
 
 function doFilters(filters: ReferenceFilter) {
 	if (Object.keys(filters).length === 0) {

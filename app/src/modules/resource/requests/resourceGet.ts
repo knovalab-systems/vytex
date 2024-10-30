@@ -90,6 +90,11 @@ function doFilters(filters: ResourceFilter) {
 					_null: filters.state === 'Activo',
 				},
 			}),
+			...(filters.ids && {
+				id: {
+					_in: filters.ids,
+				},
+			}),
 		},
 	};
 }
