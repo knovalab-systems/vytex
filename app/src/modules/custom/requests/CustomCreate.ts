@@ -23,11 +23,6 @@ async function getRefByCustomCreate() {
 				deleted_at: {
 					_null: true,
 				},
-				colors: {
-					deleted_at: {
-						_null: true,
-					},
-				},
 			},
 		}),
 	);

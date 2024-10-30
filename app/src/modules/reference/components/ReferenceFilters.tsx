@@ -65,7 +65,6 @@ function ReferenceFilters(props: { filters: ReferenceFilter; setFilters: Setter<
 									value={field.value ?? ''}
 									{...props}
 									class='h-full'
-									type='number'
 									placeholder='Código de la referencia'
 									autocomplete='off'
 									id='code-filter'

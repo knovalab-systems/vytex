@@ -22,7 +22,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 		validate: valiForm(ColorUpdateSchema),
 		initialValues: {
 			name: props.color?.name || '',
-			code: Number(props.color?.code),
+			code: props.color?.code || '',
 			hex: props.color?.hex?.slice(1),
 			deleted_at: !props.color?.deleted_at ? 'Activo' : 'Inactivo',
 		},
@@ -31,7 +31,7 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 	const handleSubmit: SubmitHandler<ColorUpdateType> = async data => {
 		const formatData = {
 			...data,
-			code: String(data.code),
+			code: data.code,
 			hex: `#${data.hex}`,
 		};
 		const { deleted_at, ...rest } = formatData;
@@ -86,14 +86,13 @@ function ColorUpdateForm(props: { color?: GetColorType }) {
 						</div>
 					)}
 				</Field>
-				<Field name='code' type='number'>
+				<Field name='code'>
 					{(field, props) => (
 						<div>
 							<Label for='code-field'>Código</Label>
 							<Input
 								placeholder='2322'
 								autocomplete='off'
-								type='number'
 								id='code-field'
 								aria-errormessage={field.error}
 								required

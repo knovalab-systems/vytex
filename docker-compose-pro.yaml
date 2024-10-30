@@ -1,0 +1,56 @@
+services:
+  
+  app:
+    container_name: app-vytex
+    restart: unless-stopped
+    build: 
+      dockerfile: ./.docker/dockerfile.pro.app
+      context: ./
+    ports:
+      - 80:80
+    networks:
+    - app-net
+    depends_on:
+      api:
+        condition: service_started
+    
+  api:
+    container_name: api-vytex
+    build: 
+      dockerfile: ./.docker/dockerfile.pro.api
+      context: ./
+    ports:
+      - 8080:8080
+    networks:
+    - app-net
+    - api-net
+    depends_on:
+      db:
+        condition: service_healthy  
+    
+  db:
+    image: postgres:16
+    container_name: db-vytex
+    environment:
+      - POSTGRES_USER=vytex
+      - POSTGRES_PASSWORD=vytex
+      - POSTGRES_DB=vytex
+    volumes:
+      - db-vytex:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - api-net
+    attach: false
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+networks:
+  app-net:
+  api-net:
+
+volumes:
+  db-vytex:

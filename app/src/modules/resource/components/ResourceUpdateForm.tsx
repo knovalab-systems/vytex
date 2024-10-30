@@ -37,7 +37,7 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 		validate: valiForm(ResourceUpdateSchema),
 		initialValues: {
 			name: props.resource?.name || '',
-			code: Number(props.resource?.code),
+			code: props.resource?.code || '',
 			cost: Number(props.resource?.cost),
 			color: props.resource?.color_id || 0,
 			supplier: props.resource?.supplier_id || 0,
@@ -50,7 +50,7 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 
 		const formData = {
 			...restData,
-			code: code.toString(),
+			code: code,
 			color_id: color,
 			supplier_id: supplier,
 		};
@@ -108,12 +108,11 @@ function ResourceUpdateForm(props: { resource?: GetResourceType }) {
 							</div>
 						)}
 					</Field>
-					<Field name='code' type='number'>
+					<Field name='code'>
 						{(field, props) => (
 							<div>
 								<Label for='code-field'>Código</Label>
 								<Input
-									type='number'
 									placeholder='2322'
 									autocomplete='off'
 									id='code-field'

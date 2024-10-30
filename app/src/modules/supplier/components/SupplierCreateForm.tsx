@@ -16,11 +16,10 @@ function SupplierCreateForm() {
 
 	const [form, { Form, Field }] = createForm<SupplierCreateType>({
 		validate: valiForm(SupplierCreateSchema),
-		initialValues: { name: '' },
 	});
 
 	const handleSubmit: SubmitHandler<SupplierCreateType> = async data => {
-		const supplier = { ...data, code: String(data.code), nit: String(data.nit) };
+		const supplier = { ...data, code: data.code, nit: String(data.nit) };
 		return createSupplierRequest(supplier)
 			.then(() => {
 				refetchSuppliers();
@@ -82,14 +81,13 @@ function SupplierCreateForm() {
 						</div>
 					)}
 				</Field>
-				<Field name='code' type='number'>
+				<Field name='code'>
 					{(field, props) => (
 						<div>
 							<Label for='code-field'>Código</Label>
 							<Input
 								placeholder='2322'
 								autocomplete='off'
-								type='number'
 								id='code-field'
 								aria-errormessage={field.error}
 								required

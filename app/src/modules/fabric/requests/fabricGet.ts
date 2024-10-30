@@ -17,7 +17,7 @@ async function getFabrics(page: number, filters: FabricFilter) {
 			page: page,
 			limit: QUERY_LIMIT,
 			fields: ['id', 'name', 'cost', 'color_id', 'code', 'deleted_at', 'supplier_id'],
-			filter: doFilters(filters),
+			...doFilters(filters),
 		}),
 	);
 }
@@ -36,7 +36,7 @@ async function countFabrics(filters: FabricFilter) {
 				count: '*',
 			},
 			query: {
-				filter: doFilters(filters),
+				...doFilters(filters),
 			},
 		}),
 	);
@@ -58,33 +58,39 @@ async function getFabric(id: number) {
 export type GetFabricType = Awaited<ReturnType<typeof getFabric>>;
 
 function doFilters(filters: FabricFilter) {
+	if (Object.keys(filters).length === 0) {
+		return;
+	}
+
 	return {
-		...(filters.code && {
-			code: {
-				_contains: filters.code,
-			},
-		}),
-		...(filters.name && {
-			name: {
-				_contains: filters.name,
-			},
-		}),
-		...(filters.colors &&
-			filters.colors.length > 0 && {
-				color_id: {
-					_in: filters.colors,
+		filter: {
+			...(filters.code && {
+				code: {
+					_contains: filters.code,
 				},
 			}),
-		...(filters.suppliers &&
-			filters.suppliers.length > 0 && {
-				supplier_id: {
-					_in: filters.suppliers,
+			...(filters.name && {
+				name: {
+					_contains: filters.name,
 				},
 			}),
-		...(filters.state && {
-			delete_at: {
-				_null: filters.state === 'Activo',
-			},
-		}),
+			...(filters.colors &&
+				filters.colors.length > 0 && {
+					color_id: {
+						_in: filters.colors,
+					},
+				}),
+			...(filters.suppliers &&
+				filters.suppliers.length > 0 && {
+					supplier_id: {
+						_in: filters.suppliers,
+					},
+				}),
+			...(filters.state && {
+				delete_at: {
+					_null: filters.state === 'Activo',
+				},
+			}),
+		},
 	};
 }

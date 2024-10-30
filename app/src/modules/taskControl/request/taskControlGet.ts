@@ -20,7 +20,7 @@ function getTaskControls(page: number, tasks: number[], filters: TaskControlFilt
 			limit: QUERY_LIMIT,
 			page: page,
 			sort: ['-created_at', '-started_at', '-finished_at', '-rejected_at'],
-			filter: doFilters(tasks, filters),
+			...doFilters(tasks, filters),
 			fields: [
 				'id',
 				'order_id',
@@ -53,32 +53,37 @@ async function countTasks(tasks: number[], filters: TaskControlFilter) {
 				count: '*',
 			},
 			query: {
-				filter: doFilters(tasks, filters),
+				...doFilters(tasks, filters),
 			},
 		}),
 	);
 }
 
 function doFilters(tasks: number[], filters: TaskControlFilter) {
+	if (Object.keys(filters).length === 0) {
+		return;
+	}
 	return {
-		...(filters.id && {
-			id: {
-				_eq: filters.id,
-			},
-		}),
-		...(filters.order && {
-			order_id: {
-				_eq: filters.order,
-			},
-		}),
-		...(filters.status &&
-			filters.status.length > 0 && {
-				task_control_state_id: {
-					_in: filters.status,
+		filter: {
+			...(filters.id && {
+				id: {
+					_eq: filters.id,
 				},
 			}),
-		task_id: {
-			_in: filters.tasks && filters.tasks.length > 0 ? filters.tasks : tasks,
+			...(filters.order && {
+				order_id: {
+					_eq: filters.order,
+				},
+			}),
+			...(filters.status &&
+				filters.status.length > 0 && {
+					task_control_state_id: {
+						_in: filters.status,
+					},
+				}),
+			task_id: {
+				_in: filters.tasks && filters.tasks.length > 0 ? filters.tasks : tasks,
+			},
 		},
 	};
 }

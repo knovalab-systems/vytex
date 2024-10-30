@@ -16,9 +16,8 @@ async function getReferences(page: number, filters: ReferenceFilter) {
 		readReferences({
 			page: page,
 			limit: QUERY_LIMIT,
-			filter: doFilters(filters),
 			fields: ['id', 'code', 'deleted_at', { colors: ['color_id'] }],
-			deep: doDeep(filters),
+			...doFilters(filters),
 		}),
 	);
 }
@@ -37,8 +36,7 @@ async function countReferences(filters: ReferenceFilter) {
 				count: '*',
 			},
 			query: {
-				filter: doFilters(filters),
-				deep: doDeep(filters),
+				...doFilters(filters),
 			},
 		}),
 	);
@@ -81,29 +79,26 @@ async function getReferenceProSupervisor(key: number) {
 export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceProSupervisor>>;
 
 function doFilters(filters: ReferenceFilter) {
-	return {
-		...(filters.code && {
-			code: {
-				_contains: filters.code,
-			},
-		}),
-		...(filters.state && {
-			delete_at: {
-				_null: filters.state === 'Activo',
-			},
-		}),
-		...(filters.colors &&
-			filters.colors.length > 0 && {
-				colors: { color_id: { _in: filters.colors } },
-			}),
-	};
-}
+	if (Object.keys(filters).length === 0) {
+		return;
+	}
 
-function doDeep(filters: ReferenceFilter) {
 	return {
-		...(filters.colors &&
-			filters.colors.length > 0 && {
-				colors: { _filter: { color_id: { _in: filters.colors } } },
+		filter: {
+			...(filters.code && {
+				code: {
+					_contains: filters.code,
+				},
 			}),
+			...(filters.state && {
+				delete_at: {
+					_null: filters.state === 'Activo',
+				},
+			}),
+			...(filters.colors &&
+				filters.colors.length > 0 && {
+					colors: { color_id: { _in: filters.colors } },
+				}),
+		},
 	};
 }
