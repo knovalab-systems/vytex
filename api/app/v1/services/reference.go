@@ -144,23 +144,20 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		return nil, err
 	}
 
-	// format fabrics n resources
-	fabricsByReference := []models.FabricByReference{}
-	resourcesByReference := []models.ResourceByReference{}
-	for _, color := range b.Colors {
-		for _, fabric := range color.Fabrics {
-			fabricsByReference = append(fabricsByReference,
-				models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
-		}
-		for _, resource := range color.Resources {
-			resourcesByReference = append(resourcesByReference,
-				models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
-		}
-	}
-
-	// format colors
+	// format colors, fabrics n resources
 	colorsByReference := []models.ColorByReference{}
 	for _, color := range b.Colors {
+		fabricsByReference := []models.FabricByReference{}
+		resourcesByReference := []models.ResourceByReference{}
+
+		for _, fabric := range color.Fabrics {
+			fabricsByReference = append(fabricsByReference, models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
+		}
+
+		for _, resource := range color.Resources {
+			resourcesByReference = append(resourcesByReference, models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
+		}
+
 		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
 	}
 
