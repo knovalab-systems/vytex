@@ -19,6 +19,7 @@
 	},
 	"dependencies": {
 		"@kobalte/core": "^0.13.2",
+		"@kurkle/color": "^0.3.0",
 		"@modular-forms/solid": "^0.23.0",
 		"@solidjs/router": "^0.14.1",
 		"@tanstack/solid-query": "^5.40.0",

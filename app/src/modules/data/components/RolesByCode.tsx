@@ -1,4 +1,4 @@
-import { Chart, Colors, Legend, Title, Tooltip } from 'chart.js';
+import { ArcElement, BarElement, Chart, Colors, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar, Pie } from 'solid-chartjs';
 import { onMount } from 'solid-js';
@@ -78,7 +78,7 @@ function RolesByCode(props: { data: CountRoleByCodeType }) {
 	};
 
 	onMount(() => {
-		Chart.register(Title, Tooltip, Legend, Colors, ChartDataLabels);
+		Chart.register(Title, Tooltip, Legend, Colors, ChartDataLabels, LinearScale, BarElement, ArcElement);
 	});
 
 	return (

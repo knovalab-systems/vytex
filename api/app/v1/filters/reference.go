@@ -72,7 +72,7 @@ func ReferenceFilters(s query.IReferenceDo, filters string) (query.IReferenceDo,
 					}
 				}
 			}
-			s = s.RightJoin(query.ColorByReference, exprs...)
+			s = s.RightJoin(query.ColorByReference, exprs...).Group(table.ID)
 		}
 	}
 
