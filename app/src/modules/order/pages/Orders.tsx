@@ -52,7 +52,7 @@ function OrdersPage() {
 					<ErrorMessage title='Error al cargar pedidos' />
 				</Match>
 				<Match when={isLoading()}>
-					<Loading label='Cargando ordenes' />
+					<Loading label='Cargando órdenes' />
 				</Match>
 				<Match when={isSuccess()}>
 					<div>

@@ -48,6 +48,7 @@ const (
 	CONF_SUPERVISOR_VALUE  RoleCode = "confsupervisor"
 	CALD_SUPERVISOR_VALUE  RoleCode = "caldsupervisor"
 	EMPQ_SUPERVISOR_VALUE  RoleCode = "empqsupervisor"
+	COMMERCE_VALUE         RoleCode = "commerce"
 )
 
 func DefaultRoles() []*Role {
@@ -63,12 +64,8 @@ func DefaultRoles() []*Role {
 				string(ReadSuppliers),
 				string(CreateSuppliers),
 				string(UpdateSuppliers),
-				string(ReadCustoms),
-				string(CreateCustoms),
-				string(CreateOrders),
 				string(ReadFabrics),
 				string(ReadResources),
-				string(ReadOrders),
 				string(CreateRoles),
 				string(UpdateRoles),
 			},
@@ -134,6 +131,18 @@ func DefaultRoles() []*Role {
 				string(ReadReferences),
 				string(ReadEmpaque),
 				string(UpdateEmpaque),
+			},
+		},
+		{
+			Name: "Comercio",
+			Code: COMMERCE_VALUE,
+			Policies: []string{
+				string(ReadReferences),
+				string(ReadCustoms),
+				string(UpdateEmpaque),
+				string(ReadOrders),
+				string(CreateCustoms),
+				string(CreateOrders),
 			},
 		},
 	}

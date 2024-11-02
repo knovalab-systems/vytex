@@ -45,7 +45,7 @@ function OrderTable(props: { orders?: GetOrdersType }) {
 				<TableBody>
 					<Show when={(props.orders?.length ?? 0) === 0}>
 						<TableRow class='bg-white'>
-							<TableCell colspan={9}>No se han encontrado ordenes.</TableCell>
+							<TableCell colspan={9}>No se han encontrado órdenes.</TableCell>
 						</TableRow>
 					</Show>
 					<For each={props.orders}>

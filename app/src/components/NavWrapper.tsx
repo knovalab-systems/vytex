@@ -2,6 +2,7 @@ import { type RouteSectionProps, useIsRouting } from '@solidjs/router';
 import { createQuery } from '@tanstack/solid-query';
 import { AiOutlineApartment } from 'solid-icons/ai';
 import { BsBoxSeamFill } from 'solid-icons/bs';
+import { FiBox } from 'solid-icons/fi';
 import { HiSolidTruck } from 'solid-icons/hi';
 import { IoBandageSharp, IoColorPaletteSharp, IoCut, IoExtensionPuzzleSharp, IoShirtSharp } from 'solid-icons/io';
 import { OcHomefill3 } from 'solid-icons/oc';
@@ -30,7 +31,7 @@ function NavWrapper(props: RouteSectionProps) {
 		ReadColors: { name: 'Colores', icon: () => <IoColorPaletteSharp size={24} />, path: PATHS.COLORS_PATH },
 		ReadFabrics: { name: 'Telas', icon: () => <IoBandageSharp size={24} />, path: PATHS.FABRICS_PATH },
 		ReadReferences: { name: 'Referencias', icon: () => <IoShirtSharp size={24} />, path: PATHS.REFS_PATH },
-		ReadOrders: { name: 'Ordenes', icon: () => <AiOutlineApartment size={24} />, path: PATHS.ORDERS_PATH },
+		ReadOrders: { name: 'Órdenes', icon: () => <AiOutlineApartment size={24} />, path: PATHS.ORDERS_PATH },
 		ReadResources: { name: 'Insumos', icon: () => <IoExtensionPuzzleSharp size={24} />, path: PATHS.RESOURCES_PATH },
 		ReadSuppliers: { name: 'Proveedores', icon: () => <HiSolidTruck size={24} />, path: PATHS.SUPPLIERS_PATH },
 		ReadCorte: { name: 'Corte', icon: () => <IoCut size={24} />, path: PATHS.CORTE_PATH },
@@ -38,6 +39,7 @@ function NavWrapper(props: RouteSectionProps) {
 		ReadRoles: { name: 'Roles', icon: () => <RiUserFacesTeamFill size={24} />, path: PATHS.ROLES_PATH },
 		ReadCalidad: { name: 'Calidad', icon: () => <VsChecklist size={24} />, path: PATHS.CALIDAD_PATH },
 		ReadEmpaque: { name: 'Empaque', icon: () => <BsBoxSeamFill size={24} />, path: PATHS.EMPAQUE_PATH },
+		ReadCustoms: { name: 'Pedidos', icon: () => <FiBox size={24} />, path: PATHS.CUSTOMS_PATH },
 	};
 
 	const getPages: Accessor<NavPages[]> = createMemo(() => {

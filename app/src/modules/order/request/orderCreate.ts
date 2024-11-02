@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { createOrder, readReferences } from '@vytex/client';
+import { createOrder, readCustom, readReferences } from '@vytex/client';
 import { client } from '~/lib/client';
 import type { Order } from '~/types/core';
 
@@ -29,3 +29,16 @@ async function getRefByOrderCreate() {
 }
 
 export type RefByOrderCreate = Awaited<ReturnType<typeof getRefByOrderCreate>>;
+
+export function getCustomForOrderQuery(id: number) {
+	return queryOptions({
+		queryFn: () => getCustomForOrder(id),
+		queryKey: ['getCustom', id],
+	});
+}
+
+async function getCustomForOrder(id: number) {
+	return await client.request(readCustom(id));
+}
+
+export type getCustomForOrder = Awaited<ReturnType<typeof getCustomForOrder>>;
