@@ -51,7 +51,7 @@ function ReferenceProSupervisor() {
 							<TabsContent value='details' class='flex flex-col gap-2'>
 								<ReferenceDetails
 									colorsByReference={reference.data?.colors as ColorByReference[]}
-									code={reference.data?.code ?? ''}
+									refCode={reference.data?.code ?? ''}
 								/>
 								<div class='flex m-4 justify-between'>
 									<Button type='button' onclick={handleCancel} variant='secondary'>
@@ -65,7 +65,17 @@ function ReferenceProSupervisor() {
 								</div>
 							</TabsContent>
 							<TabsContent value='operations' class='flex flex-col gap-2'>
-								<h1>Operational list</h1>
+								<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
+									<h1 class='text-xl font-bold mb-4'>Listado operacional</h1>
+									<For each={reference.data?.operations} fallback={<div>No operations available</div>}>
+										{(operation, index) => (
+											<div class='flex items-center gap-2 p-2 bg-gray-50 rounded-md shadow-sm'>
+												<span class='text-gray-500 font-semibold'>{index() + 1}.</span>
+												<h2 class='text-gray-800'>{operation.description}</h2>
+											</div>
+										)}
+									</For>
+								</div>
 							</TabsContent>
 							<TabsContent value='times'>
 								<div class='w-full md:w-4/6 xl:w-2/5'>

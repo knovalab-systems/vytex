@@ -72,19 +72,15 @@ async function getReferenceForSupervisor(key: number) {
 	return await client.request(
 		readReference(key, {
 			fields: [
-				'*',
-				{ time_by_task: ['*'] },
-				{
-					colors: [
-						'id',
-						'color_id',
-						{ fabrics: ['code', 'fabric_id', '*'] },
-						{ resources: ['resource_id', 'code', '*'] },
-					],
-				},
-				{ pieces: ['image_id', 'reference_id'] },
 				'front',
 				'created_at',
+				'code',
+				{ time_by_task: ['*'] },
+				{
+					colors: ['id', 'color_id', { fabrics: ['*'] }, { resources: ['*'] }],
+				},
+				'operations',
+				'pieces',
 			],
 		}),
 	);
