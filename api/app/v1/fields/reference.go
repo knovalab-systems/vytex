@@ -32,8 +32,9 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 			return true
 		}
 
-		if strings.HasPrefix(v, "pieces.") || v == "pieces" {
-			piecesFields = append(piecesFields, strings.TrimPrefix(v, "pieces."))
+		if strings.HasPrefix(v, "operations.") || v == "operations" {
+			operationsExprs := operationsSwitch(piecesFields, func(s string) bool { return false })
+			s.Preload(table.Operations.Select(operationsExprs...))
 			return true
 		}
 
@@ -51,16 +52,18 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 		exprs = append(exprs, table.ID)
 		colorsExprs := append(colorByReferenceSwitch(colorsFields, func(s string) bool { return false }), query.ColorByReference.ReferenceID)
 
-		// Preload para Fabrics
+		// Preload for Fabrics
 		if len(fabricsFields) != 0 {
 			fabricsExprs := fabricByReferenceSwitch(fabricsFields, func(s string) bool { return false })
 			s.Preload(table.Colors.Fabrics.Select(fabricsExprs...))
+			s.Preload(table.Colors.Fabrics.Fabric)
 		}
 
-		// Preload para Resources
+		// Preload for Resources
 		if len(resourcesFields) != 0 {
 			resourcesExprs := resourceByReferenceSwitch(resourcesFields, func(s string) bool { return false })
 			s.Preload(table.Colors.Resources.Select(resourcesExprs...))
+			s.Preload(table.Colors.Resources.Resource)
 		}
 
 		s.Preload(table.Colors.Select(colorsExprs...))
@@ -70,12 +73,10 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 }
 
 func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
-
 	table := query.Reference
 	exprs := []field.Expr{}
 
 	for _, v := range fields {
-
 		if function(v) {
 			continue
 		}
@@ -102,19 +103,16 @@ func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
 		case "*":
 			exprs = append(exprs, table.ALL)
 		}
-
 	}
 
 	return exprs
 }
 
 func colorByReferenceSwitch(fields []string, function func(string) bool) []field.Expr {
-
 	table := query.ColorByReference
 	exprs := []field.Expr{}
 
 	for _, v := range fields {
-
 		if function(v) {
 			continue
 		}
@@ -127,7 +125,6 @@ func colorByReferenceSwitch(fields []string, function func(string) bool) []field
 		case "*":
 			exprs = append(exprs, table.ALL)
 		}
-
 	}
 
 	return exprs
@@ -177,6 +174,28 @@ func resourceByReferenceSwitch(fields []string, function func(string) bool) []fi
 			exprs = append(exprs, table.ResourceId)
 		case "color_by_reference_id":
 			exprs = append(exprs, table.ColorByReferenceID)
+		case "*":
+			exprs = append(exprs, table.ALL)
+		}
+	}
+
+	return exprs
+}
+
+func operationsSwitch(fields []string, function func(string) bool) []field.Expr {
+	table := query.Operation
+	exprs := []field.Expr{}
+
+	for _, v := range fields {
+		if function(v) {
+			continue
+		}
+
+		switch v {
+		case "id":
+			exprs = append(exprs, table.ID)
+		case "description":
+			exprs = append(exprs, table.Description)
 		case "*":
 			exprs = append(exprs, table.ALL)
 		}
