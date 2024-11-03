@@ -9,6 +9,7 @@ import type {
 	VytexUser,
 } from '../index.js';
 import type { VytexOperation } from './operation.js';
+import type { VytexPiece } from './piece.js';
 
 /**
  * vytex_reference type
@@ -30,7 +31,7 @@ export type VytexReference<Schema = any> = MergeCoreCollection<
 		time_by_task_id: string | null;
 		time_by_task: VytexTimeByTask<Schema> | null;
 		colors: VytexColorByReference<Schema>[] | null;
-		pieces: VytexImageByReference<Schema>[] | null;
+		pieces: VytexPiece<Schema>[] | null;
 		operations: VytexOperation<Schema>[] | null;
 	}
 >;
