@@ -1,4 +1,4 @@
-import { Chart, Colors, Legend, Title, Tooltip, LinearScale, BarElement } from 'chart.js';
+import { BarElement, Chart, Colors, Legend, LinearScale, Title, Tooltip } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'solid-chartjs';
 import { onMount } from 'solid-js';

@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor, within } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
 import toast from 'solid-toast';
-import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import { createPointerEvent, installPointerEvent } from '~/utils/event';
 import * as requests from '../../request/orderCreate';
+import type { getCustomForOrder } from '../../request/orderCreate';
 import OrderCreateForm from '../OrderCreateForm';
 
 const navigateMock = vi.fn();
@@ -20,7 +20,7 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('renders correctly', () => {
-		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
+		render(() => <OrderCreateForm references={[]} custom={[] as unknown as getCustomForOrder} />);
 
 		const refField = screen.getByText('Referencia');
 		const submitButton = screen.getByText('Crear');
@@ -32,7 +32,7 @@ describe('OrderCreateForm', () => {
 	});
 
 	it('shows required errors correctly', async () => {
-		render(() => <OrderCreateForm references={[]} custom={[] as unknown as GetCustomType} />);
+		render(() => <OrderCreateForm references={[]} custom={[] as unknown as getCustomForOrder} />);
 
 		const submitButton = screen.getByText('Crear');
 		fireEvent.click(submitButton);
@@ -58,7 +58,7 @@ describe('OrderCreateForm', () => {
 						],
 					},
 				]}
-				custom={[] as unknown as GetCustomType}
+				custom={[] as unknown as getCustomForOrder}
 			/>
 		));
 
@@ -119,7 +119,7 @@ describe('OrderCreateForm', () => {
 						],
 					},
 				]}
-				custom={[] as unknown as GetCustomType}
+				custom={[] as unknown as getCustomForOrder}
 			/>
 		));
 
@@ -182,7 +182,7 @@ describe('OrderCreateForm', () => {
 						],
 					},
 				]}
-				custom={[{ id: 1 }] as unknown as GetCustomType}
+				custom={[{ id: 1 }] as unknown as getCustomForOrder}
 			/>
 		));
 

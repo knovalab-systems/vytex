@@ -1,4 +1,5 @@
 import { useNavigate } from '@solidjs/router';
+import LitsTile from '~/components/LitsTile';
 import { Button } from '~/components/ui/Button';
 import { Timeline } from '~/components/ui/Timeline';
 import { USERS_PATH, USER_UPDATE_PATH } from '~/constants/paths';
@@ -37,11 +38,11 @@ function UserCard(props: { user?: GetUserType }) {
 				<h1 class='text-2xl font-bold text-center mb-8'>Detalles del usuario</h1>
 				<div class='flex gap-4'>
 					<div class='flex flex-col gap-4 flex-1'>
-						<ValuesWithTitles support='ID' title={user()?.id} />
-						<ValuesWithTitles support='Nombre' title={user()?.name} />
-						<ValuesWithTitles support='Nombre de usuario' title={user()?.username} />
-						<ValuesWithTitles support='Estado' title={!user()?.deleted_at ? 'Activo' : 'Inactivo'} />
-						<ValuesWithTitles support='Rol' title={user()?.role?.name} />
+						<LitsTile support='ID' title={user()?.id} />
+						<LitsTile support='Nombre' title={user()?.name} />
+						<LitsTile support='Nombre de usuario' title={user()?.username} />
+						<LitsTile support='Estado' title={!user()?.deleted_at ? 'Activo' : 'Inactivo'} />
+						<LitsTile support='Rol' title={user()?.role?.name} />
 					</div>
 					<div class='mx-auto'>
 						<Timeline bulletSize={20} items={timelineArr()} activeItem={2} />
@@ -56,15 +57,6 @@ function UserCard(props: { user?: GetUserType }) {
 					Actualizar
 				</Button>
 			</div>
-		</div>
-	);
-}
-
-function ValuesWithTitles(props: { support?: string; title?: string | null }) {
-	return (
-		<div class='flex-1 space-y-1'>
-			<p class='font-medium leading-none'>{props.title || 'Title'}</p>
-			<p class='text-sm text-muted-foreground'>{props.support || 'support'}</p>
 		</div>
 	);
 }

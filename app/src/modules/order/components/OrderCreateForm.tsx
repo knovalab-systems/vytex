@@ -19,9 +19,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, Ta
 import { CUSTOMS_PATH } from '~/constants/paths';
 import { DEFAULT_SIZES, SIZES } from '~/constants/sizes';
 import { useColors } from '~/hooks/useColors';
-import type { GetCustomType } from '~/modules/custom/requests/CustomGet';
 import type { Order } from '~/types/core';
-import { type RefByOrderCreate, createOrderRequest } from '../request/orderCreate';
+import { type RefByOrderCreate, createOrderRequest, type getCustomForOrder } from '../request/orderCreate';
 import { OrderCreateSchema, type OrderCreateType } from '../schemas/orderCreate';
 
 type ColorReference = {
@@ -31,7 +30,7 @@ type ColorReference = {
 	hex: string;
 };
 
-function OrderCreateForm(props: { references: RefByOrderCreate; custom?: GetCustomType }) {
+function OrderCreateForm(props: { references: RefByOrderCreate; custom?: getCustomForOrder }) {
 	const { getColorsRecord } = useColors();
 
 	const colorReferences = createMemo(() => {
