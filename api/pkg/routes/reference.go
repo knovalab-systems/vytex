@@ -17,5 +17,6 @@ func privateReferenceRoutes(g *echo.Group) {
 	route.POST("", referenceController.CreateReference, middlewares.Policies([]models.Policy{models.CreateReferences}))
 	route.GET("/aggregate", referenceController.AggregateReferences, middlewares.Policies([]models.Policy{models.ReadReferences}))
 	route.GET("/:referenceId", referenceController.ReadReference, middlewares.Policies([]models.Policy{models.ReadReferences, models.UpdateTimesReferences}))
+	route.GET("/images/:referenceId", referenceController.ReadReferenceImages, middlewares.Policies([]models.Policy{models.ReadReferences}))
 	route.PATCH("/time-by-task/:referenceId", referenceController.UpdateTimesReference, middlewares.Policies([]models.Policy{models.UpdateTimesReferences}))
 }

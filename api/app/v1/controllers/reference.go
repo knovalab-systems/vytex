@@ -1,13 +1,12 @@
 package controllers
 
 import (
-	"net/http"
-
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/knovalab-systems/vytex/app/v1/models"
 	"github.com/knovalab-systems/vytex/pkg/problems"
 	"github.com/knovalab-systems/vytex/pkg/repository"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 type ReferenceController struct {
@@ -178,4 +177,37 @@ func (m *ReferenceController) ReadReference(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, reference)
+}
+
+// ReadReferenceImages Get a reference images
+// @Summary      Get a reference images
+// @Description  Get a reference images by id
+// @Tags         References
+// @Produce      Blob
+// @Param        refenceId path string true "References ID"
+// @Success      200 {object} models.Reference
+// @Failure      400
+// @Failure      500
+// @Router       /references/images/{referenceId} [get]
+func (m *ReferenceController) ReadReferenceImages(c echo.Context) error {
+	u := new(models.ReferenceRead)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.ReferencesBadRequest()
+	}
+
+	// validate
+	if err := c.Validate(u); err != nil {
+		return problems.ReferencesBadRequest()
+	}
+
+	// create zip file
+	zipData, err := m.ReferenceRepository.SelectReferenceImages(u)
+
+	if err != nil {
+		return problems.ServerError()
+	}
+
+	return c.Blob(http.StatusOK, "application/zip", zipData)
 }
