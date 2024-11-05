@@ -13,7 +13,7 @@ export type PolicyNav = Extract<
 	| 'ReadUsers'
 	| 'ReadReferences'
 	| 'ReadColors'
-	//	| 'ReadCustoms'
+	| 'ReadCustoms'
 	| 'ReadFabrics'
 	| 'ReadResources'
 	| 'ReadOrders'

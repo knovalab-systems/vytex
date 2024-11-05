@@ -1,0 +1,18 @@
+FROM golang:1.22.1-alpine
+
+WORKDIR /app
+
+COPY api/go.mod api/go.sum ./
+
+# install packages
+RUN go mod download
+
+COPY api .
+
+RUN go build -o ./bin/main main.go
+
+# set provilegies
+RUN chmod +x ./run.sh
+
+# container run build file
+ENTRYPOINT [ "sh", "./run.sh" ]

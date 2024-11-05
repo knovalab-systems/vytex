@@ -14,7 +14,7 @@ describe('Order Table', () => {
 
 	it('renders correctly on empty orders', () => {
 		render(() => <OrderTable orders={undefined} />);
-		const tableHeader = screen.getByText('No se han encontrado ordenes.');
+		const tableHeader = screen.getByText('No se han encontrado órdenes.');
 
 		expect(tableHeader).toBeInTheDocument();
 	});

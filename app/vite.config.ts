@@ -21,7 +21,7 @@ export default defineConfig({
 		// isolate: false,
 		outputFile: 'test_results/components-report.html',
 	},
-	plugins: [solid(), compression({ algorithm: 'brotliCompress' })],
+	plugins: [solid(), compression({ algorithm: 'gzip' })],
 	server: {
 		host: true,
 		port: 4040,

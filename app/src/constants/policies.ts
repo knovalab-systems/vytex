@@ -50,15 +50,15 @@ export const POLICIES: Record<Policy, { name: string; value: Policy }> = {
 		value: 'UpdateFabrics',
 	},
 	ReadOrders: {
-		name: 'Ver ordenes',
+		name: 'Ver órdenes',
 		value: 'ReadOrders',
 	},
 	CreateOrders: {
-		name: 'Crear ordenes',
+		name: 'Crear órdenes',
 		value: 'CreateOrders',
 	},
 	UpdateOrders: {
-		name: 'Editar ordenes',
+		name: 'Editar órdenes',
 		value: 'UpdateOrders',
 	},
 	ReadReferences: {

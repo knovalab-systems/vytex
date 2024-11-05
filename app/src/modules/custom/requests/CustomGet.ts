@@ -46,7 +46,35 @@ export function getCustomQuery(id: number) {
 }
 
 async function getCustom(id: number) {
-	return await client.request(readCustom(id));
+	return await client.request(
+		readCustom(id, {
+			deep: {
+				orders: {
+					_filter: {
+						custom_id: {
+							_eq: 1,
+						},
+					},
+				},
+			},
+			fields: [
+				'id',
+				'client',
+				{ create_user: ['name'] },
+				{ cancel_user: ['name'] },
+				'created_at',
+				'canceled_at',
+				'finished_at',
+				{
+					orders: [
+						'id',
+						'order_state_id',
+						{ color_by_reference: [{ color: ['hex', 'name'] }, { reference: ['code'] }] },
+					],
+				},
+			],
+		}),
+	);
 }
 
 export type GetCustomType = Awaited<ReturnType<typeof getCustom>>;

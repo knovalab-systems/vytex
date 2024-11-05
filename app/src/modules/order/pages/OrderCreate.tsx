@@ -5,9 +5,8 @@ import AllowPolicies from '~/components/AllowPolicies';
 import ErrorMessage from '~/components/ErrorMessage';
 import Loading from '~/components/Loading';
 import { useColors } from '~/hooks/useColors';
-import { getCustomQuery } from '~/modules/custom/requests/CustomGet';
 import OrderCreateForm from '../components/OrderCreateForm';
-import { type RefByOrderCreate, getRefByOrderCreateQuery } from '../request/orderCreate';
+import { type RefByOrderCreate, getCustomForOrderQuery, getRefByOrderCreateQuery } from '../request/orderCreate';
 
 function OrderCreate() {
 	return (
@@ -19,7 +18,7 @@ function OrderCreate() {
 
 function OrderCreatePage() {
 	const params = useParams();
-	const custom = createQuery(() => getCustomQuery(Number(params.id)));
+	const custom = createQuery(() => getCustomForOrderQuery(Number(params.id)));
 
 	const { colorsQuery } = useColors();
 	const references = createQuery(() => getRefByOrderCreateQuery());
