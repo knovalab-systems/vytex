@@ -10,7 +10,8 @@ import { REFS_PATH } from '~/constants/paths';
 import type { ColorByReference, TimeByTask } from '~/types/core';
 import ReferenceCard from '../components/ReferenceCard';
 import ReferenceDetails from '../components/ReferenceDetails';
-import { getReferenceForSupervisorQuery } from '../requests/referenceGet';
+import ReferenceImages from '../components/ReferenceImages';
+import { type GetReferenceImageType, getReferenceForSupervisorQuery, getReferenceImageQuery } from '../requests/referenceGet';
 
 function Reference() {
 	return (
@@ -24,6 +25,7 @@ function ReferenceProSupervisor() {
 	const params = useParams();
 
 	const reference = createQuery(() => getReferenceForSupervisorQuery(Number(params.id)));
+	const piece = createQuery(() => getReferenceImageQuery(Number(params.id)));
 
 	const navigate = useNavigate();
 	const handleCancel = () => navigate(REFS_PATH);
@@ -31,14 +33,14 @@ function ReferenceProSupervisor() {
 	return (
 		<div class='flex items-center justify-center h-full'>
 			<Switch>
-				<Match when={reference.isError}>
-					<ErrorMessage title='Error al cargar tiempos' />
+				<Match when={reference.isError || piece.isError}>
+					<ErrorMessage title='Error al cargar referencia' />
 				</Match>
-				<Match when={reference.isFetching}>
-					<Loading label='Cargando tiempos' />
+				<Match when={reference.isFetching || piece.isFetching}>
+					<Loading label='Cargando referencia' />
 				</Match>
-				<Match when={reference.isError}>Error</Match>
-				<Match when={reference.isSuccess}>
+				<Match when={reference.isError || piece.isError}>Error</Match>
+				<Match when={reference.isSuccess && piece.isSuccess}>
 					<div class='h-full w-full justify-between flex flex-col gap-2'>
 						<Tabs>
 							<TabsList class='sticky top-0 z-10 '>
@@ -60,9 +62,7 @@ function ReferenceProSupervisor() {
 								</div>
 							</TabsContent>
 							<TabsContent value='pieces' class='flex flex-col gap-2'>
-								<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>
-									<h1>Piezas</h1>
-								</div>
+								<ReferenceImages pieces={piece.data as GetReferenceImageType} />
 							</TabsContent>
 							<TabsContent value='operations' class='flex flex-col gap-2'>
 								<div class='flex flex-col justify-center gap-4 p-4 bg-white rounded-md border border-gray-100 shadow-md'>

@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readReference, readReferences } from '@vytex/client';
+import { aggregate, readReference, readReferenceImage, readReferences } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 import type { ReferenceFilter } from '~/types/filter';
@@ -87,6 +87,19 @@ async function getReferenceForSupervisor(key: number) {
 }
 
 export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceForSupervisor>>;
+
+export function getReferenceImageQuery(key: number) {
+	return queryOptions({
+		queryKey: ['getReferenceImage', key],
+		queryFn: () => getReferenceImage(key),
+	});
+}
+
+async function getReferenceImage(key: number) {
+	return await client.request(readReferenceImage(key));
+}
+
+export type GetReferenceImageType = Awaited<ReturnType<typeof getReferenceImage>>;
 
 function doFilters(filters: ReferenceFilter) {
 	if (Object.keys(filters).length === 0) {
