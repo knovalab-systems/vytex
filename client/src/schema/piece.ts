@@ -5,7 +5,7 @@ export type VytexPiece<Schema = any> = MergeCoreCollection<
 	'vytex_pieces',
 	{
 		id: number;
-		ImageId: string | null;
+		image_id: string | null;
 		image: VytexImage<Schema> | null;
 	}
 >;

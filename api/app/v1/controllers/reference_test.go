@@ -81,7 +81,7 @@ func TestReadReference(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("Not found fabric", func(t *testing.T) {
+	t.Run("Not found reference", func(t *testing.T) {
 		// context
 		req := httptest.NewRequest(http.MethodGet, "/", nil)
 		rec := httptest.NewRecorder()
@@ -118,6 +118,108 @@ func TestReadReference(t *testing.T) {
 
 		// test
 		err := referenceController.ReadReference(c)
+		if assert.NoError(t, err) {
+			assert.Equal(t, http.StatusOK, rec.Code)
+		}
+	})
+}
+
+func TestReadReferenceImages(t *testing.T) {
+	t.Run("Fail binding, id is not find", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReferenceImages(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail validation", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReferenceImages(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Fail get images, server error", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReferenceImages").Return([]byte{}, errors.New("server error"))
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReferenceImages(c)
+		assert.Error(t, err)
+		assert.Equal(t, problems.ServerError(), err)
+	})
+
+	t.Run("Not found reference", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReferenceImages").Return([]byte{}, errors.New("error"))
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReferenceImages(c)
+		assert.Error(t, err)
+	})
+
+	t.Run("Get reference images successfully", func(t *testing.T) {
+		// context
+		req := httptest.NewRequest(http.MethodGet, "/", nil)
+		rec := httptest.NewRecorder()
+		e := echo.New()
+		config.EchoValidator(e)
+		c := e.NewContext(req, rec)
+		c.SetParamNames("referenceId")
+		c.SetParamValues("1")
+		expectedZipData := []byte("zip data")
+
+		// mocks
+		referenceMock := mocks.ReferenceMock{}
+		referenceMock.On("SelectReferenceImages").Return(expectedZipData, nil)
+		referenceController := ReferenceController{ReferenceRepository: &referenceMock}
+
+		// test
+		err := referenceController.ReadReferenceImages(c)
 		if assert.NoError(t, err) {
 			assert.Equal(t, http.StatusOK, rec.Code)
 		}
