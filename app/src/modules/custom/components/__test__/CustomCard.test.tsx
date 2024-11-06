@@ -15,7 +15,7 @@ vi.mock('@solidjs/router', () => ({
 	},
 }));
 
-describe('UserCard', () => {
+describe('CustomCard', () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});

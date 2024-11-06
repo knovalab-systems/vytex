@@ -22,9 +22,9 @@ func TaskControlSorts(s query.ITaskControlDo, sorts string) query.ITaskControlDo
 		switch field {
 		case "created_at":
 			if descending {
-				s.Order(table.ID.Desc())
+				s.Order(table.CreatedAt.Desc())
 			} else {
-				s.Order(table.ID.Asc())
+				s.Order(table.CreatedAt.Asc())
 			}
 		case "started_at":
 			if descending {

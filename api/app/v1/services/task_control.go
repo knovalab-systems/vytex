@@ -210,7 +210,7 @@ func rejectTaskControl(taskControl *models.TaskControl, now *time.Time) (*models
 			return nil, problems.ServerError()
 		}
 	} else {
-		taskState, err := helpers.GetTaskControlStateByValue(models.RejectedTaskControlStateValue)
+		taskState, err := helpers.GetTaskControlStateByValue(models.StartedTaskControlStateValue)
 		if err != nil {
 			return nil, problems.ServerError()
 		}

@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/Tabs';
 import { useSteps } from '~/hooks/useSteps';
 import { useTaskControlStatus } from '~/hooks/useTaskControlStatus';
 import OrderCard from '../components/OrderCard';
-import { type GetOrder, getOrderQuery, getTasksByOrderQuery } from '../request/orderGet';
+import OrderTask from '../components/OrderTasks';
+import { type GetOrder, type GetTasksByOrder, getOrderQuery, getTasksByOrderQuery } from '../request/orderGet';
 
 function Order() {
 	return (
@@ -41,14 +42,16 @@ function OrderPage() {
 					<Loading label='Cargando orden' />
 				</Match>
 				<Match when={isSuccess()}>
-					<TabsList class='mr-auto'>
+					<TabsList class='mr-auto sticky top-0'>
 						<TabsTrigger value='orden'>Orden</TabsTrigger>
 						<TabsTrigger value='tasks'>Tareas</TabsTrigger>
 					</TabsList>
 					<TabsContent class='flex-1 flex' value='orden'>
 						<OrderCard order={order.data as GetOrder} />
 					</TabsContent>
-					<TabsContent value='tasks'>1</TabsContent>
+					<TabsContent class='flex-1 flex' value='tasks'>
+						<OrderTask tasks={tasks.data as GetTasksByOrder} />
+					</TabsContent>
 				</Match>
 			</Switch>
 		</Tabs>

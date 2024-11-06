@@ -131,7 +131,9 @@ async function getTasksByOrder(id: number) {
 					_eq: id,
 				},
 			},
+			sort: ['created_at'],
 			fields: [
+				'id',
 				'task_control_state_id',
 				'created_at',
 				'finished_at',
