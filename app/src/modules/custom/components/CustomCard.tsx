@@ -35,6 +35,7 @@ function CustomCard(props: { custom: GetCustomType }) {
 
 		return arr;
 	};
+
 	return (
 		<div class='flex flex-col md:w-1/2 2xl:w-2/5'>
 			<div class='p-8 m-4 space-y-4 bg-white border-gray-100 shadow-md rounded-md border'>
@@ -64,7 +65,7 @@ function CustomCard(props: { custom: GetCustomType }) {
 								{order => (
 									<TableRow class='bg-white group'>
 										<TableCell>
-											<A class=' text-blue-600 font-semibold text-lg underline' href={`${ORDERS_PATH}/${order.id}`}>
+											<A class='text-blue-600 font-semibold text-lg underline' href={`${ORDERS_PATH}/${order.id}`}>
 												{order.id}
 											</A>
 										</TableCell>

@@ -5,9 +5,14 @@ import { CUSTOMS_PATH, ORDERS_CREATE_PATH } from '~/constants/paths';
 import type { GetCustomType } from '../../requests/CustomGet';
 import CustomCard from '../CustomCard';
 
+const AMock = vi.fn();
 const navigateMock = vi.fn();
 vi.mock('@solidjs/router', () => ({
 	useNavigate: () => navigateMock,
+	A: (props: { href: string }) => {
+		AMock();
+		return <div>{props.href}</div>;
+	},
 }));
 
 describe('UserCard', () => {

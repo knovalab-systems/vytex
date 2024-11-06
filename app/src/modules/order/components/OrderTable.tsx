@@ -1,7 +1,7 @@
 import { For, Show } from 'solid-js';
 import ActionsCell from '~/components/ActionsCell';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableHeader, TableRow } from '~/components/ui/Table';
-import { ORDERS_START_PATH } from '~/constants/paths';
+import { ORDERS_PATH, ORDERS_START_PATH } from '~/constants/paths';
 import { useColors } from '~/hooks/useColors';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
 import { usePolicies } from '~/hooks/usePolicies';
@@ -15,7 +15,14 @@ function OrderTable(props: { orders?: GetOrdersType }) {
 	const { hasPolicy } = usePolicies();
 	const { getColorsRecord } = useColors();
 	const actions = (id: number, value: OrderState['value']) => {
-		const arr: Action[] = [];
+		const arr: Action[] = [
+			{
+				path: `${ORDERS_PATH}/${id}`,
+				title: 'Detalles de la orden',
+				label: 'Detalles',
+				icon: 'details',
+			},
+		];
 		if (value === 'created' && hasPolicy('StartOrder'))
 			arr.push({
 				path: `${ORDERS_START_PATH}/${id}`,
