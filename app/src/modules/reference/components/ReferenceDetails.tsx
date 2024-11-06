@@ -17,6 +17,7 @@ function ReferenceDetails(props: { colorsByReference: Omit<ColorByReference, 'id
                             <h2 class='mr-2'>{getColorsRecord()[color.color_id || 0]?.name || ''}</h2>
                             <div
                                 class='h-8 w-8 border'
+                                role='img'
                                 style={{
                                     background: getColorsRecord()[color.color_id || 0]?.hex || 'transparent',
                                 }}
@@ -39,6 +40,7 @@ function ReferenceDetails(props: { colorsByReference: Omit<ColorByReference, 'id
                                             <TableCell>
                                                 <div
                                                     class='h-8 w-8 border'
+                                                    role='img'
                                                     style={{
                                                         background: getColorsRecord()[resource?.resource?.color_id || 0]?.hex || 'transparent',
                                                     }}
