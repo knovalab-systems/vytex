@@ -44,7 +44,7 @@ function ReferenceTable(props: { references?: GetReferenceType }) {
 				</TableHeader>
 				<Show when={(props.references?.length ?? 0) === 0}>
 					<TableRow class='bg-white'>
-						<TableCell colspan={4}>No se han encontrado referencias.</TableCell>
+						<TableCell colspan={5}>No se han encontrado referencias.</TableCell>
 					</TableRow>
 				</Show>
 				<For each={props.references}>

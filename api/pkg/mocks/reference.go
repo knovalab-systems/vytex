@@ -19,6 +19,11 @@ func (m *ReferenceMock) SelectReference(resource *models.ReferenceRead) (*models
 	return &models.Reference{}, args.Error(0)
 }
 
+func (m *ReferenceMock) SelectReferenceImages(resource *models.ReferenceRead) ([]byte, error) {
+	args := m.Called()
+	return args.Get(0).([]byte), args.Error(1)
+}
+
 func (m *ReferenceMock) AggregationReferences(req *models.AggregateQuery) ([]*models.AggregateData, error) {
 	args := m.Called(req)
 	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)

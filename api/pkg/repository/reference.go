@@ -8,4 +8,5 @@ type ReferenceRepository interface {
 	CreateReference(*models.ReferenceCreateBody) (*models.Reference, error)
 	UpdateTimesReference(*models.TimeByTaskReferenceUpdate) (*models.Reference, error)
 	SelectReference(*models.ReferenceRead) (*models.Reference, error)
+	SelectReferenceImages(*models.ReferenceRead) ([]byte, error)
 }

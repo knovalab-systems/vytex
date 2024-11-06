@@ -3,6 +3,7 @@ import type {
 	DeepPartial,
 	VytexSize as VS,
 	VytexColor,
+	VytexColorByReference,
 	VytexComposition,
 	VytexCustom,
 	VytexFabric,
@@ -36,6 +37,7 @@ export type Task = VytexTask<CoreSchema>;
 export type TaskControl = VytexTaskControl;
 export type Policy = VytexPolicy;
 export type Role = VytexRole;
+export type ColorByReference = DeepPartial<VytexColorByReference<CoreSchema>>;
 
 export type ResourceFabric = {
 	fabrics: (VS & { fabric_id: number })[];

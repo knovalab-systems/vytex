@@ -87,6 +87,7 @@ func Test_WithContext(t *testing.T) {
 		qCtx.Operation.UnderlyingDB().Statement.Context,
 		qCtx.Order.UnderlyingDB().Statement.Context,
 		qCtx.OrderState.UnderlyingDB().Statement.Context,
+		qCtx.Piece.UnderlyingDB().Statement.Context,
 		qCtx.Reference.UnderlyingDB().Statement.Context,
 		qCtx.Resource.UnderlyingDB().Statement.Context,
 		qCtx.ResourceByReference.UnderlyingDB().Statement.Context,

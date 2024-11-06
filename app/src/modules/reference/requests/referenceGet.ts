@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readReference, readReferences } from '@vytex/client';
+import { aggregate, readReference, readReferenceImage, readReferences } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 import type { ReferenceFilter } from '~/types/filter';
@@ -61,22 +61,45 @@ async function getReferenceForTimes(key: number) {
 
 export type GetReferenceForTimesType = Awaited<ReturnType<typeof getReferenceForTimes>>;
 
-export function getReferenceProSupervisorQuery(key: number) {
+export function getReferenceForSupervisorQuery(key: number) {
 	return queryOptions({
-		queryKey: ['getReferenceForTimes', key],
-		queryFn: () => getReferenceProSupervisor(key),
+		queryKey: ['getReferenceForSupervisor', key],
+		queryFn: () => getReferenceForSupervisor(key),
 	});
 }
 
-async function getReferenceProSupervisor(key: number) {
+async function getReferenceForSupervisor(key: number) {
 	return await client.request(
 		readReference(key, {
-			fields: ['id', { time_by_task: ['*'] }],
+			fields: [
+				'front',
+				'created_at',
+				'code',
+				{ time_by_task: ['*'] },
+				{
+					colors: ['id', 'color_id', { fabrics: ['*'] }, { resources: ['*'] }],
+				},
+				'operations',
+				'pieces',
+			],
 		}),
 	);
 }
 
-export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceProSupervisor>>;
+export type GetReferenceProSupervisorType = Awaited<ReturnType<typeof getReferenceForSupervisor>>;
+
+export function getReferenceImageQuery(key: number) {
+	return queryOptions({
+		queryKey: ['getReferenceImage', key],
+		queryFn: () => getReferenceImage(key),
+	});
+}
+
+async function getReferenceImage(key: number) {
+	return await client.request(readReferenceImage(key));
+}
+
+export type GetReferenceImageType = Awaited<ReturnType<typeof getReferenceImage>>;
 
 function doFilters(filters: ReferenceFilter) {
 	if (Object.keys(filters).length === 0) {

@@ -46,3 +46,19 @@ export const readReference =
 			method: 'GET',
 		};
 	};
+
+export const readReferenceImage =
+	<Schema, const TQuery extends Query<Schema, VytexReference<Schema>>>(
+		key: VytexReference<Schema>['id'],
+		query?: TQuery,
+	): RestCommand<Blob, Schema> =>
+	() => {
+		throwIfEmpty(String(key), 'Key cannot be empty');
+
+		return {
+			path: `references/images/${key}`,
+			params: query ?? {},
+			method: 'GET',
+			onResponse: response => response.blob(),
+		};
+	};

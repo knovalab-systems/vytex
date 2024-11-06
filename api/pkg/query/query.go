@@ -27,6 +27,7 @@ var (
 	Operation           *operation
 	Order               *order
 	OrderState          *orderState
+	Piece               *piece
 	Reference           *reference
 	Resource            *resource
 	ResourceByReference *resourceByReference
@@ -53,6 +54,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Operation = &Q.Operation
 	Order = &Q.Order
 	OrderState = &Q.OrderState
+	Piece = &Q.Piece
 	Reference = &Q.Reference
 	Resource = &Q.Resource
 	ResourceByReference = &Q.ResourceByReference
@@ -80,6 +82,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		Operation:           newOperation(db, opts...),
 		Order:               newOrder(db, opts...),
 		OrderState:          newOrderState(db, opts...),
+		Piece:               newPiece(db, opts...),
 		Reference:           newReference(db, opts...),
 		Resource:            newResource(db, opts...),
 		ResourceByReference: newResourceByReference(db, opts...),
@@ -108,6 +111,7 @@ type Query struct {
 	Operation           operation
 	Order               order
 	OrderState          orderState
+	Piece               piece
 	Reference           reference
 	Resource            resource
 	ResourceByReference resourceByReference
@@ -137,6 +141,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		Operation:           q.Operation.clone(db),
 		Order:               q.Order.clone(db),
 		OrderState:          q.OrderState.clone(db),
+		Piece:               q.Piece.clone(db),
 		Reference:           q.Reference.clone(db),
 		Resource:            q.Resource.clone(db),
 		ResourceByReference: q.ResourceByReference.clone(db),
@@ -173,6 +178,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		Operation:           q.Operation.replaceDB(db),
 		Order:               q.Order.replaceDB(db),
 		OrderState:          q.OrderState.replaceDB(db),
+		Piece:               q.Piece.replaceDB(db),
 		Reference:           q.Reference.replaceDB(db),
 		Resource:            q.Resource.replaceDB(db),
 		ResourceByReference: q.ResourceByReference.replaceDB(db),
@@ -199,6 +205,7 @@ type queryCtx struct {
 	Operation           IOperationDo
 	Order               IOrderDo
 	OrderState          IOrderStateDo
+	Piece               IPieceDo
 	Reference           IReferenceDo
 	Resource            IResourceDo
 	ResourceByReference IResourceByReferenceDo
@@ -225,6 +232,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		Operation:           q.Operation.WithContext(ctx),
 		Order:               q.Order.WithContext(ctx),
 		OrderState:          q.OrderState.WithContext(ctx),
+		Piece:               q.Piece.WithContext(ctx),
 		Reference:           q.Reference.WithContext(ctx),
 		Resource:            q.Resource.WithContext(ctx),
 		ResourceByReference: q.ResourceByReference.WithContext(ctx),

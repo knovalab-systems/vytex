@@ -93,6 +93,51 @@ func (m *ReferenceService) SelectReference(q *models.ReferenceRead) (*models.Ref
 	return reference, nil
 }
 
+func (m *ReferenceService) SelectReferenceImages(q *models.ReferenceRead) ([]byte, error) {
+	formats.SanitizedQuery(&q.Query)
+
+	// def query
+	table := query.Reference
+	table2 := query.Image
+	s := table.Unscoped().Limit(*q.Limit).Offset(q.Offset)
+
+	// run query
+	reference, err := s.
+		Preload(query.Reference.FrontImage).
+		Preload(query.Reference.BackImage).
+		Preload(query.Reference.Pieces).
+		Where(table.ID.Eq(q.ID)).
+		First()
+
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, problems.ReadAccess()
+		}
+		return nil, problems.ServerError()
+	}
+
+	imagePaths := []string{
+		reference.FrontImage.Location,
+		reference.BackImage.Location,
+	}
+
+	for _, piece := range reference.Pieces {
+		imagPiece, err2 := table2.Where(table2.ID.Eq(piece.ImageID)).First()
+		if err2 != nil {
+			return nil, err2
+		}
+
+		imagePaths = append(imagePaths, imagPiece.Location)
+	}
+
+	zipData, err := helpers.CreateZip(imagePaths)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+
+	return zipData, nil
+}
+
 func (m *ReferenceService) AggregationReferences(q *models.AggregateQuery) ([]*models.AggregateData, error) {
 	table := query.Reference
 	s := table.Unscoped().Group(table.Code)
@@ -144,23 +189,20 @@ func (m *ReferenceService) CreateReference(b *models.ReferenceCreateBody) (*mode
 		return nil, err
 	}
 
-	// format fabrics n resources
-	fabricsByReference := []models.FabricByReference{}
-	resourcesByReference := []models.ResourceByReference{}
-	for _, color := range b.Colors {
-		for _, fabric := range color.Fabrics {
-			fabricsByReference = append(fabricsByReference,
-				models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
-		}
-		for _, resource := range color.Resources {
-			resourcesByReference = append(resourcesByReference,
-				models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
-		}
-	}
-
-	// format colors
+	// format colors, fabrics n resources
 	colorsByReference := []models.ColorByReference{}
 	for _, color := range b.Colors {
+		fabricsByReference := []models.FabricByReference{}
+		resourcesByReference := []models.ResourceByReference{}
+
+		for _, fabric := range color.Fabrics {
+			fabricsByReference = append(fabricsByReference, models.FabricByReference{FabricId: fabric.Fabric, Size: fabric.Size})
+		}
+
+		for _, resource := range color.Resources {
+			resourcesByReference = append(resourcesByReference, models.ResourceByReference{ResourceId: resource.Resource, Size: resource.Size})
+		}
+
 		colorsByReference = append(colorsByReference, models.ColorByReference{ColorID: color.Color, Fabrics: fabricsByReference, Resources: resourcesByReference})
 	}
 
