@@ -147,7 +147,7 @@ func TestAggregateResource(t *testing.T) {
 
 		// mocks
 		resourceMock := mocks.ResourceMock{}
-		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
+		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, defaultError)
 		resourceController := ResourceController{ResourceRepository: &resourceMock}
 
 		// test
@@ -167,7 +167,7 @@ func TestAggregateResource(t *testing.T) {
 
 		// mocks
 		resourceMock := mocks.ResourceMock{}
-		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		resourceMock.On("AggregationResources", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, nil)
 		resourceController := ResourceController{ResourceRepository: &resourceMock}
 
 		// test

@@ -2,9 +2,9 @@ package services
 
 import (
 	"errors"
-	"regexp"
 	"strings"
 
+	"github.com/knovalab-systems/vytex/app/v1/aggregate"
 	"github.com/knovalab-systems/vytex/app/v1/fields"
 	"github.com/knovalab-systems/vytex/app/v1/filters"
 	"github.com/knovalab-systems/vytex/app/v1/formats"
@@ -85,52 +85,57 @@ func (m *FabricService) SelectFabric(q *models.FabricRead) (*models.Fabric, erro
 	return fabric, nil
 }
 
-func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+func (m *FabricService) AggregationFabrics(q *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	table := query.Fabric
-	s := table.Unscoped().Group(table.Code)
-	aggregateElem := models.AggregateData{Count: nil}
+
+	// def subquery
+	table2 := table.As("u2")
+	subQuery := table.Unscoped().
+		Group(table.Track).
+		Select(table.Track, table.ID.Max().As("id_max")).
+		As("u2")
+
+	s := table.Unscoped().LeftJoin(subQuery, table2.Track.EqCol(table.Track)).
+		Where(field.NewInt64("u2", "id_max").EqCol(table.ID))
+
+	count := []field.Expr{}
+	countArr := []string{}
+
+	a := &[]map[string]interface{}{}
 
 	// filters
 	if q.Filter != "" {
 		var err error
 		s, err = filters.FabricFilters(s, q.Filter)
 		if err != nil {
-			return nil, problems.ResourceBadRequest()
+			return nil, problems.FabricsBadRequest()
 		}
 	}
 
 	if q.Count != "" {
-		re := regexp.MustCompile(`[\[\]]`)
-		countArr := strings.Split(re.ReplaceAllString(q.Count, ""), ",")
-		countObj := make(map[string]int64)
-
-		for _, v := range countArr {
-			switch v {
-			case "id":
-				count, err := s.Select(table.ID).Count()
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-				countObj["id"] = count
-			default:
-
-				if aggregateElem.Count == nil {
-					count, err := s.Count()
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-					aggregateElem.Count = count
-				}
-
-			}
-
-		}
-		if len(countObj) > 0 {
-			aggregateElem.Count = countObj
-		}
+		countArr = strings.Split(q.Count, ",")
+		count = aggregate.ExprsCountFabric(countArr)
 	}
 
-	return []*models.AggregateData{&aggregateElem}, nil
+	if q.GroupBy != "" {
+		groupByArr := strings.Split(q.GroupBy, ",")
+		groupBy := fields.FabricSwitch(groupByArr, func(s string) bool { return false })
+		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(a)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		aggregate.AdjustSubfix(a, countArr)
+		return a, nil
+	}
+
+	b := map[string]interface{}{}
+	err := s.Select(count...).Scan(&b)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	*a = append(*a, b)
+	aggregate.AdjustSubfix(a, countArr)
+	return a, nil
 }
 
 func (m *FabricService) CreateFabric(b *models.FabricCreateBody) (*models.Fabric, error) {

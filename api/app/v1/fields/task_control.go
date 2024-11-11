@@ -110,7 +110,7 @@ func TaskControlFields(s query.ITaskControlDo, queryFields string) query.ITaskCo
 
 			if len(colorFields) != 0 {
 				colorByReferenceF = append(colorByReferenceF, query.ColorByReference.ColorID)
-				colorF := append(colorSwitch(colorFields, func(string) bool { return false }), query.Color.ID)
+				colorF := append(ColorSwitch(colorFields, func(string) bool { return false }), query.Color.ID)
 
 				s = s.Preload(table.Order.ColorByReference.Color.Select(colorF...))
 			}

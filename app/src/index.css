@@ -91,6 +91,42 @@
     --nav: 352 64% 38%;
     --nav-foreground: 234 0% 98%;
   }
+
+  .commerce,
+  [data-kb-theme="commerce"] {
+    --new: 148 29% 65%;
+    --new-foreground: 148 29% 100%;
+
+    --action: 205 100% 82%;
+    --action-foreground: 205 100% 22%;
+
+    --header: 258 22% 56%;
+    --header-foreground: 258 22% 98%;
+
+    --nav: 36 89% 61%;
+    --nav-foreground: 36 89% 97%;
+  }
+
+  .cortesupervisor,
+  [data-kb-theme="cortesupervisor"],
+  .empqsupervisor,
+  [data-kb-theme="empqsupervisor"],
+  .confsupervisor,
+  [data-kb-theme="confsupervisor"],
+  .caldsupervisor,
+  [data-kb-theme="caldsupervisor"] {
+    --new: 36 100% 69%;
+    --new-foreground: 152 0% 100%;
+
+    --action: 47 63% 82%;
+    --action-foreground: 46 63% 32%;
+
+    --header: 0 45% 62%;
+    --header-foreground: 291 0% 98%;
+
+    --nav: 98 21% 40%;
+    --nav-foreground: 98 21% 90%;
+  }
 }
 
 @layer base {

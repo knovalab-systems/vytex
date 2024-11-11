@@ -240,7 +240,7 @@ func TestAggregateReferences(t *testing.T) {
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
-		referenceMock.On("AggregationReferences", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("ERROR"))
+		referenceMock.On("AggregationReferences", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, errors.New("ERROR"))
 
 		// controller
 		controller := ReferenceController{ReferenceRepository: &referenceMock}
@@ -262,7 +262,7 @@ func TestAggregateReferences(t *testing.T) {
 
 		// mocks
 		referenceMock := mocks.ReferenceMock{}
-		referenceMock.On("AggregationReferences", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		referenceMock.On("AggregationReferences", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, nil)
 
 		// controller
 		controller := ReferenceController{ReferenceRepository: &referenceMock}

@@ -29,11 +29,11 @@ func ResourceFields(s query.IResourceDo, queryFields string) query.IResourceDo {
 		return false
 	}
 
-	exprs = append(exprs, resourceSwitch(fields, switchFunc)...)
+	exprs = append(exprs, ResourceSwitch(fields, switchFunc)...)
 
 	if len(colorFields) != 0 {
 		exprs = append(exprs, table.ColorID)
-		colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
+		colorExprs := append(ColorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
 
 		s = s.Preload(table.Color.Select(colorExprs...))
 	}
@@ -48,7 +48,7 @@ func ResourceFields(s query.IResourceDo, queryFields string) query.IResourceDo {
 	return s.Select(exprs...)
 }
 
-func resourceSwitch(fields []string, function func(string) bool) []field.Expr {
+func ResourceSwitch(fields []string, function func(string) bool) []field.Expr {
 
 	table := query.Resource
 	exprs := []field.Expr{}

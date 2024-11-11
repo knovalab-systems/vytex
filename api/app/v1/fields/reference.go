@@ -46,7 +46,7 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 		return false
 	}
 
-	exprs = append(exprs, referenceSwitch(fields, switchFunc)...)
+	exprs = append(exprs, ReferenceSwitch(fields, switchFunc)...)
 
 	if len(colorsFields) != 0 {
 		exprs = append(exprs, table.ID)
@@ -72,7 +72,7 @@ func ReferenceFields(s query.IReferenceDo, queryFields string) query.IReferenceD
 	return s.Select(exprs...)
 }
 
-func referenceSwitch(fields []string, function func(string) bool) []field.Expr {
+func ReferenceSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.Reference
 	exprs := []field.Expr{}
 

@@ -74,13 +74,13 @@ func CustomFields(s query.ICustomDo, queryFields string) query.ICustomDo {
 
 			if len(colorFields) != 0 {
 				colorByReferenceExprs = append(colorByReferenceExprs, query.ColorByReference.ColorID)
-				colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
+				colorExprs := append(ColorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
 				s = s.Preload(table.Orders.ColorByReference.Color.Select(colorExprs...))
 			}
 
 			if len(referenceFields) != 0 {
 				colorByReferenceExprs = append(colorByReferenceExprs, query.ColorByReference.ReferenceID)
-				referenceExprs := append(referenceSwitch(referenceFields, func(s string) bool { return false }), query.Reference.ID)
+				referenceExprs := append(ReferenceSwitch(referenceFields, func(s string) bool { return false }), query.Reference.ID)
 				s = s.Preload(table.Orders.ColorByReference.Reference.Select(referenceExprs...))
 			}
 

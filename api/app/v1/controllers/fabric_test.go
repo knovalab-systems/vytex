@@ -141,7 +141,7 @@ func TestAggregateFabrics(t *testing.T) {
 
 		// mocks
 		fabricMock := mocks.FabricMock{}
-		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, errors.New("ERROR"))
+		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, errors.New("ERROR"))
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test
@@ -161,7 +161,7 @@ func TestAggregateFabrics(t *testing.T) {
 
 		// mocks
 		fabricMock := mocks.FabricMock{}
-		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		fabricMock.On("AggregationFabrics", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, nil)
 		fabricController := FabricController{FabricRepository: &fabricMock}
 
 		// test

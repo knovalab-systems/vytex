@@ -9,12 +9,12 @@ import (
 
 func ColorFields(s query.IColorDo, queryFields string) query.IColorDo {
 	fields := strings.Split(queryFields, ",")
-	exprs := colorSwitch(fields, func(s string) bool { return false })
+	exprs := ColorSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
 
-func colorSwitch(fields []string, function func(string) bool) []field.Expr {
+func ColorSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.Color
 	exprs := []field.Expr{}
 
