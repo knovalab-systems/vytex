@@ -13,7 +13,7 @@ func privateTaskControlRoutes(g *echo.Group) {
 
 	taskControlController := controllers.TaskControlController{TaskControlRepository: &services.TaskControlService{}}
 
-	route.GET("", taskControlController.ReadTaskControls, middlewares.Policies([]models.Policy{models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
+	route.GET("", taskControlController.ReadTaskControls, middlewares.Policies([]models.Policy{models.ReadOrders, models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
 	route.GET("/aggregate", taskControlController.AggregateTaskControls, middlewares.Policies([]models.Policy{models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
 	route.PATCH("/:taskControlId", taskControlController.UpdateTaskControl, middlewares.Policies([]models.Policy{models.UpdateCorte, models.UpdateConfeccion, models.UpdateCalidad, models.UpdateEmpaque}))
 

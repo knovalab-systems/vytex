@@ -36,14 +36,14 @@ func CustomFields(s query.ICustomDo, queryFields string) query.ICustomDo {
 
 	if len(cancelFieldsArr) != 0 {
 		exprs = append(exprs, table.CanceledBy)
-		cancelExprs := append(UserSwitch(cancelFieldsArr, func(s string) bool { return false }), query.Color.ID)
+		cancelExprs := append(UserSwitch(cancelFieldsArr, func(s string) bool { return false }), query.User.ID)
 
 		s = s.Preload(table.CancelUser.Select(cancelExprs...))
 	}
 
 	if len(createFieldsArr) != 0 {
 		exprs = append(exprs, table.CreatedBy)
-		createExprs := append(UserSwitch(createFieldsArr, func(s string) bool { return false }), query.Supplier.ID)
+		createExprs := append(UserSwitch(createFieldsArr, func(s string) bool { return false }), query.User.ID)
 
 		s = s.Preload(table.CreateUser.Select(createExprs...))
 	}

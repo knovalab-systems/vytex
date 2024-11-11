@@ -1,10 +1,17 @@
 import { render, screen } from '@solidjs/testing-library';
 import '@testing-library/jest-dom';
+import type { Action } from '~/types/actionsCell';
 import type { GetOrdersType } from '../../request/orderGet';
 import OrderTable from '../OrderTable';
 
 vi.mock('~/hooks/useOrderStatus', () => ({
 	useOrderStatus: () => ({ getOrderStatusRecord: () => ({ 0: { name: 'Creada' }, 1: { name: 'Iniciada' } }) }),
+}));
+
+vi.mock('~/components/ActionsCell', () => ({
+	default: (props: { actions: Action[] }) => {
+		return <td>{props.actions.length}</td>;
+	},
 }));
 
 describe('Order Table', () => {
@@ -91,6 +98,7 @@ describe('Order Table', () => {
 		const orderCreatedAt = screen.getByText('2024-05-12 05:36 PM');
 		const orderCanceledAt = screen.getByText('2024-06-12 05:36 PM');
 		const orderFinishedAt = screen.getByText('2024-07-12 05:36 PM');
+		const actionsCell = screen.getAllByText(1);
 
 		expect(orderId).toBeInTheDocument();
 		expect(customId).toBeInTheDocument();
@@ -99,5 +107,6 @@ describe('Order Table', () => {
 		expect(orderCreatedAt).toBeInTheDocument();
 		expect(orderCanceledAt).toBeInTheDocument();
 		expect(orderFinishedAt).toBeInTheDocument();
+		expect(actionsCell).length(6);
 	});
 });

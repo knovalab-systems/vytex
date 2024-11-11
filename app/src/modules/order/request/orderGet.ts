@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readOrder, readOrders } from '@vytex/client';
+import { aggregate, readOrder, readOrders, readTaskControls } from '@vytex/client';
 import dayjs from 'dayjs';
 import { QUERY_LIMIT } from '~/constants/http';
 import { SIZES } from '~/constants/sizes';
@@ -83,6 +83,71 @@ async function getOrderStart(id: number) {
 }
 
 export type GetOrderStart = Awaited<ReturnType<typeof getOrderStart>>;
+
+export function getOrderQuery(id: number) {
+	return queryOptions({
+		queryKey: ['getOrder', id],
+		queryFn: () => getOrder(id),
+	});
+}
+
+async function getOrder(id: number) {
+	return await client.request(
+		readOrder(id, {
+			fields: [
+				'*',
+				'id',
+				...SIZES,
+				'started_at',
+				'created_at',
+				'finished_at',
+				'canceled_at',
+				{ custom: ['id', 'client'] },
+				{ create_user: ['name'] },
+				{ cancel_user: ['name'] },
+				{ order_state: ['name'] },
+				{
+					color_by_reference: [{ reference: ['code'] }, { color: ['name', 'hex'] }],
+				},
+			],
+		}),
+	);
+}
+
+export type GetOrder = Awaited<ReturnType<typeof getOrder>>;
+
+export function getTasksByOrderQuery(id: number) {
+	return queryOptions({
+		queryKey: ['getTasksByOrder', id],
+		queryFn: () => getTasksByOrder(id),
+	});
+}
+
+async function getTasksByOrder(id: number) {
+	return await client.request(
+		readTaskControls({
+			filter: {
+				order_id: {
+					_eq: id,
+				},
+			},
+			sort: ['created_at'],
+			fields: [
+				'id',
+				'task_control_state_id',
+				'created_at',
+				'finished_at',
+				'rejected_at',
+				'started_at',
+				'previous_id',
+				'next_id',
+				'task_id',
+			],
+		}),
+	);
+}
+
+export type GetTasksByOrder = Awaited<ReturnType<typeof getTasksByOrder>>;
 
 function doFilters(filters: OrderFilter) {
 	if (Object.keys(filters).length === 0) {

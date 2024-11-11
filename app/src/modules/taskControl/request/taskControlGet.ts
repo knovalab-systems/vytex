@@ -60,9 +60,6 @@ async function countTasks(tasks: number[], filters: TaskControlFilter) {
 }
 
 function doFilters(tasks: number[], filters: TaskControlFilter) {
-	if (Object.keys(filters).length === 0) {
-		return;
-	}
 	return {
 		filter: {
 			...(filters.id && {

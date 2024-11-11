@@ -13,5 +13,5 @@ func privateTaskControlStateRoutes(g *echo.Group) {
 
 	taskControlStateController := controllers.TaskControlStateController{TaskControlStateRepository: &services.TaskControlStateService{}}
 
-	route.GET("", taskControlStateController.ReadTaskControlStatus, middlewares.Policies([]models.Policy{models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
+	route.GET("", taskControlStateController.ReadTaskControlStatus, middlewares.Policies([]models.Policy{models.ReadOrders, models.ReadCorte, models.ReadConfeccion, models.ReadCalidad, models.ReadEmpaque}))
 }

@@ -9,46 +9,18 @@ import (
 
 func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 	table := query.Order
-	fields := strings.Split(queryFields, ",")
 	exprs := []field.Expr{}
-	colorByReferenceFields := []string{}
 	referenceFields := []string{}
+	colorFields := []string{}
 
-	switchFunc := func(v string) bool {
-
-		if strings.HasPrefix(v, "create_user.") || v == "create_user" {
-			exprs = append(exprs, table.CreatedBy)
-			s = s.Preload(table.CreateUser)
-			return true
-		}
-
-		if strings.HasPrefix(v, "cancel_user.") || v == "cancel_user" {
-			exprs = append(exprs, table.CanceledBy)
-			s = s.Preload(table.CancelUser)
-			return true
-		}
-
-		if strings.HasPrefix(v, "custom.") || v == "custom" {
-			exprs = append(exprs, table.CustomID)
-			s = s.Preload(table.Custom)
-			return true
-		}
-
-		if strings.HasPrefix(v, "color_by_reference.") || v == "color_by_reference" {
-			colorByReferenceFields = append(colorByReferenceFields, strings.TrimPrefix(v, "color_by_reference."))
-			return true
-		}
-
-		if strings.HasPrefix(v, "order_state.") || v == "order_state" {
-			exprs = append(exprs, table.OrderStateID)
-			s = s.Preload(table.OrderState)
-			return true
-		}
-
-		return false
-	}
+	fields := SlicesOrderFields{Order: strings.Split(queryFields, ",")}
 
 	colorByReferenceSwitchFunc := func(v string) bool {
+
+		if strings.HasPrefix(v, "color.") || v == "color" {
+			colorFields = append(colorFields, strings.TrimPrefix(v, "color."))
+			return true
+		}
 
 		if strings.HasPrefix(v, "resources.") {
 			s = s.Preload(table.ColorByReference.Resources)
@@ -70,11 +42,11 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 		return false
 	}
 
-	exprs = append(exprs, orderSwitch(fields, switchFunc)...)
+	exprs = append(exprs, orderSwitch(fields.Order, OrderSwitchFunc(&fields))...)
 
-	if len(colorByReferenceFields) != 0 {
+	if len(fields.ColorByReference) != 0 {
 		exprs = append(exprs, table.ColorByReferenceID)
-		coloByReferenceExprs := append(colorByReferenceSwitch(colorByReferenceFields, colorByReferenceSwitchFunc), query.ColorByReference.ID)
+		coloByReferenceExprs := append(colorByReferenceSwitch(fields.ColorByReference, colorByReferenceSwitchFunc), query.ColorByReference.ID)
 
 		if len(referenceFields) != 0 {
 			coloByReferenceExprs = append(coloByReferenceExprs, query.ColorByReference.ReferenceID)
@@ -83,7 +55,45 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 			s = s.Preload(table.ColorByReference.Reference.Select(referenceExprs...))
 		}
 
+		if len(colorFields) != 0 {
+
+			coloByReferenceExprs = append(coloByReferenceExprs, query.ColorByReference.ColorID)
+			colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
+
+			s = s.Preload(table.ColorByReference.Color.Select(colorExprs...))
+
+		}
+
 		s = s.Preload(table.ColorByReference.Select(coloByReferenceExprs...))
+
+	}
+
+	if len(fields.CancelUser) != 0 {
+		exprs = append(exprs, table.CanceledBy)
+		cancelExprs := append(UserSwitch(fields.CancelUser, func(s string) bool { return false }), query.User.ID)
+
+		s = s.Preload(table.CancelUser.Select(cancelExprs...))
+	}
+
+	if len(fields.OrderState) != 0 {
+		exprs = append(exprs, table.OrderStateID)
+		stateExprs := append(UserSwitch(fields.OrderState, func(s string) bool { return false }), query.OrderState.ID)
+
+		s = s.Preload(table.OrderState.Select(stateExprs...))
+	}
+
+	if len(fields.CreateUser) != 0 {
+		exprs = append(exprs, table.CreatedBy)
+		createExprs := append(UserSwitch(fields.CreateUser, func(s string) bool { return false }), query.User.ID)
+
+		s = s.Preload(table.CreateUser.Select(createExprs...))
+	}
+
+	if len(fields.Custom) != 0 {
+		exprs = append(exprs, table.CustomID)
+		customExprs := append(customSwitch(fields.Custom, func(s string) bool { return false }), query.Custom.ID)
+
+		s = s.Preload(table.Custom.Select(customExprs...))
 
 	}
 
@@ -128,4 +138,36 @@ func orderSwitch(fields []string, function func(string) bool) []field.Expr {
 	}
 
 	return exprs
+}
+
+func OrderSwitchFunc(fields *SlicesOrderFields) func(v string) bool {
+
+	if fields == nil {
+		return func(v string) bool { return false }
+	}
+
+	return func(v string) bool {
+
+		if PreloadFields(v, "create_user", &fields.CreateUser) {
+			return true
+		}
+
+		if PreloadFields(v, "cancel_user", &fields.CancelUser) {
+			return true
+		}
+
+		if PreloadFields(v, "color_by_reference", &fields.ColorByReference) {
+			return true
+		}
+		if PreloadFields(v, "custom", &fields.Custom) {
+			return true
+		}
+
+		if PreloadFields(v, "order_state", &fields.OrderState) {
+			return true
+		}
+
+		return false
+	}
+
 }
