@@ -60,3 +60,23 @@ async function countOrdersBystateId() {
 }
 
 export type CountOrdersBystateIdType = Awaited<ReturnType<typeof countOrdersBystateId>>;
+
+export function countCustomsByDateQuery() {
+	return queryOptions({
+		queryKey: ['countCustomsByDate'],
+		queryFn: () => countCustomsByDate(),
+	});
+}
+
+async function countCustomsByDate() {
+	return client.request(
+		aggregate('vytex_customs', {
+			aggregate: {
+				count: ['id', 'created_at'],
+			},
+			groupBy: ['created_at'],
+		}),
+	);
+}
+
+export type CountCustomsByDateType = Awaited<ReturnType<typeof countCustomsByDate>>;

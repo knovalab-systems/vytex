@@ -1,5 +1,5 @@
 import { A } from '@solidjs/router';
-import { Chart, Colors, Legend, LineController, LineElement, PointElement, Title, Tooltip, scales } from 'chart.js';
+import { Chart, Colors, Legend, LineController, LineElement, PointElement, Title, Tooltip } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Line } from 'solid-chartjs';
 import { onMount } from 'solid-js';

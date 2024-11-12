@@ -3,17 +3,19 @@ import { Match, Switch } from "solid-js";
 import ErrorMessage from "~/components/ErrorMessage";
 import Loading from "~/components/Loading";
 import CustomsByClient from "../components/CustomsByClient";
+import CustomsByDate from "../components/CustomsByDate";
 import OrdersByState from "../components/OrdersByState";
-import { type CountCustomsByClientType, type CountOrdersBystateIdType, type CountOrdersBystateType, countCustomsByClientQuery, countOrdersBystateIdQuery, countOrdersBystateQuery } from "../requests/commerceHome";
+import { type CountCustomsByClientType, type CountCustomsByDateType, type CountOrdersBystateIdType, type CountOrdersBystateType, countCustomsByClientQuery, countCustomsByDateQuery, countOrdersBystateIdQuery, countOrdersBystateQuery } from "../requests/commerceHome";
 
 function CommerceHome() {
     const ordersByState = createQuery(countOrdersBystateQuery);
     const ordersByStateId = createQuery(countOrdersBystateIdQuery);
     const customsByClient = createQuery(countCustomsByClientQuery)
+    const customsByDate = createQuery(countCustomsByDateQuery);
 
-    const isLoading = () => ordersByState.isLoading || ordersByStateId.isLoading || customsByClient.isLoading;
-    const isError = () => ordersByState.isError || ordersByStateId.isError || customsByClient.isError;
-    const isSuccess = () => ordersByState.isSuccess && ordersByStateId.isSuccess && customsByClient.isSuccess;
+    const isLoading = () => ordersByState.isLoading || ordersByStateId.isLoading || customsByClient.isLoading || customsByDate.isLoading;
+    const isError = () => ordersByState.isError || ordersByStateId.isError || customsByClient.isError || customsByDate.isError;
+    const isSuccess = () => ordersByState.isSuccess && ordersByStateId.isSuccess && customsByClient.isSuccess && customsByDate.isSuccess;
 
     return (
         <div class='h-full w-full'>
@@ -32,7 +34,7 @@ function CommerceHome() {
                         />
                         <CustomsByClient data={customsByClient.data as CountCustomsByClientType} />
                         <div class='col-span-2'>
-                            <CustomsByClient data={customsByClient.data as CountCustomsByClientType} />
+                            <CustomsByDate data={customsByDate.data as CountCustomsByDateType} />
                         </div>
                     </div>
                 </Match>
