@@ -6,6 +6,7 @@ const Corte = lazy(() => import('./pages/Corte'));
 const Confeccion = lazy(() => import('./pages/Confeccion'));
 const Calidad = lazy(() => import('./pages/Calidad'));
 const Empaque = lazy(() => import('./pages/Empaque'));
+const TaskControl = lazy(() => import('./pages/TaskControl'));
 
 function TaskControlsRoutes() {
 	return (
@@ -14,6 +15,10 @@ function TaskControlsRoutes() {
 			<Route path={PATHS.CONFECCION_RELATIVE_PATH} component={Confeccion} />
 			<Route path={PATHS.CALIDAD_RELATIVE_PATH} component={Calidad} />
 			<Route path={PATHS.EMPAQUE_RELATIVE_PATH} component={Empaque} />
+			<Route path={`${PATHS.CORTE_RELATIVE_PATH}/:id`} component={TaskControl} />
+			<Route path={`${PATHS.CONFECCION_RELATIVE_PATH}/:id`} component={TaskControl} />
+			<Route path={`${PATHS.CALIDAD_RELATIVE_PATH}/:id`} component={TaskControl} />
+			<Route path={`${PATHS.EMPAQUE_RELATIVE_PATH}/:id`} component={TaskControl} />
 		</Route>
 	);
 }

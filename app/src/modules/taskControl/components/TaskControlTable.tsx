@@ -11,7 +11,7 @@ import type { GetTaskType } from '../request/taskControlGet';
 import TaskControlActionsCell from './TaskControlActionsCell';
 
 function TaskControlTable(props: { taskControls: GetTaskType }) {
-	const { getTasksRecord, getStepByValue } = useSteps();
+	const { getTasksRecord, getStepRecord, getStepByValue } = useSteps();
 	const { getTaskControlStatusRecord } = useTaskControlStatus();
 	const { getColorsRecord } = useColors();
 	const { hasPolicy } = usePolicies();
@@ -32,6 +32,12 @@ function TaskControlTable(props: { taskControls: GetTaskType }) {
 		}
 		return false;
 	};
+
+	const step = (task: number) => {
+		const taskRecord = getTasksRecord()[task];
+		const step = getStepRecord(taskRecord.step_id);
+		return step?.value ?? '';
+	}
 
 	return (
 		<TableContainer>
@@ -83,6 +89,8 @@ function TaskControlTable(props: { taskControls: GetTaskType }) {
 								<Show when={canUpdate(taskControl.task_id)} fallback={<TableCell />}>
 									<TaskControlActionsCell
 										id={taskControl.id}
+										refId={taskControl.order.color_by_reference?.reference?.id as number}
+										step={step(taskControl.task_id)}
 										state={getTaskControlStatusRecord()[taskControl.task_control_state_id]?.value}
 									/>
 								</Show>

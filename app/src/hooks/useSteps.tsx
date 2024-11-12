@@ -7,8 +7,9 @@ const queryKey = 'stepsContext';
 
 const StepsContext = createContext<StepsContext>({
 	stepsQuery: {} as CreateQueryResult<Steps>,
-	setActive: () => {},
+	setActive: () => { },
 	getStepByValue: () => undefined,
+	getStepRecord: () => undefined,
 	getTasks: () => [],
 	getTasksRecord: () => ({}),
 });
@@ -32,6 +33,7 @@ type StepsContext = {
 	stepsQuery: CreateQueryResult<Steps>;
 	setActive: () => void;
 	getStepByValue: (value: Step['value']) => Step | undefined;
+	getStepRecord: (stepId: number) => Step | undefined; // Nueva función para obtener Step por id
 	getTasks: Accessor<Tasks>;
 	getTasksRecord: Accessor<TasksRecord>;
 };
@@ -53,6 +55,10 @@ export function StepsProvider(props: { children: JSXElement }) {
 
 	const getStepByValue = (value: Step['value']) => stepsQuery.data?.find(e => e.value === value);
 
+	const getStepRecord = (stepId: number): Step | undefined => {
+		return stepsQuery.data?.find(step => step.id === stepId);
+	};
+
 	const getTasks = createMemo(
 		() =>
 			stepsQuery.data?.reduce((p: Tasks, v) => {
@@ -73,7 +79,7 @@ export function StepsProvider(props: { children: JSXElement }) {
 		return obj || {};
 	});
 
-	const values: StepsContext = { stepsQuery, setActive, getStepByValue, getTasks, getTasksRecord };
+	const values: StepsContext = { stepsQuery, setActive, getStepByValue, getStepRecord, getTasks, getTasksRecord };
 
 	return <StepsContext.Provider value={values}>{props.children}</StepsContext.Provider>;
 }
