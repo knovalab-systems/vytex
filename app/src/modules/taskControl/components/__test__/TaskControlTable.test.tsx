@@ -41,7 +41,7 @@ describe('TaskControlTable', () => {
 						rejected_at: '',
 						task_id: 1,
 						order_id: 2,
-						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						order: { color_by_reference: { color_id: 1, reference: { id: 1, code: '1' } } },
 						task_control_state_id: 1,
 					},
 					{
@@ -52,7 +52,7 @@ describe('TaskControlTable', () => {
 						rejected_at: '',
 						task_id: 1,
 						order_id: 3,
-						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						order: { color_by_reference: { color_id: 1, reference: { id: 1, code: '1' } } },
 						task_control_state_id: 2,
 					},
 					{
@@ -63,7 +63,7 @@ describe('TaskControlTable', () => {
 						rejected_at: '',
 						task_id: 1,
 						order_id: 4,
-						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						order: { color_by_reference: { color_id: 1, reference: { id: 1, code: '1' } } },
 						task_control_state_id: 3,
 					},
 					{
@@ -74,7 +74,7 @@ describe('TaskControlTable', () => {
 						rejected_at: '2024-06-12T22:36:52.140901Z',
 						task_id: 1,
 						order_id: 5,
-						order: { color_by_reference: { color_id: 1, reference: { code: '1' } } },
+						order: { color_by_reference: { color_id: 1, reference: { id: 1, code: '1' } } },
 						task_control_state_id: 4,
 					},
 				]}
