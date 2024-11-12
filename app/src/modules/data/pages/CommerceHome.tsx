@@ -2,16 +2,18 @@ import { createQuery } from "@tanstack/solid-query";
 import { Match, Switch } from "solid-js";
 import ErrorMessage from "~/components/ErrorMessage";
 import Loading from "~/components/Loading";
+import CustomsByClient from "../components/CustomsByClient";
 import OrdersByState from "../components/OrdersByState";
-import { type CountOrdersBystateIdType, type CountOrdersBystateType, countOrdersBystateIdQuery, countOrdersBystateQuery } from "../requests/commerceHome";
+import { type CountCustomsByClientType, type CountOrdersBystateIdType, type CountOrdersBystateType, countCustomsByClientQuery, countOrdersBystateIdQuery, countOrdersBystateQuery } from "../requests/commerceHome";
 
 function CommerceHome() {
     const ordersByState = createQuery(countOrdersBystateQuery);
     const ordersByStateId = createQuery(countOrdersBystateIdQuery);
+    const customsByClient = createQuery(countCustomsByClientQuery)
 
-    const isLoading = () => ordersByState.isLoading || ordersByStateId.isLoading;
-    const isError = () => ordersByState.isError || ordersByStateId.isError;
-    const isSuccess = () => ordersByState.isSuccess && ordersByStateId.isSuccess;
+    const isLoading = () => ordersByState.isLoading || ordersByStateId.isLoading || customsByClient.isLoading;
+    const isError = () => ordersByState.isError || ordersByStateId.isError || customsByClient.isError;
+    const isSuccess = () => ordersByState.isSuccess && ordersByStateId.isSuccess && customsByClient.isSuccess;
 
     return (
         <div class='h-full w-full'>
@@ -23,11 +25,15 @@ function CommerceHome() {
                     <Loading label='Cargando información pedidos y ordenes' />
                 </Match>
                 <Match when={isSuccess()}>
-                    <div class='h-full w-full flex flex-col md:grid md:grid-cols-2 md:grid-rows-2 gap-2'>
+                    <div class='h-full w-full flex flex-col md:grid md:grid-cols-2 gap-2'>
                         <OrdersByState
                             data={ordersByState.data as CountOrdersBystateType}
                             dataById={ordersByStateId.data as CountOrdersBystateIdType}
                         />
+                        <CustomsByClient data={customsByClient.data as CountCustomsByClientType} />
+                        <div class='col-span-2'>
+                            <CustomsByClient data={customsByClient.data as CountCustomsByClientType} />
+                        </div>
                     </div>
                 </Match>
             </Switch>

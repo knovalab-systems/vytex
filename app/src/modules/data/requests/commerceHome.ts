@@ -15,6 +15,7 @@ async function countCustomsByClient() {
 			aggregate: {
 				count: ['id', 'client'],
 			},
+			groupBy: ['client'],
 		}),
 	);
 }

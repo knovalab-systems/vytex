@@ -117,15 +117,6 @@ func (m *OrderService) AggregationOrders(q *models.AggregateQuery) (*[]map[strin
 	return a, nil
 }
 
-func contains(slice []string, item string) bool {
-	for _, s := range slice {
-		if s == item {
-			return true
-		}
-	}
-	return false
-}
-
 func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, error) {
 	// check valid custom
 	err := helpers.CheckValidCustom(b.CustomID)

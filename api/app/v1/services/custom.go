@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"github.com/knovalab-systems/vytex/app/v1/aggregate"
+	"gorm.io/gen/field"
 	"reflect"
 	"strings"
 
@@ -42,43 +43,39 @@ func (m *CustomService) SelectCustoms(q *models.Query) ([]*models.Custom, error)
 	return customs, nil
 }
 
-func (m *CustomService) AggregationCustoms(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+func (m *CustomService) AggregationCustoms(q *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	s := query.Custom.Unscoped()
-	results := []*models.AggregateData{}
+	count := []field.Expr{}
+	countArr := []string{}
+
+	a := &[]map[string]interface{}{}
 
 	if q.Count != "" {
-		countArr := strings.Split(q.Count, ",")
-		count := aggregate.ExprsCountCustoms(countArr)
+		countArr = strings.Split(q.Count, ",")
+		count = aggregate.ExprsCountCustoms(countArr)
+	}
 
-		if q.GroupBy != "" {
-			groupByArr := strings.Split(q.GroupBy, ",")
-			groupBy := fields.CustomSwitch(groupByArr, func(s string) bool { return false })
+	if q.GroupBy != "" {
+		groupByArr := strings.Split(q.GroupBy, ",")
+		groupBy := fields.CustomSwitch(groupByArr, func(s string) bool { return false })
 
-			var aggregatedData []map[string]interface{}
-			err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(&aggregatedData)
-			if err != nil {
-				return nil, problems.ServerError()
-			}
-
-			aggregate.AdjustSubfix(&aggregatedData, countArr)
-			for _, data := range aggregatedData {
-				results = append(results, &models.AggregateData{
-					Count: data,
-				})
-			}
-			return results, nil
-		}
-
-		countObj := []map[string]interface{}{}
-		err := s.Select(count...).Scan(&countObj)
+		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(a)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
-		aggregate.AdjustSubfix(&countObj, countArr)
-		results = append(results, &models.AggregateData{Count: countObj})
-	}
-	return results, nil
+		aggregate.AdjustSubfix(a, countArr)
 
+		return a, nil
+	}
+
+	b := map[string]interface{}{}
+	err := s.Select(count...).Scan(&b)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	*a = append(*a, b)
+	aggregate.AdjustSubfix(a, countArr)
+	return a, nil
 }
 
 func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom, error) {
