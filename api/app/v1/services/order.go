@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"github.com/knovalab-systems/vytex/app/v1/aggregate"
+	"gorm.io/gen/field"
 	"strings"
 	"time"
 
@@ -82,39 +84,53 @@ func (m *OrderService) SelectOrder(q *models.OrderRead) (*models.Order, error) {
 	return order, nil
 }
 
-func (m *OrderService) AggregationOrders(q *models.AggregateQuery) ([]*models.AggregateData, error) {
-	table := query.Order
-	s := table.Unscoped()
-	aggregateElem := models.AggregateData{Count: nil}
+func (m *OrderService) AggregationOrders(q *models.AggregateQuery) (*[]map[string]interface{}, error) {
+	s := query.Order.Unscoped()
+	count := []field.Expr{}
+	countArr := []string{}
+
+	res := &[]map[string]interface{}{}
 
 	if q.Count != "" {
-		countArr := strings.Split(q.Count, ",")
-		countObj := make(map[string]int64)
-
-		for _, v := range countArr {
-			switch v {
-			case "id":
-				count, err := s.Select(table.ID).Count()
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-				countObj["id"] = count
-			default:
-				if aggregateElem.Count == nil {
-					count, err := s.Count()
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-					aggregateElem.Count = &count
-				}
-			}
-		}
-		if len(countObj) > 0 {
-			aggregateElem.Count = countObj
-		}
+		countArr = strings.Split(q.Count, ",")
+		count = aggregate.ExprsCountOrder(countArr)
 	}
 
-	return []*models.AggregateData{&aggregateElem}, nil
+	s = s.LeftJoin(query.OrderState, query.Order.OrderStateID.EqCol(query.OrderState.ID))
+
+	if q.GroupBy != "" {
+		groupByArr := strings.Split(q.GroupBy, ",")
+		groupBy := fields.ColorSwitch(groupByArr, func(s string) bool { return false })
+
+		if contains(groupByArr, "order_state") {
+			groupBy = append(groupBy, query.OrderState.Name)
+		}
+
+		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(res)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		aggregate.AdjustSubfix(res, countArr)
+		return res, nil
+	}
+
+	b := map[string]interface{}{}
+	err := s.Select(count...).Scan(&b)
+	if err != nil {
+		return nil, problems.ServerError()
+	}
+	*res = append(*res, b)
+	aggregate.AdjustSubfix(res, countArr)
+	return res, nil
+}
+
+func contains(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }
 
 func (m *OrderService) CreateOrder(b *models.OrderCreateBody) (*models.Order, error) {

@@ -91,7 +91,7 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 
 	if len(fields.Custom) != 0 {
 		exprs = append(exprs, table.CustomID)
-		customExprs := append(customSwitch(fields.Custom, func(s string) bool { return false }), query.Custom.ID)
+		customExprs := append(CustomSwitch(fields.Custom, func(s string) bool { return false }), query.Custom.ID)
 
 		s = s.Preload(table.Custom.Select(customExprs...))
 
