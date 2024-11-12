@@ -29,7 +29,7 @@ function AdminHome() {
 		rolesQuery.isSuccess && usersByState.isSuccess && usersByRole.isSuccess && rolesByCode.isSuccess;
 
 	return (
-		<div class='h-full w-full flex flex-col md:grid md:grid-cols-2 gap-2'>
+		<div class='h-full w-full'>
 			<Switch>
 				<Match when={isError()}>
 					<ErrorMessage title='Error al cargar información de usuarios y roles' />
@@ -38,10 +38,12 @@ function AdminHome() {
 					<Loading label='Cargando información de usuarios y roles' />
 				</Match>
 				<Match when={isSuccess()}>
-					<UsersByState data={usersByState.data as CountUsersByStateType} />
-					<RolesByCode data={rolesByCode.data as CountRoleByCodeType} />
-					<div class='col-span-2'>
-						<UsersByRole data={usersByRole.data as CountUsersByRoleIdType} />
+					<div class='h-full w-full flex flex-col md:grid md:grid-cols-2 gap-2'>
+						<UsersByState data={usersByState.data as CountUsersByStateType} />
+						<RolesByCode data={rolesByCode.data as CountRoleByCodeType} />
+						<div class='col-span-2'>
+							<UsersByRole data={usersByRole.data as CountUsersByRoleIdType} />
+						</div>
 					</div>
 				</Match>
 			</Switch>

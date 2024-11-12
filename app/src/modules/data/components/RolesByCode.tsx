@@ -2,6 +2,7 @@ import { ArcElement, BarElement, Chart, Colors, Legend, LinearScale, Title, Tool
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar, Pie } from 'solid-chartjs';
 import { onMount } from 'solid-js';
+import { calculatePercentage } from '../helpers/calculate';
 import type { CountRoleByCodeType } from '../requests/adminHome';
 
 function RolesByCode(props: { data: CountRoleByCodeType }) {
@@ -36,12 +37,7 @@ function RolesByCode(props: { data: CountRoleByCodeType }) {
 				font: {
 					weight: 'bold',
 				},
-				// biome-ignore lint/suspicious/noExplicitAny: no types included
-				formatter: (value: number, ctx: any) => {
-					const total = ctx.chart.getDatasetMeta(0).total;
-					const percentage = `${((value * 100) / total).toFixed(2)}%`;
-					return percentage;
-				},
+				formatter: calculatePercentage,
 			},
 		},
 	};

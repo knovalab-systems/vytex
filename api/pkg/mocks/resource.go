@@ -19,9 +19,9 @@ func (m *ResourceMock) SelectResource(resource *models.ResourceRead) (*models.Re
 	return &models.Resource{}, args.Error(0)
 }
 
-func (m *ResourceMock) AggregationResources(req *models.AggregateQuery) ([]*models.AggregateData, error) {
+func (m *ResourceMock) AggregationResources(req *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	args := m.Called(req)
-	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
+	return &[]map[string]interface{}{args.Get(0).(map[string]interface{})}, args.Error(1)
 }
 
 func (m *ResourceMock) CreateResource(u *models.ResourceCreateBody) (*models.Resource, error) {

@@ -82,7 +82,7 @@ func TestAggregateColor(t *testing.T) {
 
 		// mocks
 		colorMock := mocks.ColorMock{}
-		colorMock.On("AggregationColors", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, defaultError)
+		colorMock.On("AggregationColors", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, defaultError)
 		colorController := ColorController{ColorRepository: &colorMock}
 
 		// test
@@ -102,7 +102,7 @@ func TestAggregateColor(t *testing.T) {
 
 		// mocks
 		colorMock := mocks.ColorMock{}
-		colorMock.On("AggregationColors", &models.AggregateQuery{Count: "*"}).Return(&models.AggregateData{}, nil)
+		colorMock.On("AggregationColors", &models.AggregateQuery{Count: "*"}).Return(map[string]interface{}{}, nil)
 		colorController := ColorController{ColorRepository: &colorMock}
 
 		// test

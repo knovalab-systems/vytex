@@ -13,12 +13,13 @@ export type VytexRole<Schema = any> = MergeCoreCollection<
 
 export type RoleCode =
 	| 'admin'
-	| 'desginer'
+	| 'designer'
 	| 'prosupervisor'
 	| 'cortesupervisor'
 	| 'confsupervisor'
 	| 'caldsupervisor'
 	| 'despsupervisor'
+	| 'commerce'
 	| null;
 
 export type VytexPolicy =

@@ -11,7 +11,11 @@ import type { ColorByReference, TimeByTask } from '~/types/core';
 import ReferenceCard from '../components/ReferenceCard';
 import ReferenceDetails from '../components/ReferenceDetails';
 import ReferenceImages from '../components/ReferenceImages';
-import { type GetReferenceImageType, getReferenceForSupervisorQuery, getReferenceImageQuery } from '../requests/referenceGet';
+import {
+	type GetReferenceImageType,
+	getReferenceForSupervisorQuery,
+	getReferenceImageQuery,
+} from '../requests/referenceGet';
 
 function Reference() {
 	return (
@@ -82,12 +86,11 @@ function ReferenceProSupervisor() {
 									<ReferenceCard times={reference.data?.time_by_task as TimeByTask} />
 								</div>
 							</TabsContent>
-
 						</Tabs>
 					</div>
 				</Match>
 			</Switch>
-		</div >
+		</div>
 	);
 }
 

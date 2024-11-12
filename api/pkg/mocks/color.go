@@ -19,9 +19,9 @@ func (m *ColorMock) SelectColor(req *models.ReadColor) (*models.Color, error) {
 	return &models.Color{}, args.Error(0)
 }
 
-func (m *ColorMock) AggregationColors(q *models.AggregateQuery) ([]*models.AggregateData, error) {
+func (m *ColorMock) AggregationColors(q *models.AggregateQuery) (*[]map[string]interface{}, error) {
 	args := m.Called(q)
-	return []*models.AggregateData{args.Get(0).(*models.AggregateData)}, args.Error(1)
+	return &[]map[string]interface{}{args.Get(0).(map[string]interface{})}, args.Error(1)
 }
 
 func (m *ColorMock) CreateColor(u *models.ColorCreateBody) (*models.Color, error) {

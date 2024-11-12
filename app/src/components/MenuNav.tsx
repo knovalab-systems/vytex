@@ -16,7 +16,7 @@ function MenuNav(props: { pages: NavPages[] }) {
 					{page => (
 						<li class='my-auto'>
 							<A
-								activeClass='text-nav'
+								activeClass='bg-nav/70 text-fre text-nav-foreground '
 								inactiveClass='text-gray-600 '
 								href={page.path}
 								end={page.end}

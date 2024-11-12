@@ -50,7 +50,7 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 
 		if len(referenceFields) != 0 {
 			coloByReferenceExprs = append(coloByReferenceExprs, query.ColorByReference.ReferenceID)
-			referenceExprs := append(referenceSwitch(referenceFields, func(s string) bool { return false }), query.Reference.ID)
+			referenceExprs := append(ReferenceSwitch(referenceFields, func(s string) bool { return false }), query.Reference.ID)
 
 			s = s.Preload(table.ColorByReference.Reference.Select(referenceExprs...))
 		}
@@ -58,7 +58,7 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 		if len(colorFields) != 0 {
 
 			coloByReferenceExprs = append(coloByReferenceExprs, query.ColorByReference.ColorID)
-			colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
+			colorExprs := append(ColorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
 
 			s = s.Preload(table.ColorByReference.Color.Select(colorExprs...))
 

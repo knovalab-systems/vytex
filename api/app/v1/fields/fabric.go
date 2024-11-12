@@ -34,11 +34,11 @@ func FabricFields(s query.IFabricDo, queryFields string) query.IFabricDo {
 		return false
 	}
 
-	exprs = append(exprs, fabricSwitch(fields, switchFunc)...)
+	exprs = append(exprs, FabricSwitch(fields, switchFunc)...)
 
 	if len(colorFields) != 0 {
 		exprs = append(exprs, table.ColorID)
-		colorExprs := append(colorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
+		colorExprs := append(ColorSwitch(colorFields, func(s string) bool { return false }), query.Color.ID)
 
 		s = s.Preload(table.Color.Select(colorExprs...))
 	}
@@ -52,13 +52,13 @@ func FabricFields(s query.IFabricDo, queryFields string) query.IFabricDo {
 
 	if len(compositionFields) != 0 {
 		exprs = append(exprs, table.CompositionID)
-		s = s.Preload(table.Supplier)
+		s = s.Preload(table.Composition)
 	}
 
 	return s.Select(exprs...)
 }
 
-func fabricSwitch(fields []string, function func(string) bool) []field.Expr {
+func FabricSwitch(fields []string, function func(string) bool) []field.Expr {
 
 	table := query.Fabric
 	exprs := []field.Expr{}
