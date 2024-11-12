@@ -5,6 +5,7 @@ import { getMeQueryKey, type getMeType } from '~/requests/getMe';
 
 const NotPermission = lazy(() => import('~/pages/NotPermission'));
 const AdminHome = lazy(() => import('~/modules/data/pages/AdminHome'));
+const DesignerHome = lazy(() => import('~/modules/data/pages/DesignerHome'));
 
 function Home() {
 	const user = queryClient.getQueryData<getMeType>([getMeQueryKey]);
@@ -28,6 +29,9 @@ function Home() {
 			</Match>
 			<Match when={user?.role?.code === 'admin'}>
 				<AdminHome />
+			</Match>
+			<Match when={user?.role?.code === 'designer'}>
+				<DesignerHome />
 			</Match>
 		</Switch>
 	);
