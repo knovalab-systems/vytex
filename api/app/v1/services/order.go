@@ -89,29 +89,22 @@ func (m *OrderService) AggregationOrders(q *models.AggregateQuery) (*[]map[strin
 	count := []field.Expr{}
 	countArr := []string{}
 
-	res := &[]map[string]interface{}{}
+	a := &[]map[string]interface{}{}
 
 	if q.Count != "" {
 		countArr = strings.Split(q.Count, ",")
 		count = aggregate.ExprsCountOrder(countArr)
 	}
 
-	s = s.LeftJoin(query.OrderState, query.Order.OrderStateID.EqCol(query.OrderState.ID))
-
 	if q.GroupBy != "" {
 		groupByArr := strings.Split(q.GroupBy, ",")
-		groupBy := fields.ColorSwitch(groupByArr, func(s string) bool { return false })
-
-		if contains(groupByArr, "order_state") {
-			groupBy = append(groupBy, query.OrderState.Name)
-		}
-
-		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(res)
+		groupBy := fields.OrderSwitch(groupByArr, func(s string) bool { return false })
+		err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(a)
 		if err != nil {
 			return nil, problems.ServerError()
 		}
-		aggregate.AdjustSubfix(res, countArr)
-		return res, nil
+		aggregate.AdjustSubfix(a, countArr)
+		return a, nil
 	}
 
 	b := map[string]interface{}{}
@@ -119,9 +112,9 @@ func (m *OrderService) AggregationOrders(q *models.AggregateQuery) (*[]map[strin
 	if err != nil {
 		return nil, problems.ServerError()
 	}
-	*res = append(*res, b)
-	aggregate.AdjustSubfix(res, countArr)
-	return res, nil
+	*a = append(*a, b)
+	aggregate.AdjustSubfix(a, countArr)
+	return a, nil
 }
 
 func contains(slice []string, item string) bool {

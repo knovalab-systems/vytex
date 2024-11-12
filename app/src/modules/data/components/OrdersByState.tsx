@@ -5,36 +5,55 @@ import { Line } from 'solid-chartjs';
 import { onMount } from 'solid-js';
 import { Button } from '~/components/ui/Button';
 import { ORDERS_PATH } from '~/constants/paths';
+import { useOrderStatus } from '~/hooks/useOrderStatus';
 import { calculateStepSize } from '../helpers/calculate';
-import type { CountOrdersBystateType } from '../requests/commerceHome';
+import type { CountOrdersBystateIdType, CountOrdersBystateType } from '../requests/commerceHome';
 
-function OrdersByState(props: { data: CountOrdersBystateType }) {
+function OrdersByState(props: { data: CountOrdersBystateType, dataById: CountOrdersBystateIdType }) {
+    const { getOrderStatus } = useOrderStatus();
+
     const total = () => props.data.reduce((p: number, v) => p + (v.count.id || 0), 0);
     const create = () => props.data.reduce((p: number, v) => p + (v.count.created_at || 0), 0);
     const start = () => props.data.reduce((p: number, v) => p + (v.count.started_at || 0), 0);
-    const finish = () => props.data.reduce((p: number, v) => p + (v.count.finished_at || 0), 0);
-    const cancel = () => props.data.reduce((p: number, v) => p + (v.count.canceled_at || 0), 0);
 
-    const lineChartData = () => ({
-        labels: ['Creadas', 'Iniciadas', 'Finalizadas', 'Canceladas'],
-        datasets: [
-            {
-                label: 'Estado',
-                data: [create(), start(), finish(), cancel()],
-                backgroundColor: ['#34d399', '#f87171', '#60a5fa', '#818cf8'],
-                pointStyle: 'circle',
-                pointRadius: 10,
-                pointHoverRadius: 15,
-                pointBorderColor: 'white',
-                segment: {
-                    borderColor: (ctx: { p0DataIndex: number; }) => {
-                        const colors = ['#34d399', '#f87171', '#60a5fa', '#818cf8'];
-                        return colors[ctx.p0DataIndex % colors.length];
+    const dataset = () => {
+        const filteredOrderStatus = getOrderStatus()
+            .filter(v => props.dataById.map(e => e.order_state_id).includes(v.id));
+
+        const labels = filteredOrderStatus.map(v => v.name);
+        const data = filteredOrderStatus.map(v => {
+            return props.dataById.find(e => e.order_state_id === v.id)?.count || 0;
+        });
+
+        labels.unshift('Creadas', 'Iniciadas');
+        data.unshift(create(), start());
+
+        return { labels, data };
+    };
+
+    const lineChartData = () => {
+        const { labels, data } = dataset();
+        return {
+            labels,
+            datasets: [
+                {
+                    label: 'Estado',
+                    data,
+                    backgroundColor: ['#34d399', '#f87171', '#60a5fa', '#818cf8'],
+                    pointStyle: 'circle',
+                    pointRadius: 10,
+                    pointHoverRadius: 15,
+                    pointBorderColor: 'white',
+                    segment: {
+                        borderColor: (ctx: { p0DataIndex: number; }) => {
+                            const colors = ['#34d399', '#f87171', '#60a5fa', '#818cf8'];
+                            return colors[ctx.p0DataIndex % colors.length];
+                        },
                     },
                 },
-            },
-        ],
-    })
+            ],
+        };
+    }
 
     const lineChartOptions = {
         responsive: true,

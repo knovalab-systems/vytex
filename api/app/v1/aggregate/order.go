@@ -7,7 +7,6 @@ import (
 
 func ExprsCountOrder(count []string) []field.Expr {
 	table := query.Order
-	orderStateTable := query.OrderState
 
 	exprs := []field.Expr{}
 	for _, v := range count {
@@ -24,8 +23,7 @@ func ExprsCountOrder(count []string) []field.Expr {
 			expr = table.FinishedAt.Count().As(as)
 		case "canceled_at":
 			expr = table.CanceledAt.Count().As(as)
-		case "order_state":
-			expr = orderStateTable.Name.Count().As(as)
+
 		default:
 			expr = table.ID.Count().As("count")
 		}

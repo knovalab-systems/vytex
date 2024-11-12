@@ -11,23 +11,23 @@ type OrderStateValue string
 const (
 	CreatedOrderStateValue    = "created"
 	StartedOrderStateValue    = "started"
-	CanceledOrderStateValue   = "canceled"
-	FinishedOrderStateValue   = "finished"
 	CorteOrderStateValue      = "corte"
 	ConfeccionOrderStateValue = "confeccion"
 	CalidadOrderStateValue    = "calidad"
 	EmpaqueOrderStateValue    = "empaque"
+	FinishedOrderStateValue   = "finished"
+	CanceledOrderStateValue   = "canceled"
 )
 
 func DefaultOrderStatus() []*OrderState {
 	return []*OrderState{
 		{Name: "Creada", Value: CreatedOrderStateValue},
 		{Name: "Iniciada", Value: StartedOrderStateValue},
-		{Name: "Cancelada", Value: CanceledOrderStateValue},
-		{Name: "Finalizada", Value: FinishedOrderStateValue},
 		{Name: "Corte", Value: CorteOrderStateValue},
 		{Name: "Confección", Value: ConfeccionOrderStateValue},
 		{Name: "Calidad", Value: CalidadOrderStateValue},
 		{Name: "Empaque", Value: EmpaqueOrderStateValue},
+		{Name: "Finalizada", Value: FinishedOrderStateValue},
+		{Name: "Cancelada", Value: CanceledOrderStateValue},
 	}
 }

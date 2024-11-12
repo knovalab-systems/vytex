@@ -32,10 +32,30 @@ async function countOrdersBystate() {
 	return client.request(
 		aggregate('vytex_orders', {
 			aggregate: {
-				count: ['id', 'created_at', 'finished_at', 'canceled_at', 'started_at', 'order_state'],
+				count: ['id', 'created_at', 'started_at'],
 			},
 		}),
 	);
 }
 
 export type CountOrdersBystateType = Awaited<ReturnType<typeof countOrdersBystate>>;
+
+export function countOrdersBystateIdQuery() {
+	return queryOptions({
+		queryKey: ['countOrdersBystateId'],
+		queryFn: () => countOrdersBystateId(),
+	});
+}
+
+async function countOrdersBystateId() {
+	return client.request(
+		aggregate('vytex_orders', {
+			aggregate: {
+				count: '*',
+			},
+			groupBy: ['order_state_id'],
+		}),
+	);
+}
+
+export type CountOrdersBystateIdType = Awaited<ReturnType<typeof countOrdersBystateId>>;

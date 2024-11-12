@@ -12,11 +12,16 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 	exprs := []field.Expr{}
 	referenceFields := []string{}
 	colorFields := []string{}
+	stateFields := []string{}
 
 	fields := SlicesOrderFields{Order: strings.Split(queryFields, ",")}
 
 	colorByReferenceSwitchFunc := func(v string) bool {
 
+		if strings.HasPrefix(v, "order_status.") || v == "order_status" {
+			stateFields = append(stateFields, strings.TrimPrefix(v, "order_status."))
+			return true
+		}
 		if strings.HasPrefix(v, "color.") || v == "color" {
 			colorFields = append(colorFields, strings.TrimPrefix(v, "color."))
 			return true
@@ -42,7 +47,7 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 		return false
 	}
 
-	exprs = append(exprs, orderSwitch(fields.Order, OrderSwitchFunc(&fields))...)
+	exprs = append(exprs, OrderSwitch(fields.Order, OrderSwitchFunc(&fields))...)
 
 	if len(fields.ColorByReference) != 0 {
 		exprs = append(exprs, table.ColorByReferenceID)
@@ -100,7 +105,7 @@ func OrderFields(s query.IOrderDo, queryFields string) query.IOrderDo {
 	return s.Select(exprs...)
 }
 
-func orderSwitch(fields []string, function func(string) bool) []field.Expr {
+func OrderSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.Order
 	exprs := []field.Expr{}
 

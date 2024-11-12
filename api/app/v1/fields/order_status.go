@@ -9,12 +9,12 @@ import (
 
 func OrderStateFields(s query.IOrderStateDo, queryFields string) query.IOrderStateDo {
 	fields := strings.Split(queryFields, ",")
-	exprs := orderStateSwitch(fields, func(s string) bool { return false })
+	exprs := OrderStateSwitch(fields, func(s string) bool { return false })
 
 	return s.Select(exprs...)
 }
 
-func orderStateSwitch(fields []string, function func(string) bool) []field.Expr {
+func OrderStateSwitch(fields []string, function func(string) bool) []field.Expr {
 	table := query.TaskControlState
 	exprs := []field.Expr{}
 

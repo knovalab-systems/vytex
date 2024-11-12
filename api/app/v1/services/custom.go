@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"github.com/knovalab-systems/vytex/app/v1/aggregate"
 	"reflect"
 	"strings"
 
@@ -42,38 +43,42 @@ func (m *CustomService) SelectCustoms(q *models.Query) ([]*models.Custom, error)
 }
 
 func (m *CustomService) AggregationCustoms(q *models.AggregateQuery) ([]*models.AggregateData, error) {
-	table := query.Custom
-	s := table.Unscoped()
-	aggregateElem := models.AggregateData{Count: nil}
+	s := query.Custom.Unscoped()
+	results := []*models.AggregateData{}
 
 	if q.Count != "" {
 		countArr := strings.Split(q.Count, ",")
-		countObj := make(map[string]int64)
+		count := aggregate.ExprsCountCustoms(countArr)
 
-		for _, v := range countArr {
-			switch v {
-			case "id":
-				count, err := s.Select(table.ID).Count()
-				if err != nil {
-					return nil, problems.ServerError()
-				}
-				countObj["id"] = count
-			default:
-				if aggregateElem.Count == nil {
-					count, err := s.Count()
-					if err != nil {
-						return nil, problems.ServerError()
-					}
-					aggregateElem.Count = count
-				}
+		if q.GroupBy != "" {
+			groupByArr := strings.Split(q.GroupBy, ",")
+			groupBy := fields.CustomSwitch(groupByArr, func(s string) bool { return false })
+
+			var aggregatedData []map[string]interface{}
+			err := s.Select(append(groupBy, count...)...).Group(groupBy...).Scan(&aggregatedData)
+			if err != nil {
+				return nil, problems.ServerError()
 			}
-		}
-		if len(countObj) > 0 {
-			aggregateElem.Count = countObj
-		}
-	}
 
-	return []*models.AggregateData{&aggregateElem}, nil
+			aggregate.AdjustSubfix(&aggregatedData, countArr)
+			for _, data := range aggregatedData {
+				results = append(results, &models.AggregateData{
+					Count: data,
+				})
+			}
+			return results, nil
+		}
+
+		countObj := []map[string]interface{}{}
+		err := s.Select(count...).Scan(&countObj)
+		if err != nil {
+			return nil, problems.ServerError()
+		}
+		aggregate.AdjustSubfix(&countObj, countArr)
+		results = append(results, &models.AggregateData{Count: countObj})
+	}
+	return results, nil
+
 }
 
 func (m *CustomService) CreateCustom(b *models.CustomCreateBody) (*models.Custom, error) {
