@@ -79,7 +79,7 @@ function UsersByState(props: { data: CountUsersByStateType }) {
 	});
 
 	return (
-		<div class='flex p-4 flex-col md:flex-row   shadow-md bg-white rounded-md gap-4'>
+		<div class='flex p-4 flex-col md:flex-row shadow-md bg-white rounded-md gap-4'>
 			<div class='w-full'>
 				<Bar data={barChartData()} options={barChartOptions} width={300} height={300} />
 			</div>

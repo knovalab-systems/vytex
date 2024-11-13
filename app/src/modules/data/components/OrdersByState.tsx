@@ -6,27 +6,19 @@ import { onMount } from 'solid-js';
 import { Button } from '~/components/ui/Button';
 import { ORDERS_PATH } from '~/constants/paths';
 import { useOrderStatus } from '~/hooks/useOrderStatus';
-import { calculateStepSize } from '../helpers/calculate';
-import type { CountOrdersBystateIdType, CountOrdersBystateType } from '../requests/commerceHome';
+import type { CountOrdersBystateIdType } from '../requests/commerceHome';
 
-function OrdersByState(props: { data: CountOrdersBystateType, dataById: CountOrdersBystateIdType }) {
+function OrdersByState(props: { data: CountOrdersBystateIdType }) {
     const { getOrderStatus } = useOrderStatus();
-
-    const total = () => props.data.reduce((p: number, v) => p + (v.count.id || 0), 0);
-    const create = () => props.data.reduce((p: number, v) => p + (v.count.created_at || 0), 0);
-    const start = () => props.data.reduce((p: number, v) => p + (v.count.started_at || 0), 0);
 
     const dataset = () => {
         const filteredOrderStatus = getOrderStatus()
-            .filter(v => props.dataById.map(e => e.order_state_id).includes(v.id));
+            .filter(v => props.data.map(e => e.order_state_id).includes(v.id));
 
         const labels = filteredOrderStatus.map(v => v.name);
         const data = filteredOrderStatus.map(v => {
-            return props.dataById.find(e => e.order_state_id === v.id)?.count || 0;
+            return props.data.find(e => e.order_state_id === v.id)?.count || 0;
         });
-
-        labels.unshift('Creadas', 'Iniciadas');
-        data.unshift(create(), start());
 
         return { labels, data };
     };
@@ -74,15 +66,6 @@ function OrdersByState(props: { data: CountOrdersBystateType, dataById: CountOrd
                 },
             },
         },
-        scales: {
-            y: {
-                suggestedMin: total(),
-                suggestedMax: total() * 1.20,
-                ticks: {
-                    stepSize: calculateStepSize(total()),
-                }
-            }
-        }
     };
 
     onMount(() => {
@@ -94,13 +77,13 @@ function OrdersByState(props: { data: CountOrdersBystateType, dataById: CountOrd
         <div class='flex p-4 flex-col md:flex-row shadow-md bg-white rounded-md gap-4'>
             <div class='w-full font-mono font-bold m-auto text-center'>
                 <h2 class='text-2xl'>Total ordenes</h2>
-                <p class='text-3xl mb-4'>{total()}</p>
+                <p class='text-3xl mb-4'>{18}</p>
                 <Button variant='action'>
                     <A href={ORDERS_PATH}>Navegar a ordenes</A>
                 </Button>
             </div>
             <div class='w-full'>
-                <Line data={lineChartData()} options={lineChartOptions} width={600} />
+                <Line data={lineChartData()} options={lineChartOptions} width={700} height={200} />
             </div>
         </div>
     );

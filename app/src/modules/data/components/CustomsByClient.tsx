@@ -1,8 +1,7 @@
-import { BarElement, Chart, Colors, Legend, LinearScale, Title, Tooltip } from 'chart.js';
+import { BarElement, Chart, Colors, Legend, LinearScale, Title, Tooltip, scales } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Bar } from 'solid-chartjs';
 import { onMount } from 'solid-js';
-import { calculateStepSize } from '../helpers/calculate';
 import type { CountCustomsByClientType } from '../requests/commerceHome';
 
 function CustomsByClient(props: { data: CountCustomsByClientType }) {
@@ -16,8 +15,6 @@ function CustomsByClient(props: { data: CountCustomsByClientType }) {
             { labels: [], data: [] }
         );
     };
-
-    const maxValue = Math.max(...dataset().data);
 
     const barChartData = () => ({
         labels: dataset().labels,
@@ -49,15 +46,6 @@ function CustomsByClient(props: { data: CountCustomsByClientType }) {
                 display: false,
                 color: '#FFF',
             },
-            scales: {
-                y: {
-                    suggestedMin: maxValue,
-                    suggestedMax: maxValue * 1.20,
-                    ticks: {
-                        stepSize: calculateStepSize(maxValue),
-                    },
-                },
-            },
         },
     };
 
@@ -67,7 +55,7 @@ function CustomsByClient(props: { data: CountCustomsByClientType }) {
 
     return (
         <div class='flex p-4 shadow-md bg-white rounded-md gap-4'>
-            <Bar data={barChartData()} options={barChartOptions} />
+            <Bar data={barChartData()} options={barChartOptions} height={200} />
         </div>
     );
 }

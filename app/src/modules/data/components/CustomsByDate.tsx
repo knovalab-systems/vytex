@@ -6,7 +6,6 @@ import { onMount } from 'solid-js';
 import { Button } from '~/components/ui/Button';
 import { ORDERS_PATH } from '~/constants/paths';
 import { formatDateToDayMonth } from "~/lib/parseTime";
-import { calculateStepSize } from '../helpers/calculate';
 import type { CountCustomsByDateType } from "../requests/commerceHome";
 
 function CustomsByDate(props: { data: CountCustomsByDateType }) {
@@ -67,15 +66,6 @@ function CustomsByDate(props: { data: CountCustomsByDateType }) {
                 },
             },
         },
-        scales: {
-            y: {
-                suggestedMin: 0,
-                suggestedMax: total() * 1.2,
-                ticks: {
-                    stepSize: calculateStepSize(total()),
-                },
-            },
-        },
     };
 
     onMount(() => {
@@ -84,8 +74,8 @@ function CustomsByDate(props: { data: CountCustomsByDateType }) {
 
     return (
         <div class='flex p-4 flex-col md:flex-row shadow-md bg-white rounded-md gap-4'>
-            <div class='flex-grow'>
-                <Line data={lineChartData()} options={lineChartOptions} width={600} />
+            <div class='w-full'>
+                <Line data={lineChartData()} options={lineChartOptions} width={700} height={400} />
             </div>
             <div class='w-auto md:w-1/4 font-mono font-bold m-auto text-center'>
                 <h2 class='text-2xl'>Total Pedidos</h2>
