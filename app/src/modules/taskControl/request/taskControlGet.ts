@@ -1,5 +1,5 @@
 import { queryOptions } from '@tanstack/solid-query';
-import { aggregate, readTaskControls } from '@vytex/client';
+import { aggregate, readReference, readTaskControls } from '@vytex/client';
 import { QUERY_LIMIT } from '~/constants/http';
 import { client } from '~/lib/client';
 import type { TaskControlFilter } from '~/types/filter';
@@ -30,7 +30,7 @@ function getTaskControls(page: number, tasks: number[], filters: TaskControlFilt
 				'rejected_at',
 				'task_id',
 				'task_control_state_id',
-				{ order: [{ color_by_reference: ['color_id', { reference: ['code'] }] }] },
+				{ order: [{ color_by_reference: ['color_id', { reference: ['id', 'code'] }] }] },
 			],
 		}),
 	);
@@ -58,6 +58,32 @@ async function countTasks(tasks: number[], filters: TaskControlFilter) {
 		}),
 	);
 }
+
+export function getReferenceQuery(key: number) {
+	return queryOptions({
+		queryKey: ['getReference', key],
+		queryFn: () => getReference(key),
+	});
+}
+
+async function getReference(key: number) {
+	return await client.request(
+		readReference(key, {
+			fields: [
+				'front',
+				'created_at',
+				'code',
+				{
+					colors: ['id', 'color_id', { fabrics: ['*'] }, { resources: ['*'] }],
+				},
+				'operations',
+				'pieces',
+			],
+		}),
+	);
+}
+
+export type GetReferenceType = Awaited<ReturnType<typeof getReference>>;
 
 function doFilters(tasks: number[], filters: TaskControlFilter) {
 	return {

@@ -20,12 +20,12 @@ import {
 function Reference() {
 	return (
 		<AllowPolicies policies={['ReadReferences']}>
-			<ReferenceProSupervisor />
+			<ReferencePage />
 		</AllowPolicies>
 	);
 }
 
-function ReferenceProSupervisor() {
+function ReferencePage() {
 	const params = useParams();
 
 	const reference = createQuery(() => getReferenceForSupervisorQuery(Number(params.id)));

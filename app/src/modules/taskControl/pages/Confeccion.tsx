@@ -33,7 +33,7 @@ function ConfeccionPage() {
 	const { colorsQuery } = useColors();
 	const { taskControlStatusQuery } = useTaskControlStatus();
 	const { stepsQuery, getStepByValue } = useSteps();
-	const step = () => getStepByValue('corte');
+	const step = () => getStepByValue('confeccion');
 	const tasksIds = () => step()?.tasks.map(e => e.id) ?? [];
 	const taskControls = createQuery(() => getTaskControlsQuery(page(), tasksIds(), filters()));
 	const counTaskControls = createQuery(() => countTasksQuery(tasksIds(), filters()));
