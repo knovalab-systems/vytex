@@ -12,6 +12,6 @@ func privateOrderStateRoutes(g *echo.Group) {
 	route := g.Group("/order-status")
 
 	orderStateController := controllers.OrderStateController{OrderStateRepository: &services.OrderStateService{}}
-
+	route.GET("/aggregate", orderStateController.AggregateOrderState, middlewares.Policies([]models.Policy{models.ReadOrderStatus, models.ReadOrders}))
 	route.GET("", orderStateController.ReadOrderStatus, middlewares.Policies([]models.Policy{models.ReadOrders}))
 }

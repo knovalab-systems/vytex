@@ -4,7 +4,7 @@ type Policy string
 
 func (m *Policy) Valid() bool {
 	switch *m { // purpose of being legible
-	case ReadUsers, ReadColors, ReadCustoms, ReadFabrics, ReadOrders, ReadReferences, ReadResources, ReadSuppliers, ReadCorte, ReadRoles, ReadConfeccion, ReadCalidad, ReadEmpaque:
+	case ReadUsers, ReadColors, ReadCustoms, ReadFabrics, ReadOrders, ReadOrderStatus, ReadReferences, ReadResources, ReadSuppliers, ReadCorte, ReadRoles, ReadConfeccion, ReadCalidad, ReadEmpaque:
 		return true
 	case CreateUsers, CreateColors, CreateCustoms, CreateFabrics, CreateOrders, CreateReferences, CreateResources, CreateSuppliers, CreateRoles:
 		return true
@@ -29,6 +29,7 @@ const (
 	CreateFabrics         Policy = "CreateFabrics"
 	UpdateFabrics         Policy = "UpdateFabrics"
 	ReadOrders            Policy = "ReadOrders"
+	ReadOrderStatus       Policy = "ReadOrderStatus"
 	CreateOrders          Policy = "CreateOrders"
 	UpdateOrders          Policy = "UpdateOrders"
 	ReadReferences        Policy = "ReadReferences"

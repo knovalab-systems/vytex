@@ -43,3 +43,20 @@ func (m *OrderStateController) ReadOrderStatus(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, orders)
 }
+
+func (m *OrderStateController) AggregateOrderState(c echo.Context) error {
+	u := new(models.AggregateQuery)
+
+	// bind
+	if err := c.Bind(u); err != nil {
+		return problems.OrdersBadRequest()
+	}
+
+	// get order status
+	aggregate, err := m.OrderStateRepository.AggregationOrderState(u)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(http.StatusOK, aggregate)
+}

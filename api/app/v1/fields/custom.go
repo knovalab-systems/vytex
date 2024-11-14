@@ -32,7 +32,7 @@ func CustomFields(s query.ICustomDo, queryFields string) query.ICustomDo {
 		return false
 	}
 
-	exprs = append(exprs, customSwitch(fields, switchFunc)...)
+	exprs = append(exprs, CustomSwitch(fields, switchFunc)...)
 
 	if len(cancelFieldsArr) != 0 {
 		exprs = append(exprs, table.CanceledBy)
@@ -50,7 +50,7 @@ func CustomFields(s query.ICustomDo, queryFields string) query.ICustomDo {
 
 	if len(ordersFields) != 0 {
 		colorByReferenceFields := []string{}
-		ordersExprs := append(orderSwitch(ordersFields, func(s string) bool {
+		ordersExprs := append(OrderSwitch(ordersFields, func(s string) bool {
 			return PreloadFields(s, "color_by_reference", &colorByReferenceFields)
 		}), query.Order.CustomID)
 
@@ -94,7 +94,7 @@ func CustomFields(s query.ICustomDo, queryFields string) query.ICustomDo {
 	return s.Select(exprs...)
 }
 
-func customSwitch(fields []string, function func(string) bool) []field.Expr {
+func CustomSwitch(fields []string, function func(string) bool) []field.Expr {
 
 	table := query.Custom
 	exprs := []field.Expr{}

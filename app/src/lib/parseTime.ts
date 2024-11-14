@@ -19,3 +19,12 @@ export function getBetweenDay(dateTime: dayjs.Dayjs): [string, string] {
 	const end = dateTime.endOf('d');
 	return [start.toISOString(), end.toISOString()];
 }
+
+/**
+ * Format date to 'DD-MM'
+ * @param dateTime
+ * @returns
+ */
+export function formatDateToDayMonth(dateTime: string): string {
+	return dayjs(dateTime).format('DD-MM');
+}
